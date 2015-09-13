@@ -1,9 +1,23 @@
 .DS_Store
+
 /*
-!/.ssh
- /.ssh/*
-!/.ssh/config
 
 !/.gitignore
 !/.gitmodules
+
+!/.bashrc
+!/.gitshrc
+!/.gnomerc
+!/.gvimrc
+!/.hgrc
+!/.profile
+!/.screenrc
+!/.shbookmark
+!/.tmux.conf
+!/.vimrc
+
+!/.ssh
+/.ssh/*
+!/.ssh/config
+
 !/xp

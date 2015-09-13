@@ -1,0 +1,3 @@
+#!/bin/sh
+
+. $HOME/bash.xp/script/tmp.to.shm.sh

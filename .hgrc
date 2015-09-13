@@ -1,0 +1,10 @@
+[ui]
+username=drdr.xp
+
+[extensions]
+hgext.graphlog =
+hgext.color =
+
+[trusted]
+users = *
+groups = *
