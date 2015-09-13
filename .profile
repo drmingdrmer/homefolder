@@ -3,16 +3,9 @@ if [ "x$__XP_PROFILE__" != "x" ]; then
 fi
 __XP_PROFILE__=1
 
-
-XPRC=~/.profile
-while [ -h "$XPRC" ]; do XPRC=`readlink "${XPRC}"`; done
-XPRC="$( cd -P "$( dirname "$XPRC" )" && pwd )"
-
-XPBASE=$( dirname "$XPRC" )
+XPBASE=$HOME/bash.xp
 
 export XPBASE
-export XPPLUGIN="$XPBASE/plugin"
-export XPRC
 
 . $XPBASE/inc/util.sh
 env_init_path
