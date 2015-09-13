@@ -1,5 +1,9 @@
 .DS_Store
 /*
+!/.ssh
+ /.ssh/*
+!/.ssh/config
+
 !/.gitignore
 !/.gitmodules
 !/xp
