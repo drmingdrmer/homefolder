@@ -22,3 +22,7 @@
 	path = xp/vcs/coding-track
 	url = git@git.coding.net:drmingdrmer/coding-track.git
 	branch = master
+[submodule "xp/vcs/sae-mgr"]
+	path = xp/vcs/sae-mgr
+	url = git@github.com:drmingdrmer/sae-mgr.git
+	branch = master
