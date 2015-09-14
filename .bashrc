@@ -89,11 +89,8 @@ d end tmp
 . $XPBASE/rc/alias
 d end alias
 
-# export CDPATH=.:~:/usr
-
 export EDITOR=vim
 export SVN_EDITOR='vim'
-export VIM_VERSION=70
 export HISTSIZE=50000
 export HISTCONTROL=ignoreboth
 [ -d $HOME/xp/gopath ] && export GOPATH=$HOME/xp/gopath
