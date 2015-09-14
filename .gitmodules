@@ -1,0 +1,4 @@
+[submodule "xp/bash-d"]
+	path = xp/bash-d
+	url = git@github.com:drmingdrmer/bash-d.git
+	branch = master
