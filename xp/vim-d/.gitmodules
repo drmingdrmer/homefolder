@@ -1,0 +1,232 @@
+[submodule "Align"]
+	path = plg-git/Align
+	url = https://github.com/vim-scripts/Align.git
+	branch = master
+	ignore = untracked
+[submodule "colorsel.vim"]
+	path = plg-git/colorsel.vim
+	url = https://github.com/vim-scripts/colorsel.vim.git
+	branch = master
+	ignore = untracked
+[submodule "diffchanges.vim"]
+	path = plg-git/diffchanges.vim
+	url = https://github.com/vim-scripts/diffchanges.vim.git
+	branch = master
+	ignore = untracked
+[submodule "FuzzyFinder"]
+	path = plg-git/FuzzyFinder
+	url = https://github.com/vim-scripts/FuzzyFinder.git
+	branch = master
+	ignore = untracked
+[submodule "grep.vim"]
+	path = plg-git/grep.vim
+	url = https://github.com/vim-scripts/grep.vim.git
+	branch = master
+	ignore = untracked
+[submodule "Hints-for-C-Library-Functions"]
+	path = plg-git/Hints-for-C-Library-Functions
+	url = https://github.com/vim-scripts/Hints-for-C-Library-Functions.git
+	branch = master
+	ignore = untracked
+[submodule "Hints-for-C-Library-Functions-B"]
+	path = plg-git/Hints-for-C-Library-Functions-B
+	url = https://github.com/vim-scripts/Hints-for-C-Library-Functions-B.git
+	branch = master
+	ignore = untracked
+[submodule "IndentAnything"]
+	path = plg-git/IndentAnything
+	url = https://github.com/vim-scripts/IndentAnything.git
+	branch = master
+	ignore = untracked
+[submodule "L9"]
+	path = plg-git/L9
+	url = https://github.com/vim-scripts/L9.git
+	branch = master
+	ignore = untracked
+[submodule "ManPageView"]
+	path = plg-git/ManPageView
+	url = https://github.com/vim-scripts/ManPageView.git
+	ignore = untracked
+[submodule "neocomplcache"]
+	path = plg-git/neocomplcache
+	url = https://github.com/vim-scripts/neocomplcache.git
+	branch = master
+	ignore = untracked
+[submodule "OmniCppComplete"]
+	path = plg-git/OmniCppComplete
+	url = https://github.com/vim-scripts/OmniCppComplete.git
+	branch = master
+	ignore = untracked
+[submodule "taglist.vim"]
+	path = plg-git/taglist.vim
+	url = https://github.com/vim-scripts/taglist.vim.git
+	branch = master
+	ignore = untracked
+[submodule "The-NERD-Commenter"]
+	path = plg-git/The-NERD-Commenter
+	url = https://github.com/vim-scripts/The-NERD-Commenter.git
+	branch = master
+	ignore = untracked
+[submodule "The-NERD-tree"]
+	path = plg-git/The-NERD-tree
+	url = https://github.com/vim-scripts/The-NERD-tree.git
+	branch = master
+	ignore = untracked
+[submodule "VimExplorer"]
+	path = plg-git/VimExplorer
+	url = https://github.com/vim-scripts/VimExplorer.git
+	branch = master
+	ignore = untracked
+[submodule "xmledit"]
+	path = plg-git/xmledit
+	url = https://github.com/vim-scripts/xmledit.git
+	branch = master
+	ignore = untracked
+[submodule "ZenCoding.vim"]
+	path = plg-git/ZenCoding.vim
+	url = https://github.com/vim-scripts/ZenCoding.vim.git
+	branch = master
+	ignore = untracked
+[submodule "snipmate-snippets.git"]
+	path = plg-git/snipmate-snippets.git
+	url = git://github.com/scrooloose/snipmate-snippets.git
+	branch = master
+	ignore = untracked
+[submodule "vcscommand.vim.git"]
+	path = plg-git/vcscommand.vim.git
+	url = git@github.com:drmingdrmer/vcscommand.vim.git
+	branch = master
+	ignore = untracked
+[submodule "plugins.git/github_vim_theme"]
+	path = plg-git/github_vim_theme
+	url = git://github.com/nono/github_vim_theme.git
+	branch = master
+	ignore = untracked
+[submodule "plugins.git/vim-mac-classic-theme"]
+	path = plg-git/vim-mac-classic-theme
+	url = git://github.com/nelstrom/vim-mac-classic-theme.git
+	branch = master
+	ignore = untracked
+[submodule "plugins.git/vim-fugitive"]
+	path = plg-git/vim-fugitive
+	url = git://github.com/tpope/vim-fugitive.git
+	branch = master
+	ignore = untracked
+[submodule "plugins.git/python-mode.git"]
+	path = plg-git/python-mode.git
+	url = https://github.com/klen/python-mode.git
+	branch = master
+	ignore = untracked
+[submodule "plugins.git/vim-javascript"]
+	path = plg-git/vim-javascript
+	url = https://github.com/pangloss/vim-javascript.git
+	branch = master
+	ignore = untracked
+[submodule "plg-git/vim-multiple-cursors"]
+	path = plg-git/vim-multiple-cursors
+	url = git@github.com:terryma/vim-multiple-cursors.git
+	branch = master
+[submodule "plg-git/xp-vim-git"]
+	path = plg-git/xp-vim-git
+	url = git@github.com:drmingdrmer/xp-vim-git.git
+	branch = master
+[submodule "plg-git/vim-go.fatih"]
+	path = plg-git/vim-go.fatih
+	url = https://github.com/fatih/vim-go.git
+	branch = master
+[submodule "plg-git/tagbar.majutsushi"]
+	path = plg-git/tagbar.majutsushi
+	url = https://github.com/majutsushi/tagbar.git
+	branch = master
+[submodule "plg-git/xptemplate"]
+	path = plg-git/xptemplate
+	url = git@github.com:drmingdrmer/xptemplate.git
+	branch = rc
+[submodule "plg-git/xptdev"]
+	path = plg-git/xptdev
+	url = git@github.com:drmingdrmer/xptemplate.git
+	branch = mix
+[submodule "plg-git/xptemplate.wiki"]
+	path = plg-git/xptemplate.wiki
+	url = git@github.com:drmingdrmer/xptemplate.wiki.git
+	branch = master
+[submodule "plg-git/supertab"]
+	path = plg-git/supertab
+	url = https://github.com/ervandew/supertab.git
+	branch = master
+[submodule "plg-git/auto-pairs"]
+	path = plg-git/auto-pairs
+	url = https://github.com/jiangmiao/auto-pairs.git
+	branch = master
+[submodule "plg-git/vim-tabbar"]
+	path = plg-git/vim-tabbar
+	url = git@github.com:drmingdrmer/vim-tabbar.git
+	branch = master
+[submodule "plg-git/vim-ShowMarks"]
+	path = plg-git/vim-ShowMarks
+	url = git@github.com:drmingdrmer/vim-ShowMarks.git
+	branch = master
+[submodule "plg-git/vim-syntax-markdown"]
+	path = plg-git/vim-syntax-markdown
+	url = git@github.com:drmingdrmer/vim-syntax-markdown.git
+	branch = master
+[submodule "plg-git/vim-jsx"]
+	path = plg-git/vim-jsx
+	url = git@github.com:mxw/vim-jsx.git
+	branch = master
+[submodule "plg-git/ultisnips"]
+	path = plg-git/ultisnips
+	url = git@github.com:SirVer/ultisnips.git
+	branch = master
+[submodule "plg-git/vim-snippets.honza"]
+	path = plg-git/vim-snippets.honza
+	url = git@github.com:honza/vim-snippets.git
+	branch = master
+[submodule "plg-git/vim-polyglot"]
+	path = plg-git/vim-polyglot
+	url = git@github.com:sheerun/vim-polyglot.git
+	branch = master
+[submodule "plg-git/gtags.vim"]
+	path = plg-git/gtags.vim
+	url = https://github.com/vim-scripts/gtags.vim.git
+	branch = master
+[submodule "plg-git/vim-toggle-quickfix"]
+	path = plg-git/vim-toggle-quickfix
+	url = git@github.com:drmingdrmer/vim-toggle-quickfix.git
+	branch = master
+[submodule "plg-git/vim-pathogen"]
+	path = plg-git/vim-pathogen
+	url = https://github.com/tpope/vim-pathogen.git
+	branch = master
+[submodule "plg-git/unite-gtags"]
+	path = plg-git/unite-gtags
+	url = https://github.com/hewes/unite-gtags.git
+	branch = master
+[submodule "plg-git/unite.vim"]
+	path = plg-git/unite.vim
+	url = https://github.com/Shougo/unite.vim.git
+	branch = master
+[submodule "plg-git/vim-syntax-util"]
+	path = plg-git/vim-syntax-util
+	url = git@github.com:drmingdrmer/vim-syntax-util.git
+	branch = master
+[submodule "plg-git/vim-color-edit"]
+	path = plg-git/vim-color-edit
+	url = git@github.com:drmingdrmer/vim-color-edit.git
+	branch = master
+[submodule "plg-git/vim-highlight-emphasize"]
+	path = plg-git/vim-highlight-emphasize
+	url = git@github.com:drmingdrmer/vim-highlight-emphasize.git
+	branch = master
+[submodule "plg-git/xp-vim-colorscheme"]
+	path = plg-git/xp-vim-colorscheme
+	url = git@github.com:drmingdrmer/xp-vim-colorscheme.git
+	branch = master
+[submodule "plg-git/Mark--Karkat"]
+	path = plg-git/Mark--Karkat
+	url = https://github.com/vim-scripts/Mark--Karkat.git
+	branch = master
+[submodule "plg-git/vim-xpsnip"]
+	path = plg-git/vim-xpsnip
+	url = git@github.com:drmingdrmer/vim-xpsnip.git
+	branch = master
