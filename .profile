@@ -3,7 +3,7 @@ if [ "x$__XP_PROFILE__" != "x" ]; then
 fi
 __XP_PROFILE__=1
 
-XPBASE=$HOME/bash.xp
+XPBASE=$HOME/xp/bash-d
 
 export XPBASE
 
