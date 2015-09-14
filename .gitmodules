@@ -10,3 +10,7 @@
 	path = xp/vcs/github-track
 	url = git@github.com:drmingdrmer/github-track.git
 	branch = master
+[submodule "xp/vcs/xpdev"]
+	path = xp/vcs/xpdev
+	url = git@github.com:drmingdrmer/xpdev.git
+	branch = master
