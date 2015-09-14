@@ -2,3 +2,7 @@
 	path = xp/bash-d
 	url = git@github.com:drmingdrmer/bash-d.git
 	branch = master
+[submodule "xp/appconf"]
+	path = xp/appconf
+	url = git@github.com:drmingdrmer/appconf.git
+	branch = master
