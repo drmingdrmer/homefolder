@@ -18,3 +18,7 @@
 	path = xp/vcs/bitbucket-track
 	url = git@bitbucket.org:drmingdrmer/bitbucket-track.git
 	branch = master
+[submodule "xp/vcs/coding-track"]
+	path = xp/vcs/coding-track
+	url = git@git.coding.net:drmingdrmer/coding-track.git
+	branch = master
