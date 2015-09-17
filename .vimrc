@@ -1,1 +1,1 @@
-so $HOME/xp/bash-d/vim.xp/vimrc
+so $HOME/xp/vim-d/vimrc
