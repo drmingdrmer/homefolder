@@ -1,0 +1,19 @@
+This is a mirror of http://www.vim.org/scripts/script.php?script_id=1826
+
+This script may be manually sourced or, if placed in .vim/ftplugin/c, will be automatically sourced whenever a C file is edited (which is where vimball will put it).  The prototypes within it are based on gcc's /usr/share/man/man3 directory.
+
+This plugin is truly simple to use: after one has typed a function name, a protype "hint" will be shown.
+ 
+ex.    printf(
+
+       will result in
+
+          int printf(const char * format, ...)
+
+       being echo'd at the bottom of the display.
+
+You'll probably want your cmdheight option set to at least two (ie.  set ch=2).
+
+(see vimscript#1825 for man-2 function hints)
+
+
