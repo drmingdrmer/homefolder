@@ -1,0 +1,1 @@
+exec xpsnip#once#init
