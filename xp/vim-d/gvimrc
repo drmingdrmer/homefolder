@@ -1,0 +1,71 @@
+if !has('gui_running')
+    finish
+endif
+
+if exists("g:___GVIMRC__")
+    finish
+endif
+let g:___GVIMRC__ = 1
+
+
+set   nodigraph		" I don't need sticking digraphs ...
+
+" Let K ask Webster for the word under the cursor
+" set   keywordprg=webster
+
+
+
+
+" " Sometimes I edit code with really weird indentation, like *three*
+" " spaces and stuff like that...
+" set   shiftround
+" " My message length preferences
+" set   shortmess=mrnto
+" set   showcmd
+" " Oh I hate it when programs do things I didn't ask for
+" set   nostartofline
+" " Setting the window title does not work good with screen
+" "set notitle
+" "set   cindent " Overriden later by the autocommands
+" "Context lines = 3
+" set   so=3
+" set   comments=sr:/*,mb:*,el:*/,://,b:#,:%,:XCOMM,n:>,fb:-
+" set   noautowrite
+" set   noerrorbells
+" set   dictionary=/usr/dict/words
+" set   hidden
+" "set   highlight=8r,db,es,hs,mb,Mr,nu,rs,sr,tb,vr,ws
+" set   noignorecase " == case-sensitive
+" set   modeline " Prints the mode (command/insert)
+" "set   nonumber
+" set   number
+" set   shell=/bin/tcsh
+" set   path=.,~/include/**,/usr/include/**,/usr/X11/include/**,/usr/local/include/**
+
+" " command for typedefs ( use syntypes script )...
+" "
+" 
+" Make external commands work through a pipe instead of a pseudo-tty
+set noguipty
+
+" set guifont=Bitstream\ Vera\ Sans\ Mono\ 9
+set guifont=FixedsysTTF\ Bold\ 11
+" set guifont=Monospace\ Bold\ 10
+" set guifont=Monospace\ 10
+
+
+" Use console dialogs
+set guioptions+=c
+
+" do not show scrollbar
+set guioptions-=r
+
+" turn off menu, toolbar
+set guioptions-=m
+set guioptions-=T
+
+" turn off left hand scrollbar
+set guioptions-=L
+
+" colorscheme grey3
+colorscheme xplight

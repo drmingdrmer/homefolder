@@ -1,0 +1,12 @@
+if !has("unix")
+  finish
+endif
+
+set encoding=utf-8
+set fileencodings=utf8,gb2312,gb18030,cp936
+set termencoding=utf-8
+set directory=~/tmp,/tmp,~
+set viminfo+=n~/tmp/_viminfo
+
+lang time en_US.UTF-8
+" vim: set ts=72 sw=4 sts=4 list :

@@ -1,0 +1,22 @@
+if !has("mac")
+  finish
+endif
+
+
+" only MacVim the GUI version has this option "macmeta"
+if !has('gui_running')
+    finish
+endif
+
+
+" Fix Option-<key> combination
+setglobal macmeta
+
+augroup VIMRC_MAC
+    au!
+    au BufNew,BufRead,BufAdd,BufEnter * set macmeta
+augroup END
+
+
+
+" vim: set filetype=vim ts=72 sw=4 sts=4 list :

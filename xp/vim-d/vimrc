@@ -1,0 +1,76 @@
+if v:progname =~? "evim"
+    finish
+endif
+
+if exists("g:___VIMRC__")
+    finish
+endif
+let g:___VIMRC__ = 1
+
+set      nocompatible
+filetype plugin indent on
+syntax   on
+
+let mapleader = "9"
+
+let g:XPvimrcCurrentDir = substitute(expand("<sfile>"), 'vimrc', '', '')
+let g:XPvimrcCurrentDir = substitute(g:XPvimrcCurrentDir, '\V\[/\\]\$', '', '')
+
+exe "so ".g:XPvimrcCurrentDir."/rc.profile.vim"
+
+if has("win32") | exe "so " g:XPvimrcCurrentDir."/vimrc-win" | endif
+if has("unix")  | exe "so " g:XPvimrcCurrentDir."/vimrc-nix" | endif
+if has("mac")   | exe "so " g:XPvimrcCurrentDir."/vimrc-mac" | endif
+
+exe "so ".g:XPvimrcCurrentDir."/rc.path.vim"
+exe "so ".g:XPvimrcCurrentDir."/rc.rtp.vim"
+
+" all window has status line
+set laststatus=2
+set winaltkeys=no
+set grepprg=grep\ -n\ $*
+set fileformats=unix,dos,mac
+set autoread
+set autowrite
+set nobackup
+" parse vim setting in comment
+set modeline
+set hlsearch
+
+colorscheme default
+
+" Nice window title
+if has('title') && (has('gui_running') || &title)
+  set titlestring=
+  set titlestring+=%f\  " file name
+  set titlestring+=%h%m%r%w " flags
+  set titlestring+=\ -\ %{v:progname} " program name
+endif
+
+let pluginConfs = globpath( g:XPvimrcCurrentDir . '/plugin-rc', '*.vim' )
+for fn in split( pluginConfs, "\n" )
+    if fn != ''
+        exe 'so' fn
+    endif
+endfor
+
+if has("autocmd")
+
+  augroup vimrcEx
+      au!
+
+      autocmd FileType text setlocal textwidth=78
+
+      " goto last edit position
+      autocmd BufReadPost *
+            \ if line("'\"") > 0 && line("'\"") <= line("$") |
+            \     exe "normal g`\"" |
+            \ endif
+
+  augroup END
+
+endif
+
+exe "so ".g:XPvimrcCurrentDir."/gvimrc"
+
+runtime macros/matchit.vim

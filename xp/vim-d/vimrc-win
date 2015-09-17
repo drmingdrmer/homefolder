@@ -1,0 +1,14 @@
+if !has("win32")
+  finish
+endif
+
+set encoding=cp936
+set fencs=utf8,gb2312,gb18030,cp936
+set path=.
+set complete=.,w,b,u,U,i
+
+
+
+set guifont=Courier_New:h12:cANSI
+
+" vim: set ts=72 sw=4 sts=4 list :

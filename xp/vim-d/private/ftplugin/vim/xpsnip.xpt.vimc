@@ -1,0 +1,18 @@
+XPTemplate priority=lang
+let s:f = g:XPTfuncs()
+XPTvar $TRUE          1
+XPTvar $FALSE         0
+XPTvar $NULL          NULL
+XPTvar $UNDEFINED     NULL
+XPTvar $BRif     ' '
+XPTvar $BRel     \n
+XPTvar $BRloop   ' '
+XPTvar $BRstc    ' '
+XPTvar $BRfun    ' '
+XPTinclude
+    \ _common/common
+call XPTdefineSnippet('debug',{'rawHint': 'call s:log.Debug\(  )'},['call s:log.Debug(`$SParg^`^`$SParg^)'])
+call XPTdefineSnippet('log',{'rawHint': 'call s:log.Log\(  )'},['call s:log.Log(`$SParg^`^`$SParg^)'])
+call XPTdefineSnippet('info',{'rawHint': 'call s:log.Info\(  )'},['call s:log.Info(`$SParg^`^`$SParg^)'])
+call XPTdefineSnippet('warn',{'rawHint': 'call s:log.Warn\(  )'},['call s:log.Warn(`$SParg^`^`$SParg^)'])
+call XPTdefineSnippet('error',{'rawHint': 'call s:log.Error\(  )'},['call s:log.Error(`$SParg^`^`$SParg^)'])
