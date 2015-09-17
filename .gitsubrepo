@@ -1,0 +1,155 @@
+xp/vim-d/plg-git/Align
+https://github.com/vim-scripts/Align.git master
+
+xp/vim-d/plg-git/colorsel.vim
+https://github.com/vim-scripts/colorsel.vim.git master
+
+xp/vim-d/plg-git/diffchanges.vim
+https://github.com/vim-scripts/diffchanges.vim.git master
+
+xp/vim-d/plg-git/FuzzyFinder
+https://github.com/vim-scripts/FuzzyFinder.git master
+
+xp/vim-d/plg-git/grep.vim
+https://github.com/vim-scripts/grep.vim.git master
+
+xp/vim-d/plg-git/Hints-for-C-Library-Functions
+https://github.com/vim-scripts/Hints-for-C-Library-Functions.git master
+
+xp/vim-d/plg-git/Hints-for-C-Library-Functions-B
+https://github.com/vim-scripts/Hints-for-C-Library-Functions-B.git master
+
+xp/vim-d/plg-git/IndentAnything
+https://github.com/vim-scripts/IndentAnything.git master
+
+xp/vim-d/plg-git/L9
+https://github.com/vim-scripts/L9.git master
+
+xp/vim-d/plg-git/ManPageView
+https://github.com/vim-scripts/ManPageView.git 23
+
+xp/vim-d/plg-git/neocomplcache
+https://github.com/vim-scripts/neocomplcache.git master
+
+xp/vim-d/plg-git/OmniCppComplete
+https://github.com/vim-scripts/OmniCppComplete.git master
+
+xp/vim-d/plg-git/taglist.vim
+https://github.com/vim-scripts/taglist.vim.git master
+
+xp/vim-d/plg-git/The-NERD-Commenter
+https://github.com/vim-scripts/The-NERD-Commenter.git master
+
+xp/vim-d/plg-git/The-NERD-tree
+https://github.com/vim-scripts/The-NERD-tree.git master
+
+xp/vim-d/plg-git/VimExplorer
+https://github.com/vim-scripts/VimExplorer.git master
+
+xp/vim-d/plg-git/xmledit
+https://github.com/vim-scripts/xmledit.git master
+
+xp/vim-d/plg-git/ZenCoding.vim
+https://github.com/vim-scripts/ZenCoding.vim.git master
+
+xp/vim-d/plg-git/snipmate-snippets.git
+git://github.com/scrooloose/snipmate-snippets.git master
+
+xp/vim-d/plg-git/vcscommand.vim.git
+git@github.com:drmingdrmer/vcscommand.vim.git master
+
+xp/vim-d/plg-git/github_vim_theme
+git://github.com/nono/github_vim_theme.git master
+
+xp/vim-d/plg-git/vim-mac-classic-theme
+git://github.com/nelstrom/vim-mac-classic-theme.git master
+
+xp/vim-d/plg-git/vim-fugitive
+git://github.com/tpope/vim-fugitive.git master
+
+xp/vim-d/plg-git/python-mode.git
+https://github.com/klen/python-mode.git master
+
+xp/vim-d/plg-git/vim-javascript
+https://github.com/pangloss/vim-javascript.git master
+
+xp/vim-d/plg-git/vim-multiple-cursors
+git@github.com:terryma/vim-multiple-cursors.git master
+
+xp/vim-d/plg-git/xp-vim-git
+git@github.com:drmingdrmer/xp-vim-git.git master
+
+xp/vim-d/plg-git/vim-go.fatih
+https://github.com/fatih/vim-go.git master
+
+xp/vim-d/plg-git/tagbar.majutsushi
+https://github.com/majutsushi/tagbar.git master
+
+xp/vim-d/plg-git/xptemplate
+git@github.com:drmingdrmer/xptemplate.git rc
+
+xp/vim-d/plg-git/xptdev
+git@github.com:drmingdrmer/xptemplate.git mix
+
+xp/vim-d/plg-git/xptemplate.wiki
+git@github.com:drmingdrmer/xptemplate.wiki.git master
+
+xp/vim-d/plg-git/supertab
+https://github.com/ervandew/supertab.git master
+
+xp/vim-d/plg-git/auto-pairs
+https://github.com/jiangmiao/auto-pairs.git master
+
+xp/vim-d/plg-git/vim-tabbar
+git@github.com:drmingdrmer/vim-tabbar.git master
+
+xp/vim-d/plg-git/vim-ShowMarks
+git@github.com:drmingdrmer/vim-ShowMarks.git master
+
+xp/vim-d/plg-git/vim-syntax-markdown
+git@github.com:drmingdrmer/vim-syntax-markdown.git master
+
+xp/vim-d/plg-git/vim-jsx
+git@github.com:mxw/vim-jsx.git master
+
+xp/vim-d/plg-git/ultisnips
+git@github.com:SirVer/ultisnips.git master
+
+xp/vim-d/plg-git/vim-snippets.honza
+git@github.com:honza/vim-snippets.git master
+
+xp/vim-d/plg-git/vim-polyglot
+git@github.com:sheerun/vim-polyglot.git master
+
+xp/vim-d/plg-git/gtags.vim
+https://github.com/vim-scripts/gtags.vim.git master
+
+xp/vim-d/plg-git/vim-toggle-quickfix
+git@github.com:drmingdrmer/vim-toggle-quickfix.git master
+
+xp/vim-d/plg-git/vim-pathogen
+https://github.com/tpope/vim-pathogen.git master
+
+xp/vim-d/plg-git/unite-gtags
+https://github.com/hewes/unite-gtags.git master
+
+xp/vim-d/plg-git/unite.vim
+https://github.com/Shougo/unite.vim.git master
+
+xp/vim-d/plg-git/vim-syntax-util
+git@github.com:drmingdrmer/vim-syntax-util.git master
+
+xp/vim-d/plg-git/vim-color-edit
+git@github.com:drmingdrmer/vim-color-edit.git master
+
+xp/vim-d/plg-git/vim-highlight-emphasize
+git@github.com:drmingdrmer/vim-highlight-emphasize.git master
+
+xp/vim-d/plg-git/xp-vim-colorscheme
+git@github.com:drmingdrmer/xp-vim-colorscheme.git master
+
+xp/vim-d/plg-git/Mark--Karkat
+https://github.com/vim-scripts/Mark--Karkat.git master
+
+xp/vim-d/plg-git/vim-xpsnip
+git@github.com:drmingdrmer/vim-xpsnip.git master

@@ -4,6 +4,7 @@
 
 !/.gitignore
 !/.gitmodules
+!/.gitsubrepo
 
 !/.bashrc
 !/.gitshrc
