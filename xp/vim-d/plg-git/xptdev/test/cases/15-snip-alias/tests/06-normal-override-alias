@@ -1,5 +1,0 @@
-keys:
-override-alias-by-priority
-
-expected:
-normal-in-high

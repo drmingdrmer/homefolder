@@ -1,7 +1,0 @@
-keys:
-instant-value-snippet-text
-on_a	
-at_end
-
-expected:
-(on_a-on_a)at_end

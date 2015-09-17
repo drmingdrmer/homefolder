@@ -1,8 +1,0 @@
-keys:
-quote-hint-1
-
-expected:
-quote-hint-1
-
-screen:
-quote-hint-1 [ ]*quote-hint

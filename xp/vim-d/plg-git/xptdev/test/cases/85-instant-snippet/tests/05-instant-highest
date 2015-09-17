@@ -1,8 +1,0 @@
-cmd:
-call XPTemplate('high', {'filetype': 'foo'}, 'high-ft-instant')
-
-keys:
-high
-
-expected:
-high-ft-instant

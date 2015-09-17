@@ -1,5 +1,0 @@
-keys:
-echo-text-without-mark
-
-expected:
-echoed

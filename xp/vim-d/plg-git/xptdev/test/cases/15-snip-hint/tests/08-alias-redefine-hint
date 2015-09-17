@@ -1,8 +1,0 @@
-keys:
-alias-redefine-hint
-
-expected:
-alias-redefine-hint
-
-screen:
-alias-redefine-hint  *newhint-3

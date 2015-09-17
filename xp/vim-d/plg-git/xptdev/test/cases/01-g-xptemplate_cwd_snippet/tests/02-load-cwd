@@ -1,14 +1,0 @@
-workingdir:
-_cwd
-
-pre_vimrc:
-let g:xptemplate_cwd_snippet = 1
-
-keys:
-foo
-
-bar
-
-expected:
-foo-in-dot-xpt
-bar

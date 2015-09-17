@@ -1,8 +1,0 @@
-keys:
-var-snip-name
-
-expected:
-var-snip-name
-
-screen:
-var-snip-name  *var-snip-name

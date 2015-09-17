@@ -1,5 +1,0 @@
-keys:
-var-x-alias
-
-expected:
--before-alias-after-

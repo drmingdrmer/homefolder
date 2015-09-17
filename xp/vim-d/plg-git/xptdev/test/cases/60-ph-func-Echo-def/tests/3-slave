@@ -1,7 +1,0 @@
-keys:
-slave
-	
-at_end
-
-expected:
--echo=echo=at_end

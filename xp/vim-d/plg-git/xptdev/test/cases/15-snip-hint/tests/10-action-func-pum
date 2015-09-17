@@ -1,8 +1,0 @@
-keys:
-action-func-pum
-
-expected:
-action-func-pum
-
-screen:
-action-func-pum  *a b c ..

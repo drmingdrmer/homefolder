@@ -1,7 +1,0 @@
-keys:
-build-text-with-mark
-on_ph	
-at_end
-
-expected:
-on_ph-on_ph=at_end

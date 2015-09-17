@@ -1,11 +1,0 @@
-nothing happened for Next() in pre phase
-
-keys:
-pre-no-arg
-	
-at_end
-
-
-expected:
-(x)at_end
-

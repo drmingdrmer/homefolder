@@ -1,8 +1,0 @@
-keys:
-post
-on_x	
-on_y	
-at_end
-
-expected:
--on_x-on_y=at_end

@@ -1,6 +1,0 @@
-keys:
-with-edge-3func
-at_end
-
-expected:
--(left)T(right)=at_end

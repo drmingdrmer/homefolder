@@ -1,7 +1,0 @@
-keys:
-cursor
-on_x	
-on_cursor
-
-expected:
--on_x-on_cursor=

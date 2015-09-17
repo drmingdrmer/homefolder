@@ -1,17 +1,0 @@
-map:
-inoremap <CR> (mapped)<CR>
-
-keys:
-foo
-on_x_1
-
-on_x_2	
-at_end
-
-last_line
-
-
-expected:
--on_x_1
-on_x_2=at_end(mapped)
-last_line

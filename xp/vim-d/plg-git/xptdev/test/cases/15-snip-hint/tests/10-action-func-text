@@ -1,8 +1,0 @@
-keys:
-action-func-text
-
-expected:
-action-func-text
-
-screen:
-action-func-text  *text

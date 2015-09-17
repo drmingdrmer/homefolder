@@ -1,10 +1,0 @@
-keys:
-come
-first	
-second	
-third	
-forth	
-at_end
-
-expected:
--second-first-forth-third=at_end

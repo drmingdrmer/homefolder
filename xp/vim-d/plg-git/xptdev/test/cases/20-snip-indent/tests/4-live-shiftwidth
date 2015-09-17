@@ -1,19 +1,0 @@
-setting:
-expandtab
-shiftwidth=8
-
-localsetting:
-shiftwidth=2
-
-keys:
-5-spaces
-
-:setlocal shiftwidth=4
-5-spaces
-
-
-expected:
-line1
-   line2
-line1
-     line2

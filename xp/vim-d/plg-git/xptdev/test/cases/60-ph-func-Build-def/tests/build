@@ -1,6 +1,0 @@
-keys:
-build
-type_at_end
-
-expected:
--text_built=type_at_end

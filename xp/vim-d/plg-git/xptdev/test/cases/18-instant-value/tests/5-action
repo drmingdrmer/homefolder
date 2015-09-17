@@ -1,6 +1,0 @@
-keys:
-action
-at_end
-
-expected:
--(text)ok=at_end

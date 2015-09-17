@@ -1,11 +1,0 @@
-keys:
-foo
-on_a
-
-:new
-:wincmd p
-Ax
-	
-
-expected:
-on_a-b=x	
