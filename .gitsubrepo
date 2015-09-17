@@ -88,12 +88,6 @@ https://github.com/majutsushi/tagbar.git master
 xp/vim-d/plg-git/xptemplate
 git@github.com:drmingdrmer/xptemplate.git rc
 
-xp/vim-d/plg-git/xptdev
-git@github.com:drmingdrmer/xptemplate.git mix
-
-xp/vim-d/plg-git/xptemplate.wiki
-git@github.com:drmingdrmer/xptemplate.wiki.git master
-
 xp/vim-d/plg-git/supertab
 https://github.com/ervandew/supertab.git master
 
@@ -151,5 +145,5 @@ git@github.com:drmingdrmer/xp-vim-colorscheme.git master
 xp/vim-d/plg-git/Mark--Karkat
 https://github.com/vim-scripts/Mark--Karkat.git master
 
-xp/vim-d/plg-git/vim-xpsnip
-git@github.com:drmingdrmer/vim-xpsnip.git master
+xp/vim-d/plg-git/vim-fuzzyjumpto
+https://github.com/drmingdrmer/vim-fuzzyjumpto.git
