@@ -1,7 +1,3 @@
-[submodule "xp/appconf"]
-	path = xp/appconf
-	url = git@github.com:drmingdrmer/appconf.git
-	branch = master
 [submodule "xp/vcs/github-track"]
 	path = xp/vcs/github-track
 	url = git@github.com:drmingdrmer/github-track.git
