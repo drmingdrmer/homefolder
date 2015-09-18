@@ -93,7 +93,7 @@ export EDITOR=vim
 export SVN_EDITOR='vim'
 export HISTSIZE=50000
 export HISTCONTROL=ignoreboth
-[ -d $HOME/xp/gopath ] && export GOPATH=$HOME/xp/gopath
+[ -d $HOME/xp/gopath ] && { export GOPATH=$HOME/xp/gopath; export PATH=$PATH:$GOPATH/bin; }
 
 export PYTHONPATH=/usr/lib/python2.6/site-packages/:$PYTHONPATH
 export HISTIGNORE="ll:ls"
