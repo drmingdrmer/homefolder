@@ -1,0 +1,31 @@
+<UserScriptConfig>
+	<Script filename="fix_font.user.js" name="fix_font" namespace="xp" description="" enabled="true">
+		<Include>http://en.wikipedia.org/*</Include>
+	</Script>
+	<Script filename="gmailreaderintegrator.user.js" name="Gmail + Reader Integrator" namespace="http://www.winstonyw.com" description="Integrates Google Reader into Gmail, built for Greasemonkey." enabled="false">
+		<Include>http://mail.google.com/*</Include>
+		<Include>https://mail.google.com/*</Include>
+		<Include>http://www.google.com/reader/*</Include>
+	</Script>
+	<Script filename="font.user.js" name="font" namespace="xp" description="..." enabled="true">
+		<Include>file:///*</Include>
+		<Include>http://www.oracle.com/technology/documentation/berkeley-db/*</Include>
+	</Script>
+	<Script filename="fontforproxy.user.js" name="font for proxy" namespace="xp" description="" enabled="false">
+		<Include>http://*</Include>
+	</Script>
+	<Script filename="mark.user.js" name="mark" namespace="xp" description="" enabled="false">
+		<Include>http://*</Include>
+	</Script>
+	<Script filename="htmlblockadjust.user.js" name="htmlblock.adjust" namespace="xp" description="" enabled="true">
+		<Include>http://www.htmlblock.co.uk/*</Include>
+	</Script>
+	<Script filename="util.user.js" name="util" namespace="xp" description="" enabled="true">
+		<Include>http://*</Include>
+		<Include>file:///*</Include>
+		<Include>chm:file://*</Include>
+	</Script>
+	<Script filename="gollummanager.user.js" name="gollum manager" namespace="xp" description="" enabled="true">
+		<Include>http://gollum.easycp.de/gollum/*</Include>
+	</Script>
+</UserScriptConfig>

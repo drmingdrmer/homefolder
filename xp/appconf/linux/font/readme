@@ -1,0 +1,3 @@
+Fonts
+
+As root, open an nautilus window and type "~/.fonts" in the location bar. Create the directory, if it doesn't exist. Now copy all the .ttf files there. Open a terminal windows and type: "fc-cache -f -v". Restart and you can now use OSX fonts. My font settings are shown in the "MyFonts.png" file.

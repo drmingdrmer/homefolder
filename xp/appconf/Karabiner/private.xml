@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<root>
+ <list>
+
+    <item>
+      <name>My tab-nav config</name>
+      <appendix>ctrl-opt-, to previous tab( ctrl-tab )</appendix>
+      <appendix>ctrl-opt-. to next tab( ctrl-shift-tab )</appendix>
+      <identifier>private.tab_nav</identifier>
+
+      <autogen>--KeyToKey-- KeyCode::DOT, VK_CONTROL | VK_OPTION,  KeyCode::TAB, ModifierFlag::CONTROL_L</autogen>
+      <autogen>--KeyToKey-- KeyCode::COMMA, VK_CONTROL | VK_OPTION, KeyCode::TAB, ModifierFlag::CONTROL_L | ModifierFlag::SHIFT_L</autogen>
+
+      <autogen>--KeyToKey-- KeyCode::DOT, VK_CONTROL | VK_COMMAND,  KeyCode::TAB, ModifierFlag::CONTROL_L</autogen>
+      <autogen>--KeyToKey-- KeyCode::COMMA, VK_CONTROL | VK_COMMAND, KeyCode::TAB, ModifierFlag::CONTROL_L | ModifierFlag::SHIFT_L</autogen>
+
+    </item>
+
+    <item>
+      <name>My VI config</name>
+      <appendix>Exchange Option and Command</appendix>
+      <appendix>Pass through Command-TAB</appendix>
+      <appendix>Pass through Command-C</appendix>
+      <appendix>Pass through Command-V</appendix>
+      <appendix>Pass through Command-`</appendix>
+      <appendix>Pass through Command-SPACE</appendix>
+      <identifier>private.xp_vi_ex_opt_cmd</identifier>
+
+      <only>VI</only>
+
+      <autogen>--KeyToKey-- KeyCode::COMMAND_L, KeyCode::OPTION_L</autogen>
+      <autogen>--KeyToKey-- KeyCode::OPTION_L, KeyCode::COMMAND_L</autogen>
+      <autogen>--KeyToKey-- KeyCode::TAB, VK_OPTION, KeyCode::TAB, ModifierFlag::COMMAND_L</autogen>
+      <autogen>--KeyToKey-- KeyCode::C, VK_OPTION , KeyCode::C, ModifierFlag::COMMAND_L</autogen>
+      <autogen>--KeyToKey-- KeyCode::V, VK_OPTION , KeyCode::V, ModifierFlag::COMMAND_L</autogen>
+      <autogen>--KeyToKey-- KeyCode::BACKQUOTE, VK_OPTION , KeyCode::BACKQUOTE, ModifierFlag::COMMAND_L</autogen>
+      <autogen>--KeyToKey-- KeyCode::SPACE, VK_OPTION , KeyCode::SPACE, ModifierFlag::COMMAND_L</autogen>
+
+    </item>
+
+    <item>
+      <name>My Terminal config</name>
+      <appendix>Exchange Option and Command</appendix>
+      <appendix>Pass through Command-TAB</appendix>
+      <appendix>Pass through Command-C</appendix>
+      <appendix>Pass through Command-V</appendix>
+      <appendix>Pass through Command-T</appendix>
+      <appendix>Pass through Command-`</appendix>
+      <appendix>Pass through Command-SPACE</appendix>
+      <identifier>private.xp_term_ex_opt_cmd</identifier>
+
+      <only>TERMINAL</only>
+
+      <autogen>--KeyToKey-- KeyCode::COMMAND_L, KeyCode::OPTION_L</autogen>
+      <autogen>--KeyToKey-- KeyCode::OPTION_L, KeyCode::COMMAND_L</autogen>
+      <autogen>--KeyToKey-- KeyCode::TAB, VK_OPTION, KeyCode::TAB, ModifierFlag::COMMAND_L</autogen>
+      <autogen>--KeyToKey-- KeyCode::C, VK_OPTION , KeyCode::C, ModifierFlag::COMMAND_L</autogen>
+      <autogen>--KeyToKey-- KeyCode::V, VK_OPTION , KeyCode::V, ModifierFlag::COMMAND_L</autogen>
+      <autogen>--KeyToKey-- KeyCode::T, VK_OPTION , KeyCode::T, ModifierFlag::COMMAND_L</autogen>
+      <autogen>--KeyToKey-- KeyCode::BACKQUOTE, VK_OPTION , KeyCode::BACKQUOTE, ModifierFlag::COMMAND_L</autogen>
+      <autogen>--KeyToKey-- KeyCode::SPACE, VK_OPTION , KeyCode::SPACE, ModifierFlag::COMMAND_L</autogen>
+
+    </item>
+
+  </list>
+</root>
+
