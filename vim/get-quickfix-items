@@ -1,0 +1,3 @@
+getqflist()                                             getqflist()
+                Returns a list with all the current quickfix errors.  Each
+                list item is a dictionary with these entries:

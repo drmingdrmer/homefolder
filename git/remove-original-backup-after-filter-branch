@@ -1,0 +1,7 @@
+git update-ref -d refs/original/refs/heads/master
+
+or:
+
+git for-each-ref --format="%(refname)" refs/original/ | xargs -n 1 git update-ref -d
+
+# http://stackoverflow.com/questions/7654822/remove-refs-original-heads-master-from-git-repo-after-filter-branch-tree-filte
