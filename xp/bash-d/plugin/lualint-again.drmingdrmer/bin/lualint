@@ -1,0 +1,43 @@
+#!/bin/bash
+
+lua_lint_path=${0}.lua
+
+find_exc()
+{
+    local c
+
+    while ``; do
+
+        if [ ".$1" == "." ]; then
+            echo "not found"
+            exit 1
+        fi
+
+        c=$(which $1)
+        if [ ".$c" = "." ]; then
+            shift
+        else
+            echo $c
+            return 0
+        fi
+    done
+}
+
+lua_=$(find_exc lua5.1 lua)
+luac_=$(find_exc luac5.1 luac)
+
+chk_ver()
+{
+    local cmd=$1
+    ver=$($cmd -v 2>&1 | awk '{print $2}')
+
+    if [ ".${ver:0:3}" != ".5.1" ]; then
+        echo "$cmd of version 5.1 not found"
+        exit 1
+    fi
+}
+
+chk_ver $lua_
+chk_ver $luac_
+
+luac=$luac_ $lua_ $lua_lint_path $@
