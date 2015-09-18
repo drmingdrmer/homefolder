@@ -152,13 +152,13 @@ xp/bash-d/plugin/shbookmark
 https://github.com/drmingdrmer/shbookmark.git master
 
 xp/bash-d/plugin/cosmin.git-hg
-https://github.com/:cosmin/git-hg.git master
+https://github.com/cosmin/git-hg.git master
 
 xp/bash-d/plugin/php-markdown.michelf
-https://github.com/:michelf/php-markdown.git master
+https://github.com/michelf/php-markdown.git master
 
 xp/bash-d/plugin/xunlei-lixian.iambus/bin
-https://github.com/:iambus/xunlei-lixian.git master
+https://github.com/iambus/xunlei-lixian.git master
 
 xp/bash-d/plugin/vdisk_lib.drmingdrmer/bin
 https://github.com/drmingdrmer/vdisk_lib.git master
