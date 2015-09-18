@@ -147,3 +147,27 @@ https://github.com/vim-scripts/Mark--Karkat.git master
 
 xp/vim-d/plg-git/vim-fuzzyjumpto
 https://github.com/drmingdrmer/vim-fuzzyjumpto.git master
+
+xp/bash-d/plugin/shbookmark
+https://github.com/:drmingdrmer/shbookmark.git master
+
+xp/bash-d/plugin/cosmin.git-hg
+https://github.com/:cosmin/git-hg.git master
+
+xp/bash-d/plugin/php-markdown.michelf
+https://github.com/:michelf/php-markdown.git master
+
+xp/bash-d/plugin/xunlei-lixian.iambus/bin
+https://github.com/:iambus/xunlei-lixian.git master
+
+xp/bash-d/plugin/vdisk_lib.drmingdrmer/bin
+https://github.com/:drmingdrmer/vdisk_lib.git master
+
+xp/bash-d/plugin/git-imerge.mhagger/bin
+https://github.com/mhagger/git-imerge.git master
+
+xp/bash-d/plugin/lualint-again.drmingdrmer/bin
+https://github.com/:drmingdrmer/lualint-again.git master
+
+xp/bash-d/plugin/Dropbox-Uploader.andreafabrizi/bin
+https://github.com/andreafabrizi/Dropbox-Uploader.git master
