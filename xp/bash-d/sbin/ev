@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# encryption view
+
+fn=$1
+fn=${fn%.des3}.des3
+[ -f "$fn" ] || touch $fn
+
+openssl des3 -d -in $fn

@@ -1,0 +1,6 @@
+#!/bin/sh
+
+branch=$1
+fn=$2
+
+git show $branch:$(git ls-files --full-name -- $fn)

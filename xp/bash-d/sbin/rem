@@ -1,0 +1,27 @@
+#!/bin/bash
+
+host=$1
+
+passwd_in="Gi5JkkgC9lJiPFj2bgjqf4+EufGzBp3WeTq+zusITLU0zI2UPaBSg67ZB2qTl7fIh"
+passwd_ex="jhfZ8W+NW+b3UEiMSm0+aIBA0SuWChpB0dH6H/OY1D82C3kcNoH3LcKChf1ktBWkV"
+passwd="$passwd_ex"
+
+case $host in
+    cnc1) host=202.106.182.212 ;;
+    cnc2) host=202.106.182.253 ;;
+    tom1) host=219.142.118.199 ;;
+    tom2) host=219.142.78.199  ;;
+    in1)
+        host=10.210.224.66
+        passwd="$passwd_in"
+        ;;
+    in2)
+        host=10.210.66.44
+        passwd="$passwd_in"
+        ;;
+    *) host=202.106.182.212 ;;
+esac
+
+echo "$passwd" | set-clipboard
+
+ssh yanbo@$host

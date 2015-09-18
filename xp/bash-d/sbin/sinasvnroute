@@ -1,0 +1,5 @@
+#!/bin/sh
+
+gw=$1
+
+/sbin/route add -net 10.88.15.0/24 gw $gw; echo "/sbin/route add -net 10.88.15.0/24 gw $gw" >>/etc/rc.local

@@ -1,0 +1,35 @@
+#!/bin/sh
+
+h=$1
+hrange=${h%.*}.0/24
+
+gws=`/sbin/route -n | awk '{ print $2 }' | sort | uniq | grep "^[1-9]"`
+
+echo $h
+echo $hrange
+echo $gws
+
+
+if ping -c1 -W1 $h;then
+    exit 0
+fi 
+    
+
+for gateway in $gws; do
+
+
+    /sbin/route add -net $hrange gw $gateway
+    echo "/sbin/route add -net $hrange gw $gateway"
+    /sbin/route -n
+    
+    if ping -c1 -W1 $h;then
+        echo "/sbin/route add -net $hrange gw $gateway" >> /etc/rc.local
+        exit 0
+    else
+        /sbin/route del -net $hrange
+    fi
+        
+done
+        
+exit 1
+

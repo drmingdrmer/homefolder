@@ -1,0 +1,42 @@
+#!/bin/sh
+
+
+root=$1
+rRoot=$2
+
+cmd=""
+
+mkcmd(){
+    echo "$1" > __tmp__
+    cmd="$1"
+}
+
+inotifywait --format "%w %f %e"\
+    -e modify -e create -e move -e delete\
+    --exclude .svn \
+    -rqm  $root \
+    | while read ipath ifile iact; do
+
+act=${iact%,*}
+isdir=${iact#*,}
+
+echo "$ipath $ifile $iact"
+
+ipath=${ipath#$root/}
+if [ "$isdir" = 'ISDIR' ]; then
+    if [ "$act" = 'CREATE' ]; then
+        mkcmd "mkdir $ipath$ifile"
+    elif [ "$act" = 'DELETE' ]; then
+        mkcmd "rmdir $ipath$ifile"
+    fi
+else
+    if [ "$act" = 'DELETE' ]; then
+        mkcmd "rm $ipath$ifile"
+    elif [ "$act" = 'MODIFY' ]; then
+        mkcmd "put $root/$ipath$ifile $ipath$ifile"
+    fi
+fi
+
+sftp -b __tmp__ $rRoot && { echo "ok $cmd"; } || { echo "err $cmd"; }
+
+done

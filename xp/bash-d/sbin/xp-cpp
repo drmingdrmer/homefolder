@@ -1,0 +1,4 @@
+#!/bin/bash
+
+P=`find "$PWD" -name "$1"`
+cpclp.py $P

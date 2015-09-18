@@ -1,0 +1,30 @@
+#!/bin/bash
+
+usage()
+{
+    echo 'extract changes of some file from a range of commits onto current branch'
+    echo 'git extract from..to -- <fns>'
+    exit 1
+}
+
+if [ ".$2" != ".--" ]; then
+    usage
+fi
+
+range=$1
+shift
+shift
+fns="$@"
+
+for c in $(git log --reverse $range --format="%H" -- $fns); do
+
+    echo "to pick $fns from:"
+    git log --color --stat --decorate --pretty=oneline --abbrev-commit -M -n1 $c
+
+    mes=$(git log -n1 --format="%B" $c)
+
+    p=$(git diff $c~ $c -- $fns)
+    git apply <<<"$p"
+
+    git commit -am "$mes"
+done

@@ -1,0 +1,151 @@
+#!/bin/bash
+
+mode=dry_run
+verbose=""
+
+while getopts "ifv" opname; do
+    case $opname in
+        i)
+            mode=interactive
+            ;;
+        f)
+            mode=force
+            ;;
+        v)
+            verbose=1
+            ;;
+        [?])
+            echo invalid
+            exit
+            ;;
+    esac
+done
+
+if [ ".${1:0:1}" = ".-" ]; then
+    shift
+fi
+remote=${1-origin}
+
+Black="$(tput setaf 0)"
+BlackBG="$(tput setab 0)"
+DarkGrey="$(tput bold ; tput setaf 0)"
+LightGrey="$(tput setaf 7)"
+LightGreyBG="$(tput setab 7)"
+White="$(tput bold ; tput setaf 7)"
+Red="$(tput setaf 1)"
+RedBG="$(tput setab 1)"
+LightRed="$(tput bold ; tput setaf 1)"
+Green="$(tput setaf 2)"
+GreenBG="$(tput setab 2)"
+LightGreen="$(tput bold ; tput setaf 2)"
+Brown="$(tput setaf 3)"
+BrownBG="$(tput setab 3)"
+Yellow="$(tput bold ; tput setaf 3)"
+Blue="$(tput setaf 4)"
+BlueBG="$(tput setab 4)"
+LightBlue="$(tput bold ; tput setaf 4)"
+Purple="$(tput setaf 5)"
+PurpleBG="$(tput setab 5)"
+Pink="$(tput bold ; tput setaf 5)"
+Cyan="$(tput setaf 6)"
+CyanBG="$(tput setab 6)"
+LightCyan="$(tput bold ; tput setaf 6)"
+NC="$(tput sgr0)" # No Color
+
+log()
+{
+    local color="$1"
+    local title=$2
+    shift
+    shift
+    local mes="$@"
+
+    if [ -t 1 ]; then
+        echo "$color$title$NC $mes"
+    else
+        echo "$title $mes"
+    fi
+}
+
+info()
+{
+    log "$Brown" "$@"
+}
+
+is_acenstor_of()
+{
+    local acc=$1
+    local child=$2
+    git merge-base --is-ancestor $acc $child
+}
+
+exist()
+{
+   git cat-file -t $1 >/dev/null 2>/dev/null
+}
+
+confirm()
+{
+
+    while ``; do
+        echo -n "$1?[y/N] "
+        read ans
+
+        if [ ".$ans" = ".y" ]; then
+            return 0
+        elif [ ".$ans" = ".n" ]; then
+            return 1
+        else
+            continue
+        fi
+    done
+}
+
+for b in $(git branch | awk '{print $NF}'); do
+
+    if exist $remote/$b; then
+        :
+    else
+        log $Brown not-found: $remote/$b
+        continue
+    fi
+
+    if is_acenstor_of $b $remote/$b; then
+
+        # if not the same
+        if is_acenstor_of $remote/$b $b; then
+            :
+        else
+            log $Yellow ff-merge: $b "-->" $remote/$b
+            [ "$mode" = "force" ] \
+                || { [ "$mode" = "interactive" ] && confirm "fast-forward merge?"; } \
+                || continue
+            git update-ref refs/heads/$b $remote/$b
+        fi
+    else
+        if is_acenstor_of $remote/$b $b; then
+            log $Green ff-push: $b "-->" $remote/$b
+        else
+            log $Red diversed: $b " " $remote/$b
+        fi
+
+        if [ ".$verbose" = ".1" ]; then
+            git diff --stat --color $remote/$b $b
+        fi
+    fi
+done
+
+git branch -r \
+    | awk -v "remote=$remote" '{gsub("^"remote"/", "", $1 ); print $1}' \
+    | grep -v "^HEAD$" \
+    | \
+    while read b; do
+
+        if git rev-parse $b >/dev/null 2>/dev/null; then
+            # exists locally
+            :
+        else
+            log $Brown "not-in-local:" "$remote/$b"
+        fi
+
+    done

@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# remove all
+xattr -c "$1"
+
+# show all attributes and remove them one by one
+# xattr $1 | while read a; do
+#     xattr -d $a $1
+# done

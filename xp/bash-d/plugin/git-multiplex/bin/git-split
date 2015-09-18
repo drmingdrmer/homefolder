@@ -1,0 +1,179 @@
+#!/bin/bash
+
+# * 358aee4 (HEAD) fix css
+# |  css/site.css | 13 ++++++-------
+# |
+# * f869f40 init site
+# |  html/index.html    | 12 ++++++------
+# |  html/header.html   | 34 +++++++++++++++++-----------------
+# |  css/site.css       | 61 +++++++++++++++++++++++++++++++++++++++----------------------
+# |
+# * 82554be fix doc of Build
+#
+#
+# # to split folder html into a separate branch:
+# > git-split 82554be..HEAD -- html/
+#
+#
+# *   948149a Merge commit 'aa76f4de5be5ddbb2908ba145fea5697c7baf728' into HEAD
+# |\
+# | * aa76f4d init site
+# | |  html/index.html  | 12 ++++++------
+# | |  html/header.html | 34 +++++++++++++++++-----------------
+# | |
+# * | 088e903 fix css
+# | |  css/site.css | 13 ++++++-------
+# | |
+# * | 0b606c2 init site
+# | |  css/site.css | 61 +++++++++++++++++++++++++++++++++++++++----------------------
+# |/
+# * 82554be fix doc of Build
+
+usage()
+{
+    echo 'split files out of commits to build a new branch'
+    echo 'git-split [ -b <to-new-branch> ] <from>..[<to>] -- <fns>'
+    exit 1
+}
+
+mes()
+{
+    local Brown="$(tput setaf 3)"
+    local NC="$(tput sgr0)"
+    echo $Brown"$@"$NC
+}
+
+githash()
+{
+    git log -n1 --format="%H" $1
+}
+
+new_branch=
+while getopts "b:" opname; do
+    case $opname in
+        b)
+            new_branch=$OPTARG
+            ;;
+        [?])
+            usage
+            ;;
+    esac
+done
+shift $(($OPTIND - 1))
+
+if [ ".$2" != ".--" ]; then
+    usage
+fi
+
+range=$1
+shift
+shift
+fns="$@"
+
+base=${range%..*}
+if [ ".$base" = ".$range" ]; then
+    usage
+fi
+
+tip=${range#*..}
+if [ ".$tip" = "." ]; then
+    tip=HEAD
+fi
+
+head=$(git symbolic-ref --short HEAD 2>/dev/null)
+if [ ".$head" = "." ]; then
+    head=$(git rev-parse HEAD)
+fi
+
+tip_hash=$(githash $tip)
+new_hash=
+merged_hash=
+
+
+extract()
+{
+    for c in $(git log --reverse $base..$tip_hash --format="%H" -- $fns); do
+
+        mes "== to pick $fns from:"
+        git log --color --stat --decorate --pretty=oneline --abbrev-commit -M -n1 $c
+
+        mes=$(git log -n1 --format="%B" $c)
+
+        p=$(git diff $c~ $c -- $fns)
+        git apply --index <<<"$p"
+
+        git st
+
+        git commit -am "$mes"
+    done
+}
+
+build_new_branch()
+{
+    git checkout --detach $base \
+        && mes "== build new branch ==" \
+        && extract \
+        && new_hash=$(githash) \
+        && \
+        if [ ".$new_branch" != "." ]; then
+            git branch "$new_branch"
+        fi \
+        && mes "== new branch $new_branch hash is $new_hash == "
+}
+
+discard_changes()
+{
+    local script="git rm -r -f $fns 2>/dev/null; git checkout $base -- $fns 2>/dev/null; git st >/dev/null"
+
+    git checkout --detach $tip_hash \
+        && mes "== discard from $tip ==" \
+        && git filter-branch -f --prune-empty --tree-filter "$script" $base..HEAD \
+        && [ $(git log $base..HEAD -- "$fns" | wc -l | awk '{print $1}') = 0 ] \
+        && mes "== confirmed that no changes through $base..HEAD"
+}
+
+merge_them()
+{
+    mes "== merge splitted branch back to $tip ==" \
+        && \
+        if [ ".$new_branch" = "." ]; then
+            git merge --commit --no-edit --no-ff $new_hash
+        else
+            git merge --commit --no-edit --no-ff $new_branch
+        fi \
+        && merged_hash=$(githash) \
+        && mes "merged hash: $merged_hash"
+}
+
+is_same_as_original()
+{
+    mes "== diff with original $tip ==" \
+        && git diff $tip
+}
+
+update_tip_ref()
+{
+    git update-ref -d refs/original/HEAD
+
+    # if it is a reference(branch, tag), not hash or HEAD
+
+    if [ ".$tip" = ".HEAD" ]; then
+        git update-ref $tip $merged_hash \
+            && mes "== $tip set to $merged_hash"
+    fi
+
+    if git rev-parse refs/heads/$tip >/dev/null 2>/dev/null;  then
+        git update-ref refs/heads/$tip $merged_hash \
+            && mes "== $tip set to $merged_hash"
+    fi
+
+}
+
+mes "split $fns from $range" \
+    && build_new_branch \
+    && discard_changes \
+    && merge_them \
+    && is_same_as_original \
+    && update_tip_ref \
+    && git co $tip >/dev/null 2>/dev/null \
+    && mes "== Done =="

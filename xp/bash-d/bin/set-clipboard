@@ -1,0 +1,15 @@
+#!/bin/sh
+
+
+# read from stdin
+os=`uname -s`
+case $os in
+    Darwin)
+        pbcopy
+        ;;
+
+    # Linux or *
+    *)
+    { which xclip >/dev/null 2>/dev/null && xclip -i -selection clipboard; }
+        ;;
+esac

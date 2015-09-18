@@ -1,0 +1,4 @@
+#!/bin/bash
+VBoxManage setextradata "centos5.1" "VBoxInternal/Devices/pcnet/0/LUN#0/Config/guestssh/Protocol" TCP
+VBoxManage setextradata "centos5.1" "VBoxInternal/Devices/pcnet/0/LUN#0/Config/guestssh/GuestPort" 22
+VBoxManage setextradata "centos5.1" "VBoxInternal/Devices/pcnet/0/LUN#0/Config/guestssh/HostPort" 2222

@@ -1,0 +1,39 @@
+#!/bin/sh
+
+if test -z "$1" || test "-h" = "$1" || test "--help" = "$1"
+then
+    name=${0##*/}
+    echo "$name <branch>|<rev-list>..." >&2
+    exit 0
+fi
+
+remotemode=0
+while test -n "$1"
+do
+    case $1 in
+        -r)
+            shift
+            remotemode=1
+            ;;
+        *)
+            break
+            ;;
+    esac
+done
+
+base=
+if test "$remotemode" = "1"
+then
+    branchname="$1"
+    remote=$(git config --get branch.${branchname}.remote)
+    if test -z "$remote"
+    then
+        echo "remote not found for $branchname" >&2
+        exit 1
+    fi
+
+    base=$remote/$branchname
+fi
+
+sedscript="'"'/^$/,$d'"'"
+GIT_EDITOR='f(){ cat $1 | sed '$sedscript'; }; f' git rebase --interactive --autosquash $base "$@"

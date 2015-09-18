@@ -1,0 +1,27 @@
+PTRACE(2)                  Linux Programmer’s Manual                 PTRACE(2)
+
+NAME
+       ptrace - process trace
+
+SYNOPSIS
+       #include <sys/ptrace.h>
+
+       long ptrace(enum __ptrace_request request, pid_t pid,
+                   void *addr, void *data);
+
+DESCRIPTION
+       The ptrace() system call provides a means by which a parent process may observe and control the execution of another process, and examine and change its
+       core image and registers.  It is primarily used to implement breakpoint debugging and system call tracing.
+
+       The parent can initiate a trace by calling fork(2) and having the resulting child do a PTRACE_TRACEME, followed (typically)  by  an  exec(3).   Alterna-
+       tively, the parent may commence trace of an existing process using PTRACE_ATTACH.
+
+       While  being traced, the child will stop each time a signal is delivered, even if the signal is being ignored.  (The exception is SIGKILL, which has its
+       usual effect.)  The parent will be notified at its next wait(2) and may inspect and modify the child process while  it  is  stopped.   The  parent  then
+       causes the child to continue, optionally ignoring the delivered signal (or even delivering a different signal instead).
+
+       When  the  parent  is  finished  tracing,  it  can terminate the child with PTRACE_KILL or cause it to continue executing in a normal, untraced mode via
+       PTRACE_DETACH.
+
+       The value of request determines the action to be performed:
+

@@ -1,0 +1,57 @@
+#!/bin/bash
+
+
+flags=${1-}
+
+if [ ".$flags" == ".-" ]; then
+    exit 0
+fi
+
+_out=""
+nr_context=0
+has_context_specified=0
+
+for i in $(seq 0 ${#flags}); do
+    k=${flags:$i:1}
+    case $k in
+        a) _out="$_out --all"
+            ;;
+        b) _out="$_out --simplify-by-decoration"
+            ;;
+        d) _out="$_out --date-order"
+            ;;
+        f) _out="$_out --first-parent"
+            ;;
+        i) _out="$_out --ignore-all-space"
+            ;;
+        n) _out="$_out --name-only"
+            ;;
+        r) _out="$_out --relative"
+            ;;
+        t) _out="$_out --stat"
+            ;;
+        W) _out="$_out --word-diff=color"
+            ;;
+        w) _out="$_out --color-words=[[:alpha:]]+|[^[:space:]]"
+            ;;
+
+        [0123456789])
+            has_context_specified=1
+            let nr_context=nr_context*10+k
+            ;;
+
+        "")
+            ;;
+        *)
+            echo $flags
+            exit 0
+            ;;
+    esac
+
+done
+
+if [ "$has_context_specified" = "1" ]; then
+    _out="$_out --unified=$nr_context"
+fi
+
+echo "$_out"

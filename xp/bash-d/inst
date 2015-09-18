@@ -1,0 +1,9 @@
+#!/bin/bash
+
+
+base="${BASH_SOURCE[0]}";
+while [ -h "$base" ]; do base=`readlink "${base}"`; done
+base="$( cd -P "$( dirname "$base" )" && pwd )"
+
+cd ~
+. $base/git.inst

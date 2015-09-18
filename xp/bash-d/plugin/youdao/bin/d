@@ -1,0 +1,57 @@
+#!/usr/bin/env python
+
+import sys
+import json
+import urllib
+import urllib2
+
+code_mes = {
+        20: 'word to long',
+        30: 'translate error',
+        40: 'can\'t support this language',
+        50: 'key failed',
+        60: 'do\'t have this word',
+}
+
+# http://fanyi.youdao.com/openapi
+api = 'http://fanyi.youdao.com/openapi.do' \
+        + '?keyfrom=drmingdrmer' \
+        + '&key=519053961' \
+        + '&type=data' \
+        + '&doctype=json' \
+        + '&version=1.1' \
+        + '&q='
+
+def fanyi(argv):
+
+    argv = ' '.join(argv)
+
+    if type(argv) == type(u''):
+        argv = argv.encode('utf-8')
+
+    argv = urllib.quote_plus(argv)
+
+    content = urllib2.urlopen(api + argv).read()
+    cont = json.loads(content)
+
+    code = cont['errorCode']
+    if code == 0:
+
+        basic = cont.get('basic', {})
+        u = basic.get('us-phonetic', '-')
+
+        print '   ', cont['query'], cont['translation'][0], '[', u, ']'
+
+        for ee in basic.get('explains', []):
+            print '   ', ee
+
+        for ww in cont.get('web', []):
+            print ww['key'], ':'
+            for v in ww['value']:
+                print '   ', v
+
+    else:
+        print code_mes.get(code, 'unknown error: ' + str(code))
+
+if __name__ == '__main__':
+    fanyi(sys.argv[1:])

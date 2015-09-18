@@ -1,0 +1,2 @@
+#!/bin/sh
+_tunnel $1 ln-us.veryweb.me

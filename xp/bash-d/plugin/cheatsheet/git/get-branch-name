@@ -1,0 +1,5 @@
+# echo "master"
+git symbolic-ref --short HEAD
+
+# echo "refs/heads/master"
+git rev-parse --symbolic-full-name HEAD

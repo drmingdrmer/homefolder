@@ -1,0 +1,4 @@
+#!/bin/sh
+
+maxdepth=${2-2}
+find -maxdepth $maxdepth -type f -name $1

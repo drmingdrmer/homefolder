@@ -1,0 +1,7 @@
+git add -A .
+
+# equivilent to with old git:
+
+git add .
+git add -u .
+

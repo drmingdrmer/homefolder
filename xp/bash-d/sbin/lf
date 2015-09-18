@@ -1,0 +1,12 @@
+#!/bin/sh
+
+concat_all () {
+    local x
+    while [ "x$1" != "x" ]; do
+        x=$x*$1
+        shift
+    done
+    echo "$x"
+}
+
+ls -l $(concat_all $*)*

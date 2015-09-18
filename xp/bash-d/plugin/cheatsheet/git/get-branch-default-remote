@@ -1,0 +1,1 @@
+git config --get branch.$branchname.remote

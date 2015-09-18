@@ -1,0 +1,9 @@
+#!/bin/bash
+
+enc=${LANG#*.}
+t=`echo $*|sed "s/ /%20/g"`
+curl -A "Mozilla/5.0" "http://translate.google.com/translate_a/t?client=t&text=$t&sl=en&tl=zh-CN" 2>/dev/null | iconv -f "UTF-8" -t $enc 
+echo
+
+# echo 1>> ~/bash.xp/word/$1
+

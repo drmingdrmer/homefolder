@@ -1,0 +1,4 @@
+#!/bin/bash
+
+
+w3m -dump "http://dict.cn/search.php?q=$1" | less

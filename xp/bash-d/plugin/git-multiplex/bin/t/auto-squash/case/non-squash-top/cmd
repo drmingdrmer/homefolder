@@ -1,0 +1,1 @@
+git auto-squash -t -f r..master

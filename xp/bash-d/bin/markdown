@@ -1,0 +1,23 @@
+#!/usr/bin/env php
+<?php
+
+$base = getenv( "XPBASE" );
+set_include_path( "$base/plugin/php-markdown.michelf" );
+
+require_once 'Michelf/Markdown.inc.php';
+use \Michelf\Markdown;
+
+$files = array_slice( $argv, 1 );
+
+foreach ($files as $fn) {
+    echo "Compiling: $fn\n";
+
+    $my_text = file_get_contents( "$fn" );
+    $my_html = Markdown::defaultTransform($my_text);
+
+    $newfn = explode( ".", $fn );
+    $newfn = array_slice( $newfn, 0, -1 );
+    $newfn = implode( ".", $newfn );
+    $newfn = $newfn . ".html";
+    file_put_contents( $newfn, $my_html );
+}

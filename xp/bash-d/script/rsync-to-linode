@@ -1,0 +1,11 @@
+#!/bin/sh
+
+dst=106.187.101.146::base
+
+rsync -Rauv ~/./bash.xp \
+    --delete \
+    --exclude=.svn \
+    --exclude=.git* \
+    --exclude=*.pyc \
+    --exclude=.Sync* \
+    "$dst/"

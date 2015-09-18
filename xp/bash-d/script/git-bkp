@@ -1,0 +1,8 @@
+#!/bin/sh
+
+src=$1
+dst=$2
+
+git clone --bare $src $dst
+cd dst
+git config remote.origin.fetch 'refs/heads/*:refs/heads/*'

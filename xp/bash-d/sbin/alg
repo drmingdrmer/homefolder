@@ -1,0 +1,9 @@
+#!/bin/sh
+
+sep=${1- }
+awk -F"$sep" '{
+for (i=1; i<=NF; i++){
+    printf("%-12s", $i);
+}
+printf("\n");
+}'

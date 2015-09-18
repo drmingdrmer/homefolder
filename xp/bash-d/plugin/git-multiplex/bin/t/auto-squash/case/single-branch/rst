@@ -1,0 +1,18 @@
+*   51ebd8d (HEAD, master) Merge commit 'c458576'
+|\
+| * c458576 (br) fixup! again
+* |   a6e80c4 Merge commit 'd6ab8d8'
+|\ \
+| |/
+| * d6ab8d8 fixup!
+* |   ef3efc0 Merge commit '8c1d007'
+|\ \
+| |/
+| * 8c1d007 add x
+* | a6910e2 (tag: r, refs/original/refs/heads/single) fixup! fixup! ok
+* | 75275ed fixup! ok
+* | 2e85eb7 ok
+|/
+| * b84a6ce (single) ok
+|/
+* b66353d init

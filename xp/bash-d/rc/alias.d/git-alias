@@ -1,0 +1,26 @@
+#!/bin/sh
+
+entries=$(git config --global --list  | grep "^alias" | awk -F= '{print $1}' | cut -c 7-)
+
+for e in $entries; do
+    mk_alias ".$e" "git $e"
+done
+
+
+__git_list_all_commands ()
+{
+    local i IFS=" "$'\n'
+    for i in $(git help -a|egrep '^  [a-zA-Z0-9]'); do
+        case $i in
+            *--*)
+                : helper pattern;;
+            *)
+                echo $i;;
+        esac
+    done
+}
+
+for cmd in $(__git_list_all_commands); do
+    mk_alias ".$cmd" "git $cmd"
+done
+

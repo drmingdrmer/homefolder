@@ -1,0 +1,28 @@
+#!/bin/bash
+
+dochrome-mac()
+{
+     /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --enable-udd-profiles --user-data-dir=/Users/$USER/Library/Application\ Support/Google/Chrome$1  2>&1 &
+}
+
+dochrome-linux()
+{
+    local ch=
+    for ch in /usr/bin/chromium-browser /opt/google/chrome/google-chrome; do
+        if [ -f $ch ]; then
+            break
+        fi
+    done
+    echo $ch
+    $ch --enable-udd-profiles --user-data-dir=~/.config/google-chrome$1 %U 2>%1 &
+}
+
+if [[ $(uname) = "Linux" ]]; then
+    if [[ ! -z "${1}" ]]; then
+        profilename="-${1}"
+    fi
+    dochrome-linux "${profilename}" > /dev/null
+else
+    dochrome-mac "${1}" > /dev/null
+fi
+

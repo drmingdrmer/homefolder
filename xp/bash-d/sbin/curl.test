@@ -1,0 +1,10 @@
+#!/bin/sh
+
+i=0
+while [ $i -ne 1000 ]
+do
+    #echo $i
+    curl -o /dev/null -s -w %{time_connect}:%{time_starttransfer}:%{time_total} "http://blogcnfv5.sinajs.cn/cnf5?uid=1190363061&varname=var"
+    echo
+    i=$(( $i + 1 ))
+done

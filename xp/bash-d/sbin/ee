@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# encryption edit
+
+fn=$1
+fn=${fn%.des3}.des3
+[ -f "$fn" ] || touch $fn
+
+openssl des3 -d -in $fn \
+    | vim - -c ':set buftype=nofile' -c ':nnoremap zz :w !cat \| openssl des3 > '$fn'<CR>:qa!<CR>'
+

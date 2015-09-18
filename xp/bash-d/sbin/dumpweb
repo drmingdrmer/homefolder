@@ -1,0 +1,49 @@
+#!/bin/sh
+
+ops=
+
+# squeeze multi lines
+ops="$ops -s"
+
+ops="$ops -no-graph"
+
+# suitable for mobile
+ops="$ops -cols 4096"
+
+
+curl -v -s $1 > .source 2> .head
+
+charset=`cat .head | fgrep '< Content-Type: ' | fgrep 'charset' | awk -F= '{print $NF}' | sed 's/ //g'`
+
+if [ "x$charset" = "x" ]; then
+    if iconv -f "utf-8" .source -o .source_enc; then
+        echo > /dev/null
+    elif iconv -f gb18030  .source -o .source_enc; then
+        echo > /dev/null
+    elif iconv -f gbk .source -o .source_enc; then
+        echo > /dev/null
+    elif iconv -f gb2312 .source -o .source_enc; then
+        echo > /dev/null
+    else
+        cp .source .source_enc
+    fi
+
+else
+    iconv -f $charset .source -o .source_enc
+fi
+
+
+title=`cat .source_enc | fgrep '<title>' | sed 's/.*<title>//; s/<\/title>.*//' | sed 's/^ *//; s/ *$//' | sed 's/[^a-zA-Z0-9_]/_/g'`
+title=$title.txt
+
+
+# directly redirecting content to unicode filename get some chars lost
+echo "$1" > .tmp
+w3m -T text/html -dump $ops $1 | sed 's/━━━━*/----------/g' | sed 's/            */        /g' >> .tmp
+mv .tmp "$title"
+
+
+rm .source .source_enc .head
+
+
+echo $title

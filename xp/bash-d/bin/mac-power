@@ -1,0 +1,79 @@
+#!/bin/sh
+
+
+os_detect()
+{
+    case $(uname -s) in
+        Linux)
+            os=linux ;;
+        *[bB][sS][dD])
+            os=bsd ;;
+        Darwin)
+            os=mac ;;
+        *)
+            os=unix ;;
+    esac
+    echo $os
+}
+
+usage()
+{
+    local name=${0##*/}
+    cat >&2 <<-END
+$name <cmd>
+
+cmd:
+    is-battery          exit code 0 if using battery.
+    is-ac-power         exit code 0 if using ac power.
+END
+
+}
+
+die()
+{
+    echo "$@" >&2
+    exit 1
+}
+
+init()
+{
+    cmd=$1
+}
+
+ac_power_connection()
+{
+    #  Connected: (Yes|No)
+    system_profiler SPPowerDataType \
+        | sed '1,/^ *AC Charger Information:/d' \
+        | grep Connected:
+}
+
+
+main()
+{
+    local os=$(os_detect)
+
+    if test "$os" != "mac"
+    then
+        die 'no mac but: ' $os
+    fi
+
+    case $cmd in
+
+        is-battery)
+            ac_power_connection | grep -q No
+            ;;
+
+        is-ac-power)
+            ac_power_connection | grep -q Yes
+            ;;
+
+        *|-h|--help)
+            usage
+            die
+            ;;
+    esac
+}
+
+init "$@" \
+    && main

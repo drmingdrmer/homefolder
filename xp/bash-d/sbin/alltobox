@@ -1,0 +1,25 @@
+#!/bin/bash
+
+. $HOME/bash.xp/sbin/util.sh
+
+single_proc alltobox
+
+mkdir -p _inboxnet
+
+flist=`find -type f`
+IFS='
+'
+for fn in $flist;do
+    if [ "x$fn" != "x_inboxnet" ];then
+        sh $HOME/bash.xp/sbin/filetobox "$fn" &
+    fi
+done
+
+wait
+
+
+for fn in $flist;do
+    if [ "x$fn" != "x_inboxnet" ];then
+        mv "$fn" _inboxnet
+    fi
+done

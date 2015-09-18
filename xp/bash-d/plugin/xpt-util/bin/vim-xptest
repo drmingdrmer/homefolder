@@ -1,0 +1,2 @@
+#!/bin/sh
+vim --cmd 'let g:xptemplate_debug_log = "./xpt-debug.log"' -c 'setf xptest'

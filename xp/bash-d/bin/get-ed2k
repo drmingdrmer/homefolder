@@ -1,0 +1,8 @@
+#!/bin/sh
+
+url=$1
+curl "$url" \
+    | grep "ed2k" \
+    | sed 's/ed2k/ ed2k/g' \
+    | awk '{for ( i=1; i<=NF; i++ ) { gsub("'"'"'", "", $i); print $i; }}' \
+    | grep ed2k

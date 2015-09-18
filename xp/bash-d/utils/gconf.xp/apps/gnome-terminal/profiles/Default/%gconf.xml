@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<gconf>
+	<entry name="title" mtime="1250361193" type="string">
+		<stringvalue>Terminal</stringvalue>
+	</entry>
+	<entry name="word_chars" mtime="1251979989" type="string">
+		<stringvalue>-A-Za-z0-9,./?%&amp;#:_=+@~</stringvalue>
+	</entry>
+	<entry name="scrollback_lines" mtime="1251979989" type="int" value="5120"/>
+	<entry name="background_darkness" mtime="1251979989" type="float" value="0.76801800727844238"/>
+	<entry name="background_image" mtime="1251979989" type="string">
+		<stringvalue>/home/drdrxp/ricewave.gif</stringvalue>
+	</entry>
+	<entry name="background_type" mtime="1251979989" type="string">
+		<stringvalue>transparent</stringvalue>
+	</entry>
+	<entry name="scrollbar_position" mtime="1251979989" type="string">
+		<stringvalue>hidden</stringvalue>
+	</entry>
+	<entry name="visible_name" mtime="1251979989" type="string">
+		<stringvalue>Default</stringvalue>
+	</entry>
+	<entry name="alternate_screen_scroll" mtime="1251979989" type="bool" value="true"/>
+	<entry name="font" mtime="1251979989" type="string">
+		<stringvalue>FixedsysTTF Semi-Bold 11</stringvalue>
+	</entry>
+	<entry name="use_system_font" mtime="1251979989" type="bool" value="false"/>
+	<entry name="allow_bold" mtime="1251979989" type="bool" value="false"/>
+	<entry name="background_color" mtime="1251979989" type="string">
+		<stringvalue>#000000000000</stringvalue>
+	</entry>
+	<entry name="foreground_color" mtime="1251979989" type="string">
+		<stringvalue>#AAAAAAAAAAAA</stringvalue>
+	</entry>
+	<entry name="use_theme_colors" mtime="1251979989" type="bool" value="false"/>
+	<entry name="silent_bell" mtime="1251979989" type="bool" value="true"/>
+	<entry name="default_show_menubar" mtime="1251979989" type="bool" value="false"/>
+	<entry name="palette" mtime="1251979989" type="string">
+		<stringvalue>#000000000000:#A60038F738F7:#00007DEF0000:#9BA169EB3686:#5CE2677DBD64:#9C7B497B9C7B:#36064D275564:#AAAAAAAAAAAA:#555555555555:#DBF27AC37AC3:#871CFB4B871C:#FFFFFFFF1AD7:#69399E65E491:#D3FE65EDD3FE:#22B7C8A3C8A3:#FFFFFFFFFFFF</stringvalue>
+	</entry>
+</gconf>

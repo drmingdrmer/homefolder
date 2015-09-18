@@ -1,0 +1,64 @@
+#!/bin/sh
+
+main()
+{
+    local root=$(repo_root)
+    [ "x$root" = "x" ] && die 'looking for git repo root'
+
+    local conf_fn=./.gitsubrepo
+
+    cd "$root"
+
+    local prefix=
+    local url=
+    local ref=
+    local fetched_hash=
+    local status=prefix
+    while read a b; do
+        if [ "x$a" = "x" ]; then
+            continue
+        fi
+
+        if [ "$status" = 'prefix' ]; then
+            prefix="$a"
+            status=url_and_ref
+        else
+            status=prefix
+
+            url="$a"
+            ref="$b"
+
+            # git fetch "$url" "$ref"
+            # fetched_hash=$(get_hash FETCH_HEAD)
+            if [ -d "$prefix" ]; then
+                git subtree pull --squash \
+                    --message="Merge squashed $url $ref" \
+                    --prefix "$prefix" "$url" "$ref" || die merge
+            else
+                git subtree add --squash \
+                    --message="Add squashed $url $ref" \
+                    --prefix "$prefix" "$url" "$ref" || die add
+            fi
+
+        fi
+
+    done<"$conf_fn"
+}
+
+get_hash()
+{
+    git rev-parse $1
+}
+
+repo_root()
+{
+    git rev-parse --show-toplevel
+}
+
+die()
+{
+    echo "Failure $@" >&2
+    exit 1
+}
+
+main

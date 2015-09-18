@@ -1,0 +1,12 @@
+#!/bin/sh
+
+flags=$1
+[ ".$flags" != "." ] && shift
+
+git log --color \
+    --graph \
+    --decorate \
+    --pretty=oneline \
+    --abbrev-commit \
+    -M \
+    $(_git_xp_interrept_flag $flags) "$@"

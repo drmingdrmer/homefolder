@@ -1,0 +1,8 @@
+#!/bin/bash
+
+echo $1
+w3m -dump "http://dict.cn/mini.php?q=$1" 2>/dev/null
+
+
+# curl "http://dict.cn/$1.htm" 2>/dev/null | grep mut_jies | iconv -f GBK -t $enc 
+

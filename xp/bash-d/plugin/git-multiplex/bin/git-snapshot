@@ -1,0 +1,42 @@
+#!/bin/sh
+
+cmd=$1
+
+if [ ".$cmd" = ".save" ]; then
+
+    index_hash=$(git write-tree)
+
+    # add modified file to index and read index tree
+    git add -u
+    working_hash=$(git write-tree)
+
+    # restore index tree
+    git read-tree $index_hash
+
+    echo $index_hash $working_hash
+
+elif [ ".$cmd" = ".load" ]; then
+
+    index_hash=$2
+    working_hash=$3
+
+    if [ ".$index_hash" = "." ] || [ ".$working_hash" = "." ]; then
+        echo "$0 load <index_hash> <working_hash>" >&2
+        exit 1
+    fi
+
+    # First create a temp commit to restore working tree.
+    #
+    # git-read-index to index and git-reset does not work because deleted file in
+    # index does not apply to working tree.
+
+    `` \
+        && working_commit=$(echo "x" | git commit-tree $working_hash) \
+        && git reset --hard $working_commit \
+        && git reset --soft ORIG_HEAD \
+        && git read-tree $index_hash
+else
+    echo "invalid commnd: $cmd" >&2
+    exit 1
+fi
+

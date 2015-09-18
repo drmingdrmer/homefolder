@@ -1,0 +1,9 @@
+vim.xp/addins.v7/
+.svn/
+.git/
+.hg/
+*gz
+*.xpt.vimc
+test.page*
+
+

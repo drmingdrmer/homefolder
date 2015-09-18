@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# find local branches that its upstream has been merged into <$1>
+
+tip=$1
+
+# find out-of-date local branches
+branches=$(git remote show origin | grep 'local out of date' | awk '{print $1}')
+
+for br in $branches; do
+    if git branch -a --contains origin/$br | grep -q "remotes/origin/${tip}"; then
+        echo $br
+        git l --first-parent --simplify-by-decoration $br origin/$br -n10
+    fi
+done

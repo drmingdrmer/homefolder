@@ -1,0 +1,9 @@
+#!/bin/bash
+
+icol=${1-1}
+if [ "x$2" == "x" ]; then
+    arg_sep=""
+else
+    arg_sep="-F$2"
+fi
+awk $arg_sep -v i=$icol '{print $(i)}'

@@ -1,0 +1,5 @@
+#!/bin/sh
+
+cd ~
+rsync -Rauv --delete "106.187.101.146::base/./bash.xp" ~/./
+

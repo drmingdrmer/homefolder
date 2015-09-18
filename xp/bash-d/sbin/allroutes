@@ -1,0 +1,5 @@
+#!/bin/sh
+
+
+/sbin/route -n | awk '{ print $2 }' | sort | uniq | grep "^[1-9]"
+

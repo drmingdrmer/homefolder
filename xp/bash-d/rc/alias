@@ -1,0 +1,115 @@
+#!/bin/bash
+
+mk_alias()
+{
+  Name=$1
+  Value=$2
+
+  alias "$Name"="$Value"
+}
+
+
+mk_alias xd "dict "
+mk_alias xc "bc -l <<< "
+
+if [ "$OS" == "mac" ]; then
+    mk_alias o "open"
+    mk_alias xv "open -a finder ./"
+    _xp_ls_color_opt="-G"
+elif [ "$OS" == "linux" ]; then
+    mk_alias o "gnome-open"
+    mk_alias xv "nautilus --browser ./"
+    _xp_ls_color_opt="--color=auto"
+fi
+
+# to hard directory hierarchy, which means, discard all symbol links
+mk_alias .q "cd -P ."
+
+mk_alias cgrep "grep --color=always "
+
+# some more ls aliases
+# use "/bin/ls" but not "ls" for compatibiliy with "ls" alias in git-sh
+mk_alias _xp_ls_ "/bin/ls $_xp_ls_color_opt "
+mk_alias lS  "_xp_ls_ -lS"
+mk_alias ll  "_xp_ls_ -lF"
+mk_alias lh  "_xp_ls_ -lh"
+mk_alias la  "_xp_ls_ -lA"
+mk_alias lt  "_xp_ls_ -ltr"
+mk_alias lta "_xp_ls_ -ltr --time=a"
+mk_alias l   "_xp_ls_ -CF"
+
+mk_alias xpg "ps -ef | fgrep -v grep | grep "
+mk_alias xpag "ps aux | fgrep -v grep | grep "
+mk_alias xpfg "ps auxf | fgrep -v grep | grep -C5"
+mk_alias xhg "history | grep "
+mk_alias xeg "env | grep "
+mk_alias xtl "telnet localhost "
+
+mk_alias u  'cd .. '
+mk_alias uu 'cd ../.. '
+mk_alias u2 'cd ../.. '
+mk_alias u3 'cd ../../.. '
+mk_alias u4 'cd ../../../.. '
+mk_alias u5 'cd ../../../../.. '
+mk_alias cb 'cd -'
+
+
+mk_alias mkdir 'mkdir -p '
+
+# svn
+mk_alias ignsvn "svn propedit svn:ignore --editor-cmd=vim "
+mk_alias addsvn "svn st | grep ^? | awk '{system(\"svn add \"\$2)}'"
+mk_alias asvn   "svn add --depth=empty "
+mk_alias rmsvn  "svn st | grep ^! | awk '{system(\"svn rm \"\$2)}'"
+mk_alias msvn   "svn st | grep -v '^[?]'"
+
+# curl
+mk_alias xput     "curl -v sandbox2.sinastorage.com/xp/ -T"
+
+mk_alias h1 " head -n1 "
+
+# space separated
+mk_alias c0 "c 0"
+mk_alias c1 "c 1"
+mk_alias c2 "c 2"
+mk_alias c3 "c 3"
+mk_alias c4 "c 4"
+mk_alias c5 "c 5"
+mk_alias c6 "c 6"
+mk_alias c7 "c 7"
+mk_alias c8 "c 8"
+mk_alias c9 "c 9"
+
+
+mk_alias xh "l=\$PWD"
+
+# SAE support
+mk_alias am "php am.php"
+mk_alias amu "am upload -f0 -v1 -p 123qwe -n"
+mk_alias am2 "am upload -f0 -v2 -p 123qwe -n"
+mk_alias amd "am download -f0 -v1 -p 123qwe -n"
+
+mac_vim_folder="/Applications/MacPorts/MacVim.app/Contents/MacOS"
+mac_vim="$mac_vim_folder/Vim"
+mac_macvim="$mac_vim_folder/MacVim"
+mk_alias mvim "$mac_vim -u ~/.vimrc"
+mk_alias mmvim "$mac_macvim -u ~/.vimrc 2>/dev/null"
+
+mk_alias vim "vim -u ~/.vimrc "
+mk_alias gvim "gvim -u ~/.vimrc 2>/dev/null"
+
+mk_alias VE "vim -c VE\ ."
+
+# the system vim
+mk_alias vi '/usr/bin/vim -u ~/.vimrc'
+mk_alias gvi '/usr/bin/gvim -u ~/.vimrc'
+
+mk_alias xgatewway 'netstat -nr | grep default | awk "{print \$2}"'
+
+mk_alias lx "lixian_cli.py"
+mk_alias lxd "lx download --continue --delete "
+
+# vdisk.py should be found in $PATH
+mk_alias vd 'python2.7 $(which vdisk.py) --user drdr.xp@gmail.com --pass $VDPASS'
+mk_alias vdls "vd --ls "
+mk_alias vdup "vd --upload "

@@ -1,0 +1,119 @@
+#!/bin/bash
+
+Brown="$(tput setaf 3)"
+Green="$(tput setaf 2)"
+Red="$(tput setaf 1)"
+NC="$(tput sgr0)" # No Color
+
+hsh() {
+    local tip=$1
+    git log -n1 --format="%h" $tip
+}
+
+sync() {
+    mes="gitbox commit all"
+    # old git does not add deleted file into index when 'git add .'
+    git add .
+    git add -u .
+    git commit -m "$mes" > /dev/null
+
+    git svn info > /dev/null \
+        && {
+            git svn rebase --quiet
+            [ "$(hsh HEAD)" == "$(hsh git-svn)" ] && ok && return 0;
+            git svn dcommit --quiet \
+                && ok svn || err svn
+        }
+
+    git svn info > /dev/null \
+        || {
+            git fetch origin --quiet \
+                && git rebase origin/master --quiet \
+                && git push origin master --quiet \
+                && ok fullsync || err fullsync
+        }
+}
+
+
+log()
+{
+    echo -e "$(_date) $@${NC} $(get_pwd)"
+}
+
+mes()
+{
+    log "$Brown $@"
+}
+
+ok() {
+    log "${Green}ok:    $@"
+}
+
+err() {
+    log "${Red}err:   $@"
+}
+
+_date() {
+    date +"%Y-%m-%d %H:%M:%S"
+}
+
+get_pwd() {
+    local _pwd=$(pwd)
+    local p=${1-$_pwd}
+    local home=$HOME
+    local stripped=${p#$home}
+    if [ ".$stripped" == ".$p" ]; then
+        :
+    else
+        stripped="~$stripped"
+    fi
+    echo -n "$stripped"
+}
+
+main() {
+    while ``; do
+        local conffn="${GITBOX_CONF_FN-$HOME/.gitbox.conf}"
+        if [ -f $conffn ]; then
+            while read path option; do
+                (
+                # change ~ to real home path
+
+                eval "p=$path"
+                echo path: "$p"
+
+                if [ ".$option" = ".fetchonly" ]; then
+
+                    cd "$p" && mes "$option" && git fetch --all --quiet \
+                        && ok fetch
+
+                elif [ ".$option" = ".fetchpush" ]; then
+
+                    cd "$p" && mes "$option" && git fetch --all --quiet \
+                        && ok fetch \
+                        || err fetch
+
+                    git push origin master --quiet \
+                        && ok push \
+                        || err push
+                else
+                    cd "$p" && sync
+                fi
+                ) &
+            done <$conffn
+            wait
+        else
+            echo "no conf file: $conffn"
+        fi
+
+        if mac-power is-battery
+        then
+            echo using battery.. sleep 10 minutes
+            sleep 60*10
+        else
+            sleep 20
+        fi
+    done
+}
+
+main
+

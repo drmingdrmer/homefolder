@@ -1,0 +1,22 @@
+#!/bin/bash
+
+usage()
+{
+    echo 'dicard changes of some files from a range of commits'
+    echo 'git discard from..to -- <fns>'
+    exit 1
+}
+
+if [ ".$2" != ".--" ]; then
+    usage
+fi
+
+range=$1
+shift
+shift
+fns="$@"
+
+base=${range%..*}
+
+script="git rm -f $fns 2>/dev/null; git checkout $base -- $fns 2>/dev/null; git st >/dev/null"
+git filter-branch -f --prune-empty --tree-filter "$script" $range

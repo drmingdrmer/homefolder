@@ -1,0 +1,80 @@
+#!/bin/sh
+
+
+
+XDateTime=$LightGreen[`date +%F\ $Red%T$Cyan:%9N`]
+XJob=
+XAct=
+
+xset()
+{
+    while [ $# -gt 1 ]; do
+        case $1 in
+            job)
+                XJob="$2"
+                ;;
+            act)
+                XAct="$2"
+                ;;
+            *)
+                :
+                ;;
+        esac
+        shift 2
+    done
+}
+
+xp_log()
+{
+  FD=$1
+  shift 1
+
+  clr=$1
+  shift 1
+
+  fmt=$1
+  shift 1
+
+
+  clr=$(eval "echo \$$clr")
+
+  printf "$XDateTime $NC-$Yellow$XJob$NC-$Blue$XAct$NC" >&$FD
+  printf "$clr $fmt\n$NC" $* >&$FD
+
+}
+xlog()
+{
+  fmt=$1
+  [ $# -lt 1 ] && other="" || { shift 1; other=$*; }
+
+  xp_log 1 NC "$fmt" $other
+}
+
+xstep()
+{
+  fmt=$1
+  [ $# -lt 1 ] && other="" || { shift 1; other=$*; }
+
+  xp_log 1 LightBlue "* Stp $fmt" $other
+
+}
+
+xok()
+{
+  fmt=$1
+  [ $# -lt 1 ] && other="" || { shift 1; other=$*; }
+
+  xp_log 1 LightGreen "* OK  $fmt" $other
+
+}
+
+xerr()
+{
+  fmt=$1
+  [ $# -lt 1 ] && other="" || { shift 1; other=$*; }
+
+  xp_log 1 LightRed "* Err $fmt" $other
+}
+
+# xlog "%x" 123
+# xerr "%x" 123

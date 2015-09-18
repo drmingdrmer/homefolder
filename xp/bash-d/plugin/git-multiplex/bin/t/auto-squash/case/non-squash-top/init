@@ -1,0 +1,20 @@
+*   3edc55a (HEAD, master) Merge branch 'br'
+|\
+| * 9a39697 (br) bla
+* |   51ebd8d Merge commit 'c458576'
+|\ \
+| |/
+| * c458576 fixup! again
+* |   a6e80c4 Merge commit 'd6ab8d8'
+|\ \
+| |/
+| * d6ab8d8 fixup!
+* |   ef3efc0 Merge commit '8c1d007'
+|\ \
+| |/
+| * 8c1d007 add x
+* | a6910e2 (tag: r, single) fixup! fixup! ok
+* | 75275ed fixup! ok
+* | 2e85eb7 ok
+|/
+* b66353d init

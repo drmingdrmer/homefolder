@@ -1,0 +1,21 @@
+#!/bin/sh
+
+. $HOME/bash.xp/script/rsyncbkp/sysconf
+
+mkdir -p $bkpconfdir || { echo "create '$bkpconfdir'"; exit 1; }
+
+[ ! -f $bkpconf ] && cat >$bkpconf <<-END
+bkpHome=$HOME
+bkpTargetDir=
+bkpNamePre=xpbkp
+END
+
+
+
+[ ! -f $bkpfilterFn ] && cat >$bkpfilterFn <<-END
+- .*.un~
+- .DS_Store
+END
+
+echo "conf:$bkpconf"
+echo "filter-list:$bkpfilterFn"

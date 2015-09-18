@@ -1,0 +1,2 @@
+#!/bin/bash
+socat UNIX-CONNECT:tt TCP-LISTEN:8888

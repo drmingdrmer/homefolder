@@ -1,0 +1,32 @@
+#!/bin/sh
+
+# while getopts "n:h:f:s:l:m:e:" opname; do
+#     case "$opname" in
+#         d) modDomain=$OPTARG ;;
+#         h) hash=$OPTARG ;;
+#         f) flist=$OPTARG ;;
+#         s) frontip=$OPTARG ;;
+#         l) logdir=$OPTARG ;;
+#         m) md5Mod=$OPTARG ;;
+#         e) existenceCheck=$OPTARG ;;
+#         [?]) usage; exit ;;
+#     esac
+# done
+
+EXCLUDED="fea.h264"
+
+currentBranch=$(git symbolic-ref HEAD 2>/dev/null )
+currentBranch=${currentBranch#refs/heads/}
+
+branches=`git branch | cut -c 3-  | grep -v "$EXCLUDED" `
+
+for b in $branches; do
+    # # backward compatibility
+    # if git branch --list --contains "$b" "$currentBranch" 2>/dev/null | grep -q "."; then
+
+    if git branch --contains "$b" 2>/dev/null | grep -q "\* $currentBranch"; then
+        :
+    else
+        echo $b
+    fi
+done

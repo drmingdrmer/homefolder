@@ -1,0 +1,2 @@
+#!/bin/sh
+_tunnel $1 ubuntu@54.203.14.164 ~/xp/keys/aws-oregon.pem

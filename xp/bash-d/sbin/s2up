@@ -1,0 +1,14 @@
+#!/bin/sh
+
+name=${2-t}
+url=http://sandbox.sinastorage.com/xp/$name
+curl -gT "$1" "$url"
+
+os=`uname -s`
+case $os in
+    Darwin) echo $url | pbcopy ;;
+    Linux) clp.py $url;;
+    *) clp.py $url;;
+esac
+
+echo $url

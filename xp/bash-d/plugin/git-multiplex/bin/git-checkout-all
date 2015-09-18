@@ -1,0 +1,11 @@
+#!/bin/sh
+
+
+rem=${1-origin}
+branches=$(git branch -r | awk '{print $1}' | grep $rem/ | grep -v '/HEAD' | awk -F/ '{print $2}')
+
+for b in $branches; do
+    echo $b
+    git checkout $b
+done
+

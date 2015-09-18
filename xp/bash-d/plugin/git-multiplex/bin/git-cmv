@@ -1,0 +1,56 @@
+#!/bin/sh
+
+usage(){
+    echo "Commit Move:"
+    echo "    move commit from its only belonging branch to other"
+    echo "    usage:"
+    echo "      git cmv <commit_to_move> <dest_branch>"
+    echo "    example:"
+    echo "      git cmv ab12345 dev"
+    echo ""
+    echo "    1111111(feature-x)                                ab12345(dev)"
+    echo "    |                                                 |"
+    echo "    ab12345  ddddddd(dev)  -->  1111111(feature-x)    ddddddd"
+    echo "    |       /                   |                    /"
+    echo "    0001111                     0001111"
+    echo "    ....                        ...."
+}
+
+ghash(){
+    local tip=${1-HEAD}
+    git log -n1 --format="%H" $tip
+}
+
+subj=$1
+subj_hash=$(ghash "$subj")
+dst=$2
+
+if [ ".$subj_hash" == "." ] || [ ".$subj_hash" == "." ]; then
+    echo commit to move is not found: "'$subj' '$subj_hash'"
+    usage
+    exit 1
+fi
+if [ ".$(ghash $dst)" == "." ]; then
+    echo dst branch is not found: "'$dst'"
+    usage
+    exit 1
+fi
+
+tip=$(git-binb $subj | grep -v "^remotes/")
+tip_hash=$(ghash $tip)
+
+if [ ".$tip_hash" == "." ]; then
+    echo can not find out which branch contains commit $subj, $subj_hash
+    usage
+    exit 1
+fi
+
+echo "move $subj from $tip to $dst"
+
+git checkout $subj_hash~ \
+    && { [ "$subj_hash" == "$tip_hash" ] || git cherry-pick $subj_hash..$tip_hash; } \
+    && new_tip_hash=$(ghash) \
+    && git checkout $tip \
+    && git reset --hard $new_tip_hash \
+    && git checkout $dst \
+    && git cherry-pick $subj_hash

@@ -1,0 +1,2 @@
+#!/bin/sh
+_tunnel $1 ln-jp-1.veryweb.me

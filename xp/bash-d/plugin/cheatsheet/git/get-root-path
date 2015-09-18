@@ -1,0 +1,4 @@
+git rev-parse --show-toplevel
+
+# to add all from top level
+git add -A :/

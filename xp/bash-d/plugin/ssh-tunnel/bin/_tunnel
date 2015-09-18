@@ -1,0 +1,9 @@
+#!/bin/sh
+
+local_port=$1
+host=$2
+key_path=${3-}
+if [ ".$key_path" != "." ]; then
+    key_path=" -i $key_path"
+fi
+while ``; do ssh -TCNv $key_path -D $local_port $host; sleep 1; done
