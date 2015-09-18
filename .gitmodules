@@ -1,20 +1,4 @@
-[submodule "xp/vcs/github-track"]
-	path = xp/vcs/github-track
-	url = git@github.com:drmingdrmer/github-track.git
-	branch = master
-[submodule "xp/vcs/xpdev"]
-	path = xp/vcs/xpdev
-	url = git@github.com:drmingdrmer/xpdev.git
-	branch = master
-[submodule "xp/vcs/bitbucket-track"]
-	path = xp/vcs/bitbucket-track
-	url = git@bitbucket.org:drmingdrmer/bitbucket-track.git
-	branch = master
 [submodule "xp/vcs/coding-track"]
 	path = xp/vcs/coding-track
 	url = git@git.coding.net:drmingdrmer/coding-track.git
-	branch = master
-[submodule "xp/vcs/sae-mgr"]
-	path = xp/vcs/sae-mgr
-	url = git@github.com:drmingdrmer/sae-mgr.git
 	branch = master
