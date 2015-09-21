@@ -2,6 +2,8 @@
 
 main()
 {
+    local match="$1"
+
     local root=$(repo_root)
     [ "x$root" = "x" ] && die 'looking for git repo root'
 
@@ -24,6 +26,9 @@ main()
             status=url_and_ref
         else
             status=prefix
+            if [ "x$match" != "x" ] && [ "x$prefix" != "x$match" ]; then
+                continue
+            fi
 
             url="$a"
             ref="$b"
@@ -61,4 +66,4 @@ die()
     exit 1
 }
 
-main
+main "$@"
