@@ -1,0 +1,3 @@
+xattr s.7z
+xattr -d com.apple.quarantine s.7z
+xattr -c s.7z
