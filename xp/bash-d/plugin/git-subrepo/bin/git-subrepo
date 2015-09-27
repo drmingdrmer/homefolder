@@ -62,6 +62,9 @@ main()
                 --message="Add squashed $url $ref" \
                 --prefix "$prefix" "$localtag" || die add
         fi
+
+        git tag -d $localtag
+
     done<".gitsubrepo_refs"
 }
 
