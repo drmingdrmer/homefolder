@@ -53,19 +53,19 @@ xp/vim-d/plg-git/ZenCoding.vim
 https://github.com/vim-scripts/ZenCoding.vim.git master
 
 xp/vim-d/plg-git/snipmate-snippets.git
-git://github.com/scrooloose/snipmate-snippets.git master
+https://github.com/scrooloose/snipmate-snippets.git master
 
 xp/vim-d/plg-git/vcscommand.vim.git
 git@github.com:drmingdrmer/vcscommand.vim.git master
 
 xp/vim-d/plg-git/github_vim_theme
-git://github.com/nono/github_vim_theme.git master
+https://github.com/nono/github_vim_theme.git master
 
 xp/vim-d/plg-git/vim-mac-classic-theme
-git://github.com/nelstrom/vim-mac-classic-theme.git master
+https://github.com/nelstrom/vim-mac-classic-theme.git master
 
 xp/vim-d/plg-git/vim-fugitive
-git://github.com/tpope/vim-fugitive.git master
+https://github.com/tpope/vim-fugitive.git master
 
 xp/vim-d/plg-git/python-mode.git
 https://github.com/klen/python-mode.git master
