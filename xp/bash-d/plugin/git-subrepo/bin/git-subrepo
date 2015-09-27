@@ -63,7 +63,7 @@ main()
                 --prefix "$prefix" "$localtag" || die add
         fi
 
-        git update-ref -d $localtag
+        # git update-ref -d $localtag
 
     done<".gitsubrepo_refs"
 
