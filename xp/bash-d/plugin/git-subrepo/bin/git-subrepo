@@ -1,8 +1,12 @@
 #!/bin/sh
 
+verbose=1
+counter=0
+
 main()
 {
-    local match="$1"
+    local cmd="${1-update}"
+    local match="$2"
 
     local root=$(repo_root)
     [ "x$root" = "x" ] && die 'looking for git repo root'
@@ -11,10 +15,12 @@ main()
 
     cd "$root"
 
+    rm .gitsubrepo_refs
+
     local prefix=
     local url=
     local ref=
-    local fetched_hash=
+    local localtag=
     local status=prefix
     while read a b; do
         if [ "x$a" = "x" ]; then
@@ -33,21 +39,45 @@ main()
             url="$a"
             ref="$b"
 
-            # git fetch "$url" "$ref"
-            # fetched_hash=$(get_hash FETCH_HEAD)
-            if [ -d "$prefix" ]; then
-                git subtree pull --squash \
-                    --message="Merge squashed $url $ref" \
-                    --prefix "$prefix" "$url" "$ref" || die merge
-            else
-                git subtree add --squash \
-                    --message="Add squashed $url $ref" \
-                    --prefix "$prefix" "$url" "$ref" || die add
+            if [ ".$cmd" = ".add" ]; then
+                if [ -d "$prefix" ]; then
+                    continue
+                fi
             fi
 
+            fetch_remote "$prefix" "$url" "$ref" &
         fi
 
     done<"$conf_fn"
+    wait
+
+    while read prefix url ref localtag
+    do
+        if [ -d "$prefix" ]; then
+            git subtree merge --squash \
+                --message="Merge squashed $url $ref" \
+                --prefix "$prefix" "$localtag" || die merge
+        else
+            git subtree add --squash \
+                --message="Add squashed $url $ref" \
+                --prefix "$prefix" "$localtag" || die add
+        fi
+    done<".gitsubrepo_refs"
+}
+
+fetch_remote()
+{
+    local prefix="$1"
+    local url="$2"
+    local ref="$3"
+
+    local localtag=refs/tags/_gitsubrepo/$prefix
+    local mes="$url $ref -> $localtag"
+
+    dd "Start fetching $mes"
+    git fetch --no-tags "$url" "$ref:$localtag" || die fetch "$mes"
+    echo "$prefix $url $ref $localtag" >> .gitsubrepo_refs
+    dd "Done fetching $mes"
 }
 
 get_hash()
@@ -58,6 +88,13 @@ get_hash()
 repo_root()
 {
     git rev-parse --show-toplevel
+}
+
+dd()
+{
+    if [ ".$verbose" = ".1" ]; then
+        echo "$@"
+    fi
 }
 
 die()
