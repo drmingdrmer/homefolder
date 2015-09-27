@@ -63,9 +63,11 @@ main()
                 --prefix "$prefix" "$localtag" || die add
         fi
 
-        git tag -d $localtag
+        git update-ref -d $localtag
 
     done<".gitsubrepo_refs"
+
+    rm .gitsubrepo_refs
 }
 
 fetch_remote()
