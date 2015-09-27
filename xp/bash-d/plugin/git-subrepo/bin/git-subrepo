@@ -15,7 +15,8 @@ main()
 
     cd "$root"
 
-    rm .gitsubrepo_refs
+    [ -f .gitsubrepo_refs ] && rm .gitsubrepo_refs
+    > .gitsubrepo_refs
 
     local prefix=
     local url=
