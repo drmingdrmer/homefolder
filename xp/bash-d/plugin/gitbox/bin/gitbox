@@ -79,7 +79,6 @@ main() {
                 # change ~ to real home path
 
                 eval "p=$path"
-                echo path: "$p"
 
                 if [ ".$option" = ".fetchonly" ]; then
 
@@ -91,6 +90,13 @@ main() {
                     cd "$p" && mes "$option" && git fetch --all --quiet \
                         && ok fetch \
                         || err fetch
+
+                    git merge --no-edit --commit --ff-only \
+                        && ok merge-ff \
+                        || err merge-ff
+
+                    git submodule update \
+                        && ok submodule-update
 
                     git push origin master --quiet \
                         && ok push \
