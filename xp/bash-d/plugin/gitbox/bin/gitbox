@@ -95,9 +95,6 @@ main() {
                         && ok merge-ff \
                         || err merge-ff
 
-                    git submodule update \
-                        && ok submodule-update
-
                     git push origin master --quiet \
                         && ok push \
                         || err push
