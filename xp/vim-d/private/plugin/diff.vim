@@ -79,3 +79,18 @@ nmap dp  <Plug>diff:put
 
 nnoremap <Plug>diff:update :diffupdate<CR>:redraw!<CR>zM
 nmap du  <Plug>diff:update
+
+function! s:DiffWithSaved()
+    let filetype=&ft
+
+    diffthis
+
+    vnew | r # | normal! 1Gdd
+    exe "setlocal bt=nofile bh=wipe nobl noswf ro ft=" . filetype
+    diffthis
+    au BufUnload <buffer> diffoff!
+
+    redraw!
+endfunction
+
+nnoremap <Plug>diff:diff_with_saved :call <SID>DiffWithSaved()<CR>

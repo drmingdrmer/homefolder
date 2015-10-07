@@ -57,6 +57,8 @@ fun! s:DoMap() "{{{
           \
           \ [ 'nmap', "<C-w><C-]>",           "<Plug>buffer:tag_in_preview" ],
           \
+          \ [ 'nmap', "<Leader><Leader>ds",  "<Plug>diff:diff_with_saved" ],
+          \
           \ [ 'nmap', "<C-g><C-]>",           "<Plug>edit:gtags:goto-definition" ],
           \ [ 'nmap', "<C-g><C-r>",           "<Plug>edit:gtags:goto-reference" ],
           \ [ 'nmap', "<C-g><C-n>",           ":cnext<CR>" ],
