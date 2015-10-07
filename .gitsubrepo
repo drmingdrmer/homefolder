@@ -174,3 +174,6 @@ https://github.com/drmingdrmer/lualint-again.git master
 
 xp/bash-d/plugin/Dropbox-Uploader.andreafabrizi/bin
 https://github.com/andreafabrizi/Dropbox-Uploader.git master
+
+xp/vim-d/plg-git/vim-autoformat
+https://github.com/Chiel92/vim-autoformat.git master
