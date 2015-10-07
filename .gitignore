@@ -6,6 +6,7 @@
 !/.gitmodules
 !/.gitsubrepo
 
+!/.astylerc
 !/.bashrc
 !/.gitshrc
 !/.gnomerc
