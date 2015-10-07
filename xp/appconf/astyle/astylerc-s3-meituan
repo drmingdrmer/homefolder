@@ -1,0 +1,9 @@
+--mode=c
+--style=attach
+--unpad-paren
+--pad-oper
+--pad-header
+--convert-tabs
+--indent=spaces=2
+--add-brackets
+--align-pointer=name
