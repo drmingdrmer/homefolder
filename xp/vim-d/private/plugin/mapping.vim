@@ -1,8 +1,3 @@
-if exists( "g:__XP__PLUGIN__MAPPING_VIM__" )
-    finish
-endif
-let g:__XP__PLUGIN__MAPPING_VIM__ = 1
-
 try
     " prevent conflicting to vim default mapping
     iunmap <C-u>
