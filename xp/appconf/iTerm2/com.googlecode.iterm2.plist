@@ -814,8 +814,10 @@
 	<false/>
 	<key>NSWindow Frame Preferences</key>
 	<string>279 180 924 485 0 0 1280 777 </string>
+	<key>NSWindow Frame UKCrashReporter</key>
+	<string>80 193 592 584 0 0 1280 777 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>4 0 1274 777 0 0 1280 777 </string>
+	<string>4 22 1274 755 0 0 1280 777 </string>
 	<key>NeverWarnAboutShortLivedSessions_2FE92995-500D-4626-AF0E-60482AE559B4</key>
 	<true/>
 	<key>New Bookmarks</key>
@@ -1549,7 +1551,7 @@
 	<key>NoSyncTimeOfLastPromo</key>
 	<real>463537294.797809</real>
 	<key>NoSyncTimeOfLastPromoDownload</key>
-	<real>463869323.57874399</real>
+	<real>465675635.75984597</real>
 	<key>OnlyWhenMoreTabs</key>
 	<true/>
 	<key>OpenArrangementAtStartup</key>
@@ -1614,7 +1616,7 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2015-09-13T20:34:00Z</date>
+	<date>2015-10-05T05:30:20Z</date>
 	<key>SavePasteHistory</key>
 	<false/>
 	<key>Show Toolbelt</key>
@@ -1645,6 +1647,8 @@
 	</array>
 	<key>TripleClickSelectsFullWrappedLines</key>
 	<false/>
+	<key>UKCrashReporterLastCrashReportDate</key>
+	<real>1444023040</real>
 	<key>URLHandlersByGuid</key>
 	<dict/>
 	<key>UseBorder</key>
@@ -1656,7 +1660,7 @@
 	<key>WebKitDefaultFontSize</key>
 	<integer>11</integer>
 	<key>WebKitStandardFont</key>
-	<string>.Lucida Grande UI</string>
+	<string>.Helvetica Neue DeskInterface</string>
 	<key>WindowNumber</key>
 	<true/>
 	<key>WindowStyle</key>
