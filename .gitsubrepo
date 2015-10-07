@@ -177,3 +177,6 @@ https://github.com/andreafabrizi/Dropbox-Uploader.git master
 
 xp/vim-d/plg-git/vim-autoformat
 https://github.com/Chiel92/vim-autoformat.git master
+
+xp/vim-d/plg-git/vim-gitgutter
+https://github.com/airblade/vim-gitgutter.git master
