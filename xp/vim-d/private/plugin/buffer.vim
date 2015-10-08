@@ -26,6 +26,7 @@ fun! s:RmBuf()
   endif
 
   let buftype = &buftype
+  let bufhidden = &bufhidden
   let bn = bufnr("%")
   let lastbn = bufnr( "$" )
   let bufname = bufname( bn )
@@ -42,7 +43,7 @@ fun! s:RmBuf()
   catch /.*/
   endtry
 
-  if buftype != ""
+  if buftype != "" || bufhidden =~ '\vunload|delete|wipe'
       exec "close"
       return
   endif
