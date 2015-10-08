@@ -9,6 +9,9 @@ fun! s:format_astyle() "{{{
     let rcfn = ".astylerc"
     if filereadable(rcfn)
         let lines = readfile(rcfn)
+    elseif filereadable($HOME . '/.astylerc')
+        " let astyle to find a rc file
+        let lines = []
     else
         let lines = [
               \ "--mode=c",
