@@ -41,7 +41,9 @@ fun! s:format_astyle() "{{{
 
     let arg = join(ls, " ")
 
+    call SaveWinPosition()
     exe '%!astyle' arg
+    call RestoreWinPosition()
 endfunction "}}}
 
 nnoremap <buffer> <Plug>format:format_file :call <SID>format_astyle()<CR>
