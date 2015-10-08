@@ -55,6 +55,9 @@ fun! SaveWinPosition() "{{{
 endfunction "}}}
 
 fun! RestoreWinPosition() "{{{
+
+  call cursor( s:line, s:col )
+
   let winln2 = winline()
   if winln2 > s:winln
     exe "normal! " . (winln2-s:winln) . "\<C-e>"
@@ -62,6 +65,4 @@ fun! RestoreWinPosition() "{{{
     exe "normal! " . (s:winln-winln2) . "\<C-y>"
   endif
 
-  call cursor( s:line, s:col )
-    
 endfunction "}}}
