@@ -30,7 +30,16 @@ fun! s:format_astyle() "{{{
     call filter(lines, 'v:val !~ "\\v^#"')
     call filter(lines, 'v:val !~ "\\v^ *$"')
 
-    let arg = join(lines, " ")
+    " support long options without leading '--'
+    let ls = []
+    for line in lines
+        if line !~ '\v^-'
+            let line = '--' . line
+        endif
+        let ls += [line]
+    endfor
+
+    let arg = join(ls, " ")
 
     exe '%!astyle' arg
 endfunction "}}}
