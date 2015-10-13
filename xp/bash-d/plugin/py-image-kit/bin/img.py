@@ -1,10 +1,10 @@
-#!/usr/bin/env python2.6
+#!/usr/bin/env python2
 # coding: utf-8
 
 
 import os
 import sys
-import Image
+from PIL import Image
 
 def outfn( fn ):
     tfn = fn.rsplit( ".", 1 )
