@@ -17,7 +17,7 @@ set wrapmargin=2
 " break line at char in 'breakat', rather than the last char
 set linebreak
 " wrapped line continue visually indented
-set breakindent
+call xputil#Set('breakindent')
 " a char at the start of lines that have been wrapped
 set showbreak=>>
 
