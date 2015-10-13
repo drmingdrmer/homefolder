@@ -4,7 +4,7 @@
 flags=${1-}
 
 if [ ".$flags" == ".-" ]; then
-    exit 0
+    flags=""
 fi
 
 _out=""
