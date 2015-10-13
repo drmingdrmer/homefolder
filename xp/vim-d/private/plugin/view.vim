@@ -19,7 +19,7 @@ set linebreak
 " wrapped line continue visually indented
 call xputil#Set('breakindent')
 " a char at the start of lines that have been wrapped
-set showbreak=>>
+call xputil#Set('showbreak', '>>')
 
 set tabstop=8     " how many space a tab represents
 set shiftwidth=4  " indent length
