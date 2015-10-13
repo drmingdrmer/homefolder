@@ -9,6 +9,7 @@ fi
 
 _out=""
 nr_context=0
+use_graph=1
 has_context_specified=0
 
 for i in $(seq 0 ${#flags}); do
@@ -21,6 +22,8 @@ for i in $(seq 0 ${#flags}); do
         d) _out="$_out --date-order"
             ;;
         f) _out="$_out --first-parent"
+            ;;
+        G) use_graph=0
             ;;
         i) _out="$_out --ignore-all-space"
             ;;
@@ -52,6 +55,10 @@ done
 
 if [ "$has_context_specified" = "1" ]; then
     _out="$_out --unified=$nr_context"
+fi
+
+if [ "$use_graph" = "1" ]; then
+    _out="$_out --graph"
 fi
 
 echo "$_out"
