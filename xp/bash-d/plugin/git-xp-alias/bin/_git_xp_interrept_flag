@@ -8,6 +8,7 @@ if [ ".$flags" == ".-" ]; then
 fi
 
 _out=""
+is_flags=1
 nr_context=0
 use_graph=1
 has_context_specified=0
@@ -46,19 +47,24 @@ for i in $(seq 0 ${#flags}); do
         "")
             ;;
         *)
-            echo $flags
-            exit 0
+            is_flags=0
+            break
             ;;
     esac
 
 done
 
-if [ "$has_context_specified" = "1" ]; then
-    _out="$_out --unified=$nr_context"
+if [ "$is_flags" = "1" ]; then
+    flags=""
+    if [ "$has_context_specified" = "1" ]; then
+        _out="$_out --unified=$nr_context"
+    fi
+else
+    _out=""
 fi
 
 if [ "$use_graph" = "1" ]; then
     _out="$_out --graph"
 fi
 
-echo "$_out"
+echo "$_out" "$flags"
