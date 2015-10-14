@@ -1,2 +1,2 @@
 " use filetype 'ch' for "*.h" files
-let g:ch_syntax_for_h=1
+let g:c_syntax_for_h=1
