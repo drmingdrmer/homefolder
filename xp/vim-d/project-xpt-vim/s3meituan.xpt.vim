@@ -1,7 +1,16 @@
-fun! s:Fn() "{{{
+fun! S3Fn(...) "{{{
+  let p = call(function('S3Path'), a:000)
+  return substitute(p, '\v.*/', '', '')
+endfunction "}}}
+
+fun! S3Path(...) "{{{
+  let with_suffix = a:0 == 0 || (!!a:000[0])
   let fn = expand('%')
   if fn =~ '\v^src/'
     let fn = fn[ 4: ]
+  endif
+  if ! with_suffix
+    let fn = substitute(fn, '\V.\[ch]\$', '', '')
   endif
   return fn
 endfunction "}}}
@@ -16,10 +25,9 @@ fun! S3Underline(s) "{{{
   return substitute(s, '\v(\u)', '_\l\1', 'g')
 endfunction "}}}
 
-fun! S3FileHeader() "{{{
-  let fn = s:Fn()
+fun! S3FileID() "{{{
+  let fn = S3Path(0)
 
-  let fn = substitute(fn, '\V.\[ch]\$', '', '')
   let fn = substitute(fn, '\V/s3_', '/', '')
   let fn = substitute(fn, '\V/', '_', 'g')
 
@@ -28,17 +36,16 @@ fun! S3FileHeader() "{{{
 endfunction "}}}
 
 fun! S3DotH() "{{{
-  let fn = s:Fn()
+  let fn = S3Path()
 
   let fn = substitute(fn, '\V.c\$', '.h', '')
   return fn
 endfunction "}}}
 
 fun! S3Mod() "{{{
-  let fn = s:Fn()
+  let fn = S3Path(0)
   let fn = substitute(fn, '\v.*/', '', '')
   let fn = substitute(fn, '\v^s3_', '', '')
-  let fn = substitute(fn, '\V.\[ch]', '', '')
   return fn
 endfunction "}}}
 
@@ -50,8 +57,8 @@ endfunction "}}}
 call XPTemplate('modeline', '// vim'.':ts=8:sw=2:et')
 
 call XPTemplate('hhead', [
-    \'#ifndef `S3FileHeader()^',
-    \'#define `S3FileHeader()^',
+    \'#ifndef `S3FileID()^',
+    \'#define `S3FileID()^',
     \'',
     \'#ifdef __cplusplus',
     \'extern "C" {',
@@ -62,7 +69,7 @@ call XPTemplate('hhead', [
     \'#ifdef __cplusplus',
     \'}',
     \'#endif',
-    \'#endif /* `S3FileHeader()^ */',
+    \'#endif /* `S3FileID()^ */',
     \'// vim' . ':ts=8:sw=2:et',
     \])
 
@@ -90,12 +97,25 @@ call XPTemplate('s3tp', [
 call XPTemplate('.',  's3_')
 call XPTemplate('..', 's3_`S3Mod()^_')
 call XPTemplate('.e',  'S3_ERR_')
+call XPTemplate('.esucc',  'S3_ERR_SUCCESS')
+call XPTemplate('.eoo',  'S3_ERR_OUTOFMEM')
 call XPTemplate('.t', 'S3`S3Capital(S3Mod())^')
+
+call XPTemplate('.str', 's3_string_')
+call XPTemplate('.Str', 'S3String')
+
 call XPTemplate('.ml', '(`tp^S3{S3Capital(S3Mod())}^*)s3_malloc(sizeof(`tp^))')
-call XPTemplate('teq', 'EXPECT_EQ(`^)')
-call XPTemplate('tne', 'EXPECT_NE(`^)')
-call XPTemplate('ttrue', 'EXPECT_TRUE(`^)')
-call XPTemplate('tfalse', 'EXPECT_FALSE(`^)')
+
+call XPTemplate('test', [
+      \'TEST(`S3Fn(0)^, `^) {',
+      \'  `^',
+      \'}',
+      \])
+
+call XPTemplate('eq', 'EXPECT_EQ(`^)')
+call XPTemplate('ne', 'EXPECT_NE(`^)')
+call XPTemplate('true', 'EXPECT_TRUE(`^)')
+call XPTemplate('false', 'EXPECT_FALSE(`^)')
 
 call XPTemplate( 'i8',  'int8_t' )
 call XPTemplate( 'i16', 'int16_t' )
