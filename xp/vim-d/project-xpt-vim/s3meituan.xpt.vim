@@ -102,7 +102,12 @@ call XPTemplate('.eoo',  'S3_ERR_OUTOFMEM')
 call XPTemplate('.t', 'S3`S3Capital(S3Mod())^')
 
 call XPTemplate('.str', 's3_string_')
-call XPTemplate('.Str', 'S3String')
+call XPTemplate('s3_string_', 'S3String')
+call XPTemplate('S3String', 's3_string_')
+
+call XPTemplate('.buf', 's3_buf_')
+call XPTemplate('s3_buf_', 'S3Buf')
+call XPTemplate('S3Buf', 's3_buf_')
 
 call XPTemplate('.ml', '(`tp^S3{S3Capital(S3Mod())}^*)s3_malloc(sizeof(`tp^))')
 
@@ -112,10 +117,10 @@ call XPTemplate('test', [
       \'}',
       \])
 
-call XPTemplate('eq', 'EXPECT_EQ(`^)')
-call XPTemplate('ne', 'EXPECT_NE(`^)')
-call XPTemplate('true', 'EXPECT_TRUE(`^)')
-call XPTemplate('false', 'EXPECT_FALSE(`^)')
+call XPTemplate('eq', 'EXPECT_EQ(`cursor^)')
+call XPTemplate('ne', 'EXPECT_NE(`cursor^)')
+call XPTemplate('true', 'EXPECT_TRUE(`cursor^)')
+call XPTemplate('false', 'EXPECT_FALSE(`cursor^)')
 
 call XPTemplate( 'i8',  'int8_t' )
 call XPTemplate( 'i16', 'int16_t' )
