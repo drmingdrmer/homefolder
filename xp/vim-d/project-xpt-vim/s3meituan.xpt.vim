@@ -97,15 +97,18 @@ call XPTemplate('s3tp', [
 call XPTemplate('.',  's3_')
 call XPTemplate('..', 's3_`S3Mod()^_')
 call XPTemplate('.e',  'S3_ERR_')
-call XPTemplate('.esucc',  'S3_ERR_SUCCESS')
+call XPTemplate('.es',  'S3_ERR_SUCCESS')
 call XPTemplate('.eoo',  'S3_ERR_OUTOFMEM')
 call XPTemplate('.t', 'S3`S3Capital(S3Mod())^')
 
 call XPTemplate('.str', 's3_string_')
+call XPTemplate('.buf', 's3_buf_')
+call XPTemplate('.r', 's3_record_')
+call XPTemplate('.rid', 's3_record_id_')
+
 call XPTemplate('s3_string_', 'S3String')
 call XPTemplate('S3String', 's3_string_')
 
-call XPTemplate('.buf', 's3_buf_')
 call XPTemplate('s3_buf_', 'S3Buf')
 call XPTemplate('S3Buf', 's3_buf_')
 
