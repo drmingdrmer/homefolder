@@ -81,6 +81,14 @@ call XPTemplate('chead', [
     \'// vim' . ':ts=8:sw=2:et',
     \])
 
+call XPTemplate('thead', [
+    \'#include "ctest.h"',
+    \'',
+    \'#include "lib/s3_error.h"',
+    \'`cursor^',
+    \'// vim' . ':ts=8:sw=2:et',
+    \])
+
 call XPTemplate('s3tp', [
     \'typedef struct `tp^S3{S3Capital(S3Mod())}^ `tp^;',
     \'struct `tp^ {',
