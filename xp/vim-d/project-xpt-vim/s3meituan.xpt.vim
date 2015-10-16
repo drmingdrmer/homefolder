@@ -122,7 +122,7 @@ call XPTemplate('.ml', '(`tp^S3{S3Capital(S3Mod())}^*)s3_malloc(sizeof(`tp^))')
 
 call XPTemplate('test', [
       \'TEST(`S3Fn(0)^, `^) {',
-      \'  `^',
+      \'  `cursor^',
       \'}',
       \])
 
