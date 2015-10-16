@@ -44,6 +44,10 @@ Options:
                   It is same with specifying which ref to update manually:
                   > $name -t master branch-fix
 
+    -c            Clean up backup refs which is left by history rewriting.
+                  Backup refs are something like:
+                      "refs/original/refs/heads/master"
+
 Example:
     > $name -f -p fixup b66353d..master
     moves master from a6910e2 to 4d4a5e4:
@@ -121,6 +125,10 @@ do
         -t)
             shift
             update_refs=1
+            ;;
+        -c)
+            git filter-branch -f --commit-filter "" HEAD..HEAD
+            exit $?
             ;;
         -p)
             shift
