@@ -1,0 +1,31 @@
+ 1 hup
+ 2 int         // ctrl-c
+ 3 quit        // ctrl-\
+ 4 ill
+ 5 trap
+ 6 abrt
+ 7 emt
+ 8 fpe
+ 9 kill
+10 bus
+11 segv
+12 sys
+13 pipe
+14 alrm
+15 term
+16 urg
+17 stop
+18 tstp        // ctrl-z
+19 cont
+20 chld
+21 ttin
+22 ttou
+23 io
+24 xcpu
+25 xfsz
+26 vtalrm
+27 prof
+28 winch
+29 info        // ctrl-t
+30 usr1
+31 usr2
