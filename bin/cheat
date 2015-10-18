@@ -1,0 +1,19 @@
+#!/bin/bash
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+fpattern=$1
+shift
+
+(
+cd $DIR/../sheets
+
+files=$(find . -type f -path "*$fpattern*" | grep -i "$1")
+for f in $files; do
+    echo '---' $f '---'
+    cat $f
+    echo ""
+    echo ""
+done | less
+
+)
