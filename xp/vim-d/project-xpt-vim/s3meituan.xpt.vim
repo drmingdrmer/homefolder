@@ -110,12 +110,16 @@ call XPTemplate('.eoo',  'S3_ERR_OUTOFMEM')
 call XPTemplate('.t', 'S3`S3Capital(S3Mod())^')
 
 call XPTemplate('.buf', 's3_buf_')
+call XPTemplate('.ch', 's3_chain_')
 call XPTemplate('.r', 's3_record_')
 call XPTemplate('.rid', 's3_record_id_')
 call XPTemplate('.str', 's3_string_')
 
 call XPTemplate('s3_buf_', 'S3Buf')
 call XPTemplate('S3Buf', 's3_buf_')
+
+call XPTemplate('s3_chain_', 'S3Chain')
+call XPTemplate('S3Chain', 's3_chain_')
 
 call XPTemplate('s3_record_', 'S3Record')
 call XPTemplate('S3Record', 's3_record_')
