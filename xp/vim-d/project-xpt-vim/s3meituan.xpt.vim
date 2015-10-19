@@ -127,6 +127,12 @@ call XPTemplate('s3_string_', 'S3String')
 call XPTemplate('S3String', 's3_string_')
 
 call XPTemplate('.ml', '(`tp^S3{S3Capital(S3Mod())}^*)s3_malloc(sizeof(`tp^))')
+call XPTemplate('.bz', 'bzero(`x^, sizeof(*`x^))')
+call XPTemplate('.ifbz', [
+      \'if (`x^ != NULL) {',
+      \'  bzero(`x^, sizeof(*`x^))',
+      \'}',
+      \] )
 
 call XPTemplate('test', [
       \'TEST(`S3Fn(0)^, `^) {',
@@ -139,6 +145,7 @@ call XPTemplate('ne', 'EXPECT_NE(`cursor^)')
 call XPTemplate('true', 'EXPECT_TRUE(`cursor^)')
 call XPTemplate('false', 'EXPECT_FALSE(`cursor^)')
 
+call XPTemplate('uchar', 'unsigned char')
 call XPTemplate( 'i8',  'int8_t' )
 call XPTemplate( 'i16', 'int16_t' )
 call XPTemplate( 'i32', 'int32_t' )
