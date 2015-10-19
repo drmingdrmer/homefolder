@@ -130,7 +130,7 @@ call XPTemplate('.ml', '(`tp^S3{S3Capital(S3Mod())}^*)s3_malloc(sizeof(`tp^))')
 call XPTemplate('.bz', 'bzero(`x^, sizeof(*`x^))')
 call XPTemplate('.ifbz', [
       \'if (`x^ != NULL) {',
-      \'  bzero(`x^, sizeof(*`x^))',
+      \'  bzero(`x^, sizeof(*`x^));',
       \'}',
       \] )
 
