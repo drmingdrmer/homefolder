@@ -75,6 +75,7 @@ $gconf alias.st  "status"
 $gconf alias.r   "rebase"
 $gconf alias.ri  "rebase --interactive"
 $gconf alias.ris "rebase --interactive --autosquash"
+$gconf alias.rp  "rebase --preserve-merges"
 
 $gconf alias.ss  "stash"
 $gconf alias.sl  "stash list"
