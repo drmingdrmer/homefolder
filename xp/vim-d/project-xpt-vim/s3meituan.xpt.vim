@@ -166,6 +166,8 @@ call XPTemplate( 'u32', 'uint32_t' )
 call XPTemplate( 'u64', 'uint64_t' )
 call XPTemplate( 'up',  'uintptr_t' )
 
+call XPTemplate('null', 'NULL')
+
 call XPTemplate( 'st',  'size_t' )
 call XPTemplate( 'so',  'sizeof(`cursor^)' )
 
