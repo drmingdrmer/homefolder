@@ -31,8 +31,6 @@ function! unite#handlers#_on_insert_enter()  "{{{
     return
   endif
 
-  setlocal modifiable
-
   let unite = unite#get_current_unite()
   let unite.is_insert = 1
 
@@ -264,6 +262,7 @@ function! unite#handlers#_on_cursor_moved()  "{{{
 endfunction"}}}
 function! unite#handlers#_on_buf_unload(bufname)  "{{{
   call unite#view#_clear_match()
+  call unite#view#_clear_match_highlight()
 
   " Save unite value.
   silent! let unite = getbufvar(a:bufname, 'unite')
