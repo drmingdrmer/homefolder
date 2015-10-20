@@ -109,12 +109,14 @@ PACKS="
   elixir:elixir-lang/vim-elixir
   emberscript:heartsentwined/vim-ember-script
   emblem:heartsentwined/vim-emblem
-  erlang:hcs42/vim-erlang-runtime
+  erlang:vim-erlang/vim-erlang-runtime
   git:tpope/vim-git
+  glsl:tikhomirov/vim-glsl
   go:fatih/vim-go:_BASIC
+  groovy:vim-scripts/groovy.vim
   haml:tpope/vim-haml
   handlebars:mustache/vim-mustache-handlebars
-  haskell:raichoo/haskell-vim
+  haskell:neovimhaskell/haskell-vim
   haxe:yaymukund/vim-haxe
   html5:othree/html5.vim
   jade:digitaltoad/vim-jade
@@ -124,6 +126,7 @@ PACKS="
   json:sheerun/vim-json
   jst:briancollins/vim-jst
   jsx:mxw/vim-jsx:_ALL
+  kotlin:udalov/kotlin-vim
   latex:LaTeX-Box-Team/LaTeX-Box
   less:groenewege/vim-less
   liquid:tpope/vim-liquid
@@ -138,6 +141,7 @@ PACKS="
   powershell:Persistent13/vim-ps1
   protobuf:uarun/vim-protobuf
   python:mitsuhiko/vim-python-combined
+  qml:peterhoeg/vim-qml
   r-lang:vim-scripts/R.vim
   ragel:jneen/ragel.vim
   rspec:sheerun/rspec.vim

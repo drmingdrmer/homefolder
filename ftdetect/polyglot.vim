@@ -64,9 +64,13 @@ if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'emblem') == -1
 autocmd BufNewFile,BufRead *.emblem set filetype=emblem
 autocmd FileType emblem set tabstop=2|set shiftwidth=2|set expandtab
 endif
+if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'erlang') == -1
+  
+au BufNewFile,BufRead *.erl,*.hrl,rebar.config,*.app,*.app.src,*.yaws,*.xrl set ft=erlang
+endif
 if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'git') == -1
   
-autocmd BufNewFile,BufRead *.git/{,modules/**/}{COMMIT_EDIT,TAG_EDIT,MERGE_,}MSG set ft=gitcommit
+autocmd BufNewFile,BufRead *.git/{,modules/**/,worktrees/*/}{COMMIT_EDIT,TAG_EDIT,MERGE_,}MSG set ft=gitcommit
 autocmd BufNewFile,BufRead *.git/config,.gitconfig,gitconfig,.gitmodules set ft=gitconfig
 autocmd BufNewFile,BufRead */.config/git/config                          set ft=gitconfig
 autocmd BufNewFile,BufRead *.git/modules/**/config                       set ft=gitconfig
@@ -85,6 +89,10 @@ autocmd BufNewFile,BufRead *
       \   set filetype=gitsendemail |
       \ endif
 endif
+if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'glsl') == -1
+  
+autocmd! BufNewFile,BufRead *.glsl,*.geom,*.vert,*.frag,*.gsh,*.vsh,*.fsh,*.vs,*.fs,*.gs,*.tcs,*.tes set filetype=glsl
+endif
 if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'go') == -1
   
 let s:current_fileformats = ''
@@ -99,7 +107,7 @@ function! s:gofiletype_post()
     let &g:fileformats = s:current_fileformats
     let &g:fileencodings = s:current_fileencodings
 endfunction
-au BufNewFile *.go setlocal filetype=go fileencoding=utf-8 fileformat=unix
+au BufNewFile *.go setfiletype go | setlocal fileencoding=utf-8 fileformat=unix
 au BufRead *.go call s:gofiletype_pre()
 au BufReadPost *.go call s:gofiletype_post()
 au BufRead,BufNewFile *.tmpl set filetype=gohtmltmpl
@@ -143,6 +151,11 @@ if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'julia') == -1
   
 au BufRead,BufNewFile *.jl		let b:undo_ftplugin = "setlocal comments< define< formatoptions< iskeyword< lisp<"
 au BufRead,BufNewFile *.jl		set filetype=julia
+endif
+if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'kotlin') == -1
+  
+autocmd BufNewFile,BufRead *.kt setfiletype kotlin
+autocmd BufNewFile,BufRead *.kts setfiletype kotlin
 endif
 if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'less') == -1
   
@@ -244,6 +257,10 @@ if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'puppet') == -1
 au! BufRead,BufNewFile *.pp setfiletype puppet
 au! BufRead,BufNewFile Puppetfile setfiletype ruby
 endif
+if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'qml') == -1
+  
+autocmd BufRead,BufNewFile *.qml setfiletype qml
+endif
 if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'ruby') == -1
   
 function! s:setf(filetype) abort
@@ -273,6 +290,8 @@ au BufNewFile,BufRead Puppetfile		call s:setf('ruby')
 au BufNewFile,BufRead [Bb]uildfile		call s:setf('ruby')
 au BufNewFile,BufRead Appraisals		call s:setf('ruby')
 au BufNewFile,BufRead Podfile,*.podspec		call s:setf('ruby')
+au BufNewFile,BufRead [rR]outefile		call s:setf('ruby')
+au BufNewFile,BufRead .simplecov		set filetype=ruby
 endif
 if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'rust') == -1
   
@@ -346,7 +365,7 @@ autocmd BufNewFile,BufRead *.html.twig set filetype=html.twig
 endif
 if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'typescript') == -1
   
-autocmd BufNewFile,BufRead *.ts setlocal filetype=typescript
+autocmd BufNewFile,BufRead *.ts,*.tsx setlocal filetype=typescript
 endif
 if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'vala') == -1
   
