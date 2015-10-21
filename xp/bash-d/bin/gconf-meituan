@@ -1,0 +1,4 @@
+#!/bin/sh
+
+git config --local --add user.name 张炎泼
+git config --local --add user.email zhangyanpo@meituan.com
