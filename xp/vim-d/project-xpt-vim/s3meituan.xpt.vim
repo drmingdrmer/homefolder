@@ -113,6 +113,7 @@ call XPTemplate('.buf', 's3_buf_')
 call XPTemplate('.ch', 's3_chain_')
 call XPTemplate('.log', 's3_log_')
 call XPTemplate('.r', 's3_record_')
+call XPTemplate('.rbt', 's3_rbtree_')
 call XPTemplate('.rid', 's3_record_id_')
 call XPTemplate('.str', 's3_string_')
 
@@ -127,6 +128,9 @@ call XPTemplate('S3Log', 's3_log_')
 
 call XPTemplate('s3_record_', 'S3Record')
 call XPTemplate('S3Record', 's3_record_')
+
+call XPTemplate('s3_rbtree_', 'S3Rbtree')
+call XPTemplate('S3Rbtree', 's3_rbtree_')
 
 call XPTemplate('s3_record_header_', 'S3RecordHeader')
 call XPTemplate('S3RecordHeader', 's3_record_header_')
