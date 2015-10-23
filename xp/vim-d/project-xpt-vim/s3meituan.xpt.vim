@@ -116,6 +116,8 @@ call XPTemplate('.r', 's3_record_')
 call XPTemplate('.rb', 's3_rbtree_')
 call XPTemplate('.rid', 's3_record_id_')
 call XPTemplate('.str', 's3_string_')
+call XPTemplate('.tm',  's3_timer_')
+call XPTemplate('.tmc', 's3_timer_callback_')
 
 call XPTemplate('s3_buf_', 'S3Buf')
 call XPTemplate('S3Buf', 's3_buf_')
@@ -134,6 +136,12 @@ call XPTemplate('S3Rbtree', 's3_rbtree_')
 
 call XPTemplate('s3_record_header_', 'S3RecordHeader')
 call XPTemplate('S3RecordHeader', 's3_record_header_')
+
+call XPTemplate('s3_timer_', 'S3Timer')
+call XPTemplate('S3Timer', 's3_timer_')
+
+call XPTemplate('s3_timer_callback_', 'S3TimerCallback')
+call XPTemplate('S3TimerCallback', 's3_timer_callback_')
 
 call XPTemplate('s3_string_', 'S3String')
 call XPTemplate('S3String', 's3_string_')
