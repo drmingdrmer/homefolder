@@ -117,7 +117,7 @@ call XPTemplate('.rb', 's3_rbtree_')
 call XPTemplate('.rid', 's3_record_id_')
 call XPTemplate('.str', 's3_string_')
 call XPTemplate('.tm',  's3_timer_')
-call XPTemplate('.tmc', 's3_timer_callback_')
+call XPTemplate('.tcb', 's3_timer_callback_')
 
 call XPTemplate('s3_buf_', 'S3Buf')
 call XPTemplate('S3Buf', 's3_buf_')
