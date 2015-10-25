@@ -9,17 +9,12 @@ import pprint
 if len( sys.argv ) > 1:
 
     fn = sys.argv[ 1 ]
-
     with open( fn, 'r' ) as f:
         cont = f.read()
-        try:
-            pprint.pprint( json.loads( cont, encoding='utf-8' ) )
-        except ValueError, e:
-            print cont
 else:
     cont = sys.stdin.read()
-    try:
-        pprint.pprint( json.loads( cont, encoding='utf-8' ) )
-    except ValueError, e:
-        print cont
 
+try:
+    pprint.pprint( json.loads( cont, encoding='utf-8' ) )
+except ValueError, e:
+    print cont
