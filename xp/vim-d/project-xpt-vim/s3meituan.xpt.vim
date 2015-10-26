@@ -136,6 +136,9 @@ call XPTemplate('S3Log', 's3_log_')
 call XPTemplate('s3_record_', 'S3Record')
 call XPTemplate('S3Record', 's3_record_')
 
+call XPTemplate('s3_record_id_', 'S3RecordID')
+call XPTemplate('S3RecordID', 's3_record_id_')
+
 call XPTemplate('s3_recordindex_', 'S3Recordindex')
 call XPTemplate('S3Recordindex', 's3_recordindex_')
 
