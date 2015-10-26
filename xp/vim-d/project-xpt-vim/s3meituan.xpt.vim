@@ -109,6 +109,7 @@ call XPTemplate('.es',  'S3_ERR_SUCCESS')
 call XPTemplate('.eoo',  'S3_ERR_OUTOFMEM')
 call XPTemplate('.t', 'S3`S3Capital(S3Mod())^')
 
+call XPTemplate('.arr', 's3_array_')
 call XPTemplate('.buf', 's3_buf_')
 call XPTemplate('.ch', 's3_chain_')
 call XPTemplate('.log', 's3_log_')
@@ -118,6 +119,9 @@ call XPTemplate('.rid', 's3_record_id_')
 call XPTemplate('.str', 's3_string_')
 call XPTemplate('.tm',  's3_timer_')
 call XPTemplate('.tcb', 's3_timer_callback_')
+
+call XPTemplate('s3_array_', 'S3Array')
+call XPTemplate('S3Array', 's3_array_')
 
 call XPTemplate('s3_buf_', 'S3Buf')
 call XPTemplate('S3Buf', 's3_buf_')
