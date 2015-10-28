@@ -4,13 +4,13 @@ endif
 let g:__SETTINGSWITCHER_VIM__ = 1
 
 let s:settings = {
-            \'l' :  'list', 
-            \'p' :  'spell', 
-            \'n' :  'number', 
-            \'r' :  'wrap', 
-            \'u' :  'cursorline', 
-            \'c' :  'cursorcolumn', 
-            \'m' :  'modifiable', 
+            \'l' :  'list',
+            \'p' :  'spell',
+            \'n' :  'number',
+            \'r' :  'wrap',
+            \'u' :  'cursorline',
+            \'c' :  'cursorcolumn',
+            \'m' :  'modifiable',
             \}
 
 
