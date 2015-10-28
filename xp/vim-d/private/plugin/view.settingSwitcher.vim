@@ -11,7 +11,19 @@ let s:settings = {
             \'u' :  'cursorline',
             \'c' :  'cursorcolumn',
             \'m' :  'modifiable',
+            \'x' :  'conceal',
             \}
+
+let s:switchers = {}
+fun! s:switchers.conceal() "{{{
+    if &l:conceallevel == 0
+        setlocal conceallevel=2
+        setlocal concealcursor=nv
+    else
+        setlocal conceallevel=0
+        setlocal concealcursor=
+    endif
+endfunction "}}}
 
 
 fun! s:ShowMenu() "{{{
@@ -25,7 +37,12 @@ fun! s:ShowMenu() "{{{
     let c = nr2char( getchar() )
 
     if has_key( s:settings, c )
-        exe "setlocal " . s:settings[ c ] . "!"
+        let setting_key = s:settings[c]
+        if has_key(s:switchers, setting_key)
+            call s:switchers[setting_key]()
+        else
+            exe "setlocal " . s:settings[ c ] . "!"
+        endif
     endif
 
     let &cmdheight = oldcmdheight
