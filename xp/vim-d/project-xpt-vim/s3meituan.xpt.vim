@@ -201,27 +201,30 @@ call XPTemplate( 'so',  'sizeof(`cursor^)' )
 
 fun! s:Conceal() "{{{
   let lst = [
-        \["S3Record", {"cchar": 'R'}],
-        \["S3Recordindex", {"cchar": 'I'}],
-        \["S3RecordPos", {"cchar": 'P'}],
-        \["s3_record", {"cchar": 'r'}],
-        \["s3_record_pos", {"cchar": 'p'}],
-        \["s3_recordindex", {"cchar": 'i'}],
+        \['Array', {'cchar': 'A'}],
+        \['Index', {'cchar': 'I'}],
+        \['Pos', {'cchar': 'P'}],
+        \['Record', {'cchar': 'R'}],
+        \['_array', {'cchar': 'a'}],
+        \['_index', {'cchar': 'i'}],
+        \['_pos', {'cchar': 'p'}],
+        \['_record', {'cchar': 'r'}],
         \]
 
   let conceal_fprefix = 's3_' . S3Mod()
   let mod = 'S3' . S3Capital(S3Mod())
 
-  exe 'syn' 'match' "cConceal" '"s3_"' 'conceal' 'cchar=·'
-  exe 'syn' 'match' "cConceal" '"S3_ERR_"' 'conceal' 'cchar=▸'
+  exe 'syn' 'match' "cConceal" '"s3"' 'conceal' 'cchar=·'
+  exe 'syn' 'match' "cConceal" '"S3"' 'conceal' 'cchar=•'
+  exe 'syn' 'match' "cConceal" '"S3_ERR"' 'conceal' 'cchar=▸'
+  exe 'syn' 'match' "cConceal" '"EXPECT"' 'conceal' 'cchar=▸'
 
   for [k, v] in lst
-    " exe 'syn' 'match' "cConceal" string(k) 'conceal' 'cchar=' . v.cchar
+    exe 'syn' 'match' "cConceal" string(k) 'conceal' 'cchar=' . v.cchar
   endfor
 
-  exe 'syn' 'match' "cConceal" '"'.conceal_fprefix.'"' 'conceal' 'cchar=‥'
-  exe 'syn' 'match' "cConceal" '"'.mod.'"' 'conceal' 'cchar=•'
-  "▸
+  " exe 'syn' 'match' "cConceal" '"'.conceal_fprefix.'"' 'conceal' 'cchar=‥'
+  " exe 'syn' 'match' "cConceal" '"'.mod.'"' 'conceal' 'cchar=።'
   "‽
 
   " hi cConceal ctermfg=blue ctermbg=none
