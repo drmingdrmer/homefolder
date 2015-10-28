@@ -24,6 +24,7 @@ fun! s:switchers.conceal() "{{{
         setlocal concealcursor=
     endif
 endfunction "}}}
+let g:xp_switchers = s:switchers
 
 
 fun! s:ShowMenu() "{{{
