@@ -185,12 +185,14 @@ call XPTemplate( 'i8',  'int8_t' )
 call XPTemplate( 'i16', 'int16_t' )
 call XPTemplate( 'i32', 'int32_t' )
 call XPTemplate( 'i64', 'int64_t' )
+call XPTemplate( 'i74', 'int64_t' ) "typo
 call XPTemplate( 'ip',  'intptr_t' )
 
 call XPTemplate( 'u8',  'uint8_t' )
 call XPTemplate( 'u16', 'uint16_t' )
 call XPTemplate( 'u32', 'uint32_t' )
 call XPTemplate( 'u64', 'uint64_t' )
+call XPTemplate( 'u74', 'uint64_t' ) "typo
 call XPTemplate( 'up',  'uintptr_t' )
 
 call XPTemplate('null', 'NULL')
