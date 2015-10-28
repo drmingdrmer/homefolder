@@ -207,21 +207,22 @@ fun! s:Conceal() "{{{
         \["s3_record", {"cchar": 'r'}],
         \["s3_record_pos", {"cchar": 'p'}],
         \["s3_recordindex", {"cchar": 'i'}],
-        \["S3_ERR", {"cchar": '‽'}],
         \]
 
   let conceal_fprefix = 's3_' . S3Mod()
   let mod = 'S3' . S3Capital(S3Mod())
 
   exe 'syn' 'match' "cConceal" '"s3_"' 'conceal' 'cchar=·'
+  exe 'syn' 'match' "cConceal" '"S3_ERR_"' 'conceal' 'cchar=▸'
 
   for [k, v] in lst
-    exe 'syn' 'match' "cConceal" string(k) 'conceal' 'cchar=' . v.cchar
+    " exe 'syn' 'match' "cConceal" string(k) 'conceal' 'cchar=' . v.cchar
   endfor
 
   exe 'syn' 'match' "cConceal" '"'.conceal_fprefix.'"' 'conceal' 'cchar=‥'
   exe 'syn' 'match' "cConceal" '"'.mod.'"' 'conceal' 'cchar=•'
   "▸
+  "‽
 
   " hi cConceal ctermfg=blue ctermbg=none
   " hi cConceal cterm=b
