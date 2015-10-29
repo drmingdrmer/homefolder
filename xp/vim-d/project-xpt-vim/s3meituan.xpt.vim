@@ -233,8 +233,8 @@ fun! s:Conceal() "{{{
   " hi cConceal cterm=b
   hi Conceal ctermfg=white
 
-  set conceallevel=2
-  set concealcursor=nv
+  setlocal conceallevel=2
+  setlocal concealcursor=nv
 endfunction "}}}
 
 call s:Conceal()
