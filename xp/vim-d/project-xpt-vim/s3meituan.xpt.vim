@@ -239,7 +239,7 @@ endfunction "}}}
 
 call s:Conceal()
 
-nmap <M-0> :call g:xp_switchers.conceal()<CR>
+nmap <buffer> <M-)> :call g:xp_switchers.conceal()<CR>
 
 
 " vim:filetype=vim:sw=2
