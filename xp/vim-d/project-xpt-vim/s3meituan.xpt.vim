@@ -204,13 +204,17 @@ call XPTemplate( 'so',  'sizeof(`cursor^)' )
 fun! s:Conceal() "{{{
   let lst = [
         \['Array', {'cchar': 'A'}],
+        \['Buf', {'cchar': 'B'}],
         \['Index', {'cchar': 'I'}],
         \['Pos', {'cchar': 'P'}],
         \['Record', {'cchar': 'R'}],
+        \['String', {'cchar': 'S'}],
+        \['_buf', {'cchar': 'b'}],
         \['_array', {'cchar': 'a'}],
         \['_index', {'cchar': 'i'}],
         \['_pos', {'cchar': 'p'}],
         \['_record', {'cchar': 'r'}],
+        \['_string', {'cchar': 's'}],
         \]
 
   let conceal_fprefix = 's3_' . S3Mod()
