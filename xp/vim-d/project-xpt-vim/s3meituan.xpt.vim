@@ -205,6 +205,7 @@ fun! s:Conceal() "{{{
   let lst = [
         \['Array', {'cchar': 'A'}],
         \['Buf', {'cchar': 'B'}],
+        \['Header', {'cchar': 'H'}],
         \['Index', {'cchar': 'I'}],
         \['Log', {'cchar': 'L'}],
         \['Pos', {'cchar': 'P'}],
@@ -213,6 +214,7 @@ fun! s:Conceal() "{{{
         \['String', {'cchar': 'S'}],
         \['_buf', {'cchar': 'b'}],
         \['_array', {'cchar': 'a'}],
+        \['_header', {'cchar': 'h'}],
         \['_index', {'cchar': 'i'}],
         \['_log', {'cchar': 'l'}],
         \['_pos', {'cchar': 'p'}],
