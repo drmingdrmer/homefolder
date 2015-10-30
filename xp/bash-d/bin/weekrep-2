@@ -7,4 +7,4 @@ git shortlog \
     --since="$_days days ago" \
     --no-merges \
     --format="%ad %s" \
-    | awk '{$4="";$5="";$6=""; print $0}'
+    | awk '{$4="";$5="";$6="     "; print $0}'
