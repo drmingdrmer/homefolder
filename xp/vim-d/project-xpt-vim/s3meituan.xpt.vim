@@ -231,6 +231,8 @@ fun! s:Conceal() "{{{
   exe 'syn' 'match' "cConceal" '"S3_ERR"' 'conceal' 'cchar=▸'
   exe 'syn' 'match' "cConceal" '"EXPECT"' 'conceal' 'cchar=▸'
 
+  exe 'syn' 'keyword' "cConceal" 'void' 'contained conceal'
+
   for [k, v] in lst
     exe 'syn' 'match' "cConceal" string(k) 'conceal' 'cchar=' . v.cchar
   endfor
