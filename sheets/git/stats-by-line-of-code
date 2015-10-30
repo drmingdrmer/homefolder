@@ -1,0 +1,3 @@
+git log --author="<me>" --pretty=tformat: --numstat
+
+git log --author="<me>" --oneline --shortstat
