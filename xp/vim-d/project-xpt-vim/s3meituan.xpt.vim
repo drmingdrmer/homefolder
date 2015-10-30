@@ -183,10 +183,15 @@ call XPTemplate('test', [
       \'}',
       \])
 
-call XPTemplate('eq', 'EXPECT_EQ(`cursor^)')
-call XPTemplate('ne', 'EXPECT_NE(`cursor^)')
-call XPTemplate('true', 'EXPECT_TRUE(`cursor^)')
-call XPTemplate('false', 'EXPECT_FALSE(`cursor^)')
+call XPTemplate('eeq', 'EXPECT_EQ(`cursor^)')
+call XPTemplate('ene', 'EXPECT_NE(`cursor^)')
+call XPTemplate('etrue', 'EXPECT_TRUE(`cursor^)')
+call XPTemplate('efalse', 'EXPECT_FALSE(`cursor^)')
+
+call XPTemplate('eq', 'ASSERT_EQ(`cursor^)')
+call XPTemplate('ne', 'ASSERT_NE(`cursor^)')
+call XPTemplate('true', 'ASSERT_TRUE(`cursor^)')
+call XPTemplate('false', 'ASSERT_FALSE(`cursor^)')
 
 call XPTemplate('uchar', 'unsigned char')
 call XPTemplate( 'i8',  'int8_t' )
@@ -242,6 +247,7 @@ fun! s:Conceal() "{{{
   exe 'syn' 'match' "cConceal" '"S3"' 'conceal' 'cchar=•'
   exe 'syn' 'match' "cConceal" '"S3_ERR"' 'conceal' 'cchar=▸'
   exe 'syn' 'match' "cConceal" '"EXPECT"' 'conceal' 'cchar=▸'
+  exe 'syn' 'match' "cConceal" '"ASSERT"' 'conceal' 'cchar=!'
 
   exe 'syn' 'keyword' "cConceal" 'void' 'contained conceal'
 
