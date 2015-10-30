@@ -216,38 +216,37 @@ call XPTemplate( 'so',  'sizeof(`cursor^)' )
 
 fun! s:Conceal() "{{{
   let lst = [
-        \['Array', {'cchar': 'A'}],
-        \['Buf', {'cchar': 'B'}],
-        \['Header', {'cchar': 'H'}],
-        \['Index', {'cchar': 'I'}],
-        \['Log', {'cchar': 'L'}],
-        \['Object', {'cchar': 'O'}],
-        \['Position', {'cchar': 'P'}],
-        \['Queue', {'cchar': 'Q'}],
-        \['Record', {'cchar': 'R'}],
-        \['RecordsChunk', {'cchar': 'C'}],
-        \['String', {'cchar': 'S'}],
-        \['_buf', {'cchar': 'b'}],
-        \['_array', {'cchar': 'a'}],
-        \['_header', {'cchar': 'h'}],
-        \['_index', {'cchar': 'i'}],
-        \['_log', {'cchar': 'l'}],
-        \['_object', {'cchar': 'o'}],
-        \['_position', {'cchar': 'p'}],
-        \['_queue', {'cchar': 'q'}],
-        \['_record', {'cchar': 'r'}],
-        \['_records_chunk', {'cchar': 'c'}],
-        \['_string', {'cchar': 's'}],
+        \['S3'             , {'cchar': '•'}] ,
+        \['Array'          , {'cchar': 'A'}] ,
+        \['Buf'            , {'cchar': 'B'}] ,
+        \['Header'         , {'cchar': 'H'}] ,
+        \['Index'          , {'cchar': 'I'}] ,
+        \['Log'            , {'cchar': 'L'}] ,
+        \['Object'         , {'cchar': 'O'}] ,
+        \['Position'       , {'cchar': 'P'}] ,
+        \['Queue'          , {'cchar': 'Q'}] ,
+        \['Record'         , {'cchar': 'R'}] ,
+        \['RecordsChunk'   , {'cchar': 'C'}] ,
+        \['String'         , {'cchar': 'S'}] ,
+        \['s3_'            , {'cchar': '·'}] ,
+        \['buf_'           , {'cchar': 'b'}] ,
+        \['array_'         , {'cchar': 'a'}] ,
+        \['header_'        , {'cchar': 'h'}] ,
+        \['index_'         , {'cchar': 'i'}] ,
+        \['log_'           , {'cchar': 'l'}] ,
+        \['object_'        , {'cchar': 'o'}] ,
+        \['position_'      , {'cchar': 'p'}] ,
+        \['queue_'         , {'cchar': 'q'}] ,
+        \['record_'        , {'cchar': 'r'}] ,
+        \['records_chunk_' , {'cchar': 'c'}] ,
+        \['string_'        , {'cchar': 's'}] ,
+        \['S3_ERR_'        , {'cchar': '▸'}] ,
+        \['EXPECT_'        , {'cchar': '▸'}] ,
+        \['ASSERT_'        , {'cchar': '!'}] ,
         \]
 
   let conceal_fprefix = 's3_' . S3Mod()
   let mod = 'S3' . S3Capital(S3Mod())
-
-  exe 'syn' 'match' "cConceal" '"s3"' 'conceal' 'cchar=·'
-  exe 'syn' 'match' "cConceal" '"S3"' 'conceal' 'cchar=•'
-  exe 'syn' 'match' "cConceal" '"S3_ERR"' 'conceal' 'cchar=▸'
-  exe 'syn' 'match' "cConceal" '"EXPECT"' 'conceal' 'cchar=▸'
-  exe 'syn' 'match' "cConceal" '"ASSERT"' 'conceal' 'cchar=!'
 
   exe 'syn' 'keyword' "cConceal" 'void' 'contained conceal'
 
