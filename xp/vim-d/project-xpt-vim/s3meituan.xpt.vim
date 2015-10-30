@@ -209,6 +209,7 @@ fun! s:Conceal() "{{{
         \['Log', {'cchar': 'L'}],
         \['Pos', {'cchar': 'P'}],
         \['Record', {'cchar': 'R'}],
+        \['RecordsChunk', {'cchar': 'C'}],
         \['String', {'cchar': 'S'}],
         \['_buf', {'cchar': 'b'}],
         \['_array', {'cchar': 'a'}],
@@ -216,6 +217,7 @@ fun! s:Conceal() "{{{
         \['_log', {'cchar': 'l'}],
         \['_pos', {'cchar': 'p'}],
         \['_record', {'cchar': 'r'}],
+        \['_records_chunk', {'cchar': 'c'}],
         \['_string', {'cchar': 's'}],
         \]
 
