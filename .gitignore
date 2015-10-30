@@ -22,4 +22,6 @@
 /.ssh/*
 !/.ssh/config
 
+!/Music/网易云音乐
+
 !/xp
