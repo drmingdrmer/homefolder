@@ -113,6 +113,8 @@ call XPTemplate('.arr', 's3_array_')
 call XPTemplate('.buf', 's3_buf_')
 call XPTemplate('.ch', 's3_chain_')
 call XPTemplate('.log', 's3_log_')
+call XPTemplate('.o', 's3_object_')
+call XPTemplate('.oid', 's3_object_id_')
 call XPTemplate('.r', 's3_record_')
 call XPTemplate('.rix', 's3_record_index_')
 call XPTemplate('.rb', 's3_rbtree_')
@@ -133,6 +135,12 @@ call XPTemplate('S3Chain', 's3_chain_')
 
 call XPTemplate('s3_log_', 'S3Log')
 call XPTemplate('S3Log', 's3_log_')
+
+call XPTemplate('s3_object_', 'S3Object')
+call XPTemplate('S3Object', 's3_object_')
+
+call XPTemplate('s3_object_id_', 'S3ObjectID')
+call XPTemplate('S3ObjectID', 's3_object_id_')
 
 call XPTemplate('s3_record_', 'S3Record')
 call XPTemplate('S3Record', 's3_record_')
@@ -208,7 +216,9 @@ fun! s:Conceal() "{{{
         \['Header', {'cchar': 'H'}],
         \['Index', {'cchar': 'I'}],
         \['Log', {'cchar': 'L'}],
+        \['Object', {'cchar': 'O'}],
         \['Position', {'cchar': 'P'}],
+        \['Queue', {'cchar': 'Q'}],
         \['Record', {'cchar': 'R'}],
         \['RecordsChunk', {'cchar': 'C'}],
         \['String', {'cchar': 'S'}],
@@ -217,7 +227,9 @@ fun! s:Conceal() "{{{
         \['_header', {'cchar': 'h'}],
         \['_index', {'cchar': 'i'}],
         \['_log', {'cchar': 'l'}],
+        \['_object', {'cchar': 'o'}],
         \['_position', {'cchar': 'p'}],
+        \['_queue', {'cchar': 'q'}],
         \['_record', {'cchar': 'r'}],
         \['_records_chunk', {'cchar': 'c'}],
         \['_string', {'cchar': 's'}],
