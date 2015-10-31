@@ -1,0 +1,10 @@
+#!/bin/sh
+
+cd ~/xp/rsync-folders || exit 1
+
+for ss in $(ls); do
+    (
+    cd $ss \
+        && rsync -Rauv src/./* dst/./
+    )
+done
