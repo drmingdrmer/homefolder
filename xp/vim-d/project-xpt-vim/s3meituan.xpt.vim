@@ -115,6 +115,8 @@ call XPTemplate('.ch', 's3_chain_')
 call XPTemplate('.log', 's3_log_')
 call XPTemplate('.o', 's3_object_')
 call XPTemplate('.oid', 's3_object_id_')
+call XPTemplate('.ph', 's3_partition_header_')
+call XPTemplate('.pid', 's3_partition_id_')
 call XPTemplate('.r', 's3_record_')
 call XPTemplate('.rix', 's3_record_index_')
 call XPTemplate('.rb', 's3_rbtree_')
@@ -141,6 +143,15 @@ call XPTemplate('S3Object', 's3_object_')
 
 call XPTemplate('s3_object_id_', 'S3ObjectID')
 call XPTemplate('S3ObjectID', 's3_object_id_')
+
+call XPTemplate('s3_partition_', 'S3Partition')
+call XPTemplate('S3Partition', 's3_partition_')
+
+call XPTemplate('s3_partition_header_', 'S3PartitionHeader')
+call XPTemplate('S3PartitionHeader', 's3_partition_header_')
+
+call XPTemplate('s3_partition_id_', 'S3PartitionID')
+call XPTemplate('S3PartitionID', 's3_partition_id_')
 
 call XPTemplate('s3_record_', 'S3Record')
 call XPTemplate('S3Record', 's3_record_')
@@ -223,7 +234,7 @@ fun! s:Conceal() "{{{
         \['Index'          , {'cchar': 'I'}] ,
         \['Log'            , {'cchar': 'L'}] ,
         \['Object'         , {'cchar': 'O'}] ,
-        \['Position'       , {'cchar': 'P'}] ,
+        \['Partition'      , {'cchar': 'P'}] ,
         \['Queue'          , {'cchar': 'Q'}] ,
         \['Record'         , {'cchar': 'R'}] ,
         \['RecordsChunk'   , {'cchar': 'C'}] ,
@@ -235,7 +246,7 @@ fun! s:Conceal() "{{{
         \['index_'         , {'cchar': 'i'}] ,
         \['log_'           , {'cchar': 'l'}] ,
         \['object_'        , {'cchar': 'o'}] ,
-        \['position_'      , {'cchar': 'p'}] ,
+        \['partition_'     , {'cchar': 'p'}] ,
         \['queue_'         , {'cchar': 'q'}] ,
         \['record_'        , {'cchar': 'r'}] ,
         \['records_chunk_' , {'cchar': 'c'}] ,
@@ -253,6 +264,8 @@ fun! s:Conceal() "{{{
   for [k, v] in lst
     exe 'syn' 'match' "cConceal" string(k) 'conceal' 'cchar=' . v.cchar
   endfor
+
+  syn match cConceal '\v\\$' conceal
 
   " exe 'syn' 'match' "cConceal" '"'.conceal_fprefix.'"' 'conceal' 'cchar=‥'
   " exe 'syn' 'match' "cConceal" '"'.mod.'"' 'conceal' 'cchar=።'
