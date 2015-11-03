@@ -35,6 +35,9 @@ nmap <unique> <Leader>s <Plug>view:switchSetting
 
 fun! s:DoMap() "{{{
     let mapping = [
+          \ [ 'nmap', "[[",                   "<Plug>func_start" ],
+          \ [ 'nmap', "][",                   "<Plug>func_end" ],
+          \
           \ [ 'imap', "<C-a><C-v>",           "<Plug>edit:x_paste" ],
           \ [ 'imap', "<M-f>",                "<Plug>insert:comment" ],
           \ [ 'imap', "<C-c>",                "<Plug>edit:insert:toNormal" ],
