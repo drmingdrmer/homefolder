@@ -42,7 +42,7 @@ fun! s:format_astyle() "{{{
     let arg = join(ls, " ")
 
     call SaveWinPosition()
-    exe '%!astyle' arg
+    exe '%!astyle 2>/dev/null' arg
     call RestoreWinPosition()
 endfunction "}}}
 
