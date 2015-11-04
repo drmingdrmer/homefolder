@@ -44,16 +44,16 @@ fun! GetBlockLines()
 endfunction
 
 fun! GetFuncRange()
-    normal [[
+    XpFuncStart
     let ln1 = line(".")
 
-    normal ][
+    XpFuncEnd
     let ln2 = line(".")
 
     return ln1.",".ln2
 endfunction
 
-fun! ReplaceInRange(pattern, replace, range)
+fun! s:replace_in_range(pattern, replace, range)
     let cmd = a:range."s/".a:pattern."/".a:replace."/gc"
     exe cmd
 endfunction
@@ -62,7 +62,7 @@ fun! ReplaceInBlock()
     let ptn = inputdialog("pattern : ")
     let rep = inputdialog("replace to : ")
     let rng = GetBlockLines()
-    call ReplaceInRange(ptn, rep, rng)
+    call s:replace_in_range(ptn, rep, rng)
 endfunction
 
 fun! RelaceCurrentWordInBlock()
@@ -73,7 +73,7 @@ fun! RelaceCurrentWordInBlock()
     let ptn = "\\<".word.'\>'
     let rep = inputdialog("replace to : ", word)
     let rng = GetBlockLines()
-    call ReplaceInRange(ptn, rep, rng)
+    call s:replace_in_range(ptn, rep, rng)
 
     call cursor(ln, cur)
 endfunction
@@ -85,7 +85,7 @@ fun! RelaceCurrentWordInFunc()
     let ptn = "\\<".word.'\>'
     let rep = inputdialog("replace to : ", word)
     let rng = GetFuncRange()
-    call ReplaceInRange(ptn, rep, rng)
+    call s:replace_in_range(ptn, rep, rng)
 
     call cursor( currentPos )
 endfunction
@@ -99,7 +99,7 @@ fun! RelaceCurrentWord()
     let rep = inputdialog("replace to : ", word)
     let ptn = '\<'.word.'\>'
     let rng = "%"
-    call ReplaceInRange(ptn, rep, rng)
+    call s:replace_in_range(ptn, rep, rng)
 
     " call cursor(ln, cur)
     call RestoreWinPosition()
@@ -120,60 +120,3 @@ nmap <Leader>rb :call ReplaceInBlock()<cr>
 nmap <Leader><Leader>rc :call RelaceCurrentWordInBlock()<cr>
 nmap <Leader><Leader>rf :call RelaceCurrentWordInFunc()<cr>
 nmap <Leader><Leader>ra :call RelaceCurrentWord()<cr>
-"TODO replace selected text
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-" nmap <Leader><Leader>ra :call RelaceCurrentWord()<cr>
-
