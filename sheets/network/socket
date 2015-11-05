@@ -1,9 +1,9 @@
 /* /usr/include/bits/socket.h */
 struct sockaddr
-  {
+{
     __SOCKADDR_COMMON (sa_);    /* Common data: address family and length.  */
     char sa_data[14];           /* Address data.  */
-  };
+};
 
 /* /usr/include/bits/sockaddr.h */
 /* POSIX.1g specifies this type name for the `sa_family' member.  */
@@ -14,7 +14,7 @@ typedef unsigned short int sa_family_t;
    `struct sockaddr_in', `struct sockaddr_un', etc.  */
 
 #define __SOCKADDR_COMMON(sa_prefix)
-  sa_family_t sa_prefix##family
+sa_family_t sa_prefix##family
 
 #define __SOCKADDR_COMMON_SIZE  (sizeof (unsigned short int))
 
@@ -25,51 +25,51 @@ typedef unsigned short int sa_family_t;
 
 struct ifaddrs
 {
-  struct ifaddrs *ifa_next;
+    struct ifaddrs *ifa_next;
 
-  char *ifa_name;
-  unsigned int ifa_flags;
+    char *ifa_name;
+    unsigned int ifa_flags;
 
-  struct sockaddr *ifa_addr;
-  struct sockaddr *ifa_netmask;
-  union
-  {
-    struct sockaddr *ifu_broadaddr;
-    struct sockaddr *ifu_dstaddr;
-  } ifa_ifu;
-/* # 56 "/usr/include/ifaddrs.h" 3 4 */
-  void *ifa_data;
+    struct sockaddr *ifa_addr;
+    struct sockaddr *ifa_netmask;
+    union
+    {
+        struct sockaddr *ifu_broadaddr;
+        struct sockaddr *ifu_dstaddr;
+    } ifa_ifu;
+    /* # 56 "/usr/include/ifaddrs.h" 3 4 */
+    void *ifa_data;
 };
 
 /* # 28 "/usr/include/bits/sockaddr.h" 3 4 */
 typedef unsigned short int sa_family_t;
 
 struct sockaddr
-  {
+{
     sa_family_t sa_family;
     char sa_data[14];
-  };
+};
 
 
 /* # 224 "/usr/include/netinet/in.h" 3 4 */
 struct sockaddr_in
-  {
+{
     sa_family_t sin_family;
     in_port_t sin_port;
     struct in_addr sin_addr;
 
 
     unsigned char sin_zero[sizeof (struct sockaddr) -
-      (sizeof (unsigned short int)) -
-      sizeof (in_port_t) -
-      sizeof (struct in_addr)];
-  };
+            (sizeof (unsigned short int)) -
+            sizeof (in_port_t) -
+            sizeof (struct in_addr)];
+};
 
 typedef uint32_t in_addr_t;
 struct in_addr
-  {
+{
     in_addr_t s_addr;
-  };
+};
 
 /* vim:ft=c
- */
+*/
