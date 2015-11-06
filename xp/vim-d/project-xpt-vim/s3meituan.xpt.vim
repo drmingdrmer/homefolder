@@ -101,6 +101,19 @@ call XPTemplate('s3tp', [
     \'int `tp^S3Underline(V())^_init(`tp^ *`tp^S3TypeVar(V())^);',
     \'void `tp^S3Underline(V())^_destroy(`tp^ *`tp^S3TypeVar(V())^);',
     \])
+call XPTemplate('ifs', [
+      \'if (ret == S3_ERR_SUCCESS) {',
+      \'  `cursor^',
+      \'}',
+      \])
+call XPTemplate('ifns', [
+      \'if (ret != S3_ERR_SUCCESS) {',
+      \'  `return ret;^',
+      \'}',
+      \])
+
+call XPTemplate('dinfo', 'S3_INFO(`cursor^);' )
+call XPTemplate('derr', 'S3_ERROR(`cursor^);' )
 
 call XPTemplate('.',  's3_')
 call XPTemplate('..', 's3_`S3Mod()^_')
@@ -115,6 +128,7 @@ call XPTemplate('.ch', 's3_chain_')
 call XPTemplate('.log', 's3_log_')
 call XPTemplate('.o', 's3_object_')
 call XPTemplate('.oid', 's3_object_id_')
+call XPTemplate('.p', 's3_partition_')
 call XPTemplate('.ph', 's3_partition_header_')
 call XPTemplate('.pid', 's3_partition_id_')
 call XPTemplate('.r', 's3_record_')
