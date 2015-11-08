@@ -45,7 +45,7 @@ hi  Statement    gui=none      guifg=#91cb71     guibg=NONE
 hi  Cursor       gui=none      guifg=#000000     guibg=#00ff00
 hi  Search       gui=none      guifg=#dfdfdf     guibg=#4b7435
 hi  Type         gui=none      guifg=#f2ef85     guibg=NONE
-hi  Visual       gui=none      guifg=NONE        guibg=#303040
+hi  Visual       gui=none      guifg=NONE        guibg=#454560
 hi  Folded       gui=none      guifg=#8790b4     guibg=NONE
 hi  Operator     gui=none      guifg=#77928f     guibg=NONE
 hi  Number       gui=none      guifg=#8f85f5     guibg=#181818
