@@ -1,9 +1,9 @@
 #!/bin/sh
 
-_author=$(git config --local --get user.name)
 
 _days=5
 _show_time=0
+_author=""
 
 while [ $# -gt 0 ]
 do
@@ -17,11 +17,25 @@ do
             shift
             _show_time=1
             ;;
+        -a)
+            shift
+            _author=$1
+            shift
+            ;;
     esac
 done
 
+if [ "$_author" = "me" ]; then
+    _author=$(git config --local --get user.name)
+fi
+
+arg_author=""
 fmt="%s"
 awk_filter='{print $0}'
+
+if [ ".$author" != "." ]; then
+    arg_author="--author=\"$_author\""
+fi
 
 if [ "$_show_time" = "1" ]; then
     fmt="%ad $fmt"
@@ -29,7 +43,7 @@ if [ "$_show_time" = "1" ]; then
 fi
 
 git shortlog \
-    --author="$_author" \
+    $arg_author \
     --since="$_days days ago" \
     --no-merges \
     --format="$fmt" \
