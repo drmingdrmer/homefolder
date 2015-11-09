@@ -1,0 +1,42 @@
+#!/bin/sh
+
+
+unpack_()
+{
+    local prefix=$1
+
+    if [ -e $prefix.tgz ]; then
+        tar -xzf $prefix.tgz
+
+    elif [ -e $prefix.tar.gz ]; then
+        tar -xzf $prefix.tar.gz
+
+    elif [ -e $prefix.tar.bz2 ]; then
+        tar -xjf $prefix.tar.bz2
+
+    elif [ -e $prefix.zip ]; then
+        unzip -o $prefix.zip
+
+    else
+        echo "Unknown package type of $prefix"
+        return 1
+    fi
+
+    return 0
+}
+
+unpack_suffixed_()
+{
+    local fn="$1"
+    local suffixes="tgz tar.gz tar.gz2 zip"
+    for suf in $suffixes; do
+        if [ "${fn%.$suf}" != "$fn" ]; then
+            unpack_ ${fn%.$suf}
+            return $?
+        fi
+    done
+    echo "Unknown suffix of $fn"
+    return 1
+}
+
+unpack_suffixed_ "$1"
