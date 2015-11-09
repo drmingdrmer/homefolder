@@ -52,14 +52,13 @@ augroup NO_VISUAL_BELL
     au BufNew,BufRead,BufAdd,BufEnter * set t_vb=
 augroup END
 
-
 set updatetime=200
 
 if v:version >=703
-    set colorcolumn=+2
+    " high light 3 columns after textwidth
+    " see hi-ColorColumn
+    set colorcolumn=+1,+2,+3
 endif
-
-
 
 nmap <Leader><Leader>wm  <Plug>view:width_max
 nnoremap <Plug>view:width_max :set columns=999<CR>
