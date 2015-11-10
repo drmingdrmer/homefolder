@@ -137,23 +137,6 @@ fun! s:TagAllDoc() "{{{
     endfor
 endfunction "}}}
 
-
-
-" " TODO check string quoter
-" fun! s:SuperCR()
-  " let syn = CurSyntaxName()
-  " if syn =~? "string"
-    " if !exists("b:strConnector")
-      " let b:strConnector = "+"
-    " endif
-    " return "\"\<cr>".b:strConnector."\""
-  " endif
-"
-  " return "\<cr>"
-" endfunction
-"
-" inoremap <cr> <C-r>=<SID>SuperCR()<cr>
-
 let s:curReg = 1
 fun! s:SelDelReg(i)
   let s:curReg = s:curReg + a:i
