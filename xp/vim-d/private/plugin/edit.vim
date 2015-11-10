@@ -180,15 +180,31 @@ function! CpPath()
   let @+ =x
 endfunction
 
+fun! s:remove_trailing_blank() "{{{
+    let search = @/
+    call SaveWinPosition()
+
+    %s/\s*$//g
+
+    call RestoreWinPosition()
+    let @/ = search
+endfunction "}}}
+
+fun! s:remove_blank_lines() "{{{
+    call SaveWinPosition()
+
+    %g/^\s*$/normal dd
+
+    call RestoreWinPosition()
+endfunction "}}}
+
 
 "Copy Current path
 com! XXcc call CpPath()
 
 com! XXtagdoc call <SID>TagAllDoc()
-
-" remove blanks end of line
-com! XXrmeb kO | %s/\s*$//g | let @/="" | 'O
-com! XXrmbl kO | %%g/^\s*$/d | let @/="" | 'O
+com! XXrmeb call <SID>remove_trailing_blank()
+com! XXrmbl call <SID>remove_blank_lines()
 
 " shrink blank
 com XXsbl %s/\s+/ /g
