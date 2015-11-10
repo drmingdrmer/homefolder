@@ -289,7 +289,7 @@ fun! s:Conceal() "{{{
   " hi cConceal cterm=b
   hi Conceal ctermfg=white
 
-  setlocal conceallevel=2
+  setlocal conceallevel=0
   setlocal concealcursor=nv
 endfunction "}}}
 
