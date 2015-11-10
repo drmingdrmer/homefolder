@@ -5,7 +5,7 @@ runtime plugin/util.vim
 function! FoldText() "   {{{
     let tb     = &tabstop
     let tbstr  = repeat(" ", tb)
-    let width  = winwidth(0) - 10
+    let width  = winwidth(0) - 6
 
     " folding text
     let txt = getline(v:foldstart)
@@ -13,10 +13,9 @@ function! FoldText() "   {{{
     " replace tabs with spaces
     let txt = substitute(txt, '\t', tbstr, "g")
 
-    " create ?? lines text
-    let lines = (v:foldend-v:foldstart)." lines"
+    let text_lines = (v:foldend-v:foldstart) . ''
 
-    let textWidth = width - strlen(lines)
+    let textWidth = width - strlen(text_lines)
 
     " cut too long text
     if strlen(txt) > textWidth
@@ -24,10 +23,10 @@ function! FoldText() "   {{{
     endif
 
     " create space
-    let len = strlen(txt) + strlen(lines) 
+    let len = strlen(txt) + strlen(text_lines)
     let space = repeat('.', width - len) . " "
 
-    return txt.space.lines
+    return txt.space.text_lines
 endfunction " }}}
 
 set foldminlines=1
