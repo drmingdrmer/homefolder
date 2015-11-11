@@ -133,6 +133,12 @@ This beautifier developed and tested with ruby `2.0+`, so you can have weird res
 The default golang formatting program is shipped with the golang distribution. Make sure `gofmt` is in your PATH (if golang is installed properly, it should be).
 Here is the link to the installation: https://golang.org/doc/install
 
+* `rustfmt` for __Rust__.
+It can be installed using `cargo`, the Rust package manager. Up-to-date installation instructions are on the project page: https://github.com/nrc/rustfmt/#installation.
+
+* `dartfmt` for __Dart__.
+Part of the Dart SDK (make sure it is on your PATH). See https://www.dartlang.org/tools/dartfmt/ for more info.
+
 How can I change the behaviour of formatters, or add one myself?
 ----------------------------------------------------------------
 If you need a formatter that is not among the defaults, or if you are not satisfied with the default formatting behaviour that is provided by vim-autoformat, you can define it yourself.

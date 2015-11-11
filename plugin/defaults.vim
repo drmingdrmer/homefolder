@@ -4,16 +4,12 @@
 
 
 " Python
-if !exists('g:formatdef_autopep8_1_0_3')
-    let g:formatdef_autopep8_1_0_3 = '"autopep8 - --range ".a:firstline." ".a:lastline." ".(&textwidth ? "--max-line-length=".&textwidth : "")'
-endif
-
-if !exists('g:formatdef_autopep8_1_2_1')
-    let g:formatdef_autopep8_1_2_1 = '"autopep8 - --line-range ".a:firstline." ".a:lastline." ".(&textwidth ? "--max-line-length=".&textwidth : "")'
+if !exists('g:formatdef_autopep8')
+    let g:formatdef_autopep8 = '"autopep8 - --range ".a:firstline." ".a:lastline." ".(&textwidth ? "--max-line-length=".&textwidth : "")'
 endif
 
 if !exists('g:formatters_python')
-    let g:formatters_python = ['autopep8_1_0_3', 'autopep8_1_2_1']
+    let g:formatters_python = ['autopep8']
 endif
 
 
@@ -175,7 +171,7 @@ endif
 
 " Typescript
 if !exists('g:formatdef_tsfmt')
-    let g:formatdef_tsfmt = '"tsfmt --stdin %"'
+    let g:formatdef_tsfmt = "'tsfmt --stdin '.bufname('%')"
 endif
 
 if !exists('g:formatters_typescript')
@@ -198,3 +194,20 @@ if !exists('g:formatters_go')
     let g:formatters_go = ['gofmt_1', 'gofmt_2']
 endif
 
+" Rust
+if !exists('g:formatdef_rustfmt')
+    let g:formatdef_rustfmt = '"rustfmt"'
+endif
+
+if !exists('g:formatters_rust')
+    let g:formatters_rust = ['rustfmt']
+endif
+
+" Dart
+if !exists('g:formatdef_dartfmt')
+    let g:formatdef_dartfmt = '"dartfmt"'
+endif
+
+if !exists('g:formatters_dart')
+    let g:formatters_dart = ['dartfmt']
+endif
