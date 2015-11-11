@@ -687,11 +687,6 @@ function! unite#view#_quit(is_force, ...)  "{{{
     else
       startinsert!
     endif
-
-    " Skip next auto completion.
-    if exists('*neocomplcache#skip_next_complete')
-      call neocomplcache#skip_next_complete()
-    endif
   else
     redraw
   endif
@@ -828,7 +823,8 @@ function! unite#view#_redraw_echo(expr) "{{{
     set noruler
 
     let msg = map(s:msg2list(a:expr), "unite#util#truncate_smart(
-          \ v:val, &columns-1, &columns/2, '...')")
+          \ v:val, &columns - 1 + len(v:val) - strdisplaywidth(v:val),
+          \ &columns/2, '...')")
     let height = max([1, &cmdheight])
     for i in range(0, len(msg)-1, height)
       redraw
@@ -890,13 +886,13 @@ function! unite#view#_get_status_tail_string() "{{{
 endfunction"}}}
 
 function! unite#view#_get_source_name_string(source) "{{{
-  return (a:source.unite__len_candidates == 0) ? '_' :
+  return (a:source.unite__orig_len_candidates == 0) ? '_' :
         \ join(insert(filter(copy(a:source.args),
         \  'type(v:val) <= 1'),
         \   unite#helper#convert_source_name(a:source.name)), ':')
 endfunction"}}}
 function! unite#view#_get_source_candidates_string(source) "{{{
-  return a:source.unite__len_candidates == 0 ? '' :
+  return a:source.unite__orig_len_candidates == 0 ? '' :
         \      a:source.unite__orig_len_candidates ==
         \            a:source.unite__len_candidates ?
         \            '(' . a:source.unite__len_candidates . ')' :

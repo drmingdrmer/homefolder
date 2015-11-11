@@ -482,7 +482,12 @@ function! s:toggle_mark_candidates(start, end) "{{{
   let pos = getpos('.')
   try
     call cursor(a:start, 1)
+    let prev = -1
     for _ in range(a:start, a:end)
+      if line('.') == prev || line('.') < a:start || line('.') > a:end
+        break
+      endif
+      let prev = line('.')
       if line('.') == unite.prompt_linenr
         call unite#helper#skip_prompt()
       else
@@ -542,7 +547,7 @@ function! s:insert_enter(key) "{{{
 
   return (line('.') != unite.prompt_linenr) ?
         \ (unite.context.prompt_focus ?
-        \     unite.prompt_linenr.'GA' : '0i') :
+        \     unite.prompt_linenr.'GA' : 'gI') :
         \ (a:key == 'i' && col('.') <= 1
         \     || a:key == 'a' && col('.') < 1) ?
         \     'A' :
