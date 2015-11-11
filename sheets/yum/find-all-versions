@@ -1,0 +1,1 @@
+yum --showduplicates list gcc
