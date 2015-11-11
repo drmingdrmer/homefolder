@@ -296,6 +296,7 @@ function! unite#init#_current_unite(sources, context) "{{{
         \ (exists('b:unite') && !context.split) ?
         \ b:unite.prev_bufnr : bufnr('%')
   let unite.prev_winnr = winnr()
+  let unite.prev_winsaveview = winsaveview()
   let unite.prev_line = 0
   let unite.update_time_save = &updatetime
   let unite.statusline = unite#view#_get_status_string(unite)
@@ -342,6 +343,10 @@ function! unite#init#_current_unite(sources, context) "{{{
   let unite.cursor_line_time = reltime()
   let unite.match_id = 11
   let unite.sign_offset = 0
+
+  if has('nvim') && exists(':UniteInitializePython')
+    UniteInitializePython
+  endif
 
   if context.here
     let context.winheight = winheight(0) - winline() + 1
