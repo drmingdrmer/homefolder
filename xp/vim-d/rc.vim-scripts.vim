@@ -11,8 +11,8 @@ endfunction
 
 call s:add('Align')
 call s:add('FuzzyFinder')
-call s:add('Hints-for-C-Library-Functions')
-call s:add('Hints-for-C-Library-Functions-B')
+" call s:add('Hints-for-C-Library-Functions')
+" call s:add('Hints-for-C-Library-Functions-B')
 call s:add('IndentAnything')
 call s:add('L9')
 call s:add('ManPageView')
