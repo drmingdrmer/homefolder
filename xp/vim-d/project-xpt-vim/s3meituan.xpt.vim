@@ -178,14 +178,8 @@ call XPTemplate('S3PartitionHeader', 's3_partition_header_')
 call XPTemplate('s3_partition_id_', 'S3PartitionID')
 call XPTemplate('S3PartitionID', 's3_partition_id_')
 
-call XPTemplate('s3_record_', 'S3Replica')
-call XPTemplate('S3Replica', 's3_record_')
-
-call XPTemplate('s3_record_id_', 'S3ReplicaID')
-call XPTemplate('S3ReplicaID', 's3_record_id_')
-
-call XPTemplate('s3_replica_', 'S3Record')
-call XPTemplate('S3Record', 's3_replica_')
+call XPTemplate('s3_record_', 'S3Record')
+call XPTemplate('S3Record', 's3_record_')
 
 call XPTemplate('s3_record_id_', 'S3RecordID')
 call XPTemplate('S3RecordID', 's3_record_id_')
@@ -195,6 +189,12 @@ call XPTemplate('S3RecordPosition', 's3_record_position_')
 
 call XPTemplate('s3_record_index_', 'S3RecordIndex')
 call XPTemplate('S3RecordIndex', 's3_record_index_')
+
+call XPTemplate('s3_replica_', 'S3Replica')
+call XPTemplate('S3Replica', 's3_replica_')
+
+call XPTemplate('s3_replica_id_', 'S3ReplicaID')
+call XPTemplate('S3ReplicaID', 's3_replica_id_')
 
 call XPTemplate('s3_rbtree_', 'S3Rbtree')
 call XPTemplate('S3Rbtree', 's3_rbtree_')
