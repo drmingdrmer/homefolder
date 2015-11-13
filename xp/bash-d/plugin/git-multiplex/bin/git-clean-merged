@@ -1,8 +1,11 @@
 #!/bin/sh
 
+
+remote=${1-origin}
+
 for b in $(git branch | awk '{print $NF}')
 do
-    if git-branch-exist $b
+    if git-branch-exist $remote/$b
     then
         :
     else
