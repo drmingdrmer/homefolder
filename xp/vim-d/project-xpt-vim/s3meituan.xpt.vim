@@ -126,12 +126,8 @@ call XPTemplate('.t', 'S3`S3Capital(S3Mod())^')
 call XPTemplate('.arr', 's3_array_')
 call XPTemplate('.buf', 's3_buf_')
 call XPTemplate('.ch', 's3_chain_')
-call XPTemplate('.cr', [
-      \'s3_check_ret(ret = `^,',
-      \'        "`cursor^");'])
-call XPTemplate('.crw', [
-      \'s3_check_ret_warn(ret = `^,',
-      \'        "`cursor^");'])
+call XPTemplate('.cr',  's3_check_ret(ret = `^, `cursor^);'])
+call XPTemplate('.crw', 's3_check_ret_warn(ret = `^, `cursor^);'])
 call XPTemplate('.ex', 's3_exit(`cursor^);')
 call XPTemplate('.exw', 's3_exit_warn(`cursor^);')
 call XPTemplate('.log', 's3_log_')
