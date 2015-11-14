@@ -13,7 +13,9 @@ indent-switches
 #缩进case内容
 indent-cases
 #缩进宏定义内容
-indent-preprocessor
+# indent-preproc-block
+# indent-preproc-cond
+# indent-preproc-define
 #缩进注释
 indent-col1-comments
 
