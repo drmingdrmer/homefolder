@@ -136,6 +136,7 @@ call XPTemplate('.oid', 's3_object_id_')
 call XPTemplate('.p', 's3_partition_')
 call XPTemplate('.ph', 's3_partition_header_')
 call XPTemplate('.pid', 's3_partition_id_')
+call XPTemplate('.q', 's3_queue_')
 call XPTemplate('.r', 's3_record_')
 call XPTemplate('.rc', 's3_replica_')
 call XPTemplate('.rcid', 's3_replica_id_')
@@ -174,6 +175,9 @@ call XPTemplate('S3PartitionHeader', 's3_partition_header_')
 
 call XPTemplate('s3_partition_id_', 'S3PartitionID')
 call XPTemplate('S3PartitionID', 's3_partition_id_')
+
+call XPTemplate('s3_queue_', 'S3Queue')
+call XPTemplate('S3Queue', 's3_queue_')
 
 call XPTemplate('s3_record_', 'S3Record')
 call XPTemplate('S3Record', 's3_record_')
