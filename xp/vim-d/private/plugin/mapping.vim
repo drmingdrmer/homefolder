@@ -58,7 +58,8 @@ fun! s:DoMap() "{{{
           \ [ 'nmap', ",<Plug>F4",            "<Plug>buffer:rm_buf_win" ],
           \ [ 'nmap', ",me",                  "<Plug>buffer:make_executable" ],
           \
-          \ [ 'nmap', "<C-w><C-]>",           "<Plug>buffer:tag_in_preview" ],
+          \ [ 'nmap', "<C-w><C-]>",           "<Plug>buffer:tag_in_preview_right" ],
+          \ [ 'nmap', "<C-w>]",               "<Plug>buffer:tag_in_preview_top" ],
           \
           \ [ 'nmap', "<Leader><Leader>ds",  "<Plug>diff:diff_with_saved" ],
           \

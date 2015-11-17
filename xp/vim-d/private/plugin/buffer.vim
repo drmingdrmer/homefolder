@@ -174,7 +174,8 @@ nnoremap <Plug>buffer:to8               :call <SID>ToBuf(8)<cr>
 nnoremap <Plug>buffer:to9               :call <SID>ToBuf(9)<cr>
 nnoremap <Plug>buffer:to0               :call <SID>ToBuf(10)<cr>
 " show tag in preview window; go to preview window; make it right most
-nnoremap <Plug>buffer:tag_in_preview    <C-w>}<C-w>P<C-w>L:set winfixwidth<CR>:exe 'vertical resize' (!!&tw)*&tw+(!&tw)*80<CR>
+nnoremap <Plug>buffer:tag_in_preview_right    <C-w>}<C-w>P<C-w>L:set winfixwidth<CR>:exe 'vertical resize' (!!&tw)*&tw+(!&tw)*80<CR>
+nnoremap <Plug>buffer:tag_in_preview_top      <C-w>}
 "map}}}
 
 " vim: shiftwidth=2
