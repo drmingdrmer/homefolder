@@ -117,6 +117,7 @@ call XPTemplate('derr', 'S3_ERROR(`cursor^);' )
 
 call XPTemplate('.',  's3_')
 call XPTemplate('..', 's3_`S3Mod()^_')
+call XPTemplate('.ok',  'S3_OK')
 call XPTemplate('.e',  'S3_ERR_`x^ChooseStr("ERR", "BUF_OVERFLOW", "BUF_NOT_ENOUGH", "NUM_OVERFLOW", "OUTOFMEM", "CHKSUM", "INVALID_ARG", "NOTFOUND", "DUP", "IO", "INITTWICE", "INDEX_OUT_OF_RANGE", "TIMEOUT", "NOT_SUPPORTED", "SOCKET_FAIL", "AGAIN")^')
 call XPTemplate('.ei',  'S3_ERR_INVALID_ARG')
 call XPTemplate('.es',  'S3_ERR_SUCCESS')
