@@ -25,7 +25,7 @@ let colors_name = "default"
 hi Normal       cterm=none ctermbg=black       ctermfg=grey
 hi IncSearch    cterm=none ctermbg=blue       ctermfg=white
 hi Search       cterm=none ctermfg=black     ctermbg=white
-hi ColorColumn             ctermfg=yellow    ctermbg=darkcyan
+hi ColorColumn             ctermfg=yellow    ctermbg=none
 
 " hi Comment      cterm=none         ctermfg=darkcyan
 hi Comment      cterm=none         ctermfg=darkblue
