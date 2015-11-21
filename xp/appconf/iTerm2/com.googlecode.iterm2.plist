@@ -803,21 +803,28 @@
 	<key>MaxVertically</key>
 	<false/>
 	<key>NSNavLastRootDirectory</key>
-	<string>~/xp/appconf/iTerm2</string>
+	<string>~/Downloads/mbadolato-iTerm2-Color-Schemes-34b1c01/schemes</string>
 	<key>NSNavPanelExpandedSizeForOpenMode</key>
 	<string>{712, 448}</string>
+	<key>NSNavPanelExpandedSizeForSaveMode</key>
+	<string>{712, 521}</string>
 	<key>NSQuotedKeystrokeBinding</key>
 	<string></string>
 	<key>NSRepeatCountBinding</key>
 	<string></string>
 	<key>NSScrollAnimationEnabled</key>
 	<false/>
+	<key>NSToolbar Configuration com.apple.NSColorPanel</key>
+	<dict>
+		<key>TB Is Shown</key>
+		<integer>1</integer>
+	</dict>
 	<key>NSWindow Frame Preferences</key>
-	<string>279 180 924 485 0 0 1280 777 </string>
+	<string>331 216 924 485 0 0 1280 777 </string>
 	<key>NSWindow Frame UKCrashReporter</key>
 	<string>80 193 592 584 0 0 1280 777 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>4 22 1274 755 0 0 1280 777 </string>
+	<string>4 22 1270 755 0 0 1280 777 </string>
 	<key>NeverWarnAboutShortLivedSessions_2FE92995-500D-4626-AF0E-60482AE559B4</key>
 	<true/>
 	<key>New Bookmarks</key>
@@ -886,20 +893,20 @@
 			<key>Ansi 14 Color</key>
 			<dict>
 				<key>Blue Component</key>
-				<real>0.46582809090614319</real>
+				<real>0.46815690398216248</real>
 				<key>Green Component</key>
-				<real>0.46942126750946045</real>
+				<real>0.46815690398216248</real>
 				<key>Red Component</key>
-				<real>0.2697489857673645</real>
+				<real>0.26684942841529846</real>
 			</dict>
 			<key>Ansi 15 Color</key>
 			<dict>
 				<key>Blue Component</key>
-				<real>0.99047619104385376</real>
+				<real>1</real>
 				<key>Green Component</key>
 				<real>1</real>
 				<key>Red Component</key>
-				<real>0.99523806571960449</real>
+				<real>0.99000000953674316</real>
 			</dict>
 			<key>Ansi 2 Color</key>
 			<dict>
@@ -940,11 +947,11 @@
 			<key>Ansi 6 Color</key>
 			<dict>
 				<key>Blue Component</key>
-				<real>0.34062996506690979</real>
+				<real>0.2689221203327179</real>
 				<key>Green Component</key>
-				<real>0.34504973888397217</real>
+				<real>0.27151504158973694</real>
 				<key>Red Component</key>
-				<real>0.16036267578601837</real>
+				<real>0.12487178295850754</real>
 			</dict>
 			<key>Ansi 7 Color</key>
 			<dict>
@@ -1548,10 +1555,12 @@
 			<string>/Users/zhangyanpo</string>
 		</dict>
 	</array>
+	<key>NoSyncNeverRemindPrefsChangesCopy</key>
+	<true/>
 	<key>NoSyncTimeOfLastPromo</key>
 	<real>463537294.797809</real>
 	<key>NoSyncTimeOfLastPromoDownload</key>
-	<real>465675635.75984597</real>
+	<real>469727900.93447202</real>
 	<key>OnlyWhenMoreTabs</key>
 	<true/>
 	<key>OpenArrangementAtStartup</key>
@@ -1612,11 +1621,11 @@
 	<key>SUEnableAutomaticChecks</key>
 	<true/>
 	<key>SUFeedURL</key>
-	<string>http://iterm2.com/appcasts/testing.xml</string>
+	<string>https://iterm2.com/appcasts/testing.xml</string>
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2015-10-05T05:30:20Z</date>
+	<date>2015-11-20T15:58:20Z</date>
 	<key>SavePasteHistory</key>
 	<false/>
 	<key>Show Toolbelt</key>
@@ -1672,6 +1681,6 @@
 	<key>findRegex_iTerm</key>
 	<false/>
 	<key>iTerm Version</key>
-	<string>2.1.1</string>
+	<string>2.1.4</string>
 </dict>
 </plist>
