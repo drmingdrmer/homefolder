@@ -824,7 +824,7 @@
 	<key>NSWindow Frame UKCrashReporter</key>
 	<string>80 193 592 584 0 0 1280 777 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>4 22 1270 755 0 0 1280 777 </string>
+	<string>4 0 1274 777 0 0 1280 777 </string>
 	<key>NeverWarnAboutShortLivedSessions_2FE92995-500D-4626-AF0E-60482AE559B4</key>
 	<true/>
 	<key>New Bookmarks</key>
@@ -893,11 +893,11 @@
 			<key>Ansi 14 Color</key>
 			<dict>
 				<key>Blue Component</key>
-				<real>0.46815690398216248</real>
+				<real>0.53722184896469116</real>
 				<key>Green Component</key>
-				<real>0.46815690398216248</real>
+				<real>0.53722184896469116</real>
 				<key>Red Component</key>
-				<real>0.26684942841529846</real>
+				<real>0.30084425210952759</real>
 			</dict>
 			<key>Ansi 15 Color</key>
 			<dict>
@@ -929,11 +929,11 @@
 			<key>Ansi 4 Color</key>
 			<dict>
 				<key>Blue Component</key>
-				<real>0.72490841150283813</real>
+				<real>0.75995993614196777</real>
 				<key>Green Component</key>
-				<real>0.42603865265846252</real>
+				<real>0.42245000600814819</real>
 				<key>Red Component</key>
-				<real>0.30523428320884705</real>
+				<real>0.31459721922874451</real>
 			</dict>
 			<key>Ansi 5 Color</key>
 			<dict>
@@ -947,11 +947,11 @@
 			<key>Ansi 6 Color</key>
 			<dict>
 				<key>Blue Component</key>
-				<real>0.2689221203327179</real>
+				<real>0.24895696341991425</real>
 				<key>Green Component</key>
-				<real>0.27151504158973694</real>
+				<real>0.24895696341991425</real>
 				<key>Red Component</key>
-				<real>0.12487178295850754</real>
+				<real>0.11452020704746246</real>
 			</dict>
 			<key>Ansi 7 Color</key>
 			<dict>
