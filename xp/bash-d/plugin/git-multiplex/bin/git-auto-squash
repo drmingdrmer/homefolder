@@ -172,6 +172,22 @@ record_squash()
     echo $target >"$squash_dir/squash_to/$commit"
     echo $tree >"$squash_dir/tree_to_use/$target"
 }
+get_squash_target()
+{
+    local commit=$1
+    if test -r "$squash_dir/squash_to/$commit"
+    then
+        cat "$squash_dir/squash_to/$commit"
+    else
+        echo $commit
+    fi
+}
+does_contain()
+{
+    local trunk=$1
+    local branch=$2
+    test ".$(git rev-list $trunk..$branch -n1)" = "."
+}
 END)
 
 # The first pass collect commits need to be squashed
@@ -185,6 +201,7 @@ git filter-branch $force --commit-filter "$vars; $funs;"'
     tree=$1
     shift
 
+    parents="$@"
     firstparent=$2
 
     case $mes in
@@ -192,19 +209,44 @@ git filter-branch $force --commit-filter "$vars; $funs;"'
             record_squash $GIT_COMMIT $tree $firstparent
             ;;
         *)
-            for p in "$@"
+            # remove: -p first_parent
+            shift
+            shift
+
+            need_keep=0
+
+            # If there is no secondary parent, it is a normal commit and
+            # should be kept.
+            if [ -z "$1" ]; then
+                need_keep=1
+            fi
+
+            # If there are unsquashed and unmerged parent, keep this commit.
+            # Otherwise its first parent already contains all secondary parent
+            # then it can be removed.
+            while [ -n "$1" ]
             do
-                # if any of its parent is squashed
-                if test "-p" != "$p" && test "$firstparent" != "$p" && test -r "$squash_dir/squash_to/$p"
+                p=$2
+                shift
+                shift
+
+                if does_contain $firstparent $(get_squash_target $p)
                 then
-                    record_squash $GIT_COMMIT $tree $firstparent
+                    :
+                else
+                    need_keep=1
                     break
                 fi
             done
+            if test "$need_keep" = "0"; then
+                record_squash $GIT_COMMIT $tree $firstparent
+            fi
+
             ;;
     esac
 
-    git commit-tree $tree "$@" < $workdir/../this_message
+    git commit-tree $tree $parents < $workdir/../this_message
+
 ' "$@"
 
 # without force, our responsibility to remove backup refs
