@@ -32,11 +32,13 @@ fun! s:switchers.clean() "{{{
     if &showtabline == 0
         set showtabline=2
         set laststatus=2
+        set ruler
         set cmdheight=2
         call system('tmux set status on >/dev/null 2>/dev/null')
     else
         set showtabline=0
         set laststatus=0
+        set noruler
         set cmdheight=1
         call system('tmux set status off >/dev/null 2>/dev/null')
     endif
