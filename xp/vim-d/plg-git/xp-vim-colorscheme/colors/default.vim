@@ -36,6 +36,7 @@ hi CursorColumn cterm=none         ctermfg=none       ctermbg=darkmagenta
 hi CursorLine   cterm=none     ctermfg=none       ctermbg=none
 " hi CursorLine   cterm=none	    ctermfg=none       ctermbg=darkcyan
 hi Folded       cterm=none         ctermfg=grey       ctermbg=none
+hi VertSplit    cterm=none         ctermfg=darkgrey
 
 
 hi Function     cterm=none         ctermfg=blue
