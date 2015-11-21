@@ -4,13 +4,15 @@ endif
 let g:__SETTINGSWITCHER_VIM__ = 1
 
 let s:settings = {
-            \'fdc':  'foldcolumn',
+            \'.fc':  'foldcolumn',
+            \'.c' :  'clean',
+            \
             \'l' :  'list',
             \'p' :  'spell',
             \'n' :  'number',
             \'r' :  'wrap',
-            \'u' :  'cursorline',
-            \'c' :  'cursorcolumn',
+            \'cl' :  'cursorline',
+            \'cc' :  'cursorcolumn',
             \'m' :  'modifiable',
             \'x' :  'conceal',
             \}
@@ -24,6 +26,19 @@ fun! s:switchers.conceal() "{{{
     else
         setlocal conceallevel=0
         setlocal concealcursor=
+    endif
+endfunction "}}}
+fun! s:switchers.clean() "{{{
+    if &showtabline == 0
+        set showtabline=2
+        set laststatus=2
+        set cmdheight=2
+        call system('tmux set status on >/dev/null 2>/dev/null')
+    else
+        set showtabline=0
+        set laststatus=0
+        set cmdheight=1
+        call system('tmux set status off >/dev/null 2>/dev/null')
     endif
 endfunction "}}}
 let s:switchers.foldcolumn = [0, 3]
@@ -64,9 +79,10 @@ fun! s:ShowMenu() "{{{
         let pref .= c
     endwhile
 
+    let &cmdheight = oldcmdheight
+    redraw!
+
     if ! found
-        let &cmdheight = oldcmdheight
-        redraw!
         return
     endif
 
@@ -77,37 +93,35 @@ fun! s:ShowMenu() "{{{
 
         if has_key(s:switchers, setting_key)
 
-            let swt = s:switchers[setting_key]
-            if type(swt) == type([])
+            if type(s:switchers[setting_key]) == type([])
                 call s:switch_seq(setting_key)
             else
-                call swt()
+                call s:switchers[setting_key]()
             endif
         else
             exe "setlocal " . s:settings[ c ] . "!"
         endif
     endif
 
-    let &cmdheight = oldcmdheight
     redraw!
 
 endfunction "}}}
 
 fun! s:switch_seq(setting_key) "{{{
-    let swt = s:switchers[a:setting_key]
-    let [i, len] = [0 - 1, len(swt) - 1]
+    let Swt = s:switchers[a:setting_key]
+    let [i, len] = [0 - 1, len(Swt) - 1]
     while i < len | let i += 1
 
         exe 'let cur = &l:' . a:setting_key
 
-        if cur == swt[i]
-            let nxt = swt[(i + 1) % len(swt)]
+        if cur == Swt[i]
+            let nxt = Swt[(i + 1) % len(Swt)]
             exe 'let &l:' . a:setting_key . ' = ' . nxt
             return
         endif
     endwhile
 
-    exe 'let &l:' . a:setting_key . ' = ' . swt[0]
+    exe 'let &l:' . a:setting_key . ' = ' . Swt[0]
 
 endfunction "}}}
 
