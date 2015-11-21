@@ -1,8 +1,18 @@
 *   d7e3134 (HEAD -> master) Merge commit 'c458576'
 |\
 | * c920459 add x
-* | a6910e2 (tag: r, single) fixup! fixup! ok
-* | 75275ed fixup! ok
-* | 2e85eb7 ok
+| | *   8516b93 (refs/original/refs/heads/master) Merge commit 'c458576'
+| | |\
+| |/ /
+|/| |
+* | | a6910e2 (tag: r, single) fixup! fixup! ok
+* | | 75275ed fixup! ok
+* | | 2e85eb7 ok
+|/ /
+| | * 9a39697 (br) bla
+| |/
+| * c458576 fixup! again
+| * d6ab8d8 fixup!
+| * 8c1d007 add x
 |/
 * b66353d init
