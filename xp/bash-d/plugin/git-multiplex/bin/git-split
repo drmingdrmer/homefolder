@@ -1,12 +1,12 @@
 #!/bin/bash
 
 # * 358aee4 (HEAD) fix css
-# |  css/site.css | 13 ++++++-------
+# |  css/site.css | 13 ++---
 # |
 # * f869f40 init site
-# |  html/index.html    | 12 ++++++------
-# |  html/header.html   | 34 +++++++++++++++++-----------------
-# |  css/site.css       | 61 +++++++++++++++++++++++++++++++++++++++----------------------
+# |  html/index.html    | 12 ++--
+# |  html/header.html   | 34 +-----
+# |  css/site.css       | 61 +++++++------
 # |
 # * 82554be fix doc of Build
 #
@@ -18,14 +18,14 @@
 # *   948149a Merge commit 'aa76f4de5be5ddbb2908ba145fea5697c7baf728' into HEAD
 # |\
 # | * aa76f4d init site
-# | |  html/index.html  | 12 ++++++------
-# | |  html/header.html | 34 +++++++++++++++++-----------------
+# | |  html/index.html  | 12 ++--
+# | |  html/header.html | 34 +-----
 # | |
 # * | 088e903 fix css
-# | |  css/site.css | 13 ++++++-------
+# | |  css/site.css | 13 ++---
 # | |
 # * | 0b606c2 init site
-# | |  css/site.css | 61 +++++++++++++++++++++++++++++++++++++++----------------------
+# | |  css/site.css | 61 +++++++------
 # |/
 # * 82554be fix doc of Build
 
@@ -102,7 +102,7 @@ extract()
         p=$(git diff $c~ $c -- $fns)
         git apply --index <<<"$p"
 
-        git st
+        git status
 
         git commit -am "$mes"
     done
@@ -123,7 +123,7 @@ build_new_branch()
 
 discard_changes()
 {
-    local script="git rm -r -f $fns 2>/dev/null; git checkout $base -- $fns 2>/dev/null; git st >/dev/null"
+    local script="git rm -r -f $fns 2>/dev/null; git checkout $base -- $fns 2>/dev/null; git status >/dev/null"
 
     git checkout --detach $tip_hash \
         && mes "== discard from $tip ==" \
@@ -175,5 +175,5 @@ mes "split $fns from $range" \
     && merge_them \
     && is_same_as_original \
     && update_tip_ref \
-    && git co $tip >/dev/null 2>/dev/null \
+    && git checkout $tip >/dev/null 2>/dev/null \
     && mes "== Done =="
