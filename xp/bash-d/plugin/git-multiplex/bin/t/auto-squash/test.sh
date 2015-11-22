@@ -54,7 +54,9 @@ test_case()
                 || compare_file "$cwd/init"            "$testdir/init" init of $name
         } \
         && cmd=$(cat $cwd/case/$name/cmd) \
-        && $cmd \
+        && {
+            $cmd || die failure to run: "$cmd"
+        } \
         && _gl >"$testdir/rst" \
         && compare_file "$cwd/case/$name/rst" "$testdir/rst" rst of $name \
         && echo ok $name
