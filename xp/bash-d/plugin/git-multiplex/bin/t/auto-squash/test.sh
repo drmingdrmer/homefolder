@@ -55,7 +55,7 @@ test_case()
         } \
         && cmd=$(cat $cwd/case/$name/cmd) \
         && {
-            $cmd || die failure to run: "$cmd"
+            $cmd || test -r "$cwd/case/$name/failure" || die failure $name: "$cmd"
         } \
         && _gl >"$testdir/rst" \
         && compare_file "$cwd/case/$name/rst" "$testdir/rst" rst of $name \

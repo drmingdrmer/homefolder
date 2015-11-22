@@ -9,11 +9,9 @@ cat >&2 <<-END
     its first parent. By drdr.xp@gmail.com
 
 Usage:
-    > $name [-f] [-t] [-p <pattern>] <rev-list options>...
+    > $name [-t] [-p <pattern>] <rev-list options>...
 
 Options:
-    -f            Force to remove backup ref from previous $name.
-
     -p <pattern>  Squash commits with mssage starts with <pattern>.
                   By default <pattern> is 'fixup!'.
 
@@ -49,7 +47,7 @@ Options:
                       "refs/original/refs/heads/master"
 
 Example:
-    > $name -f -p fixup b66353d..master
+    > $name -p fixup b66353d..master
     moves master from a6910e2 to 4d4a5e4:
       * 4d4a5e4 (HEAD, master) ok
       | * a6910e2 fixup! fixup! ok
@@ -64,7 +62,7 @@ Tips:
 
     I suggest to keep them but if you really find it annoying, just force
     auto-squash to run again with empty-history to remove them:
-    > $name -f HEAD..
+    > $name HEAD..
 END
 
 }
@@ -75,8 +73,23 @@ die()
     exit 1
 }
 
-# workdir=./.git-rewrite/t/
-# mappingdir=./.git-rewrite/map
+# folders in $squash_dir:
+#
+#   squash_to/$commit :
+#       $commit should be squashed to $(cat $commit).
+#
+#   tree_to_use/$commit :
+#       $commit is a squash target and the tree hash to use is
+#       $(cat $commit).
+#
+#   commit_hashes :
+#       list of commit hash specified by user.
+#
+#   commit/$commit :
+#       present if $commit is in commit_hashes.
+#
+#   refs :
+#       list of refs to update after squashing.
 
 squash_dir=.git-auto-squash
 _orig_dir=$(pwd)
@@ -92,7 +105,12 @@ find_refs()
 {
     mkdir -p "$squash_dir/commit" || die "mkdir $squash_dir/commit"
 
-    for commit in $(git rev-list --reverse --topo-order --default HEAD --parents --simplify-merges "$@")
+    git rev-list --reverse --topo-order \
+        --default HEAD --parents \
+        --simplify-merges "$@" >"$squash_dir/commit_hashes" \
+        || die "listing commits: git rev-list ... $@"
+
+    for commit in $(cat "$squash_dir/commit_hashes")
     do
         echo 1 >"$squash_dir/commit/$commit"
     done
@@ -107,7 +125,6 @@ find_refs()
     done
 }
 
-force=
 update_refs=
 pattern="fixup!"
 
@@ -117,10 +134,6 @@ do
         "-h"|"--help"|"")
             usage
             exit 0
-            ;;
-        -f)
-            shift
-            force=" -f "
             ;;
         -t)
             shift
@@ -149,7 +162,8 @@ done
 
 if test "$update_refs" = "1"
 then
-    update_refs=$(find_refs "$@")
+    find_refs "$@" >"$squash_dir/refs"
+    update_refs=$(cat $squash_dir/refs)
 
     echo "Also update ref: $update_refs"
 fi
@@ -192,7 +206,7 @@ END)
 
 # The first pass collect commits need to be squashed
 
-git filter-branch $force --commit-filter "$vars; $funs;"'
+git filter-branch -f --commit-filter "$vars; $funs;"'
 
     cat > "$workdir/../this_message"
     mes="$(cat "$workdir/../this_message")"
@@ -249,8 +263,7 @@ git filter-branch $force --commit-filter "$vars; $funs;"'
 
 ' "$@"
 
-# without force, our responsibility to remove backup refs
-git filter-branch $force --commit-filter "$vars; $funs;"'
+git filter-branch -f --commit-filter "$vars; $funs;"'
 
     if test -r "$squash_dir/squash_to/$GIT_COMMIT"
     then
