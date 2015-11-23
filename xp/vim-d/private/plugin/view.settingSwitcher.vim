@@ -35,12 +35,14 @@ fun! s:switchers.clean() "{{{
         set ruler
         set cmdheight=2
         call system('tmux set status on >/dev/null 2>/dev/null')
+        call system('screen -X hardstatus alwayslastline >/dev/null 2>/dev/null')
     else
         set showtabline=0
         set laststatus=0
         set noruler
         set cmdheight=1
         call system('tmux set status off >/dev/null 2>/dev/null')
+        call system('screen -X hardstatus ignore >/dev/null 2>/dev/null')
     endif
 endfunction "}}}
 let s:switchers.foldcolumn = [0, 3]
