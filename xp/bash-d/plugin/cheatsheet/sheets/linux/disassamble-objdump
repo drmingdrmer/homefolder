@@ -1,0 +1,1 @@
+objdump --line-numbers --source a.out
