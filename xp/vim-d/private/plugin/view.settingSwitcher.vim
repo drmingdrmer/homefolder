@@ -7,14 +7,15 @@ let s:settings = {
             \'.fc':  'foldcolumn',
             \'.c' :  'clean',
             \
-            \'l' :  'list',
-            \'p' :  'spell',
-            \'n' :  'number',
-            \'r' :  'wrap',
-            \'cl' :  'cursorline',
             \'cc' :  'cursorcolumn',
-            \'m' :  'modifiable',
-            \'x' :  'conceal',
+            \'cl' :  'cursorline',
+            \'l'  :  'list',
+            \'m'  :  'modifiable',
+            \'n'  :  'number',
+            \'p'  :  'spell',
+            \'r'  :  'wrap',
+            \'tl' :  'showtabline',
+            \'x'  :  'conceal',
             \}
 
 let s:switchers = {}
