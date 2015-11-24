@@ -46,6 +46,7 @@ fun! s:switchers.clean() "{{{
         call system('screen -X hardstatus ignore >/dev/null 2>/dev/null')
     endif
 endfunction "}}}
+let s:switchers.showtabline = [0, 2]
 let s:switchers.foldcolumn = [0, 3]
 
 fun! s:ShowMenu() "{{{
