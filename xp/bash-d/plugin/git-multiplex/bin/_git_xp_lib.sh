@@ -96,7 +96,7 @@ git_ver()
 
 git_hash()
 {
-    git log -n1 --format="%H" $1 \
+    git rev-parse $1 \
         || die "'git_hash $@'"
 }
 
