@@ -12,7 +12,6 @@ set_verbose()
 {
     _git_xp_verbose=${1-1}
 }
-
 log()
 {
     local color="$1"
@@ -29,12 +28,10 @@ log()
         echo "$title $mes"
     fi
 }
-
 dd()
 {
     debug "$@"
 }
-
 debug()
 {
     if [ ".$_git_xp_verbose" == ".1" ]; then
@@ -42,13 +39,11 @@ debug()
         log "$DarkGrey" "$@"
     fi
 }
-
 info()
 {
     local Brown="$(tput setaf 3)"
     log "$Brown" "$@"
 }
-
 mes()
 {
     local Green="$(tput setaf 2)"
@@ -84,22 +79,11 @@ _colors()
     NC="$(tput sgr0)" # No Color
 }
 
-git_ver()
-{
-    local git_version=$(git --version | awk '{print $NF}')
-    local git_version_1=${git_version%%.*}
-    local git_version_2=${git_version#*.}
-    git_version_2=${git_version_2%%.*}
-
-    printf "%03d%03d" $git_version_1 $git_version_2
-}
-
 git_hash()
 {
     git rev-parse $1 \
         || die "'git_hash $@'"
 }
-
 git_rev_list()
 {
     # --parents
@@ -114,7 +98,15 @@ git_rev_list()
         "$@" \
         || die "'git rev-list $@'"
 }
+git_ver()
+{
+    local git_version=$(git --version | awk '{print $NF}')
+    local git_version_1=${git_version%%.*}
+    local git_version_2=${git_version#*.}
+    git_version_2=${git_version_2%%.*}
 
+    printf "%03d%03d" $git_version_1 $git_version_2
+}
 git_working_root()
 {
     git rev-parse --show-toplevel
