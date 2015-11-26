@@ -63,16 +63,36 @@ imap     <Plug>complete:omni          <C-x><C-o>
 nmap     <Plug>edit:copy_cur_word     :let @"=<C-r>='expand("<cword>")'<cr><cr>
 vnoremap <Plug>edit:copy_to_tmp       :w! ~/clp<cr>gv"+y
 
-if has("gui_running") || &term == "xterm"
-    xnoremap <Plug>edit:x_copy            ygv"+y
-    inoremap <Plug>edit:x_paste           <C-o>"+p
-elseif executable("xclip")
-    xnoremap <Plug>edit:x_copy            :w! ~/..clp<cr>:silent !cat ~/..clp\|xclip -selection clipboard<cr>gvy
-    inoremap <Plug>edit:x_paste           <esc>:r! xclip -o -selection clipboard<cr>
-else
+fun! s:try_map_clipboard() "{{{
+    let t = reltime()
+    let text = '' . (t[0] * 1000 * 1000 + t[1])
+
+    try
+        let saved = @+
+        let @+ = text
+        if @+ == text
+
+            xnoremap <Plug>edit:x_copy            ygv"+y
+            inoremap <Plug>edit:x_paste           <C-o>"+p
+            let @+ = saved
+
+            echom 'use at +'
+            return
+        endif
+    catch /.*/
+    endtry
+
+    if executable("xclip")
+        xnoremap <Plug>edit:x_copy            :w! ~/..clp<cr>:silent !cat ~/..clp\|xclip -selection clipboard<cr>gvy
+        inoremap <Plug>edit:x_paste           <esc>:r! xclip -o -selection clipboard<cr>
+        return
+    endif
+
     xnoremap <Plug>edit:x_copy            :w! ~/..clp<cr>gvy
     inoremap <Plug>edit:x_paste           <esc>:r ~/..clp<cr>
-endif
+
+endfunction "}}}
+call s:try_map_clipboard()
 
 imap          <Plug>edit:paste_from_tmp    <esc>:r ~/clp<cr>i
 nmap          <Plug>edit:move_up           mz:m-2<cr>`z==
