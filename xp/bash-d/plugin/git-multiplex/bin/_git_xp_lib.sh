@@ -1,9 +1,16 @@
 #!/bin/sh
 
+_git_xp_verbose=1
+
 die()
 {
     echo "Failure $@" >&2
     exit 1
+}
+
+set_verbose()
+{
+    _git_xp_verbose=${1-1}
 }
 
 log()
@@ -25,8 +32,10 @@ log()
 
 debug()
 {
-    local DarkGrey="$(tput bold ; tput setaf 0)"
-    log "$DarkGrey" "$@"
+    if [ ".$_git_xp_verbose" == ".1" ]; then
+        local DarkGrey="$(tput bold ; tput setaf 0)"
+        log "$DarkGrey" "$@"
+    fi
 }
 
 info()
