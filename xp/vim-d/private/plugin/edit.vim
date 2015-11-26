@@ -76,7 +76,6 @@ fun! s:try_map_clipboard() "{{{
             inoremap <Plug>edit:x_paste           <C-o>"+p
             let @+ = saved
 
-            echom 'use at +'
             return
         endif
     catch /.*/
