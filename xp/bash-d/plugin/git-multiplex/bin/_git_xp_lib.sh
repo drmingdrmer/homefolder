@@ -114,3 +114,8 @@ git_rev_list()
         "$@" \
         || die "'git rev-list $@'"
 }
+
+git_working_root()
+{
+    git rev-parse --show-toplevel
+}
