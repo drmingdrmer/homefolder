@@ -2,9 +2,6 @@
 
 source _git_xp_lib.sh
 
-verbose=1
-counter=0
-
 main()
 {
     local cmd="${1-update}"
