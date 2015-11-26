@@ -12,6 +12,7 @@ log()
     local title=$2
     shift
     shift
+
     local mes="$@"
     local NC="$(tput sgr0)"
 
@@ -24,7 +25,7 @@ log()
 
 debug()
 {
-    DarkGrey="$(tput bold ; tput setaf 0)"
+    local DarkGrey="$(tput bold ; tput setaf 0)"
     log "$DarkGrey" "$@"
 }
 
