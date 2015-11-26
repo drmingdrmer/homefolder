@@ -30,6 +30,11 @@ log()
     fi
 }
 
+dd()
+{
+    debug "$@"
+}
+
 debug()
 {
     if [ ".$_git_xp_verbose" == ".1" ]; then
