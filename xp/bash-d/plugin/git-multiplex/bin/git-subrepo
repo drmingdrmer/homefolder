@@ -10,7 +10,7 @@ main()
     local cmd="${1-update}"
     local match="$2"
 
-    local root=$(repo_root)
+    local root=$(git_working_root)
     [ "x$root" = "x" ] && die 'looking for git repo root'
 
     local conf_fn=./.gitsubrepo
@@ -86,29 +86,6 @@ fetch_remote()
     git fetch --no-tags "$url" "$ref:$localtag" || die fetch "$mes"
     echo "$prefix $url $ref $localtag" >> .gitsubrepo_refs
     dd "Done fetching $mes"
-}
-
-get_hash()
-{
-    git rev-parse $1
-}
-
-repo_root()
-{
-    git rev-parse --show-toplevel
-}
-
-dd()
-{
-    if [ ".$verbose" = ".1" ]; then
-        echo "$@"
-    fi
-}
-
-die()
-{
-    echo "Failure $@" >&2
-    exit 1
 }
 
 main "$@"
