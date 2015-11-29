@@ -42,11 +42,15 @@ fun! S3DotH() "{{{
   return fn
 endfunction "}}}
 
-fun! S3Mod() "{{{
+fun! S3mod() "{{{
   let fn = S3Path(0)
   let fn = substitute(fn, '\v.*/', '', '')
   let fn = substitute(fn, '\v^s3_', '', '')
   return fn
+endfunction "}}}
+
+fun! S3Mod() "{{{
+  return S3Capital(S3mod())
 endfunction "}}}
 
 fun! S3TypeVar(tp) "{{{
@@ -90,7 +94,7 @@ call XPTemplate('thead', [
     \])
 
 call XPTemplate('s3tp', [
-    \'typedef struct `tp^S3{S3Capital(S3Mod())}^ `tp^;',
+    \'typedef struct `tp^S3{S3Mod()}^ `tp^;',
     \'struct `tp^ {',
     \'  `cursor^',
     \'};',
@@ -101,11 +105,29 @@ call XPTemplate('s3tp', [
     \'int `tp^S3Underline(V())^_init(`tp^ *`tp^S3TypeVar(V())^);',
     \'void `tp^S3Underline(V())^_destroy(`tp^ *`tp^S3TypeVar(V())^);',
     \])
+
+call XPTemplate('s3construct', [
+      \'S3`S3Mod()^ *s3_`S3mod()^_construct() {',
+      \'    S3`S3Mod()^ *`x^ = malloc(sizeof(S3`S3Mod()^));',
+      \'    if (`x^ == NULL) {',
+      \'        return `x^;',
+      \'    }',
+      \'    *`x^ = (S3`S3Mod()^)s3_`S3mod()^_null;',
+      \'    return `x^;',
+      \'}',
+      \'',
+      \'void s3_`S3mod()^_destruct(S3`S3Mod()^ *`x^) {',
+      \'    s3_`S3mod()^_destroy(`x^);',
+      \'    s3_free(`x^);',
+      \'}',
+      \])
+
 call XPTemplate('ifs', [
       \'if (ret == S3_OK) {',
       \'  `cursor^',
       \'}',
       \])
+
 call XPTemplate('ifns', [
       \'if (ret != S3_OK) {',
       \'  `return ret;^',
@@ -116,12 +138,12 @@ call XPTemplate('dinfo', 'S3_INFO(`cursor^);' )
 call XPTemplate('derr', 'S3_ERROR(`cursor^);' )
 
 call XPTemplate('.',  's3_')
-call XPTemplate('..', 's3_`S3Mod()^_')
+call XPTemplate('..', 's3_`S3mod()^_')
 call XPTemplate('.ok',  'S3_OK')
 call XPTemplate('.e',  'S3_ERR_`x^ChooseStr("ERR", "EOF", "BUF_OVERFLOW", "BUF_NOT_ENOUGH", "NUM_OVERFLOW", "OUTOFMEM", "CHKSUM", "INVALID_ARG", "NOTFOUND", "DUP", "IO", "INITTWICE", "INDEX_OUT_OF_RANGE", "TIMEOUT", "NOT_SUPPORTED", "SOCKET_FAIL", "AGAIN")^')
 call XPTemplate('.ei',  'S3_ERR_INVALID_ARG')
 call XPTemplate('.eoo',  'S3_ERR_OUTOFMEM')
-call XPTemplate('.t', 'S3`S3Capital(S3Mod())^')
+call XPTemplate('.t', 'S3`S3Capital(S3mod())^')
 
 call XPTemplate('.arr', 's3_array_')
 call XPTemplate('.buf', 's3_buf_')
@@ -215,7 +237,7 @@ call XPTemplate('S3TimerCallback', 's3_timer_callback_')
 call XPTemplate('s3_string_', 'S3String')
 call XPTemplate('S3String', 's3_string_')
 
-call XPTemplate('.ml', '(`tp^S3{S3Capital(S3Mod())}^*)s3_malloc(sizeof(`tp^))')
+call XPTemplate('.ml', '(`tp^S3{S3Capital(S3mod())}^*)s3_malloc(sizeof(`tp^))')
 call XPTemplate('.bz', 'bzero(`x^, sizeof(*`x^))')
 call XPTemplate('.ifbz', [
       \'if (`x^ != NULL) {',
@@ -292,8 +314,8 @@ fun! s:Conceal() "{{{
         \['s3_check_ret'   , {'cchar': '«'}] ,
         \]
 
-  let conceal_fprefix = 's3_' . S3Mod()
-  let mod = 'S3' . S3Capital(S3Mod())
+  let conceal_fprefix = 's3_' . S3mod()
+  let mod = 'S3' . S3Capital(S3mod())
 
   exe 'syn' 'keyword' "cConceal" 'void' 'contained conceal'
 
