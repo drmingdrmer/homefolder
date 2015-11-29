@@ -58,7 +58,7 @@ fun! S3TypeVar(tp) "{{{
   return tolower(tp)
 endfunction "}}}
 
-call XPTemplate('modeline', '// vim'.':ts=8:sw=2:et')
+call XPTemplate('modeline', '// vim'.':ts=8:sw=2:et:fdl=1')
 
 call XPTemplate('hhead', [
     \'#ifndef `S3FileID()^',
@@ -74,7 +74,7 @@ call XPTemplate('hhead', [
     \'}',
     \'#endif',
     \'#endif /* `S3FileID()^ */',
-    \'// vim' . ':ts=8:sw=2:et',
+    \'// vim' . ':ts=8:sw=2:et:fdl=1',
     \])
 
 call XPTemplate('chead', [
@@ -82,7 +82,7 @@ call XPTemplate('chead', [
     \'',
     \'`cursor^',
     \'',
-    \'// vim' . ':ts=8:sw=2:et',
+    \'// vim' . ':ts=8:sw=2:et:fdl=0',
     \])
 
 call XPTemplate('thead', [
@@ -90,7 +90,7 @@ call XPTemplate('thead', [
     \'',
     \'#include "lib/s3_error.h"',
     \'`cursor^',
-    \'// vim' . ':ts=8:sw=2:et',
+    \'// vim' . ':ts=8:sw=2:et:fdl=0',
     \])
 
 call XPTemplate('s3tp', [
