@@ -3,10 +3,19 @@ if exists("g:__EDIT_CONVENTION_sjfkdsfdjksl__")
 endif
 let g:__EDIT_CONVENTION_sjfkdsfdjksl__ = 1
 
-runtime plugin/xp_remap.vim
+" remove a space if current line ends with ", "
+fun! s:cr_map() "{{{
+    let text_before_cursor = strpart(getline("."), 0, col(".")-1)
+    if text_before_cursor =~ '\V,\s\$'
+        return "\<BS>\<CR>"
+    else
+        return "\<CR>"
+    endif
+endfunction "}}}
 
-imap ,      <Plug>xp_remap_comma<Plug>xp_remap_space
-imap ,<CR>  <Plug>xp_remap_comma<Plug>xp_remap_cr
+" <C-]> to expand abbreviation
+inoremap ,      <C-]>,<Space>
+inoremap <expr> <CR>  <SID>cr_map()
 
 fun! s:ClosePum() "{{{
     if pumvisible()
