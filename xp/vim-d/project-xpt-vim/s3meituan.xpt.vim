@@ -143,7 +143,8 @@ call XPTemplate('.ok',  'S3_OK')
 call XPTemplate('.e',  'S3_ERR_`x^ChooseStr("ERR", "EOF", "BUF_OVERFLOW", "BUF_NOT_ENOUGH", "NUM_OVERFLOW", "OUTOFMEM", "CHKSUM", "INVALID_ARG", "NOTFOUND", "DUP", "IO", "INITTWICE", "INDEX_OUT_OF_RANGE", "TIMEOUT", "NOT_SUPPORTED", "SOCKET_FAIL", "AGAIN")^')
 call XPTemplate('.ei',  'S3_ERR_INVALID_ARG')
 call XPTemplate('.eoo',  'S3_ERR_OUTOFMEM')
-call XPTemplate('.t', 'S3`S3Capital(S3mod())^')
+call XPTemplate('.t', 'S3`S3S3Mod()^')
+call XPTemplate('.ret', 's3_return_val_if_fail(`^, `S3_ERR_INVALID_ARG^);')
 
 call XPTemplate('.arr', 's3_array_')
 call XPTemplate('.buf', 's3_buf_')
@@ -151,6 +152,13 @@ call XPTemplate('.ch', 's3_chain_')
 call XPTemplate('.cr',  's3_check_ret(ret = `^, `""^);')
 call XPTemplate('.crw', 's3_check_ret_warn(ret = `^, `""^);')
 call XPTemplate('.ex', 's3_exit(`cursor^);')
+call XPTemplate('out', [
+      \'exit:',
+      \'    if (ret != S3_OK) {',
+      \'        `cursor^',
+      \'    }',
+      \'    return ret;',
+      \])
 call XPTemplate('.exw', 's3_exit_warn(`cursor^);')
 call XPTemplate('.log', 's3_log_')
 call XPTemplate('.o', 's3_object_')
