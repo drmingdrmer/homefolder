@@ -134,6 +134,7 @@ call XPTemplate('ifns', [
       \'}',
       \])
 
+call XPTemplate('dd', 'S3_DEBUG(`cursor^);' )
 call XPTemplate('dinfo', 'S3_INFO(`cursor^);' )
 call XPTemplate('derr', 'S3_ERROR(`cursor^);' )
 
