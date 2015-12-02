@@ -1,0 +1,1 @@
+vim --startuptime vim.log
