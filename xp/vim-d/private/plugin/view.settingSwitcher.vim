@@ -4,18 +4,18 @@ endif
 let g:__SETTINGSWITCHER_VIM__ = 1
 
 let s:settings = {
-            \'.fc':  'foldcolumn',
             \'.c' :  'clean',
+            \'.fc':  'foldcolumn',
             \
+            \'x'  :  'conceal',
             \'cc' :  'cursorcolumn',
             \'cl' :  'cursorline',
             \'l'  :  'list',
             \'m'  :  'modifiable',
             \'n'  :  'number',
+            \'tl' :  'showtabline',
             \'p'  :  'spell',
             \'r'  :  'wrap',
-            \'tl' :  'showtabline',
-            \'x'  :  'conceal',
             \}
 
 let s:switchers = {}
@@ -81,7 +81,12 @@ fun! s:ShowMenu() "{{{
             break
         endif
 
-        let c = nr2char( getchar() )
+        try
+            let c = nr2char( getchar() )
+        catch /.*/
+            " maybe <C-c> by user
+            break
+        endtry
         let pref .= c
     endwhile
 
