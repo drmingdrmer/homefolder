@@ -133,6 +133,7 @@ call XPTemplate('ifns', [
       \'  `return ret;^',
       \'}',
       \])
+call XPTemplate('.cmp', 's3_norm_cmp_return_ne(a->`x^, b->`x^);')
 
 call XPTemplate('dd', 'S3_DEBUG(`cursor^);' )
 call XPTemplate('dinfo', 'S3_INFO(`cursor^);' )
@@ -146,6 +147,11 @@ call XPTemplate('.ei',  'S3_ERR_INVALID_ARG')
 call XPTemplate('.eoo',  'S3_ERR_OUTOFMEM')
 call XPTemplate('.t', 'S3`S3S3Mod()^')
 call XPTemplate('.ret', 's3_return_val_if_fail(`^, `S3_ERR_INVALID_ARG^);')
+call XPTemplate('.retinit', [
+      \'s3_return_val_if_fail(`x^ != NULL, `S3_ERR_INVALID_ARG^);'
+      \'s3_return_val_if_fail(`x^->inited_ == 1, `S3_ERR_INVALID_ARG^);'
+      \])
+call XPTemplate('.ret2', 's3_return_val_if_fail(`^->inited_ == 0, `S3_ERR_INITTWICE^);')
 
 call XPTemplate('.arr', 's3_array_')
 call XPTemplate('.buf', 's3_buf_')
@@ -286,6 +292,15 @@ call XPTemplate( 'u74', 'uint64_t' ) "typo
 call XPTemplate( 'up',  'uintptr_t' )
 
 call XPTemplate('null', 'NULL')
+call XPTemplate('nil', 'NULL')
+call XPTemplate('=n', ' == NULL')
+call XPTemplate('!n', ' != NULL')
+
+call XPTemplate('>i', '->inited_')
+call XPTemplate('.i', '.inited_')
+
+call XPTemplate('=0', ' == 0')
+call XPTemplate('=1', ' == 1')
 
 call XPTemplate( 'st',  'size_t' )
 call XPTemplate( 'sst',  'ssize_t' )
