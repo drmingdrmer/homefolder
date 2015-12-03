@@ -148,8 +148,8 @@ call XPTemplate('.eoo',  'S3_ERR_OUTOFMEM')
 call XPTemplate('.t', 'S3`S3S3Mod()^')
 call XPTemplate('.ret', 's3_return_val_if_fail(`^, `S3_ERR_INVALID_ARG^);')
 call XPTemplate('.retinit', [
-      \'s3_return_val_if_fail(`x^ != NULL, `S3_ERR_INVALID_ARG^);'
-      \'s3_return_val_if_fail(`x^->inited_ == 1, `S3_ERR_INVALID_ARG^);'
+      \'s3_return_val_if_fail(`x^ != NULL, `S3_ERR_INVALID_ARG^);',
+      \'s3_return_val_if_fail(`x^->inited_ == 1, `S3_ERR_INVALID_ARG^);',
       \])
 call XPTemplate('.ret2', 's3_return_val_if_fail(`^->inited_ == 0, `S3_ERR_INITTWICE^);')
 
