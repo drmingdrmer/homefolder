@@ -1,0 +1,3 @@
+#!/bin/sh
+
+git push origin $1:refs/heads/feature/$2
