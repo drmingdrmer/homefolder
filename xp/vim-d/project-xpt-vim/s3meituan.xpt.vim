@@ -153,6 +153,7 @@ call XPTemplate('.retinit', [
       \])
 call XPTemplate('.ret2', 's3_return_val_if_fail(`^->inited_ == 0, `S3_ERR_INITTWICE^);')
 
+call XPTemplate('.at', 's3_atomic_')
 call XPTemplate('.arr', 's3_array_')
 call XPTemplate('.buf', 's3_buf_')
 call XPTemplate('.ch', 's3_chain_')
