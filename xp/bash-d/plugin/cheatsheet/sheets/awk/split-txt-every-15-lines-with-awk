@@ -1,0 +1,2 @@
+
+cat inception.txt | awk 'BEGIN {j=0}; { if (i>15) { fn=sprintf("%04d.txt",j); print x > "inc/"fn; x = ""; i = 0; j += 1; }; x = x "\n" $0; i = i + 1 }'
