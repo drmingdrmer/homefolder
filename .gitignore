@@ -8,6 +8,8 @@
 
 !/.astylerc
 !/.bashrc
+!/.gdbinit
+!/.gdbinit.d
 !/.gitshrc
 !/.gnomerc
 !/.gvimrc
