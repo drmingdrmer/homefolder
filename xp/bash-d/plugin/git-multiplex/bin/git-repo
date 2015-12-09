@@ -1,0 +1,27 @@
+#!/bin/sh
+
+source _git_xp_lib.sh
+
+cat <<-END
+[mod "dir/path"]
+	remote origin git://github.com/jquery/jquery-tmpl.git
+	remote    bkp git://github.com/jquery/jquery-tmpl.git
+	head origin master
+END
+
+main()
+{
+    local working_root_fn="$(git_working_root)"
+    local repos_fn=
+
+    if test ".$working_root_fn" = "."
+    then
+        die 'can not find git here'
+    fi
+
+    repos_fn="$working_root_fn/.gitrepo"
+
+}
+
+
+main "$@"
