@@ -31,9 +31,6 @@ let g:fuf_mrucmd_maxItem = 400
 " nnoremap <silent> <C-f><C-e> :FufEditInfo<CR>
 " nnoremap <silent> <C-f><C-r> :FufRenewCache<CR>
 
-nnoremap <silent> <C-n>     :CMiniBufExplorer<CR>:FufCoverageFile<CR>
-nnoremap <silent> <C-p>     :CMiniBufExplorer<CR>:FufMruFile<CR>
-nnoremap <silent> <C-h>     :CMiniBufExplorer<CR>:FufBuffer<CR>
 nnoremap <silent> <C-n>     :FufCoverageFile<CR>
 nnoremap <silent> <C-p>     :FufMruFile<CR>
 nnoremap <silent> <C-h>     :FufBuffer<CR>
