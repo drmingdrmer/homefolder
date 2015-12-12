@@ -20,6 +20,18 @@ _gl()
         --all
 }
 
+_gl_tree()
+{
+    git log --no-color \
+        --graph \
+        --decorate \
+        --pretty=oneline \
+        --abbrev-commit \
+        -M \
+        --format="%t %s" \
+        --all
+}
+
 compare_file()
 {
     local expected=$1
@@ -56,7 +68,17 @@ test_case()
             $cmd || test -r "$cwd/case/$name/failure" || die failure $name: "$cmd"
         } \
         && _gl >"$testdir/rst" \
-        && compare_file "$cwd/case/$name/rst" "$testdir/rst" rst of $name \
+        && _gl_tree >"$testdir/tree-rst" \
+        && {
+            if test -r "$cwd/case/$name/rst"
+            then
+                compare_file "$cwd/case/$name/rst" "$testdir/rst" rst of $name
+            fi
+            if test -r "$cwd/case/$name/tree-rst"
+            then
+                compare_file "$cwd/case/$name/tree-rst" "$testdir/tree-rst" tree-rst of $name
+            fi
+        } \
         && echo ok $name
 }
 
