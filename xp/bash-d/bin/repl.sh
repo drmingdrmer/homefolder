@@ -1,7 +1,7 @@
 #!/bin/sh
 if [ $# -ne 3 ]; then
-  echo "Usage: replace original target filepattern"
-  exit
+    echo "Usage: replace original target filepattern"
+    exit
 fi
 
 Pattern=$1
@@ -9,12 +9,17 @@ Repl=$2
 FilePtn=$3
 
 
-Files=`find . -type f -name "$FilePtn" ! -name '.*' ! -path '*/.git/*' ! -path '*/.svn/*' ! -path '*/.hg/*'`
+files=`find . -type f -name "$FilePtn" ! -name '.*' ! -path '*/.git/*' ! -path '*/.svn/*' ! -path '*/.hg/*'`
 
 
-for filename in $Files
+for filename in $files
 do
-  sed -i '' "s/\b$1\b/$2/g" "$filename"
-  # replace $1 $2 -- $filename
-  # mv TMP $filename
+    echo replacing $filename
+
+    if test "$(uname -s)" = "Darwin"
+    then
+        sed -i '' 's/[[:<:]]'"$Pattern"'[[:>:]]/'"$Repl"'/g' "$filename"
+    else
+        sed -i '' 's/\b'"$Pattern"'\b/'"$Repl"'/g' "$filename"
+    fi
 done
