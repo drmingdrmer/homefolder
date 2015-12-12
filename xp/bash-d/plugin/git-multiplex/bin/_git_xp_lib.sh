@@ -7,6 +7,14 @@ die()
     echo "Failure $@" >&2
     exit 1
 }
+die_empty()
+{
+    if test -z "$1"
+    then
+        shift
+        die empty: "$@"
+    fi
+}
 
 set_verbose()
 {
