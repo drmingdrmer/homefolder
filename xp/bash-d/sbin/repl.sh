@@ -9,7 +9,7 @@ Repl=$2
 FilePtn=$3
 
 
-Files=`find -type f -name "$FilePtn" ! -name '.*' ! -path '*/.git/*' ! -path '*/.svn/*' ! -path '*/.hg/*'`
+Files=`find . -type f -name "$FilePtn" ! -name '.*' ! -path '*/.git/*' ! -path '*/.svn/*' ! -path '*/.hg/*'`
 
 
 for filename in $Files
