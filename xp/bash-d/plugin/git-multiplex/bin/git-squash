@@ -1,5 +1,7 @@
 #!/bin/sh
 
+source _git_xp_lib.sh
+
 if test -z "$1" || test "-h" = "$1" || test "--help" = "$1"
 then
     name=${0##*/}
@@ -12,8 +14,8 @@ while test -n "$1"
 do
     case $1 in
         -r)
-            shift
             remotemode=1
+            shift
             ;;
         *)
             break
@@ -24,13 +26,20 @@ done
 base=
 if test "$remotemode" = "1"
 then
-    branchname="$1"
-    remote=$(git config --get branch.${branchname}.remote)
-    if test -z "$remote"
+    if test -z "$1"
     then
-        echo "remote not found for $branchname" >&2
-        exit 1
+        branchname=$(git_head_branch)
+        die_empty "$branchname" "head is not on a branch"
+    else
+        branchname="$1"
+        shift
     fi
+
+    remote=$(git_branch_default_remote $branchname)
+    die_empty "$remote" "find remote of branch $branchname"
+
+    upstream=$(git_branch_default_upstream $branchname)
+    die_empty "$upstream" "find upstream of branch $branchname"
 
     base=$remote/$branchname
 fi
