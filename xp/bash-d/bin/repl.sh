@@ -14,7 +14,7 @@ Files=`find . -type f -name "$FilePtn" ! -name '.*' ! -path '*/.git/*' ! -path '
 
 for filename in $Files
 do
-  sed -i "s/\b$1\b/$2/g" "$filename"
+  sed -i '' "s/\b$1\b/$2/g" "$filename"
   # replace $1 $2 -- $filename
   # mv TMP $filename
 done
