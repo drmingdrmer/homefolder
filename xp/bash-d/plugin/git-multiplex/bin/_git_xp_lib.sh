@@ -111,3 +111,18 @@ git_working_root()
 {
     git rev-parse --show-toplevel
 }
+
+git_branch_default_remote()
+{
+    local branchname=$1
+    git config --get branch.${branchname}.remote
+}
+git_branch_default_upstream_ref()
+{
+    local branchname=$1
+    git config --get branch.${branchname}.merge
+}
+git_branch_default_upstream()
+{
+    git_branch_default_upstream_ref "$@" | sed 's/^refs\/heads\///'
+}
