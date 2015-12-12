@@ -134,3 +134,8 @@ git_branch_default_upstream()
 {
     git_branch_default_upstream_ref "$@" | sed 's/^refs\/heads\///'
 }
+
+git_head_branch()
+{
+    git symbolic-ref --short HEAD
+}
