@@ -46,37 +46,38 @@ compare_file()
 test_case()
 {
     local name=$1
+    local casedir="$cwd/case/$name"
 
     rm -rf "$testdir" 2>/dev/null
 
     mkdir -p "$testdir" \
         && cd "$testdir" \
         && {
-            test -r "$cwd/case/$name/repo.tgz" \
-                && tar -xzf "$cwd/case/$name/repo.tgz" -C "$testdir/" \
+            test -r "$casedir/repo.tgz" \
+                && tar -xzf "$casedir/repo.tgz" -C "$testdir/" \
                 || tar -xzf "$cwd/repo.tgz" -C "$testdir/"
         } \
         && cd "$testdir/repo" \
         && _gl >"$testdir/init" \
         && {
-            test -r "$cwd/case/$name/init" \
-                && compare_file "$cwd/case/$name/init" "$testdir/init" init of $name \
+            test -r "$casedir/init" \
+                && compare_file "$casedir/init" "$testdir/init" init of $name \
                 || compare_file "$cwd/init"            "$testdir/init" init of $name
         } \
-        && cmd=$(cat $cwd/case/$name/cmd) \
+        && cmd=$(cat $casedir/cmd) \
         && {
-            $cmd || test -r "$cwd/case/$name/failure" || die failure $name: "$cmd"
+            $cmd || test -r "$casedir/failure" || die failure $name: "$cmd"
         } \
         && _gl >"$testdir/rst" \
         && _gl_tree >"$testdir/tree-rst" \
         && {
-            if test -r "$cwd/case/$name/rst"
+            if test -r "$casedir/rst"
             then
-                compare_file "$cwd/case/$name/rst" "$testdir/rst" rst of $name
+                compare_file "$casedir/rst" "$testdir/rst" rst of $name
             fi
-            if test -r "$cwd/case/$name/tree-rst"
+            if test -r "$casedir/tree-rst"
             then
-                compare_file "$cwd/case/$name/tree-rst" "$testdir/tree-rst" tree-rst of $name
+                compare_file "$casedir/tree-rst" "$testdir/tree-rst" tree-rst of $name
             fi
         } \
         && echo ok $name
