@@ -80,7 +80,7 @@ test_case()
                 compare_file "$casedir/tree-rst" "$testdir/tree-rst" tree-rst of $name
             fi
         } \
-        && echo ok $name
+        && echo "$(tput setaf 2)ok $name$(tput sgr0)"
 }
 
 run_test()
