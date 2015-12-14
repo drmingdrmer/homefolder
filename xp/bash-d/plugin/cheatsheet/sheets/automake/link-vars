@@ -1,0 +1,8 @@
+LDADD / *_LDADD
+add object or library that are not found by configure:
+
+    LDADD = ../lib/libcpio.a
+
+LDFLAGS / AM_LDFLAGS *_LDFLAGS
+add linker flags:
+    LDFLAGS = -lpthread
