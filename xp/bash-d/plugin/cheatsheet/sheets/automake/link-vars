@@ -5,4 +5,11 @@ add object or library that are not found by configure:
 
 LDFLAGS / AM_LDFLAGS *_LDFLAGS
 add linker flags:
-    LDFLAGS = -lpthread
+    LDFLAGS = -L../
+
+LIBS
+add pthread etc:
+    LIBS = -lpthread
+
+LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+$(AM_V_CCLD)$(LINK) $(s3_storeserver_OBJECTS) $(s3_storeserver_LDADD) $(LIBS)
