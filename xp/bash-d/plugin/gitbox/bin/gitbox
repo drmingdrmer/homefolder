@@ -53,6 +53,11 @@ err() {
     log "${Red}err:   $@"
 }
 
+die() {
+    err "$@"
+    exit 1
+}
+
 _date() {
     date +"%Y-%m-%d %H:%M:%S"
 }
@@ -79,15 +84,16 @@ main() {
                 # change ~ to real home path
 
                 eval "p=$path"
+                cd "$p" || die not-found: "$p"
 
                 if [ ".$option" = ".fetchonly" ]; then
 
-                    cd "$p" && mes "$option" && git fetch --all --quiet \
+                    mes "$option" && git fetch --all --quiet \
                         && ok fetch
 
                 elif [ ".$option" = ".fetchpush" ]; then
 
-                    cd "$p" && mes "$option" && git fetch --all --quiet \
+                    mes "$option" && git fetch --all --quiet \
                         && ok fetch \
                         || err fetch
 
@@ -99,7 +105,7 @@ main() {
                         && ok push \
                         || err push
                 else
-                    cd "$p" && sync
+                    sync
                 fi
                 ) &
             done <$conffn
