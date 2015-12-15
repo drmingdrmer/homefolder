@@ -34,13 +34,25 @@ doit()
     local remote=
     local url=
     local tip=
+    local repo_path=
 
     { cat "$conf_fn"; echo ""; } | while read k a1 a2; do
 
         case "$k" in
             '')
-                dd 'empty line, continue'
-                continue
+                if test -z "$dirpath"; then
+                    dd "no conf read, continue"
+                    continue
+                fi
+                repo_path="$working_dir/$dirpath"
+
+                if test -d "$repo_path"; then
+                fi
+
+                # dirpath=
+                # remote=
+                # url=
+                # tip=
                 ;;
 
             dir:)
