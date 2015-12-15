@@ -266,6 +266,15 @@ call XPTemplate('test', [
       \'  `cursor^',
       \'}',
       \])
+call XPTemplate('.cases', [
+      \'struct { `^ } cases[] = {',
+      \'  { `cursor^ },',
+      \'};',
+      \'',
+      \'for (int i = 0; i < s3_no_elts(cases); i++) {',
+      \'  typeof(cases[0]) c = cases[i];',
+      \'}',
+      \])
 
 call XPTemplate('eeq', 'EXPECT_EQ(`cursor^)')
 call XPTemplate('ene', 'EXPECT_NE(`cursor^)')
