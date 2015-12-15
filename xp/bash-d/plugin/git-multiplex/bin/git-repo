@@ -1,26 +1,72 @@
 #!/bin/sh
 
+PATH=$PATH:$(git --exec-path)
+. git-sh-setup
+
 source _git_xp_lib.sh
 
-cat <<-END
-[mod "dir/path"]
-	remote origin git://github.com/jquery/jquery-tmpl.git
-	remote    bkp git://github.com/jquery/jquery-tmpl.git
-	head origin master
-END
+dd "git dir: $GIT_DIR"
+
+# cat <<-END
+# dir:    "dir/path"
+# remote: origin  git://github.com/jquery/jquery-tmpl.git
+# remote: bkp     git://github.com/jquery/jquery-tmpl.git
+# head:   origin  master
+# END
+
+init()
+{
+    working_dir="$(git_working_root)"
+    die_empty "$working_dir" no git working dir found
+
+    conf_fn="$working_dir/.gitrepo"
+    test -r "$conf_fn" \
+        || die "$conf_fn" is unreadable
+}
+
+doit()
+{
+    local k=
+    local a1=
+    local a2=
+
+    local dirpath=
+    local remote=
+    local url=
+    local tip=
+
+    { cat "$conf_fn"; echo ""; } | while read k a1 a2; do
+
+        case "$k" in
+            '')
+                dd 'empty line, continue'
+                continue
+                ;;
+
+            dir:)
+                dirpath="$a1"
+                dd "find dir: $dirpath"
+                ;;
+
+            remote:)
+                remote="$a1"
+                url="$a2"
+                dd "remote: $remote : $url"
+                ;;
+            head:)
+                head="$a1"
+                dd "head: $head"
+                ;;
+        esac
+    done
+
+    dd "finished"
+}
 
 main()
 {
-    local working_root_fn="$(git_working_root)"
-    local repos_fn=
-
-    if test ".$working_root_fn" = "."
-    then
-        die 'can not find git here'
-    fi
-
-    repos_fn="$working_root_fn/.gitrepo"
-
+    init
+    doit
 }
 
 
