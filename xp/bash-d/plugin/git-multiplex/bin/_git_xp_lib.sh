@@ -43,8 +43,8 @@ dd()
 debug()
 {
     if [ ".$_git_xp_verbose" == ".1" ]; then
-        local DarkGrey="$(tput bold ; tput setaf 0)"
-        log "$DarkGrey" "$@"
+        local LightCyan="$(tput bold ; tput setaf 6)"
+        log "$LightCyan" "$@"
     fi
 }
 info()
