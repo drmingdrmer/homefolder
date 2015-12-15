@@ -146,12 +146,12 @@ call XPTemplate('.e',  'S3_ERR_`x^ChooseStr("ERR", "EOF", "BUF_OVERFLOW", "BUF_N
 call XPTemplate('.ei',  'S3_ERR_INVALID_ARG')
 call XPTemplate('.eoo',  'S3_ERR_OUTOFMEM')
 call XPTemplate('.t', 'S3`S3S3Mod()^')
-call XPTemplate('.must', 's3_must_be(`^`, `S3_ERR_INVALID_ARG^);')
-call XPTemplate('.mustinit', [
+call XPTemplate('.mb', 's3_must_be(`^`, `S3_ERR_INVALID_ARG^);')
+call XPTemplate('.mbinit', [
       \'s3_must_be(`x^ != NULL, `S3_ERR_INVALID_ARG^);',
       \'s3_must_be(`x^->inited_ == 1, `S3_ERR_INVALID_ARG^);',
       \])
-call XPTemplate('.must2', 's3_must_be(`^->inited_ == 0, `S3_ERR_INITTWICE^);')
+call XPTemplate('.mb2', 's3_must_be(`^->inited_ == 0, `S3_ERR_INITTWICE^);')
 
 call XPTemplate('.at', 's3_atomic_')
 call XPTemplate('.arr', 's3_array_')
