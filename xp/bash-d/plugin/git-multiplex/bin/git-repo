@@ -36,6 +36,8 @@ doit()
     local tip=
     local repo_path=
 
+    local state=nil
+
     { cat "$conf_fn"; echo ""; } | while read k a1 a2; do
 
         case "$k" in
