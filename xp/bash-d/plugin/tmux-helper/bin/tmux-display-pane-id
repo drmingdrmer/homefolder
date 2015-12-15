@@ -1,0 +1,3 @@
+#!/bin/sh
+
+tmux display -p '#{session_id}:#{window_index}.#{pane_index}'
