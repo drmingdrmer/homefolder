@@ -19,3 +19,4 @@ _git_not_merged() { _git_checkout; }
 _git_dep_push() { _git_push; }
 # _git_rebase_all() { _git_checkout; }
 _git_remerge() { _git_checkout; }
+_git_squash() { _git_checkout; }
