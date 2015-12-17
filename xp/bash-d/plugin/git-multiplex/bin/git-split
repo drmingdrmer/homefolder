@@ -100,8 +100,7 @@ extract()
 
         mes=$(git log -n1 --format="%B" $c)
 
-        p=$(git diff $c~ $c -- $fns)
-        git apply --index <<<"$p"
+        git diff --binary $c~ $c -- $fns | git apply --index
 
         mes "== after patch $c =="
         git status --short
