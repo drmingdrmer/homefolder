@@ -96,13 +96,16 @@ extract()
 
         mes "== to pick $fns from:"
         git log --color --stat --decorate --pretty=oneline --abbrev-commit -M -n1 $c
+        mes "== END =="
 
         mes=$(git log -n1 --format="%B" $c)
 
         p=$(git diff $c~ $c -- $fns)
         git apply --index <<<"$p"
 
-        git status
+        mes "== after patch $c =="
+        git status --short
+        mes "== END =="
 
         git commit -am "$mes"
     done
@@ -124,13 +127,23 @@ build_new_branch()
 
 discard_changes()
 {
-    local script="git rm -r -f $fns 2>/dev/null; git checkout $base -- $fns 2>/dev/null; git status >/dev/null"
+    # git checkout would fail if one of the files does not exists.
+    # thus newly added file impedes the whole process.
+    # git checkout ab12345 -- nonexistent
+
+    local script='for f in '"$fns"'; do git rm -r -f $f; git checkout '"$base"' -- $f; done'
+    # local script='for f in '"$fns"'; do git rm -r -f $f; git status -- $f >&2; git checkout '"$base"' -- $f; git status -- $f >&2; done'
 
     git checkout --detach $tip_hash \
         && mes "== discard from $tip ==" \
         && git filter-branch -f --prune-empty --tree-filter "$script" $base..HEAD \
         && [ $(git log $base..HEAD -- "$fns" | wc -l | awk '{print $1}') = 0 ] \
         && mes "== confirmed that no changes through $base..HEAD"
+    git status --short
+    mes "== END =="
+    mes "== history =="
+    git log --color --stat --decorate --pretty=oneline --abbrev-commit -M $base..HEAD
+    mes "== END =="
 }
 
 merge_them()
