@@ -20,6 +20,6 @@ do
     then
         sed -i '' 's/[[:<:]]'"$Pattern"'[[:>:]]/'"$Repl"'/g' "$filename"
     else
-        sed -i '' 's/\b'"$Pattern"'\b/'"$Repl"'/g' "$filename"
+        sed -i 's/\b'"$Pattern"'\b/'"$Repl"'/g' "$filename"
     fi
 done
