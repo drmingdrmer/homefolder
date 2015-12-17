@@ -130,8 +130,8 @@ discard_changes()
     # thus newly added file impedes the whole process.
     # git checkout ab12345 -- nonexistent
 
-    local script='for f in '"$fns"'; do git rm -r -f $f; git checkout '"$base"' -- $f; done'
-    # local script='for f in '"$fns"'; do git rm -r -f $f; git status -- $f >&2; git checkout '"$base"' -- $f; git status -- $f >&2; done'
+    # local script='for f in '"$fns"'; do git rm -r -f $f; git checkout '"$base"' -- $f; done'
+    local script='for f in '"$fns"'; do echo "== $f =="; git rm -r -f $f; git status -- $f >&2; git checkout '"$base"' -- $f; git status -- $f >&2; done'
 
     git checkout --detach $tip_hash \
         && mes "== discard from $tip ==" \
@@ -141,7 +141,7 @@ discard_changes()
     git status --short
     mes "== END =="
     mes "== history =="
-    git log --color --stat --decorate --pretty=oneline --abbrev-commit -M $base..HEAD
+    git --no-pager log --color --stat --decorate --pretty=oneline --abbrev-commit -M $base..HEAD
     mes "== END =="
 }
 
