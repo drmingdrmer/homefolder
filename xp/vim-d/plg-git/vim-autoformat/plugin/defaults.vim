@@ -1,6 +1,16 @@
 "
-" This file contains all default format program definitions and links them to filetypes
+" This file contains default settings and all format program definitions and links these to filetypes
 "
+
+
+" Vim-autoformat configuration variables
+if !exists('g:autoformat_autoindent')
+    let g:autoformat_verbosemode = 0
+endif
+
+if !exists('g:autoformat_verbosemode')
+    let g:autoformat_verbosemode = 0
+endif
 
 
 " Python
@@ -27,7 +37,6 @@ endif
 if !exists('g:formatdef_clangformat')
     let g:formatdef_clangformat = "'clang-format -lines='.a:firstline.':'.a:lastline.' --assume-filename='.bufname('%').' -style=\"{BasedOnStyle: WebKit, AlignTrailingComments: true, '.(&textwidth ? 'ColumnLimit: '.&textwidth.', ' : '').(&expandtab ? 'UseTab: Never, IndentWidth: '.shiftwidth() : 'UseTab: Always').'}\"'"
 endif
-
 
 
 " C
@@ -210,4 +219,28 @@ endif
 
 if !exists('g:formatters_dart')
     let g:formatters_dart = ['dartfmt']
+endif
+
+" Perl
+if !exists('g:formatdef_perltidy')
+  " use perltidyrc file if readable
+  if (has("win32") && (filereadable("perltidy.ini") || filereadable($HOMEPATH."/perltidy.ini"))) ||
+        \ ((has("unix") || has("mac")) && (filereadable(".perltidyrc") || filereadable("~/.perltidyrc") || filereadable("/usr/local/etc/perltidyrc") || filereadable("/etc/perltidyrc")))
+    let g:formatdef_perltidy = '"perltidy -q -st"'
+  else
+    let g:formatdef_perltidy = '"perltidy --perl-best-practices --format-skipping -q "'
+  endif
+endif
+
+if !exists('g:formatters_perl')
+  let g:formatters_perl = ['perltidy']
+endif
+
+" Haskell
+if !exists('g:formatdef_stylish_haskell')
+    let g:formatdef_stylish_haskell = '"stylish-haskell"'
+endif
+
+if !exists('g:formatters_haskell')
+    let g:formatters_haskell = ['stylish_haskell']
 endif
