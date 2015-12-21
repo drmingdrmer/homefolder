@@ -385,6 +385,8 @@ function! unite#helper#get_current_candidate_linenr(num) "{{{
     if unite.prompt_linenr == 0
       let num += line('$') + 1
     endif
+  else
+    let num += 1
   endif
 
   return unite.prompt_linenr + num
@@ -579,7 +581,7 @@ endfunction"}}}
 function! unite#helper#complete_search_history(arglead, cmdline, cursorpos) "{{{
   return filter(map(unite#util#uniq(s:histget('search')
         \                           + s:histget('input')),
-        \           "substitute(v:val, '^\\\\<\\|\\\\>$', '', 'g')"),
+        \           "substitute(v:val, '\\c^\\(\\\\[cmv<]\\)*\\|\\\\>$', '', 'g')"),
         \ "stridx(tolower(v:val), tolower(a:arglead)) == 0")
 endfunction"}}}
 
@@ -592,6 +594,28 @@ function! s:histget(type) abort "{{{
   return filter(map(reverse(range(1, histnr(a:type))),
         \           'histget(a:type, v:val)'),
         \       'v:val != ""')
+endfunction"}}}
+
+function! unite#helper#ignore_candidates(candidates, context) "{{{
+  let candidates = copy(a:candidates)
+
+  if a:context.ignore_pattern != ''
+    let candidates = unite#filters#vim_filter_pattern(
+          \   candidates, a:context.ignore_pattern)
+  endif
+
+  if !empty(a:context.ignore_globs)
+    let candidates = unite#filters#filter_patterns(candidates,
+          \ unite#filters#globs2patterns(a:context.ignore_globs),
+          \ unite#filters#globs2patterns(a:context.white_globs))
+  endif
+
+  if a:context.path != ''
+    let candidates = unite#filters#{unite#util#has_lua()? 'lua' : 'vim'}
+          \_filter_head(candidates, a:context.path)
+  endif
+
+  return candidates
 endfunction"}}}
 
 let &cpo = s:save_cpo
