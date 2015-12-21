@@ -10,7 +10,7 @@ hsh() {
     git log -n1 --format="%h" $tip
 }
 
-sync() {
+fetch_commit_rebase_push() {
     mes="gitbox commit all"
     # old git does not add deleted file into index when 'git add .'
     git add .
@@ -20,7 +20,9 @@ sync() {
     git fetch origin --quiet \
         && git rebase origin/master --quiet \
         && git push origin master --quiet \
-        && ok fullsync || err fullsync
+        && ok fetch_commit_rebase_push \
+        || err fetch_commit_rebase_push
+
 }
 
 
@@ -31,7 +33,7 @@ log()
 
 mes()
 {
-    log "$Brown $@"
+    log "$Brown$@"
 }
 
 ok() {
@@ -70,19 +72,22 @@ main() {
         if [ -f $conffn ]; then
             while read path option; do
                 (
+                option=${option:-fetch_commit_rebase_push}
                 # change ~ to real home path
 
                 eval "p=$path"
                 cd "$p" || die not-found: "$p"
 
+                mes "$option"
+
                 if [ ".$option" = ".fetchonly" ]; then
 
-                    mes "$option" && git fetch --all --quiet \
+                    git fetch --all --quiet \
                         && ok fetch
 
                 elif [ ".$option" = ".fetchpush" ]; then
 
-                    mes "$option" && git fetch --all --quiet \
+                    git fetch --all --quiet \
                         && ok fetch \
                         || err fetch
 
@@ -94,7 +99,7 @@ main() {
                         && ok push \
                         || err push
                 else
-                    sync
+                    fetch_commit_rebase_push
                 fi
                 )
                 # ) &
