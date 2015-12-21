@@ -32,16 +32,30 @@ endfunction"}}}
 
 let s:kind = {
       \ 'name' : 'window',
-      \ 'default_action' : 'open',
+      \ 'default_action' : 'jump',
       \ 'action_table': {},
-      \ 'parents' : ['cdable'],
+      \ 'parents' : ['common', 'openable', 'cdable'],
       \}
 
 " Actions "{{{
 let s:kind.action_table.open = {
+      \ 'description' : 'open this window buffer',
+      \ 'is_selectable' : 1,
+      \ }
+function! s:kind.action_table.open.func(candidates) "{{{
+  for candidate in a:candidates
+    execute 'buffer' (has_key(candidate, 'action__tab_nr') ?
+          \ tabpagebuflist(candidate.action__tab_nr)[
+          \   candidate.action__window_nr - 1] :
+          \ winbufnr(candidate.action__window_nr))
+    doautocmd BufRead
+  endfor
+endfunction"}}}
+
+let s:kind.action_table.jump = {
       \ 'description' : 'move to this window',
       \ }
-function! s:kind.action_table.open.func(candidate) "{{{
+function! s:kind.action_table.jump.func(candidate) "{{{
   if has_key(a:candidate, 'action__tab_nr')
     execute 'tabnext' a:candidate.action__tab_nr
   endif
@@ -91,12 +105,19 @@ function! s:kind.action_table.preview.func(candidate) "{{{
   endif
 
   if !has_key(a:candidate, 'action__buffer_nr')
+        \ && !has_key(a:candidate, 'action__window_nr')
     return
   endif
 
   let winnr = winnr()
   try
-    execute bufwinnr(a:candidate.action__buffer_nr).'wincmd w'
+    let unite_winnr = unite#get_current_unite().winnr
+    let prevwinnr = has_key(a:candidate, 'action__window_nr') ?
+          \ (a:candidate.action__window_nr >= unite_winnr ?
+          \  a:candidate.action__window_nr + 1 :
+          \  a:candidate.action__window_nr) :
+          \ bufwinnr(a:candidate.action__buffer_nr)
+    execute prevwinnr.'wincmd w'
     execute 'match Search /\%'.line('.').'l/'
     redraw
     sleep 500m
