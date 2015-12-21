@@ -3,7 +3,7 @@
 set -E
 
 DIRS="syntax indent compiler autoload ftplugin ftdetect after/syntax after/indent after/ftplugin after/ftdetect"
-DIRS_BASIC="syntax indent ftdetect after/syntax after/indent after/ftdetect"
+DIRS_BASIC="syntax compiler indent ftdetect after/syntax after/indent after/ftdetect"
 DIRS_ALL="syntax indent compiler autoload ftplugin ftdetect after"
 
 OUTPUT=""
@@ -96,16 +96,19 @@ EOF
 }
 
 PACKS="
+  ansible:pearofducks/ansible-vim
   arduino:sudar/vim-arduino-syntax
-  blade:xsbeats/vim-blade
+  blade:jwalton512/vim-blade
   c++11:octol/vim-cpp-enhanced-highlight
-  c/c++:vim-jp/cpp-vim
+  c/c++:vim-jp/vim-cpp
   cjsx:mtscout6/vim-cjsx
   clojure:guns/vim-clojure-static
   coffee-script:kchmck/vim-coffee-script
   css:JulesWang/css.vim
   cucumber:tpope/vim-cucumber
+  dart:dart-lang/dart-vim-plugin
   dockerfile:honza/dockerfile.vim
+  elm:lambdatoast/elm.vim
   elixir:elixir-lang/vim-elixir
   emberscript:heartsentwined/vim-ember-script
   emblem:heartsentwined/vim-emblem
@@ -122,6 +125,7 @@ PACKS="
   jade:digitaltoad/vim-jade
   jasmine:glanotte/vim-jasmine
   javascript:sheerun/yajs.vim
+  jinja:Glench/Vim-Jinja2-Syntax
   json:sheerun/vim-json
   jst:briancollins/vim-jst
   jsx:mxw/vim-jsx:_ALL
@@ -131,7 +135,9 @@ PACKS="
   less:groenewege/vim-less
   liquid:tpope/vim-liquid
   markdown:tpope/vim-markdown
-  nginx:mutewinter/nginx.vim
+  nginx:nginx/nginx::/contrib/vim/
+  nix:spwhitt/vim-nix
+  objc:b4winckler/vim-objc
   ocaml:jrk/vim-ocaml
   octave:vim-scripts/octave.vim--
   opencl:petRUShka/vim-opencl
@@ -146,23 +152,24 @@ PACKS="
   r-lang:vim-scripts/R.vim
   rspec:sheerun/rspec.vim
   ruby:vim-ruby/vim-ruby
-  rust:wting/rust.vim
+  rust:rust-lang/rust.vim
   sbt:derekwyatt/vim-sbt
   scala:derekwyatt/vim-scala
   slim:slim-template/vim-slim
   solidity:ethereum/vim-solidity
   stylus:wavded/vim-stylus
-  swift:toyamarinyon/vim-swift
+  swift:keith/swift.vim
   systemd:kurayama/systemd-vim-syntax
   textile:timcharper/textile.vim
   thrift:solarnz/thrift.vim
   tmux:tejr/vim-tmux
-  tomdoc:duwanis/tomdoc.vim
+  tomdoc:wellbredgrapefruit/tomdoc.vim
   toml:cespare/vim-toml
   twig:beyondwords/vim-twig
   typescript:leafgarland/typescript-vim
   vala:tkztmk/vim-vala
   vbnet:vim-scripts/vbnet.vim
+  vcl:smerrill/vcl-vim-plugin
   vm:lepture/vim-velocity
   xls:vim-scripts/XSLT-syntax
   yard:sheerun/vim-yardoc
