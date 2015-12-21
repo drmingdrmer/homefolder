@@ -17,21 +17,10 @@ sync() {
     git add -u .
     git commit -m "$mes" > /dev/null
 
-    git svn info > /dev/null \
-        && {
-            git svn rebase --quiet
-            [ "$(hsh HEAD)" == "$(hsh git-svn)" ] && ok && return 0;
-            git svn dcommit --quiet \
-                && ok svn || err svn
-        }
-
-    git svn info > /dev/null \
-        || {
-            git fetch origin --quiet \
-                && git rebase origin/master --quiet \
-                && git push origin master --quiet \
-                && ok fullsync || err fullsync
-        }
+    git fetch origin --quiet \
+        && git rebase origin/master --quiet \
+        && git push origin master --quiet \
+        && ok fullsync || err fullsync
 }
 
 
