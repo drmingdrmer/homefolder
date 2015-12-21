@@ -107,9 +107,10 @@ main() {
                 else
                     sync
                 fi
-                ) &
+                )
+                # ) &
             done <$conffn
-            wait
+            # wait
         else
             echo "no conf file: $conffn"
         fi
