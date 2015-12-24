@@ -4,6 +4,7 @@ endif
 let g:__RC_PROFILE_VIM__ = 1
 
 " exe 'profile start ' . $HOME . '/prof.txt'
+" profile func *
 
 
 fun! s:GetCmdOutput( cmd ) "{{{
