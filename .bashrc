@@ -21,7 +21,14 @@ init_prompt()
     d end color
 
     PROMPT_COMMAND='echo -ne "\033]0;${mainip}\007"'
-    export PS1="$Green\u.\h$NC""$Yellow${eth0_ip}$NC"" $Red[\d \t]$NC"".\j"" $LightGreen\$(parse_git_branch)$NC:""\n$LightBlue\w\[\033[00m\]\n"
+
+    local ps="$Green\u.\h$NC"
+    ps=$ps"$Yellow${eth0_ip}$NC"
+    # ps=$ps" $Red[\d \t]$NC"
+    ps=$ps".\j"
+    ps=$ps" $LightGreen\$(parse_git_branch)$NC:"
+    ps=$ps" $LightBlue\w$NC\n"
+    export PS1="$ps"
     d end ps1
 }
 init_plugin()
