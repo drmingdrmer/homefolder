@@ -19,7 +19,7 @@ ps_pwd()
     if test ".$cwd" != ".$PWD"; then
         cwd="~$cwd"
     fi
-    test "$height" -ge 10 \
+    test "$height" -gt 10 \
         && echo "
 $LightBlue$cwd$NC" \
         || echo " $LightBlue$cwd$NC"
