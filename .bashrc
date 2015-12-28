@@ -9,6 +9,21 @@ parse_git_branch()
 {
    git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/' 
 }
+ps_pwd()
+{
+    local LightBlue="$(tput bold ; tput setaf 4)"
+    local NC="$(tput sgr0)" # No Color
+    local height=$(tput lines)
+
+    local cwd="${PWD#$HOME}"
+    if test ".$cwd" != ".$PWD"; then
+        cwd="~$cwd"
+    fi
+    test "$height" -ge 10 \
+        && echo "
+$LightBlue$cwd$NC" \
+        || echo " $LightBlue$cwd$NC"
+}
 init_prompt()
 {
     Red="$(tput setaf 1)"
@@ -27,7 +42,7 @@ init_prompt()
     # ps=$ps" $Red[\d \t]$NC"
     ps=$ps".\j"
     ps=$ps" $LightGreen\$(parse_git_branch)$NC:"
-    ps=$ps" $LightBlue\w$NC\n"
+    ps=$ps"\$(ps_pwd)\n"
     export PS1="$ps"
     d end ps1
 }
