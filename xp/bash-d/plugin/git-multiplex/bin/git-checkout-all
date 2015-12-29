@@ -1,11 +1,13 @@
-#!/bin/sh
+#!/bin/bash
 
+rem=${1-$(git remote | grep "^origin$" )}
+rem=${rem:-$(git remote | head -n1 )}
 
-rem=${1-origin}
 branches=$(git branch -r | awk '{print $1}' | grep $rem/ | grep -v '/HEAD' | awk -F/ '{print $2}')
 
 for b in $branches; do
-    echo $b
-    git checkout $b
+    git rev-parse --quiet --verify refs/heads/$b >/dev/null \
+        && echo exist: $b \
+        || { git update-ref refs/heads/$b $rem/$b && git branch --set-upstream-to=$rem/$b $b && echo checkout: $b; }
 done
 
