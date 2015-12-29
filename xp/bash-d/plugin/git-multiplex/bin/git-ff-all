@@ -24,7 +24,9 @@ done
 if [ ".${1:0:1}" = ".-" ]; then
     shift
 fi
-remote=${1-origin}
+
+remote=${1-$(git remote | grep "^origin$" )}
+remote=${rem:-$(git remote | head -n1 )}
 
 Black="$(tput setaf 0)"
 BlackBG="$(tput setab 0)"
