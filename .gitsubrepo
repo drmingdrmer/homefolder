@@ -56,7 +56,7 @@ xp/vim-d/plg-git/snipmate-snippets.git
 https://github.com/scrooloose/snipmate-snippets.git master
 
 xp/vim-d/plg-git/vcscommand.vim.git
-git@github.com:drmingdrmer/vcscommand.vim.git master
+git@github.com:vim-scripts/vcscommand.vim.git master
 
 xp/vim-d/plg-git/github_vim_theme
 https://github.com/nono/github_vim_theme.git master
