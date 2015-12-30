@@ -1,5 +1,5 @@
 
-nmap <buffer> ,m :silent! make<CR>:botright cwindow<CR>:redraw!<CR>
+nmap <buffer> ,mk :silent! make<CR>:botright cwindow<CR>:redraw!<CR>
 " nmap <buffer> ,m :silent! make<CR>:botright cwindow<CR>
 
 nmap <buffer> f[ [[zC[[zO
