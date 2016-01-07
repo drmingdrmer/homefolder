@@ -1,0 +1,6 @@
+pandoc --standalone         \
+    -H src/_inc/css.html    \
+    -f markdown -t html     \
+    --toc --toc-depth=5     \
+    src/$i.markdown         \
+    --output built/$i.html
