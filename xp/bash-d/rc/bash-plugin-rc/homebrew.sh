@@ -1,3 +1,3 @@
 # my personal github token for homebrew
 # See: https://github.com/settings/tokens
-export HOMEBREW_GITHUB_API_TOKEN=234f9d1d2763330abb9f105f479ba469b4a4a01b
+export HOMEBREW_GITHUB_API_TOKEN=664586d89dd5a42239308b95ae45fd24da1f91bc
