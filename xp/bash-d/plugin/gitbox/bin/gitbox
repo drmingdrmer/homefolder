@@ -66,6 +66,10 @@ get_pwd() {
     echo -n "$stripped"
 }
 
+git_head_branch() {
+    git symbolic-ref --short HEAD
+}
+
 main() {
     while ``; do
         local conffn="${GITBOX_CONF_FN-$HOME/.gitbox.conf}"
@@ -79,6 +83,7 @@ main() {
                 cd "$p" || die not-found: "$p"
 
                 mes "$option"
+                branch=$(git_head_branch)
 
                 if [ ".$option" = ".fetchonly" ]; then
 
