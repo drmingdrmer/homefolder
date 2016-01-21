@@ -28,8 +28,9 @@ fun! s:func_end() "{{{
     let b = b:xp_func_block
     let cur = [line("."), col(".")]
     let [l, c] = searchpairpos(b[0], b[1], b[2], 'W')
+    " echom 'searchpairpos(' . "'" . join(b, "', '") . "', " . '"W")'
     if [0, 0] == [l, c] || cur == [l, c]
-        call searchpos(b[0], 'W')
+        call searchpos(b[2], 'W')
     endif
 endfunction "}}}
 
