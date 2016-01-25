@@ -23,7 +23,7 @@ os_detect()
 env_init_path()
 {
     PATH=:$PATH:
-    for p in "" /usr /usr/local /opt/local ~ ~/xp/bash-d;do
+    for p in "" /usr /usr/local /opt/local ~/local ~ ~/xp/bash-d;do
 
         for binfolder in sbin bin; do
             p2=:$p/$binfolder
