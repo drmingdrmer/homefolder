@@ -1,0 +1,4 @@
+# for msgfmt
+apt-get install gettext
+
+make prefix=$HOME/local NO_TCLTK=YesPlease
