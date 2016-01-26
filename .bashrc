@@ -37,7 +37,7 @@ init_prompt()
 
     PROMPT_COMMAND='echo -ne "\033]0;${mainip}\007"'
 
-    local ps="$Green\u.\h$NC"
+    local ps="$Green\u \h$NC"
     ps=$ps"$Yellow${eth0_ip}$NC"
     # ps=$ps" $Red[\d \t]$NC"
     ps=$ps".\j"
