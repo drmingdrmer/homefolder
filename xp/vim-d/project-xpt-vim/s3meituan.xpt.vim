@@ -162,8 +162,8 @@ call XPTemplate('.at', 's3_atomic_')
 call XPTemplate('.arr', 's3_array_')
 call XPTemplate('.buf', 's3_buf_')
 call XPTemplate('.ch', 's3_chain_')
-call XPTemplate('.cr',  's3_check_ret(ret = `^, `""^);')
-call XPTemplate('.crw', 's3_check_ret_warn(ret = `^, `""^);')
+call XPTemplate('.cr',  's3_check_ret(ret`^, "`^");')
+call XPTemplate('.crw', 's3_check_ret_warn(ret`^, "`^");')
 call XPTemplate('.ex', 's3_exit(`cursor^);')
 call XPTemplate('out', [
       \'exit:',
