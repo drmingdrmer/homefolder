@@ -90,6 +90,9 @@ function! unite#start#standard(sources, ...) "{{{
 
     if empty(candidates)
       " Ignore.
+      call unite#view#_print_warning(
+            \ 'unite buffer "'
+            \ . current_unite.buffer_name.'" candidates are empty')
       call unite#variables#disable_current_unite()
       return
     elseif (context.immediately && len(candidates) == 1)
@@ -204,6 +207,7 @@ function! unite#start#temporary(sources, ...) "{{{
   let unite.winnr = unite_save.winnr
   let unite.has_preview_window = unite_save.has_preview_window
   let unite.prev_winsaveview = unite_save.prev_winsaveview
+  let unite.win_rest_cmd = unite_save.win_rest_cmd
 
   " Restore current directory.
   execute 'lcd' fnameescape(cwd)
