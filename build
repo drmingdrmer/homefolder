@@ -109,8 +109,8 @@ PACKS="
   cucumber:tpope/vim-cucumber
   dart:dart-lang/dart-vim-plugin
   dockerfile:honza/dockerfile.vim
-  elm:lambdatoast/elm.vim
   elixir:elixir-lang/vim-elixir
+  elm:lambdatoast/elm.vim
   emberscript:heartsentwined/vim-ember-script
   emblem:heartsentwined/vim-emblem
   erlang:vim-erlang/vim-erlang-runtime
@@ -137,6 +137,7 @@ PACKS="
   liquid:tpope/vim-liquid
   markdown:tpope/vim-markdown
   nginx:nginx/nginx::/contrib/vim/
+  nim:zah/nim.vim:_BASIC
   nix:spwhitt/vim-nix
   objc:b4winckler/vim-objc
   ocaml:jrk/vim-ocaml
@@ -149,8 +150,8 @@ PACKS="
   puppet:rodjek/vim-puppet
   python:mitsuhiko/vim-python-combined
   qml:peterhoeg/vim-qml
-  ragel:jneen/ragel.vim
   r-lang:vim-scripts/R.vim
+  ragel:jneen/ragel.vim
   rspec:sheerun/rspec.vim
   ruby:vim-ruby/vim-ruby
   rust:rust-lang/rust.vim
@@ -166,13 +167,14 @@ PACKS="
   tmux:tejr/vim-tmux
   tomdoc:wellbredgrapefruit/tomdoc.vim
   toml:cespare/vim-toml
-  twig:beyondwords/vim-twig
+  twig:evidens/vim-twig
   typescript:leafgarland/typescript-vim
   vala:tkztmk/vim-vala
   vbnet:vim-scripts/vbnet.vim
   vcl:smerrill/vcl-vim-plugin
   vm:lepture/vim-velocity
   xls:vim-scripts/XSLT-syntax
+  yaml:stephpy/vim-yaml
   yard:sheerun/vim-yardoc
 "
 
