@@ -69,14 +69,14 @@ endfunction " }}}
 
 set winwidth=40
 
-let g:xp_window_size = [160, 120, 80, 60]
+let g:xp_window_size = [60, 80, 120, 160]
 
 fun! Win_Switch_Width(...) " {{{
 
     let curwidth = winwidth(0)
 
     for w in g:xp_window_size
-        if curwidth > w
+        if curwidth < w
             exe 'vertical' 'resize' w
             return
         endif
