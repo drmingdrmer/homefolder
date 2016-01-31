@@ -67,36 +67,26 @@ fun! s:Win_Resize_To_Tiny() " {{{
   endif
 endfunction " }}}
 
-let g:nice_win_width = &columns * 618 / 1000
+let g:xp_window_size_wide = 160
+let g:xp_window_size_norm = 80
+
+set winwidth=80
+
 let g:tiny_win_width = 40
-
-let s:winWidths = {}
-
-fun! s:winWidths.W0() "{{{
-    return min( [ 85, &columns - 4 ] )
-endfunction "}}}
-fun! s:winWidths.W1() "{{{
-    return min( [ 120, &columns - 4 ] )
-endfunction "}}}
-fun! s:winWidths.W2() "{{{
-    return &columns * 618 / 1000
-endfunction "}}}
 
 fun! Win_Switch_Width(...) " {{{
 
     let curwidth = winwidth(0)
 
-    for i in [ 0, 1, 2 ]
-        let exp = s:winWidths['W' . i]()
-        let exp = exp / 5 * 5
-        if exp > curwidth
-            exe "vertical resize ".exp
-            return
-        endif
-    endfor
+    if curwidth > g:xp_window_size_wide
+        exe 'vertical' 'resize' g:xp_window_size_wide
+        return
+    endif
 
-    let exp = s:winWidths[ 'W0' ]()
-    exe "vertical resize ".exp
+    if curwidth < g:xp_window_size_norm
+        exe 'vertical' 'resize' g:xp_window_size_norm
+        return
+    endif
 
 endfunction " }}}
 
@@ -108,10 +98,6 @@ fun! Win_LR_Switch() " {{{
     wincmd h
   endif
 endfunction " }}}
-
-" switch window
-nmap <M-q> :call Win_LR_Switch()<CR>:exe "vertical res ".g:nice_win_width<CR>
-" nmap <M-w><M-w> <C-w><C-w>:vertical res 100<CR>zzze
 
 " swith up/down & to full height
 fun! s:SwitchVertWin(isUp) " {{{
@@ -134,10 +120,6 @@ nmap <F7>       <F2><C-w>R
 
 nmap <Plug>F1 :call <SID>SwitchVertWin(1)<CR>
 nmap <Plug>F2 :call <SID>SwitchVertWin(0)<CR>
-
-nmap <Leader><Leader><Leader>wildwindow :call Win_Switch_Width(2)<CR>zzze
-
-" upper/lower window in tiny size
 
 nmap <M-a> <C-w>h
 nmap <M-f> <C-w>l
