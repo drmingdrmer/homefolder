@@ -67,10 +67,9 @@ fun! s:Win_Resize_To_Tiny() " {{{
   endif
 endfunction " }}}
 
-let g:xp_window_size_wide = 160
-let g:xp_window_size_norm = 80
+let g:xp_window_size = [160, 120, 80, 60]
 
-set winwidth=80
+set winwidth=40
 
 let g:tiny_win_width = 40
 
@@ -78,15 +77,12 @@ fun! Win_Switch_Width(...) " {{{
 
     let curwidth = winwidth(0)
 
-    if curwidth > g:xp_window_size_wide
-        exe 'vertical' 'resize' g:xp_window_size_wide
-        return
-    endif
-
-    if curwidth < g:xp_window_size_norm
-        exe 'vertical' 'resize' g:xp_window_size_norm
-        return
-    endif
+    for w in g:xp_window_size
+        if curwidth > w
+            exe 'vertical' 'resize' w
+            return
+        endif
+    endfor
 
 endfunction " }}}
 
