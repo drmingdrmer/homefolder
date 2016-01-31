@@ -86,15 +86,6 @@ fun! Win_Switch_Width(...) " {{{
 
 endfunction " }}}
 
-fun! Win_LR_Switch() " {{{
-  let cur = winnr()
-  wincmd l
-  let cur2 = winnr()
-  if cur == cur2
-    wincmd h
-  endif
-endfunction " }}}
-
 " swith up/down & to full height
 fun! s:SwitchVertWin(isUp) " {{{
   " call confirm ("...")
