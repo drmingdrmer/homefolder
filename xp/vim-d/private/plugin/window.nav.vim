@@ -67,11 +67,9 @@ fun! s:Win_Resize_To_Tiny() " {{{
   endif
 endfunction " }}}
 
-let g:xp_window_size = [160, 120, 80, 60]
-
 set winwidth=40
 
-let g:tiny_win_width = 40
+let g:xp_window_size = [160, 120, 80, 60]
 
 fun! Win_Switch_Width(...) " {{{
 
