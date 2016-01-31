@@ -84,6 +84,8 @@ fun! Win_Switch_Width(...) " {{{
         endif
     endfor
 
+    exe 'vertical' 'resize' g:xp_window_size[0]
+
 endfunction " }}}
 
 fun! Win_LR_Switch() " {{{
