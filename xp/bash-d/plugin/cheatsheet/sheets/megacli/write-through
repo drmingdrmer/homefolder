@@ -1,0 +1,8 @@
+
+megacli -LDSetProp WB -L0 -aALL
+0的话 表示盘符 
+0是第一个盘
+1是第二个盘 
+依次类推
+WB是writeback
+WT是writethrough
