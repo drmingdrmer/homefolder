@@ -167,6 +167,7 @@ call XPTemplate('out', [
       \])
 call XPTemplate('.exw', 's3_exit_warn(`cursor^);')
 call XPTemplate('.log', 's3_log_')
+call XPTemplate('.mtc', 's3_metadb_client_')
 call XPTemplate('.o', 's3_object_')
 call XPTemplate('.oid', 's3_object_id_')
 call XPTemplate('.p', 's3_partition_')
@@ -196,6 +197,9 @@ call XPTemplate('S3Chain', 's3_chain_')
 
 call XPTemplate('s3_log_', 'S3Log')
 call XPTemplate('S3Log', 's3_log_')
+
+call XPTemplate('s3_metadb_client_', 'S3MetaDbClient')
+call XPTemplate('S3MetaDbClient', 's3_metadb_client_')
 
 call XPTemplate('s3_object_', 'S3Object')
 call XPTemplate('S3Object', 's3_object_')
