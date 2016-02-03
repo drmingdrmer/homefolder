@@ -32,7 +32,8 @@ fi
 
 $gconf user.name "drdr xp"
 $gconf user.email drdr.xp@gmail.com
-$gconf push.default upstream
+# $gconf push.default upstream
+$gconf push.default current
 $gconf merge.defaultToUpstream true
 
 $gconf color.diff true
