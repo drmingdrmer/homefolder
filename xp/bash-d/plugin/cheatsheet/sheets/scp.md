@@ -92,6 +92,3 @@ compression:
 
 <!-- vim:ft=markdown
 -->
-
-
-
