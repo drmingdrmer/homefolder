@@ -149,7 +149,7 @@ call XPTemplate('.eoo',  'S3_ERR_OUTOFMEM')
 call XPTemplate('.t', 'S3`S3S3Mod()^')
 call XPTemplate('.mb', 's3_must_be(`^`, `S3_ERR_INVALID_ARG^);')
 call XPTemplate('.mbi', 's3_must_inited(`x^, `S3_ERR_UNINITED^);')
-call XPTemplate('.mbui', 's3_must_uninited(`x^, `S3_ERR_INITTWICE^);')
+call XPTemplate('.mbui', 's3_must_uninited(`x^, `S3_ERR_INIT_TWICE^);')
 
 call XPTemplate('.at', 's3_atomic_')
 call XPTemplate('.arr', 's3_array_')
