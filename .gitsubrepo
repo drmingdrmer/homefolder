@@ -85,6 +85,9 @@ https://github.com/fatih/vim-go.git master
 xp/vim-d/plg-git/tagbar.majutsushi
 https://github.com/majutsushi/tagbar.git master
 
+xp/vim-d/plg-git/clang_complete
+git@github.com:Rip-Rip/clang_complete.git
+
 xp/vim-d/plg-git/xptemplate
 git@github.com:drmingdrmer/xptemplate.git rc
 
