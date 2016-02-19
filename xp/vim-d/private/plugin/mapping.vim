@@ -33,6 +33,9 @@ xmap ]<space> ]%
 
 nmap <unique> <Leader>s <Plug>view:switchSetting
 
+" user complete
+inoremap <unique> <M-i> <C-x><C-u>
+
 fun! s:DoMap() "{{{
     let mapping = [
           \ [ 'nmap', "[[",                   "<Plug>func_start" ],
@@ -43,7 +46,6 @@ fun! s:DoMap() "{{{
           \ [ 'imap', "<C-c>",                "<Plug>edit:insert:toNormal" ],
           \ [ 'imap', "<C-space>",            "<Plug>complete:omni" ],
           \ [ 'imap', "<C-u>",                "<Plug>edit:del" ],
-          \ [ 'imap', "<M-i>",                "<Plug>insert:insert_tab" ],
           \ [ 'imap', "<M-v>",                "<Plug>edit:paste_from_tmp" ],
           \ [ 'nmap', ",0",                   "<Plug>buffer:to0" ],
           \ [ 'nmap', ",1",                   "<Plug>buffer:to1" ],
