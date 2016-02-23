@@ -115,6 +115,7 @@ export EDITOR=vim
 export SVN_EDITOR='vim'
 export HISTSIZE=50000
 export HISTCONTROL=ignoreboth
+[ -d /usr/local/go/bin ] && { export PATH=$PATH:/usr/local/go/bin; export GOROOT=/usr/local/go; }
 [ -d $HOME/xp/gopath ] && { export GOPATH=$HOME/xp/gopath; export PATH=$PATH:$GOPATH/bin; }
 
 export PYTHONPATH=/usr/lib/python2.6/site-packages/:$PYTHONPATH
