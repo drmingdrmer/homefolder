@@ -1,0 +1,206 @@
+
+  • Ctrl-C (in older Unixes, DEL) sends an INT signal ("interrupt", SIGINT); by
+    default, this causes the process to terminate.
+  • Ctrl-Z sends a TSTP signal ("terminal stop", SIGTSTP); by default, this
+    causes the process to suspend execution.
+  • Ctrl-\ sends a QUIT signal (SIGQUIT); by default, this causes the process
+    to terminate and dump core.
+  • Ctrl-T (not supported on all UNIXes) sends an INFO signal (SIGINFO); by
+    default, and if supported by the command, this causes the operating system
+    to show information about the running command.
+
+
+SIGABRT
+    The SIGABRT signal is sent to a process to tell it to abort, i.e. to
+    terminate. The signal is usually initiated by the process itself when it
+    calls abort function of the C Standard Library, but it can be sent to the
+    process from outside like any other signal.
+SIGALRM, SIGVTALRM and SIGPROF
+    The SIGALRM, SIGVTALRM and SIGPROF signal is sent to a process when the
+    time limit specified in a call to a preceding alarm setting function (such
+    as setitimer) elapses. SIGALRM is sent when real or clock time elapses.
+    SIGVTALRM is sent when CPU time used by the process elapses. SIGPROF is
+    sent when CPU time used by the process and by the system on behalf of the
+    process elapses.
+SIGBUS
+    The SIGBUS signal is sent to a process when it causes a bus error. The
+    conditions that lead to the signal being sent are, for example, incorrect
+    memory access alignment or non-existent physical address.
+SIGCHLD
+    The SIGCHLD signal is sent to a process when a child process terminates, is
+    interrupted, or resumes after being interrupted. One common usage of the
+    signal is to instruct the operating system to clean up the resources used
+    by a child process after its termination without an explicit call to the
+    wait system call.
+SIGCONT
+    The SIGCONT signal instructs the operating system to continue (restart) a
+    process previously paused by the SIGSTOP or SIGTSTP signal. One important
+    use of this signal is in job control in the Unix shell.
+SIGFPE
+    The SIGFPE signal is sent to a process when it executes an erroneous
+    arithmetic operation, such as division by zero (the name "FPE", standing
+    for floating-point exception, is a misnomer as the signal covers
+    integer-arithmetic errors as well).^[2]
+SIGHUP
+    The SIGHUP signal is sent to a process when its controlling terminal is
+    closed. It was originally designed to notify the process of a serial line
+    drop (a hangup). In modern systems, this signal usually means that the
+    controlling pseudo or virtual terminal has been closed.^[3] Many daemons
+    will reload their configuration files and reopen their logfiles instead of
+    exiting when receiving this signal.^[4] nohup is a command to make a
+    command ignore the signal.
+SIGILL
+    The SIGILL signal is sent to a process when it attempts to execute an
+    illegal, malformed, unknown, or privileged instruction.
+SIGINT
+    The SIGINT signal is sent to a process by its controlling terminal when a
+    user wishes to interrupt the process. This is typically initiated by
+    pressing Ctrl-C, but on some systems, the "delete" character or "break" key
+    can be used.^[5]
+SIGKILL
+    The SIGKILL signal is sent to a process to cause it to terminate
+    immediately (kill). In contrast to SIGTERM and SIGINT, this signal cannot
+    be caught or ignored, and the receiving process cannot perform any clean-up
+    upon receiving this signal.
+SIGPIPE
+    The SIGPIPE signal is sent to a process when it attempts to write to a pipe
+    without a process connected to the other end.
+SIGPOLL
+    The SIGPOLL signal is sent when an event occurred on an explicitly watched
+    file descriptor.^[6] Using it effectively leads to making asynchronous I/O
+    requests since the kernel will poll the descriptor in place of the caller.
+    It provides an alternative to active polling.
+SIGRTMIN to SIGRTMAX
+    The SIGRTMIN to SIGRTMAX signals are intended to be used for user-defined
+    purposes. They are real-time signals.
+SIGQUIT
+    The SIGQUIT signal is sent to a process by its controlling terminal when
+    the user requests that the process quit and perform a core dump.
+SIGSEGV
+    The SIGSEGV signal is sent to a process when it makes an invalid virtual
+    memory reference, or segmentation fault, i.e. when it performs a seg
+    mentation violation.^[7]
+SIGSTOP
+    The SIGSTOP signal instructs the operating system to stop a process for
+    later resumption.
+SIGSYS
+    The SIGSYS signal is sent to a process when it passes a bad argument to a
+    system call. In practice, this kind of signal is rarely encountered since
+    applications rely on libraries (e.g. libc) to make the call for them.
+SIGTERM
+    The SIGTERM signal is sent to a process to request its termination. Unlike
+    the SIGKILL signal, it can be caught and interpreted or ignored by the
+    process. This allows the process to perform nice termination releasing
+    resources and saving state if appropriate. SIGINT is nearly identical to
+    SIGTERM.
+SIGTSTP
+    The SIGTSTP signal is sent to a process by its controlling terminal to
+    request it to stop (terminal stop). It is commonly initiated by the user
+    pressing [[Ctrl-Z|Template:Keystroke]]. Unlike SIGSTOP, the process can
+    register a signal handler for or ignore the signal.
+SIGTTIN and SIGTTOU
+    The SIGTTIN and SIGTTOU signals are sent to a process when it attempts to
+    read in or write out respectively from the tty while in the background.
+    Typically, these signals are received only by processes under job control;
+    daemons do not have controlling terminals and, therefore, should never
+    receive these signals.
+SIGTRAP
+    The SIGTRAP signal is sent to a process when an exception (or trap) occurs:
+    a condition that a debugger has requested to be informed of — for example,
+    when a particular function is executed, or when a particular variable
+    changes value.
+SIGURG
+    The SIGURG signal is sent to a process when a socket has urgent or
+    out-of-band data available to read.
+SIGUSR1 and SIGUSR2
+    The SIGUSR1 and SIGUSR2 signals are sent to a process to indicate
+    user-defined conditions.
+SIGXCPU
+    The SIGXCPU signal is sent to a process when it has used up the CPU for a
+    duration that exceeds a certain predetermined user-settable value.^[8] The
+    arrival of a SIGXCPU signal provides the receiving process a chance to
+    quickly save any intermediate results and to exit gracefully, before it is
+    terminated by the operating system using the SIGKILL signal.
+SIGXFSZ
+    The SIGXFSZ signal is sent to a process when it grows a file larger than
+    the maximum allowed size.
+
+ Signal     Portable    Default Action                Description
+             number
+SIGABRT   6            Terminate (core  Process abort signal
+                       dump)
+SIGALRM   14           Terminate        Alarm clock
+SIGBUS    n/a          Terminate (core  Access to an undefined portion of a
+                       dump)            memory object.
+SIGCHLD   n/a          Ignore           Child process terminated, stopped, or
+                                        continued.
+SIGCONT   n/a          Continue         Continue executing, if stopped.
+SIGFPE    n/a          Terminate (core  Erroneous arithmetic operation.
+                       dump)
+SIGHUP    1            Terminate        Hangup.
+SIGILL    n/a          Terminate (core  Illegal instruction.
+                       dump)
+SIGINT    2            Terminate        Terminal interrupt signal.
+SIGKILL   9            Terminate        Kill (cannot be caught or ignored).
+SIGPIPE   n/a          Terminate        Write on a pipe with no one to read it.
+SIGPOLL   n/a          Terminate        Pollable event.
+SIGPROF   n/a          Terminate        Profiling timer expired.
+SIGQUIT   3            Terminate (core  Terminal quit signal.
+                       dump)
+SIGSEGV   n/a          Terminate (core  Invalid memory reference.
+                       dump)
+SIGSTOP   n/a          Stop             Stop executing (cannot be caught or
+                                        ignored).
+SIGSYS    n/a          Terminate (core  Bad system call.
+                       dump)
+SIGTERM   15           Terminate        Termination signal.
+SIGTRAP   n/a          Terminate (core  Trace/breakpoint trap.
+                       dump)
+SIGTSTP   n/a          Stop             Terminal stop signal.
+SIGTTIN   n/a          Stop             Background process attempting read.
+SIGTTOU   n/a          Stop             Background process attempting write.
+SIGUSR1   n/a          Terminate        User-defined signal 1.
+SIGUSR2   n/a          Terminate        User-defined signal 2.
+SIGURG    n/a          Ignore           High bandwidth data is available at a
+                                        socket.
+SIGVTALRM n/a          Terminate        Virtual timer expired.
+SIGXCPU   n/a          Terminate (core  CPU time limit exceeded.
+                       dump)
+SIGXFSZ   n/a          Terminate (core  File size limit exceeded
+                       dump)
+
+    Portable number:
+    For most signals the corresponding signal number is implementation-defined.
+    This column lists the numbers specified in the POSIX standard.^[9]
+
+    Actions explained:
+    Terminate — abnormal termination of the process. The process is terminated
+    with all the consequences of _exit() except that the status made available
+    to wait() and waitpid() indicates abnormal termination by the specified
+    signal.
+    Terminate (core dump) — Abnormal termination of the process. Additionally,
+    implementation-defined abnormal termination actions, such as creation of a
+    core file, may occur.
+    Ignore — Ignore the signal.
+    Stop — Stop (not terminate) the process.
+    Continue — Continue the process, if it is stopped; otherwise, ignore the
+    signal.
+
+Miscellaneous signals[edit]
+
+The following signals are not specified in the POSIX specification. They are,
+however, sometimes used on various systems.
+
+SIGEMT
+    The SIGEMT signal is sent to a process when an emulator trap occurs.
+SIGINFO
+    The SIGINFO signal is sent to a process when a status (info) request is
+    received from the controlling terminal.
+SIGPWR
+    The SIGPWR signal is sent to a process when the system experiences a power
+    failure.
+SIGLOST
+    The SIGLOST signal is sent to a process when a file lock is lost.
+SIGWINCH
+    The SIGWINCH signal is sent to a process when its controlling terminal
+    changes its size (a window change).
