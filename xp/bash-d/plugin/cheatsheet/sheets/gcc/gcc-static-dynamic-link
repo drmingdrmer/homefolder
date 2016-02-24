@@ -1,0 +1,1013 @@
+ 1. Home
+ 2. Tutorials
+ 3. C/C++
+ 4. C/C++ Libraries
+
+Yolinux.com Tutorial
+
+Static, Shared Dynamic and Loadable Linux Libraries
+
+This tutorial discusses the philosophy behind libraries and the creation and
+use of C/C++ library "shared components" and "plug-ins". The various
+technologies and methodologies used and insight to their appropriate
+application, is also discussed. In this tutorial, all libraries are created
+using the GNU Linux compiler.
+
+
+Free Information Technology Magazines and Document Downloads
+TradePub link image
+
+Free Information Technology Software and Development Magazine Subscriptions and
+Document Downloads
+
+Why libraries are used:
+
+This methodology, also known as "shared components" or "archive libraries",
+groups together multiple compiled object code files into a single file known as
+a library. Typically C functions/C++ classes and methods which can be shared by
+more than one application are broken out of the application's source code,
+compiled and bundled into a library. The C standard libraries and C++ STL are
+examples of shared components which can be linked with your code. The benefit
+is that each and every object file need not be stated when linking because the
+developer can reference the individual library. This simplifies the multiple
+use and sharing of software components between applications. It also allows
+application vendors a way to simply release an API to interface with an
+application. Components which are large can be created for dynamic use, thus
+the library remain separate from the executable reducing it's size and thus
+disk space used. The library components are then called by various applications
+for use when needed.
+
+Linux Library Types:
+
+There are two Linux C/C++ library types which can be created:
+
+ 1. Static libraries (.a): Library of object code which is linked with, and
+    becomes part of the application.
+ 2. Dynamically linked shared object libraries (.so): There is only one form of
+    this library but it can be used in two ways.
+     1. Dynamically linked at run time but statically aware. The libraries must
+        be available during compile/link phase. The shared objects are not
+        included into the executable component but are tied to the execution.
+     2. Dynamically loaded/unloaded and linked during execution (i.e. browser
+        plug-in) using the dynamic linking loader system functions.
+
+Library naming conventions:
+
+Libraries are typically names with the prefix "lib". This is true for all the C
+standard libraries. When linking, the command line reference to the library
+will not contain the library prefix or suffix.
+
+Thus the following link command: gcc src-file.c -lm -lpthread
+The libraries referenced in this example for inclusion during linking are the
+math library and the thread library. They are found in /usr/lib/libm.a and /usr
+/lib/libpthread.a.
+
+Note: The GNU compiler now has the command line option "-pthread" while older
+versions of the compiler specify the pthread library explicitly with
+"-lpthread". Thus now you are more likely to see gcc src-file.c -lm -pthread
+
+Static Libraries: (.a)
+
+How to generate a library (object code archive file):
+
+  • Compile: cc -Wall -c ctest1.c ctest2.c
+    Compiler options:
+      □ -Wall: include warnings. See man page for warnings specified.
+  • Create library "libctest.a": ar -cvq libctest.a ctest1.o ctest2.o
+  • List files in library: ar -t libctest.a
+  • Linking with the library:
+      □ cc -o executable-name prog.c libctest.a
+      □ cc -o executable-name prog.c -L/path/to/library-directory -lctest
+  • Example files:
+      □ ctest1.c
+
+        void ctest1(int *i)
+        {
+           *i=5;
+        }
+
+
+      □ ctest2.c void ctest2(int *i)
+        {
+        *i=100;
+        }
+
+      □ prog.c
+
+        #include <stdio.h>
+        void ctest1(int *);
+        void ctest2(int *);
+
+        int main()
+        {
+           int x;
+           ctest1(&x);
+           printf("Valx=%d\n",x);
+
+           return 0;
+        }
+
+
+Historical note: After creating the library it was once necessary to run the
+command: ranlib ctest.a. This created a symbol table within the archive. Ranlib
+is now embedded into the "ar" command.
+
+Note for MS/Windows developers: The Linux/Unix ".a" library is conceptually the
+same as the Visual C++ static ".lib" libraries.
+
+Dynamically Linked "Shared Object" Libraries: (.so)
+
+How to generate a shared object: (Dynamically linked object library file.) Note
+that this is a two step process.
+
+ 1. Create object code
+ 2. Create library
+ 3. Optional: create default version using a symbolic link.
+
+Library creation example:
+
+    gcc -Wall -fPIC -c *.c
+    gcc -shared -Wl,-soname,libctest.so.1 -o libctest.so.1.0   *.o
+    mv libctest.so.1.0 /opt/lib
+    ln -sf /opt/lib/libctest.so.1.0 /opt/lib/libctest.so.1
+    ln -sf /opt/lib/libctest.so.1.0 /opt/lib/libctest.so
+
+
+This creates the library libctest.so.1.0 and symbolic links to it.
+
+It is also valid to cascade the linkage:
+
+    ln -sf /opt/lib/libctest.so.1.0 /opt/lib/libctest.so.1
+    ln -sf /opt/lib/libctest.so.1   /opt/lib/libctest.so
+
+
+If you look at the libraries in /lib/ and /usr/lib/ you will find both
+methodologies present. Linux developers are not consistent. What is important
+is that the symbolic links eventually point to an actual library.
+
+Compiler options:
+
+  • -Wall: include warnings. See man page for warnings specified.
+  • -fPIC: Compiler directive to output position independent code, a
+    characteristic required by shared libraries. Also see "-fpic".
+  • -shared: Produce a shared object which can then be linked with other
+    objects to form an executable.
+  • -Wl,options: Pass options to linker.
+    In this example the options to be passed on to the linker are: "-soname
+    libctest.so.1". The name passed with the "-o" option is passed to gcc.
+  • Option -o: Output of operation. In this case the name of the shared object
+    to be output will be "libctest.so.1.0"
+
+Library Links:
+
+  • The link to /opt/lib/libctest.so allows the naming convention for the
+    compile flag -lctest to work.
+  • The link to /opt/lib/libctest.so.1 allows the run time binding to work. See
+    dependency below.
+
+Compile main program and link with shared object library:
+
+Compiling for runtime linking with a dynamically linked libctest.so.1.0:
+
+    gcc -Wall -I/path/to/include-files -L/path/to/libraries prog.c -lctest -o prog
+
+
+Use:
+
+    gcc -Wall -L/opt/lib prog.c -lctest -o prog
+
+
+Where the name of the library is libctest.so. (This is why you must create the
+symbolic links or you will get the error "/usr/bin/ld: cannot find -lctest".)
+The libraries will NOT be included in the executable but will be dynamically
+linked during runtime execution.
+
+List Dependencies:
+
+The shared library dependencies of the executable can be listed with the
+command: ldd name-of-executable
+
+Example: ldd prog
+
+        libctest.so.1 => /opt/lib/libctest.so.1 (0x00002aaaaaaac000)
+        libc.so.6 => /lib64/tls/libc.so.6 (0x0000003aa4e00000)
+        /lib64/ld-linux-x86-64.so.2 (0x0000003aa4c00000)
+
+
+[Potential Pitfall]: Unresolved errors within a shared library may cause an
+error when the library is loaded. Example:
+
+Error message at runtime:
+
+        ERROR: unable to load  libname-of-lib.so
+        ERROR: unable to get function address
+
+
+Investigate error:
+
+    [prompt]$ ldd libname-of-lib.so
+        libglut.so.3 => /usr/lib64/libglut.so.3 (0x00007fb582b74000)
+        libGL.so.1 => /usr/lib64/libGL.so.1 (0x00007fb582857000)
+        libX11.so.6 => /usr/lib64/libX11.so.6 (0x00007fb582518000)
+        libIL.so.1 (0x00007fa0f2c0f000)
+        libcudart.so.4 => not found
+
+
+The first three libraries show that there is a path resolution. The last two
+are problematic.
+
+The fix is to resolve dependencies of the last two libraries when linking the
+library libname-of-lib.so:
+
+  • Add the unresolved library path in /etc/ld.so.conf.d/name-of-lib
+    -x86_64.conf and/or /etc/ld.so.conf.d/name-of-lib-i686.conf
+    Reload the library cache (/etc/ld.so.cache) with the command: sudo ldconfig
+    or
+  • Add library and path explicitly to the compiler/linker command: -l
+    name-of-lib -L/path/to/lib
+    or
+  • Add the library path to the environment variable to fix runtime dependency:
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/path/to/lib
+
+Run Program:
+
+  • Set path: export LD_LIBRARY_PATH=/opt/lib:$LD_LIBRARY_PATH
+  • Run: prog
+
+Man Pages:
+
+  • gcc - GNU C compiler
+  • ld - The GNU Linker
+  • ldd - List library dependencies
+  • ldconfig - configure dynamic linker run time bindings (update cache /etc/
+    ld.so.cache)
+
+Links:
+
+  • LDP: Shared libraries
+
+Library Path:
+
+In order for an executable to find the required libraries to link with during
+run time, one must configure the system so that the libraries can be found.
+Methods available: (Do at least one of the following)
+
+ 1. Add library directories to be included during dynamic linking to the file /
+    etc/ld.so.conf
+
+    Sample: /etc/ld.so.conf
+
+    /usr/X11R6/lib
+    /usr/lib
+    ...
+    ..
+    /usr/lib/sane
+    /usr/lib/mysql
+    /opt/lib
+
+
+    Add the library path to this file and then execute the command (as root)
+    ldconfig to configure the linker run-time bindings.
+    You can use the "-f file-name" flag to reference another configuration file
+    if you are developing for different environments.
+    See man page for command ldconfig.
+
+    OR
+
+ 2. Add specified directory to library cache: (as root)
+    ldconfig -n /opt/lib
+    Where /opt/lib is the directory containing your library libctest.so
+    (When developing and just adding your current directory: ldconfig -n . Link
+    with -L.)
+
+    This will NOT permanently configure the system to include this directory.
+    The information will be lost upon system reboot.
+
+    OR
+
+ 3. Specify the environment variable LD_LIBRARY_PATH to point to the directory
+    paths containing the shared object library. This will specify to the run
+    time loader that the library paths will be used during execution to resolve
+    dependencies.
+    (Linux/Solaris: LD_LIBRARY_PATH, SGI: LD_LIBRARYN32_PATH, AIX: LIBPATH, Mac
+    OS X: DYLD_LIBRARY_PATH, HP-UX: SHLIB_PATH)
+
+    Example (bash shell): export LD_LIBRARY_PATH=/opt/lib:$LD_LIBRARY_PATH or
+    add to your ~/.bashrc file:
+
+    ...
+    if [ -d /opt/lib ];
+    then
+       LD_LIBRARY_PATH=/opt/lib:$LD_LIBRARY_PATH
+    fi
+
+    ...
+
+    export LD_LIBRARY_PATH
+
+
+
+    This instructs the run time loader to look in the path described by the
+    environment variable LD_LIBRARY_PATH, to resolve shared libraries. This
+    will include the path /opt/lib.
+
+Library paths used should conform to the "Linux Standard Base" directory
+structure.
+
+Library Info:
+
+ar: list object files in archive library
+
+ar tf /usr/lib/x86_64-linux-gnu/libjpeg.a
+
+This will list all of the object files held in the archive library:
+
+jlibinit.o
+jcapimin.o
+jcapistd.o
+jccoefct.o
+jccolor.o
+jcdctmgr.o
+jchuff.o
+jcinit.o
+...
+...
+
+
+Also see: Man page for ar
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+nm: list symbols: object files, archive library and shared library
+
+The command "nm" lists symbols contained in object files:
+
+ nm file.o
+
+The command "nm" lists symbols contained in the archive library:
+
+Object symbols in static archive libraries are categorized using the source and
+object file hierachy of the library:
+
+ nm /usr/lib/x86_64-linux-gnu/libjpeg.a
+
+jlibinit.o:
+0000000000000000 B auxv
+                 U fclose
+                 U fopen
+                 U fread
+                 U getpagesize
+0000000000000000 T libjpeg_general_init
+                 U malloc
+                 U perror
+
+jcapimin.o:
+                 U jinit_marker_writer
+                 U jinit_memory_mgr
+0000000000000000 T jpeg_CreateCompress
+                 U jpeg_abort
+0000000000000240 T jpeg_abort_compress
+                 U jpeg_destroy
+0000000000000230 T jpeg_destroy_compress
+00000000000002a0 T jpeg_finish_compress
+                 U jpeg_natural_order
+...
+...
+
+
+The command "nm" lists symbols contained in the object file or shared library.
+
+Use the command nm -D libctest.so.1.0
+(or nm --dynamic libctest.so.1.0)
+
+0000000000100988 A __bss_start
+000000000000068c T ctest1
+00000000000006a0 T ctest2
+                 w __cxa_finalize
+00000000001007b0 A _DYNAMIC
+0000000000100988 A _edata
+0000000000100990 A _end
+00000000000006f8 T _fini
+0000000000100958 A _GLOBAL_OFFSET_TABLE_
+                 w __gmon_start__
+00000000000005b0 T _init
+                 w _Jv_RegisterClasses
+
+
+Also see: Man page for nm
+
+ Symbol                               Description
+  Type
+A        The symbol's value is absolute, and will not be changed by further
+         linking.
+B        Un-initialized data section
+D        Initialized data section
+T        Normal code section
+U        Undefined symbol used but not defined. Dependency on another library.
+W        Doubly defined symbol. If found, allow definition in another library
+         to resolve dependency.
+
+Also see: objdump man page
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+readelf: list symbols in shared library
+
+The command "readelf" command to list symbols contained in a shared library:
+
+Use the command readelf -s /usr/lib64/libjpeg.so
+
+Symbol table '.dynsym' contains 144 entries:
+   Num:    Value          Size Type    Bind   Vis      Ndx Name
+     0: 0000000000000000     0 NOTYPE  LOCAL  DEFAULT  UND
+     1: 0000000000003b30     0 SECTION LOCAL  DEFAULT   10
+     2: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND getenv@GLIBC_2.2.5 (4)
+     3: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND free@GLIBC_2.2.5 (4)
+     4: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND ferror@GLIBC_2.2.5 (4)
+     5: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND fread@GLIBC_2.2.5 (4)
+     6: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND fclose@GLIBC_2.2.5 (4)
+     7: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND __stack_chk_fail@GLIBC_2.4 (5)
+     8: 0000000000000000     0 FUNC    GLOBAL DEFAULT  UND memset@GLIBC_2.2.5 (4)
+     9: 0000000000000000     0 NOTYPE  WEAK   DEFAULT  UND __gmon_start__
+...
+...
+
+Also see: readelf man page
+
+Library Versions:
+
+Library versions should be specified for shared objects if the function
+interfaces are expected to change (C++ public/protected class definitions),
+more or fewer functions are included in the library, the function prototype
+changes (return data type (int, const int, ...) or argument list changes) or
+data type changes (object definitions: class data members, inheritance, virtual
+functions, ...).
+
+The library version can be specified when the shared object library is created.
+If the library is expected to be updated, then a library version should be
+specified. This is especially important for shared object libraries which are
+dynamically linked. This also avoids the Microsoft "DLL hell" problem of
+conflicting libraries where a system upgrade which changes a standard library
+breaks an older application expecting an older version of the the shared object
+function.
+
+Versioning occurs with the GNU C/C++ libraries as well. This often make
+binaries compiled with one version of the GNU tools incompatible with binaries
+compiled with other versions unless those versions also reside on the system.
+Multiple versions of the same library can reside on the same system due to
+versioning. The version of the library is included in the symbol name so the
+linker knows which version to link with.
+
+One can look at the symbol version used: nm csub1.o
+
+00000000 T ctest1
+
+
+No version is specified in object code by default.
+
+ld and object file layout
+
+There is one GNU C/C++ compiler flag that explicitly deals with symbol
+versioning. Specify the version script to use at compile time with the flag:
+--version-script=your-version-script-file
+Note: This is only useful when creating shared libraries. It is assumed that
+the programmer knows which libraries to link with when static linking. Runtime
+linking allows opportunity for library incompatibility.
+
+GNU/Linux, see examples of version scripts here: sysdeps/unix/sysv/linux/
+Versions
+
+Some symbols may also get version strings from assembler code which appears in
+glibc headers files. Look at include/libc-symbols.h.
+
+Example: nm /lib/libc.so.6 | more
+
+00000000 A GCC_3.0
+00000000 A GLIBC_2.0
+00000000 A GLIBC_2.1
+00000000 A GLIBC_2.1.1
+00000000 A GLIBC_2.1.2
+00000000 A GLIBC_2.1.3
+00000000 A GLIBC_2.2
+00000000 A GLIBC_2.2.1
+00000000 A GLIBC_2.2.2
+00000000 A GLIBC_2.2.3
+00000000 A GLIBC_2.2.4
+...
+..
+
+Note the use of a version script.
+
+Library referencing a versioned library: nm /lib/libutil-2.2.5.so
+
+..
+...
+         U strcpy@@GLIBC_2.0
+         U strncmp@@GLIBC_2.0
+         U strncpy@@GLIBC_2.0
+...
+..
+
+Links:
+
+  • Symbol versioning
+  • GNU.org: ld
+
+Dynamic loading and un-loading of shared libraries using libdl:
+
+These libraries are dynamically loaded / unloaded and linked during execution.
+Usefull for creating a "plug-in" architecture.
+
+Prototype include file for the library: ctest.h
+
+#ifndef CTEST_H
+#define CTEST_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+void ctest1(int *);
+void ctest2(int *);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif
+
+Use the notation extern "C" so the libraries can be used with C and C++. This
+statement prevents the C++ from name mangling and thus creating "unresolved
+symbols" when linking.
+
+Load and unload the library libctest.so (created above), dynamically:
+
+#include <stdio.h>
+#include <dlfcn.h>
+#include "ctest.h"
+
+int main(int argc, char **argv)
+{
+   void *lib_handle;
+   double (*fn)(int *);
+   int x;
+   char *error;
+
+   lib_handle = dlopen("/opt/lib/libctest.so", RTLD_LAZY);
+   if (!lib_handle)
+   {
+      fprintf(stderr, "%s\n", dlerror());
+      exit(1);
+   }
+
+   fn = dlsym(lib_handle, "ctest1");
+   if ((error = dlerror()) != NULL)
+   {
+      fprintf(stderr, "%s\n", error);
+      exit(1);
+   }
+
+   (*fn)(&x);
+   printf("Valx=%d\n",x);
+
+   dlclose(lib_handle);
+   return 0;
+}
+
+gcc -rdynamic -o progdl progdl.c -ldl
+
+Explanation:
+
+  • dlopen("/opt/lib/libctest.so", RTLD_LAZY);
+    Open shared library named "libctest.so".
+    The second argument indicates the binding. See include file dlfcn.h.
+    Returns NULL if it fails.
+    Options:
+      □ RTLD_LAZY: If specified, Linux is not concerned about unresolved
+        symbols until they are referenced.
+      □ RTLD_NOW: All unresolved symbols resolved when dlopen() is called.
+      □ RTLD_GLOBAL: Make symbol libraries visible.
+  • dlsym(lib_handle, "ctest1");
+    Returns address to the function which has been loaded with the shared
+    library..
+    Returns NULL if it fails.
+    Note: When using C++ functions, first use nm to find the "mangled" symbol
+    name or use the extern "C" construct to avoid name mangling.
+    i.e. extern "C" void function-name();
+
+Object code location: Object code archive libraries can be located with either
+the executable or the loadable library. Object code routines used by both
+should not be duplicated in each. This is especially true for code which use
+static variables such as singleton classes. A static variable is global and
+thus can only be represented once. Including it twice will provide unexpected
+results. The programmer can specify that specific object code be linked with
+the executable by using linker commands which are passed on by the compiler.
+
+Use the "-Wl" gcc/g++ compiler flag to pass command line arguments on to the
+GNU "ld" linker.
+
+Example makefile statement: g++ -rdynamic -o appexe $(OBJ) $(LINKFLAGS)
+-Wl,--whole-archive -L{AA_libs} -laa -Wl,--no-whole-archive $(LIBS)
+
+  • --whole-archive: This linker directive specifies that the libraries listed
+    following this directive (in this case AA_libs) shall be included in the
+    resulting output even though there may not be any calls requiring its
+    presence. This option is used to specify libraries which the loadable
+    libraries will require at run time.
+  • -no-whole-archive: This needs to be specified whether you list additional
+    object files or not. The gcc/g++ compiler will add its own list of archive
+    libraries and you would not want all the object code in the archive library
+    linked in if not needed. It toggles the behavior back to normal for the
+    rest of the archive libraries.
+
+Man pages:
+
+  • dlopen() - gain access to an executable object file
+  • dclose() - close a dlopen object
+  • dlsym() - obtain the address of a symbol from a dlopen object
+  • dlvsym() - Programming interface to dynamic linking loader.
+  • dlerror() - get diagnostic information
+
+Links:
+
+  • GNOME Glib dynamic loading of modules - cross platform API for dynamically
+    loading "plug-ins".
+
+C++ class objects and dynamic loading:
+
+C++ and name mangling:
+
+When running the above "C" examples with the "C++" compiler one will quickly
+find that "C++" function names get mangled and thus will not work unless the
+function definitions are protected with extern "C"{}.
+
+Note that the following are not equivalent:
+
+extern "C"                              extern "C" int functionx();
+{
+   int functionx();
+}
+
+
+The following are equivalent:
+
+extern "C"                              extern "C" int functionx();
+{
+   extern int functionx();
+}
+
+
+Dynamic loading of C++ classes:
+
+The dynamic library loading routines enable the programmer to load "C"
+functions. In C++ we would like to load class member functions. In fact the
+entire class may be in the library and we may want to load and have access to
+the entire object and all of its member functions. Do this by passing a "C"
+class factory function which instantiates the class.
+
+The class ".h" file:
+
+class Abc {
+
+...
+...
+
+};
+
+// Class factory "C" functions
+
+typedef Abc* create_t;
+typedef void destroy_t(Abc*);
+
+The class ".cpp" file:
+
+Abc::Abc()
+{
+    ...
+}
+
+extern "C"
+{
+   // These two "C" functions manage the creation and destruction of the class Abc
+
+   Abc* create()
+   {
+      return new Abc;
+   }
+
+   void destroy(Abc* p)
+   {
+      delete p;   // Can use a base class or derived class pointer here
+   }
+}
+
+This file is the source to the library. The "C" functions to instantiate
+(create) and destroy a class defined in the dynamically loaded library where
+"Abc" is the C++ class.
+
+Main executable which calls the loadable libraries:
+
+// load the symbols
+    create_t* create_abc = (create_t*) dlsym(lib_handle, "create");
+
+...
+...
+
+    destroy_t* destroy_abc = (destroy_t*) dlsym(lib_handle, "destroy");
+
+...
+...
+
+
+Pitfalls:
+
+  • The new/delete of the C++ class should both be provided by the executable
+    or the library but not split. This is so that there is no surprise if one
+    overloads new/delete in one or the other.
+
+Links:
+
+  • LinuxJournal.com: Dynamic Class Loading for C++ on Linux
+  • dlopen howto
+
+Comparison to the Microsoft DLL:
+
+The Microsoft Windows equivalent to the Linux / Unix shared object (".so") is
+the ".dll". The Microsoft Windows DLL file usually has the extension ".dll",
+but may also use the extension ".ocx". On the old 16 bit windows, the
+dynamically linked libraries were also named with the ".exe" suffix.
+"Executing" the DLL will load it into memory.
+
+The Visual C++ .NET IDE wizard will create a DLL framework through the GUI, and
+generates a ".def" file. This "module definition file" lists the functions to
+be exported. When exporting C++ functions, the C++ mangled names are used.
+Using the Visual C++ compiler to generate a ".map" file will allow you to
+discover the C++ mangled name to use in the ".def" file. The "SECTIONS" label
+in the ".def" file will define the portions which are "shared". Unfortunately
+the generation of DLLs are tightly coupled to the Microsoft IDE, so much so
+that I would not recomend trying to create one without it.
+
+The Microsoft Windows C++ equivalent functions to libdl are the following
+functions:
+
+  • ::LoadLibrary() - dlopen()
+  • ::GetProcAddress() - dlsym()
+  • ::FreeLibrary() - dlclose()
+
+[Potential Pitfall]: Microsoft Visual C++ .NET compilers do not allow the
+linking controll that the GNU linker "ld" allows (i.e. --whole-archive,
+-no-whole-archive). All symbols need to be resolved by the VC++ compiler for
+both the loadable library and the application executable individually and thus
+it can cause duplication of libraries when the library is loaded. This is
+especially bad when using static variables (i.e. used in singleton patterns) as
+you will get two memory locations for the static variable, one used by the
+loadable library and the other used by the program executable. This breaks the
+whole static variable concept and the singleton pattern. Thus you can not use a
+static variable which is referenced by by both the loadable library and the
+application executable as they will be unique and different. To use a unique
+static variable, you must pass a pointer to that static variable to the other
+module so that each module (main executable and DLL library) can use the same
+instatiation. On MS/Windows you can use shared memory or a memory mapped file
+so that the main executable and DLL library can share a pointer to an address
+they both will use.
+
+Cross platform (Linux and MS/Windows) C++ code snippet:
+
+Include file declaration: (.h or .hpp)
+
+class Abc{
+public:
+   static Abc* Instance(); // Function declaration. Could also be used as a public class member function.
+
+private:
+   static Abc *mInstance;      // Singleton. Use this declaration in C++ class member variable declaration.
+   ...
+}
+
+C/C++ Function source: (.cpp)
+
+/// Singleton instantiation
+Abc* Abc::mInstance = 0;   // Use this declaration for C++ class member variable
+                           // (Defined outside of class definition in ".cpp" file)
+
+// Return unique pointer to instance of Abc or create it if it does not exist.
+// (Unique to both exe and dll)
+
+static Abc* Abc::Instance() // Singleton
+{
+#ifdef WIN32
+    // If pointer to instance of Abc exists (true) then return instance pointer else look for
+    // instance pointer in memory mapped pointer. If the instance pointer does not exist in
+    // memory mapped pointer, return a newly created pointer to an instance of Abc.
+
+    return mInstance ?
+       mInstance : (mInstance = (Abc*) MemoryMappedPointers::getPointer("Abc")) ?
+       mInstance : (mInstance = (Abc*) MemoryMappedPointers::createEntry("Abc",(void*)new Abc));
+#else
+    // If pointer to instance of Abc exists (true) then return instance pointer
+    // else return a newly created pointer to an instance of Abc.
+
+    return mInstance ? mInstance : (mInstance = new Abc);
+#endif
+}
+
+Windows linker will pull two instances of object, one in exe and one in
+loadable module. Specify one for both to use by using memory mapped pointer so
+both exe and loadable library point to same variable or object.
+Note that the GNU linker does not have this problem.
+
+For more on singletons see the YoLinux.com C++ singleton software design
+pattern tutorial.
+
+Cross platform programming of loadable libraries:
+
+ 
+
+#ifndef USE_PRECOMPILED_HEADERS
+#ifdef WIN32
+#include <direct.h>
+#include <windows.h>
+#else
+#include <sys/types.h>
+#include <dlfcn.h>
+#endif
+#include <iostream>
+#endif
+
+    using namespace std;
+
+#ifdef WIN32
+    HINSTANCE lib_handle;
+#else
+    void *lib_handle;
+#endif
+
+    // Where retType is the pointer to a return type of the function
+    // This return type can be int, float, double, etc or a struct or class.
+
+    typedef retType* func_t;
+
+    // load the library -------------------------------------------------
+#ifdef WIN32
+    string nameOfLibToLoad("C:\opt\lib\libctest.dll");
+    lib_handle = LoadLibrary(TEXT(nameOfLibToLoad.c_str()));
+    if (!lib_handle) {
+        cerr << "Cannot load library: " << TEXT(nameOfDllToLoad.c_str()) << endl;
+    }
+#else
+    string nameOfLibToLoad("/opt/lib/libctest.so");
+    lib_handle = dlopen(nameOfLibToLoad.c_str(), RTLD_LAZY);
+    if (!lib_handle) {
+        cerr << "Cannot load library: " << dlerror() << endl;
+    }
+#endif
+
+...
+...
+...
+
+    // load the symbols -------------------------------------------------
+#ifdef WIN32
+    func_t* fn_handle = (func_t*) GetProcAddress(lib_handle, "superfunctionx");
+    if (!fn_handle) {
+        cerr << "Cannot load symbol superfunctionx: " << GetLastError() << endl;
+    }
+#else
+    // reset errors
+    dlerror();
+
+    // load the symbols (handle to function "superfunctionx")
+    func_t* fn_handle= (func_t*) dlsym(lib_handle, "superfunctionx");
+    const char* dlsym_error = dlerror();
+    if (dlsym_error) {
+        cerr << "Cannot load symbol superfunctionx: " << dlsym_error << endl;
+    }
+#endif
+
+...
+...
+...
+
+    // unload the library -----------------------------------------------
+
+#ifdef WIN32
+    FreeLibrary(lib_handle);
+#else
+    dlclose(lib_handle);
+#endif
+
+Tools:
+
+Man pages:
+
+  • ar - create, modify, and extract from archives
+  • ranlib - generate index to archive
+  • nm - list symbols from object files
+  • ld - Linker
+  • ldconfig - configure dynamic linker run-time bindings
+    ldconfig -p : Print the lists of directories and candidate libraries stored
+    in the current cache.
+    i.e. /sbin/ldconfig -p |grep libGL
+  • ldd - print shared library dependencies
+  • gcc/g++ - GNU project C and C++ compiler
+  • man page to: ld.so - a.out dynamic linker/loader
+
+Notes:
+
+  • Direct loader to preload a specific shared library before all others:
+    export LD_PRELOAD=/usr/lib/libXXX.so.x; exec program. This is specified in
+    the file /etc/ld.so.preload and extended with the environment variable
+    LD_PRELOAD.
+    Also see:
+      □ man page to: ld.so - a.out dynamic linker/loader
+      □ LD_PRELOAD and Linux function interception.
+
+  • Running Red Hat 7.1 (glibc 2.2.2) but compiling for Red Hat 6.2
+    compatibility.
+    See RELEASE-NOTES
+
+            export LD_ASSUME_KERNEL=2.2.5
+            . /usr/i386-glibc21-linux/bin/i386-glibc21-linux-env.sh
+
+
+  • Environment variable to highlight warnings, errors, etc: export CC=
+    "colorgcc"
+
+YoLinux Software Development Tutorials:
+
+  • Editors:
+      □ VI / VIM - Advanced editing - tutorial, tips and tricks
+      □ X-Emacs - Editing C++ code - Use, settings, code beautification
+  • Source Code Control/Revision:
+      □ CVS source code control - Track and manage a set of files and their
+        revisions.
+      □ RCS source code control - Track and manage individual files and their
+        revisions.
+      □ IBM/Rational Clearcase:
+          ☆ Clearcase Client Installation
+          ☆ Clearcase commands
+  • C++ Programming on Linux:
+      □ C++ STL (Standard Template Library) example for Linked Lists
+      □ Linux/Gnu C++ string class examples and tutorial
+      □ Use of structures in C++ - This example shows the use of a constructor
+        with a structure. The stuff they never included in the text books.
+      □ Programming web server CGI programs with C++ and the GNU CgiCC library
+      □ C++ Coding styles and practices
+      □ C++ Memory corruption and leaks
+  • Tips and Best Practices for Microsoft Visual C++ users (So they don't make
+    ugly files and mess up your project.)
+  • CORBA, OmniORB, C++ and remote services (client/server request)
+  • Fork, exec and process control
+  • Threads:
+      □ POSIX Threads - make your code run faster and more scalable.
+      □ GNOME GDK Threads (g_threads) - Cross platform threads API.
+  • GNOME GTK+ Programming Tips and Tricks - Using the GTK+ cross platform GUI
+    API to build an interactive application.
+  • XML and parsing XML with Gnome libXML2
+  • Mixing C and FORTRAN language subroutines
+  • JAVA on Linux
+  • OpenLDAP C programming SDK Man Pages, RFC's and Links
+
+Links:
+
+  • GNU: Libtool - script for portable shared library creation.
+  • Suse.de: Discussion of improvement in ld.so for performance improvement.
+  • LDP Library Howto
+
+Books Books:
+
+      "Advanced Linux Programming"                                   Amazon.com
+      by Mark Mitchell, Jeffrey Oldham, Alex Samuel, Jeffery Oldham
+      ISBN # 0735710430, New Riders
+Book
+image Good book for programmers who already know how to program and
+      just need to know the Linux specifics. Covers a variety of
+      Linux tools, libraries, API's and techniques. If you don't
+      know how to program, start with a book on C.
+
+      "Linux Programming Bible"                                      Amazon.com
+Book  by John Goerzen
+image ISBN # 0764546570, Hungry Minds, Inc
+
+      This covers the next step after "C" programming 101.
+
+   
+
+    Bookmark and Share
+
+Advertisements
+
+ 
+
+YoLinux.com Home Page
+YoLinux Tutorial Index | Terms
+Privacy Policy | Advertise with us | Feedback Form |
+Unauthorized copying or redistribution prohibited.
+
+  Bookmark and Share
+
+                                                                 to top of page
+
+Copyright (C) 2005-2014 by Greg Ippolito
+
+Quantcast
