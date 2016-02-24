@@ -1,0 +1,3 @@
+yum install -y yum-utils
+
+repoquery -l glibc
