@@ -23,7 +23,7 @@ set_verbose()
 log()
 {
     local color="$1"
-    local title=$2
+    local title="$2"
     shift
     shift
 
@@ -42,7 +42,7 @@ dd()
 }
 debug()
 {
-    if [ ".$_git_xp_verbose" == ".1" ]; then
+    if [ ".$_git_xp_verbose" = ".1" ]; then
         local LightCyan="$(tput bold ; tput setaf 6)"
         log "$LightCyan" "$@"
     fi
