@@ -1,0 +1,2 @@
+#!/bin/sh
+git log --color --graph --decorate -M --pretty=oneline --abbrev-commit -M --first-parent $(git branch -a | grep "$1" | awk '{print $NF}')

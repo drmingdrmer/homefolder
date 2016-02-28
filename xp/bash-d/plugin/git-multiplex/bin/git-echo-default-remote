@@ -1,0 +1,39 @@
+#!/bin/sh
+
+usage()
+{
+    local name=${0##*/}
+
+    cat >&2 <<-END
+    Print default remote name of given branch. It is the remote name to push
+    to or merge from.
+
+Usage:
+    > $name [<branch>]
+
+Options:
+
+Example:
+    > $name master
+    origin
+END
+
+}
+
+while [ -n "$1" ]
+do
+    case $1 in
+        -h|--help)
+            usage
+            exit 0
+            ;;
+        *)
+            break
+            ;;
+    esac
+done
+
+
+branchname=${1}
+
+git config --get branch.${branchname}.remote

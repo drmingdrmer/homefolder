@@ -1,0 +1,19 @@
+#!/bin/sh
+
+remote=${1-origin}
+tip=${2-master}
+
+git fetch -p \
+    && git push $remote $tip \
+    && git remote show $remote \
+    | grep 'fast-forwardable' \
+    | awk '{print $1}' \
+    | while read br; do
+
+        if git branch --contains $br | grep -q "\b$tip\b"; then
+            git push $remote $br
+        else
+            echo not fast-forwardable: $br
+        fi
+
+done

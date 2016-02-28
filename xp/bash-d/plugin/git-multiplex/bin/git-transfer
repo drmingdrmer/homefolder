@@ -1,0 +1,23 @@
+#!/bin/sh
+
+# transfer git repo from one host to another
+# 1 clone in "bare" mode
+# 2 push all to another host
+fn=${1-git-transfer.conf}
+
+cat $fn | while read folder src dst
+do
+    if [ -d $folder ]; then
+        :
+    else
+        git clone --bare $src $folder
+    fi
+
+    (
+    cd $folder \
+        && git config remote.origin.fetch '+refs/heads/*:refs/heads/*' \
+        && git fetch -p \
+        && { { git remote | grep -q "^b$"; } || git remote add b $dst; } \
+        && git push b --all --prune -f
+    )
+done

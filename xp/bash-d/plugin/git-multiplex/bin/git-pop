@@ -1,0 +1,12 @@
+#!/bin/sh
+
+onto=$1
+branchname=$2
+
+git tag --force bkp \
+    && git branch $branchname \
+    && git reset --hard HEAD~ \
+    && git r --onto $onto HEAD $branchname \
+
+
+

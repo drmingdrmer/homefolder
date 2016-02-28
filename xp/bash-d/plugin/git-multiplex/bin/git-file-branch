@@ -1,0 +1,56 @@
+#!/bin/bash
+
+git_root() {
+    git rev-parse --show-toplevel
+}
+
+git_absolute_path () {
+    local fullpath=$([[ $1 = /* ]] && echo "$1" || echo "$PWD/${1#./}")
+    local gitroot="$(git rev-parse --show-toplevel)" || return 1
+    [[ "$fullpath" =~ "$gitroot" ]] && echo "${fullpath/$gitroot\//}"
+}
+
+find_parent=0
+while getopts ph opname; do
+    case $opname in
+        p)
+            find_parent=1
+            ;;
+        *)
+            echo "git-file-branch [-p] <fn>"
+            echo "    find branch in which the last time <fn> is modified"
+            echo ""
+            echo "    -p    if <fn> is a new file, use the branch in which"
+            echo "          any of its parent folder is modified."
+            exit 0
+            ;;
+    esac
+done
+shift $(($OPTIND - 1))
+
+fn="$1"
+path_in_repo=$(git_absolute_path "$fn")
+
+root=$(git_root)
+if [ ".$root" = "." ]; then
+    echo "failure to find repo root" >&2
+    exit 1
+fi
+cd $root
+
+p="$path_in_repo"
+while ``; do
+    hsh=$(git log -n1 --no-merges --format="%H" -- "$p")
+
+    if [ ".$hsh" != "." ]; then
+        break
+    else
+        if [ "$find_parent" = "1" ]; then
+            p="$(dirname "$p")"
+        else
+            exit 1
+        fi
+    fi
+done
+
+git-binb $hsh

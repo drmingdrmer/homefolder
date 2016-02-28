@@ -1,0 +1,37 @@
+#!/bin/sh
+
+from=${1-HEAD~}
+head_sha1=$(git rev-list -n1 HEAD)
+
+# Merge branch 'fea.front' into t.xp
+
+commits=""
+for c in $(git log --first-parent  --format="%H" $from..$head_sha1); do
+    commits="$c $commits"
+done
+commits=${commits% }
+
+echo ""
+echo "---- reset to $from ----"
+git reset --hard $from
+
+for hsh in $commits; do
+    log=$(git log -n1 --format="%s" $hsh)
+
+    if echo "$log" | grep -q "^Merge branch "; then
+        branch=$(echo "$log" | awk '{print $3}' | sed "s/'//g")
+        echo ""
+        echo "---- merge $branch ----"
+        # # old git does not support no-edit arg
+        # try using no-edit and if failed try not to use it
+        git merge --no-edit --commit --no-ff $branch \
+            || git merge --commit --no-ff $branch
+    else
+        echo ""
+        echo "---- cherry-pick $hsh $log ----"
+        git cherry-pick $hsh
+    fi
+
+done
+
+exit

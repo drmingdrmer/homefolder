@@ -1,0 +1,193 @@
+#!/bin/bash
+
+# to commit index on to its own branch and merge it back
+
+dest_branch=""
+commit_mes=""
+find_parent=0
+
+init()
+{ #{{{
+    arg_no_edit="--no-edit"
+    local v=$(_git_ver)
+    if [ "$v" -lt "001008" ]; then
+        arg_no_edit=""
+    fi
+} #}}}
+
+load_opts()
+{ #{{{
+    while getopts b:m:p opname; do
+        case $opname in
+            b)
+                dest_branch=$OPTARG
+                ;;
+            m)
+                commit_mes="$OPTARG"
+                ;;
+            p)
+                find_parent=1
+                ;;
+            *)
+                echo invalid
+                exit
+                ;;
+        esac
+    done
+} #}}}
+
+find_fn_branch()
+{ #{{{
+    local fns="$1"
+
+    local branches=$(git file-branch $fns | grep --line-buffered -v "^remotes/" | head -n2)
+
+    # for new file, find its parents
+    if [ ".$branches" = "." ] && [ "$find_parent" = "1" ]; then
+        branches=$(git file-branch -p $fns | grep --line-buffered -v "^remotes/" | head -n2)
+    fi
+
+    local nr=$(echo "$branches" | wc -l | sed 's/^[[:space:]]*//')
+
+    if [ ".$branches" = "." ]; then
+        echo "error looking up branches" >&2
+        exit 1
+    fi
+
+    if [ ${nr} = "1" ]; then
+        echo "$branches"
+    else
+        echo "files in '$nr' branches: '$fns': '$(echo $branches)'" >&2
+        exit 1
+    fi
+} #}}}
+
+get_mode()
+{
+    local mode_fn="$1"
+    echo "${mode_fn:0:1}"
+}
+
+get_fn()
+{
+    local mode_fn="$1"
+    local lr="$2"
+
+    local mode=$(get_mode "$mode_fn")
+    local fns="${mode_fn:3}"
+
+    git-parse-renaming-fn "$fns" "$lr"
+}
+
+tt () {
+    echo $1
+    echo $2
+}
+
+init
+load_opts "$@"
+
+cur_branch=$(git rev-parse --symbolic-full-name HEAD)
+
+if [ ".${cur_branch%%/*}" != ".refs" ]; then
+    echo "not on a branch" >&2
+    exit 1;
+fi
+cur_branch=${cur_branch##refs/heads/}
+echo "current branch: '$cur_branch'" >&2
+
+(
+
+# go to repo root since git-status --porcelain use absolute path
+cd $(git rev-parse --show-toplevel)
+
+if [ ".$dest_branch" != "." ]; then
+
+    saved=$(git-snapshot save)
+
+    fns=$(git status --porcelain --ignore-submodules |  grep "^[RMAD]" | cut -c 4-)
+
+    commit_mes=${commit_mes:-commit $fns}
+
+    git checkout $(git rev-parse --show-toplevel) \
+        && git checkout $dest_branch \
+        && git commit --verbose -m "$commit_mes"\
+        && git checkout $cur_branch \
+        && git merge $arg_no_edit --commit --no-ff $dest_branch \
+        && git-snapshot load $saved \
+        && echo "merged $fns"
+else
+
+    while ``; do
+
+        saved=$(git-snapshot save)
+
+        fns="$(git status --porcelain --ignore-submodules |  grep "^[RMAD]")"
+        if [ ".$fns" = "." ]; then
+            echo "done"
+            break
+        fi
+
+        mes="${commit_mes:-commit $fns}"
+
+        index_tree_hash=$(git write-tree)
+
+        mode_fn_1=$(echo "$fns" | head -n1)
+        fn_1="$(get_fn "$mode_fn_1" left)"
+        br_1=$(find_fn_branch "$fn_1")
+        if [ ".$br_1" = "." ]; then
+            exit 1
+        fi
+
+        commit_fns=""
+
+        oldIFS="$IFS"
+        IFS='
+'
+        for mode_fn in $fns; do
+
+            mode="$(get_mode "$mode_fn")"
+            fn="$(get_fn "$mode_fn" left)"
+
+            fbr=$(find_fn_branch "$fn")
+            echo "found: '$mode_fn' in branch: '$fbr'" >&2
+
+            if [ "$br_1" = "$fbr" ]; then
+                if [ ".$mode" = ".R" ]; then
+                    dst="$(get_fn "$mode_fn" right)"
+                    echo "add '$fn -> $dst' to commits" >&2
+                    commit_fns="$commit_fns '$fn -> $dst'"
+                else
+                    echo "add '$fn' to commits" >&2
+                    commit_fns="$commit_fns '$fn'"
+                fi
+            else
+                if [ ".$mode" = ".R" ]; then
+                    dst="$(get_fn "$mode_fn" right)"
+                    echo "reset -- '$fn -> $dst'" >&2
+                    git reset -- "$fn" "$dst" >/dev/null
+                else
+                    echo "reset -- '$fn'" >&2
+                    git reset -- "$fn" >/dev/null
+                fi
+            fi
+        done
+        IFS="$oldIFS"
+
+        echo "partial index to commit:" >&2
+        git status --short >&2
+
+        git checkout -q $(git rev-parse --show-toplevel)\
+            && git checkout -q $br_1 \
+            && git commit -m "$mes" >/dev/null\
+            && git checkout -q $cur_branch\
+            && git merge $arg_no_edit --commit --no-ff $br_1 >/dev/null \
+            && git-snapshot load $saved >/dev/null \
+            && echo "merged: '$br_1'. fns:$commit_fns"
+
+        git status --short >&2
+
+    done
+
+fi
+)

@@ -1,0 +1,54 @@
+#!/bin/sh
+
+usage()
+{
+    local name=${0##*/}
+
+    cat >&2 <<-END
+    Print branch name of commit to stdout.
+
+Usage:
+    > $name [-s|--short] [<rev>]
+
+Options:
+    -s|--short          Print short branch name "master" instead of full ref
+                        like "refs/heads/master"
+
+Example:
+    > $name HEAD
+    refs/heads/master
+    > $name -s HEAD
+    master
+END
+
+}
+
+short=0
+while [ -n "$1" ]
+do
+    case $1 in
+        -s|--short)
+            short=1
+            shift
+            ;;
+
+        -h|--help)
+            usage
+            exit 0
+            ;;
+        *)
+            break
+            ;;
+    esac
+done
+
+head=${1-HEAD}
+
+if test "$short" = "1"
+then
+    # echo "master"
+    git symbolic-ref --short $head 2>/dev/null
+else
+    # echo "refs/heads/master"
+    git rev-parse --symbolic-full-name $head
+fi

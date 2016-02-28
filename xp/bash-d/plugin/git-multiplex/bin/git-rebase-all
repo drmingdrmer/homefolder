@@ -1,0 +1,50 @@
+#!/bin/sh
+
+# rebaseall <onto> <base> <head>
+
+onto=$1
+upstream=$2
+head=$3
+headHash=$(git log -n1 --format="%H" $head)
+
+git log -n1 $onto -- >/dev/null 2>&1 || { echo "invalid $onto"; exit 1; }
+git log -n1 $upstream -- >/dev/null 2>&1  || { echo "invalid $upstream"; exit 1; }
+git log -n1 $head -- >/dev/null 2>&1 || { echo "invalid $head"; exit 1; }
+
+
+git rebase --preserve-merges --onto $onto $upstream $head || { exit 1; }
+
+
+while ``; do
+
+    echo "----------------- All descendant branches:"
+    git branch --contains $headHash
+    echo "-----------------"
+
+
+    newcommits=$(git branch --contains $headHash | cut -c 3-)
+
+    if [ "x$newcommits" == "x" ]; then
+        exit 0
+    fi
+
+    for c in $newcommits; do
+
+        echo "----------------- commits between old $head --> $c:"
+        git branch --contains $headHash --merged $c
+        echo "-----------------"
+
+
+        if [ "$(git branch --contains $headHash --merged $c  | wc -l)" -eq 1 ]; then
+
+            echo "Instant Descendant: $c"
+            echo "Continue to rebase:"
+            echo "between: prev($head) ($headHash) --> $c"
+            echo "onto: $head"
+
+            $0 $head $headHash $c || { exit 1; }
+
+        fi
+    done
+
+done

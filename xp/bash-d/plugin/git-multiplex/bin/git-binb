@@ -1,0 +1,21 @@
+#!/bin/sh
+
+# find if a commit is in first-parents
+
+base=$1
+
+branches=`git branch -a --contains $base | cut -c 3- `
+prev=$(git rev-parse $base^)
+
+for br in $branches; do
+
+    if git rev-list "$br" -n1 > /dev/null 2>&1; then
+        :
+    else
+        continue
+    fi
+
+    if git rev-list --no-merges --first-parent $prev..$br | grep -q $base; then
+        echo $br
+    fi
+done

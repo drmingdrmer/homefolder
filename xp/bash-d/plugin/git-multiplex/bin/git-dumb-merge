@@ -1,0 +1,23 @@
+#!/bin/sh
+
+commit_mes=
+
+while getopts m: opname; do
+    case $opname in
+        m)
+            commit_mes="$OPTARG"
+            ;;
+        *)
+            echo usage: $0 -m '<message>' '<parent>'
+            exit
+            ;;
+    esac
+done
+
+shift $(($OPTIND - 1))
+
+head=$(git rev-parse HEAD)
+head_tree=$(git rev-parse HEAD^{tree})
+
+new_hash=$(echo $commit_mes | git commit-tree $head_tree -p $head -p $1)
+echo $

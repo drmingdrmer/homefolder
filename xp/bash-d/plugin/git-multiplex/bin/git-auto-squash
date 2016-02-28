@@ -1,0 +1,295 @@
+#!/bin/bash
+
+usage()
+{
+    local name=${0##*/}
+
+cat >&2 <<-END
+    Rewrite history to squash all commits wiht message starts with 'fixup!' to
+    its first parent. By drdr.xp@gmail.com
+
+Usage:
+    > $name [-t] [-p <pattern>] <rev-list options>...
+
+Options:
+    -p <pattern>  Squash commits with mssage starts with <pattern>.
+                  By default <pattern> is 'fixup!'.
+
+    -t            Update all ref touched. Usefull when squashing history with
+                  merges.
+                  By default, with a repo like:
+                      * a6910e2 (master) Merge commit '75275ed'
+                      |\\
+                      | * 75275ed (branch-fix) fixup! ok
+                      | * 2e85eb7 ok
+                      |/
+                      * b66353d init
+                  > $name master
+                  Will only update "master", but leave "branch-fix" where it
+                  was. It results in:
+                      * 0982b05 (master) Merge commit '75275ed'
+                      |\\
+                      | * 377a349 ok
+                      |/
+                      * b66353d init
+                  With "-t" it also update ref "branch-fix" after squashing:
+                  > $name -t master
+                      * 0982b05 (master) Merge commit '75275ed'
+                      |\\
+                      | * 377a349 (branch-fix) ok
+                      |/
+                      * b66353d init
+                  It is same with specifying which ref to update manually:
+                  > $name -t master branch-fix
+
+    -c            Clean up backup refs which is left by history rewriting.
+                  Backup refs are something like:
+                      "refs/original/refs/heads/master"
+
+Example:
+    > $name -p fixup b66353d..master
+    moves master from a6910e2 to 4d4a5e4:
+      * 4d4a5e4 (HEAD, master) ok
+      | * a6910e2 fixup! fixup! ok
+      | * 75275ed fixup! ok
+      | * 2e85eb7 ok
+      |/
+      * b66353d init
+
+Tips:
+    $name uses git-filter-branch to process history, which leaves backup refs
+    like: "refs/original/refs/heads/master".
+
+    I suggest to keep them but if you really find it annoying, just force
+    auto-squash to run again with empty-history to remove them:
+    > $name HEAD..
+END
+
+}
+
+die()
+{
+    echo "Failure $@" >&2
+    exit 1
+}
+
+# folders in $squash_dir:
+#
+#   squash_to/$commit :
+#       $commit should be squashed to $(cat $commit).
+#
+#   tree_to_use/$commit :
+#       $commit is a squash target and the tree hash to use is
+#       $(cat $commit).
+#
+#   commit_hashes :
+#       list of commit hash specified by user.
+#
+#   commit/$commit :
+#       present if $commit is in commit_hashes.
+#
+#   refs :
+#       list of refs to update after squashing.
+
+squash_dir=.git-auto-squash
+_orig_dir=$(pwd)
+
+mkdir -p "$squash_dir/squash_to" "$squash_dir/tree_to_use" \
+    && squash_dir="$(cd "$squash_dir"; pwd)" \
+    || exit 1
+
+# Remove squash_dir on exit
+trap 'cd "$_orig_dir"; rm -rf "$squash_dir"' 0
+
+find_refs()
+{
+    mkdir -p "$squash_dir/commit" || die "mkdir $squash_dir/commit"
+
+    git rev-list --reverse --topo-order \
+        --default HEAD --parents \
+        --simplify-merges "$@" >"$squash_dir/commit_hashes" \
+        || die "listing commits: git rev-list ... $@"
+
+    for commit in $(cat "$squash_dir/commit_hashes")
+    do
+        echo 1 >"$squash_dir/commit/$commit"
+    done
+
+    git show-ref --heads |
+    while read commit full_ref
+    do
+        if test -r "$squash_dir/commit/$commit"
+        then
+            echo "$full_ref"
+        fi
+    done
+}
+
+update_refs=
+pattern="fixup!"
+
+while :
+do
+    case $1 in
+        "-h"|"--help"|"")
+            usage
+            exit 0
+            ;;
+        -t)
+            shift
+            update_refs=1
+            ;;
+        -c)
+            git filter-branch -f --commit-filter "" HEAD..HEAD
+            exit $?
+            ;;
+        -p)
+            shift
+            pattern="$1"
+            shift
+
+            if test -z $pattern
+            then
+                usage
+                exit 1
+            fi
+            ;;
+        *)
+            break
+            ;;
+    esac
+done
+
+if test "$update_refs" = "1"
+then
+    find_refs "$@" >"$squash_dir/refs"
+    update_refs=$(cat $squash_dir/refs)
+
+    echo "Also update ref: $update_refs"
+fi
+
+vars='squash_dir="'"$squash_dir"'"'
+funs=$(cat << \END
+record_squash()
+{
+    local commit=$1
+    local tree=$2
+    local parent=$3
+    local target=
+
+    if test -r "$squash_dir/squash_to/$parent"
+    then
+        target=$(cat "$squash_dir/squash_to/$parent")
+    else
+        target=$parent
+    fi
+    echo $target >"$squash_dir/squash_to/$commit"
+    echo $tree >"$squash_dir/tree_to_use/$target"
+}
+get_squash_target()
+{
+    local commit=$1
+    if test -r "$squash_dir/squash_to/$commit"
+    then
+        cat "$squash_dir/squash_to/$commit"
+    else
+        echo $commit
+    fi
+}
+does_contain()
+{
+    local trunk=$1
+    local branch=$2
+    test ".$(git rev-list $trunk..$branch -n1)" = "."
+}
+END)
+
+# The first pass collect commits need to be squashed
+
+git filter-branch -f --commit-filter "$vars; $funs;"'
+
+    cat > "$workdir/../this_message"
+    mes="$(cat "$workdir/../this_message")"
+
+    # input arguments are "<tree-ish> -p <firstparent> [-p <parent>].."
+    tree=$1
+    shift
+
+    parents="$@"
+    firstparent=$2
+
+    case $mes in
+        "'"$pattern"'"*)
+            record_squash $GIT_COMMIT $tree $firstparent
+            ;;
+        *)
+            # remove: -p first_parent
+            shift
+            shift
+
+            need_keep=0
+
+            # If there is no secondary parent, it is a normal commit and
+            # should be kept.
+            if [ -z "$1" ]; then
+                need_keep=1
+            fi
+
+            # If there are unsquashed and unmerged parent, keep this commit.
+            # Otherwise its first parent already contains all secondary parent
+            # then it can be removed.
+            while [ -n "$1" ]
+            do
+                p=$2
+                shift
+                shift
+
+                if does_contain $firstparent $(get_squash_target $p)
+                then
+                    :
+                else
+                    need_keep=1
+                    break
+                fi
+            done
+            if test "$need_keep" = "0"; then
+                record_squash $GIT_COMMIT $tree $firstparent
+            fi
+
+            ;;
+    esac
+
+    git commit-tree $tree $parents < $workdir/../this_message
+
+' "$@"
+
+git filter-branch -f --commit-filter "$vars; $funs;"'
+
+    if test -r "$squash_dir/squash_to/$GIT_COMMIT"
+    then
+
+        tree=$1
+        shift;
+
+        # normal commit
+        if test "$#" = "2"
+        then
+            skip_commit $tree "$@"
+        else
+            # merge, do not pass squashed parent to children.
+            # this also removed non-squashed parent if there are more than 3
+            # parents.
+            skip_commit $tree $1 $2
+        fi
+    else
+        if test -r "$squash_dir/tree_to_use/$GIT_COMMIT"
+        then
+            tree=$(cat "$squash_dir/tree_to_use/$GIT_COMMIT")
+        else
+            tree=$1
+        fi
+
+        shift # remove tree from args
+        git commit-tree $tree "$@"
+    fi
+' "$@" $update_refs

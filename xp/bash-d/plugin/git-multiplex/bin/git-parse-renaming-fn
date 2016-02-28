@@ -1,0 +1,62 @@
+#!/bin/sh
+
+git_parse_renaming_fn()
+{
+    local fn="$1"
+    local lr=${2-left}
+    # echo "$fn" >&2
+
+    local left=
+    local right=
+
+    left="${fn%% -> *}"
+    right="${fn#* -> }"
+
+    while ``; do
+        # echo "$left" >&2
+        # echo "$right" >&2
+        if eval "echo $left" >/dev/null 2>/dev/null && eval "echo $right" >/dev/null 2>/dev/null; then
+            # echo $left >&2
+            # eval "echo $left" >&2
+            if [ "$lr" = "left" ]; then
+                eval "echo $left"
+            else
+                eval "echo $right"
+            fi
+            return
+        else
+            # echo "$left $right" >&2
+            if [ "${right#* -> }" = "${right}" ]; then
+                # no more trial seem to be valid, maybe a single part fn
+                eval "echo $fn"
+                return 0
+            fi
+            left="$left -> ${right%% -> *}"
+            right="${right#* -> }"
+            # echo "$left $right" >&2
+        fi
+    done
+}
+
+_test()
+{
+    [ "$(git_parse_renaming_fn 'a' left)" = "a" ] || echo ERR a only left
+
+    [ "$(git_parse_renaming_fn '"a -> b"' left)" = "a -> b" ] || echo ERR 'a -> b'
+
+    [ "$(git_parse_renaming_fn 'a -> b' left)" = "a" ] || echo ERR a
+    [ "$(git_parse_renaming_fn 'a -> "b"' left)" = "a" ] || echo ERR a
+    [ "$(git_parse_renaming_fn '"a" -> b' left)" = "a" ] || echo ERR a
+    [ "$(git_parse_renaming_fn '"a x" -> b' left)" = "a x" ] || echo ERR 'a x'
+    [ "$(git_parse_renaming_fn '"a x" -> "b y"' left)" = "a x" ] || echo ERR 'a x'
+    [ "$(git_parse_renaming_fn '"a -> x" -> "b -> y"' left)" = "a -> x" ] || echo ERR 'a -> x'
+
+    [ "$(git_parse_renaming_fn 'a -> b' right)" = "b" ] || echo ERR b
+    [ "$(git_parse_renaming_fn 'a -> "b"' right)" = "b" ] || echo ERR b
+    [ "$(git_parse_renaming_fn '"a" -> b' right)" = "b" ] || echo ERR b
+    [ "$(git_parse_renaming_fn '"a x" -> b' right)" = "b" ] || echo ERR 'b'
+    [ "$(git_parse_renaming_fn '"a x" -> "b y"' right)" = "b y" ] || echo ERR 'b y'
+    [ "$(git_parse_renaming_fn '"a -> x" -> "b -> y"' right)" = "b -> y" ] || echo ERR 'b -> y'
+}
+
+git_parse_renaming_fn "$1" "$2"
