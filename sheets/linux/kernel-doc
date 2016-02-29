@@ -1,0 +1,10 @@
+# centos:
+# yum install -y kernel-doc.noarch
+
+/usr/share/doc/kernel-doc-2.6.32
+
+# ubuntu:
+# apt-get install -y linux-doc
+
+/usr/share/doc/linux-doc/
+
