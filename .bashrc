@@ -42,7 +42,7 @@ init_prompt()
     # ps=$ps" $Red[\d \t]$NC"
     ps=$ps".\j"
     ps=$ps" $LightGreen\$(parse_git_branch 2>/dev/null || git branch --no-color 2> /dev/null)$NC:"
-    ps=$ps"\$(ps_pwd 2>/dev/null || echo $PWD)\n"
+    ps=$ps"\$(ps_pwd 2>/dev/null || { echo; pwd; })\n"
     export PS1="$ps"
     d end ps1
 }
