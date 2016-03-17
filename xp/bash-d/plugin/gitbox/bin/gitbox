@@ -11,10 +11,10 @@ hsh() {
 }
 
 fetch_commit_rebase_push() {
-    mes="gitbox commit all"
     # old git does not add deleted file into index when 'git add .'
     git add .
     git add -u .
+    mes="$(git status --short --ignore-submodules --untracked-files=no | head -n1)"
     git commit -m "$mes" > /dev/null
 
     git fetch origin --quiet \
