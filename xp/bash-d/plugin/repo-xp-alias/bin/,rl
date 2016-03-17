@@ -1,0 +1,15 @@
+#!/bin/sh
+
+regexp=".*"
+
+while test $# != 0; do
+
+    r="$1"
+    shift
+
+    regexp="$regexp.*$r"
+done
+
+repo list -r "$regexp"
+
+# vim: ft=sh

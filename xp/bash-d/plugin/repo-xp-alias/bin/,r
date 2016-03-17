@@ -1,0 +1,5 @@
+#!/bin/sh
+
+repo "$@"
+
+# vim: ft=sh
