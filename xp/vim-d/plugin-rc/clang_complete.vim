@@ -3,5 +3,6 @@ if has("mac")
 else
     " let g:clang_library_path = ""
 endif
+let g:clang_jumpto_declaration_key = '<M-g><C-]>'
 let g:clang_complete_copen = 1
 " let g:clang_snippets = 1
