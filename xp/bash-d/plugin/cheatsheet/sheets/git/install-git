@@ -1,4 +1,7 @@
 # for msgfmt
 apt-get install gettext
 
+
+yum install -y openssl.* libcurl-devel* gettext.* expat-devel.*
+
 make prefix=$HOME/local NO_TCLTK=YesPlease
