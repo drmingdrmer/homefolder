@@ -70,7 +70,8 @@ function! unite#kinds#jump_list#define() abort "{{{
 
     " Add search history
     let context = unite#get_context()
-    if len(context.input_list) == 1
+    if has_key(context, 'input_list')
+          \ && len(context.input_list) == 1
           \ && context.input != ''
       call histadd("search", context.input)
     endif
@@ -94,12 +95,8 @@ function! unite#kinds#jump_list#define() abort "{{{
     wincmd P
     try
       let bufnr = s:open(a:candidate)
-      if bufwinnr < 0
-        silent doautocmd BufRead
-        setlocal nomodified
-        if !buflisted
-          call unite#add_previewed_buffer_list(bufnr)
-        endif
+      if bufwinnr < 0 && !buflisted
+        call unite#add_previewed_buffer_list(bufnr)
       endif
       call s:jump(a:candidate, 1)
     finally
