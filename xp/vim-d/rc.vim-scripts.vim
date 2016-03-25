@@ -9,6 +9,7 @@ fun! s:add(k)
     endif
 endfunction
 
+call s:add('ansible-vim')
 call s:add('Align')
 call s:add('FuzzyFinder')
 " call s:add('Hints-for-C-Library-Functions')
