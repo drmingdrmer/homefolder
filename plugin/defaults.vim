@@ -5,7 +5,15 @@
 
 " Vim-autoformat configuration variables
 if !exists('g:autoformat_autoindent')
-    let g:autoformat_verbosemode = 0
+    let g:autoformat_autoindent = 1
+endif
+
+if !exists('g:autoformat_retab')
+    let g:autoformat_retab = 1
+endif
+
+if !exists('g:autoformat_remove_trailing_spaces')
+    let g:autoformat_remove_trailing_spaces = 1
 endif
 
 if !exists('g:autoformat_verbosemode')
@@ -25,7 +33,13 @@ endif
 
 " C#
 if !exists('g:formatdef_astyle_cs')
-    let g:formatdef_astyle_cs = '"astyle --mode=cs --style=ansi --indent-namespaces -pcH".(&expandtab ? "s".shiftwidth() : "t")'
+    if filereadable('.astylerc')
+        let g:formatdef_astyle_cs = '"astyle --mode=cs --options=.astyle"'
+    elseif filereadable(expand('~/.astylerc')) || exists('$ARTISTIC_STYLE_OPTIONS')
+        let g:formatdef_astyle_cs = '"astyle --mode=cs"'
+    else
+        let g:formatdef_astyle_cs = '"astyle --mode=cs --style=ansi --indent-namespaces -pcH".(&expandtab ? "s".shiftwidth() : "t")'
+    endif
 endif
 
 if !exists('g:formatters_cs')
@@ -35,8 +49,8 @@ endif
 
 " Generic C, C++, Objective-C
 if !exists('g:formatdef_clangformat')
-    let s:configfile_def = "'clang-format -lines='.a:firstline.':'.a:lastline.' --assume-filename='.bufname('%').' -style=file'"
-    let s:noconfigfile_def = "'clang-format -lines='.a:firstline.':'.a:lastline.' --assume-filename='.bufname('%').' -style=\"{BasedOnStyle: WebKit, AlignTrailingComments: true, '.(&textwidth ? 'ColumnLimit: '.&textwidth.', ' : '').(&expandtab ? 'UseTab: Never, IndentWidth: '.shiftwidth() : 'UseTab: Always').'}\"'"
+    let s:configfile_def = "'clang-format -lines='.a:firstline.':'.a:lastline.' --assume-filename=\"'.expand('%:p').'\" -style=file'"
+    let s:noconfigfile_def = "'clang-format -lines='.a:firstline.':'.a:lastline.' --assume-filename=\"'.expand('%:p').'\" -style=\"{BasedOnStyle: WebKit, AlignTrailingComments: true, '.(&textwidth ? 'ColumnLimit: '.&textwidth.', ' : '').(&expandtab ? 'UseTab: Never, IndentWidth: '.shiftwidth() : 'UseTab: Always').'}\"'"
     let g:formatdef_clangformat = "g:ClangFormatConfigFileExists() ? (" . s:configfile_def . ") : (" . s:noconfigfile_def . ")"
 endif
 
@@ -48,7 +62,13 @@ endfunction
 
 " C
 if !exists('g:formatdef_astyle_c')
-    let g:formatdef_astyle_c = '"astyle --mode=c --style=ansi -pcH".(&expandtab ? "s".shiftwidth() : "t")'
+    if filereadable('.astylerc')
+        let g:formatdef_astyle_c = '"astyle --mode=c --options=.astyle"'
+    elseif filereadable(expand('~/.astylerc')) || exists('$ARTISTIC_STYLE_OPTIONS')
+        let g:formatdef_astyle_c = '"astyle --mode=c"'
+    else
+        let g:formatdef_astyle_c = '"astyle --mode=c --style=ansi -pcH".(&expandtab ? "s".shiftwidth() : "t")'
+    endif
 endif
 
 if !exists('g:formatters_c')
@@ -58,7 +78,13 @@ endif
 
 " C++
 if !exists('g:formatdef_astyle_cpp')
-    let g:formatdef_astyle_cpp = '"astyle --mode=c --style=ansi -pcH".(&expandtab ? "s".shiftwidth() : "t")'
+    if filereadable('.astylerc')
+        let g:formatdef_astyle_cpp = '"astyle --mode=c --options=.astyle"'
+    elseif filereadable(expand('~/.astylerc')) || exists('$ARTISTIC_STYLE_OPTIONS')
+        let g:formatdef_astyle_cpp = '"astyle --mode=c"'
+    else
+        let g:formatdef_astyle_cpp = '"astyle --mode=c --style=ansi -pcH".(&expandtab ? "s".shiftwidth() : "t")'
+    endif
 endif
 
 if !exists('g:formatters_cpp')
@@ -74,7 +100,13 @@ endif
 
 " Java
 if !exists('g:formatdef_astyle_java')
-    let g:formatdef_astyle_java = '"astyle --mode=java --style=java -pcH".(&expandtab ? "s".shiftwidth() : "t")'
+    if filereadable('.astylerc')
+        let g:formatdef_astyle_java = '"astyle --mode=java --options=.astyle"'
+    elseif filereadable(expand('~/.astylerc')) || exists('$ARTISTIC_STYLE_OPTIONS')
+        let g:formatdef_astyle_java = '"astyle --mode=java"'
+    else
+        let g:formatdef_astyle_java = '"astyle --mode=java --style=java -pcH".(&expandtab ? "s".shiftwidth() : "t")'
+    endif
 endif
 
 if !exists('g:formatters_java')
@@ -112,7 +144,13 @@ endif
 
 " JSON
 if !exists('g:formatdef_jsbeautify_json')
-    let g:formatdef_jsbeautify_json = '"js-beautify -f - -".(&expandtab ? "s ".shiftwidth() : "t")'
+    if filereadable('.jsbeautifyrc')
+        let g:formatdef_jsbeautify_json = '"js-beautify"'
+    elseif filereadable(expand('~/.jsbeautifyrc'))
+        let g:formatdef_jsbeautify_json = '"js-beautify"'
+    else
+        let g:formatdef_jsbeautify_json = '"js-beautify -f - -".(&expandtab ? "s ".shiftwidth() : "t")'
+    endif
 endif
 
 if !exists('g:formatdef_pyjsbeautify_json')
@@ -265,4 +303,13 @@ endif
 
 if !exists('g:formatters_haskell')
     let g:formatters_haskell = ['stylish_haskell']
+endif
+
+" Markdown
+if !exists('g:formatdef_remark_markdown')
+    let g:formatdef_remark_markdown = '"remark --silent --no-color"'
+endif
+
+if !exists('g:formatters_markdown')
+    let g:formatters_markdown = ['remark_markdown']
 endif
