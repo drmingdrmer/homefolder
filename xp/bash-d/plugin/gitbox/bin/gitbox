@@ -17,9 +17,12 @@ fetch_commit_rebase_push() {
     mes="$(git status --short --ignore-submodules --untracked-files=no | head -n1)"
     git commit -m "$mes" > /dev/null
 
+    branch=$(git_head_branch)
+    upstream=$(git_branch_default_upstream $branch)
+
     git fetch origin --quiet \
-        && git rebase origin/master --quiet \
-        && git push origin master --quiet \
+        && git rebase origin/$upstream --quiet \
+        && git push origin $branch --quiet \
         && ok fetch_commit_rebase_push \
         || err fetch_commit_rebase_push
 
@@ -66,6 +69,15 @@ get_pwd() {
     echo -n "$stripped"
 }
 
+git_branch_default_upstream_ref()
+{
+    local branchname=$1
+    git config --get branch.${branchname}.merge
+}
+git_branch_default_upstream()
+{
+    git_branch_default_upstream_ref "$@" | sed 's/^refs\/heads\///'
+}
 git_head_branch() {
     git symbolic-ref --short HEAD
 }
@@ -100,7 +112,7 @@ main() {
                         && ok merge-ff \
                         || err merge-ff
 
-                    git push origin master --quiet \
+                    git push origin $branch --quiet \
                         && ok push \
                         || err push
                 else
