@@ -81,7 +81,7 @@ fun! s:ReplaceInDir()
     let wrd = expand("<cword>")
     let wrd = escape(wrd, '$^|\')
 
-    let rep = inputdialog("to replace:", wrd)
+    let rep = inputdialog("to replace: ", wrd)
     let tmp = tempname()
     " exe ':!grep -R --include='.g:workingFT.' "\b'.wrd.'\b" * \\| grep -v "'.escape(g:searchSkipPtn, '|\').'" > '.tmp
 
