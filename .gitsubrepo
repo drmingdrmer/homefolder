@@ -64,6 +64,9 @@ git@github.com:vim-scripts/vcscommand.vim.git master
 xp/vim-d/plg-git/github_vim_theme
 https://github.com/nono/github_vim_theme.git master
 
+xp/vim-d/plg-git/vim-yaml
+https://github.com/stephpy/vim-yaml.git master
+
 xp/vim-d/plg-git/vim-mac-classic-theme
 https://github.com/nelstrom/vim-mac-classic-theme.git master
 
