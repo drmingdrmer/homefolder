@@ -133,3 +133,5 @@ nmap <M--> 4<C-w>-
 " horizontal resize
 nmap <M-0> 4<C-w>>
 nmap <M-9> 4<C-w><
+
+nnoremap <M-4> <C-w><C-v><C-w>=
