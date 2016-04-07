@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# PATH=$PATH:$(git --exec-path)
+# . git-sh-setup
+
+source _git_xp_lib.sh
+
+if test $# -gt 1; then
+    base="$1"
+    mes="$2"
+else
+    base=HEAD
+    mes="$1"
+fi
+
+if test -z "$mes"; then
+    die "usage: $0 'message'"
+fi
+
+branch_name=$(echo "$mes" | sed 's/[^a-zA-Z0-9]\+/-/g' | sed 's/^-\|-$//g')
+
+echo message: $mes
+echo base: $base
+echo branch: $branch_name
+
+git stash \
+    && git checkout -b "$branch_name" $base \
+    && git commit --allow-empty -m "$mes"
+
