@@ -6,4 +6,6 @@ while [ -h "$base" ]; do base=`readlink "${base}"`; done
 base="$( cd -P "$( dirname "$base" )" && pwd )"
 
 cd ~
-. $base/git.inst
+. ~/xp/bash-d/git.inst
+
+git remote add coding git@git.coding.net:drmingdrmer/homefolder.git
