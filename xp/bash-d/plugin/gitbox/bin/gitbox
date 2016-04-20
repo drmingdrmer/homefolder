@@ -21,9 +21,16 @@ fetch_commit_rebase_push() {
     upstream=$(git_branch_default_upstream $branch)
 
     git fetch origin --quiet \
-        && git rebase origin/$upstream --quiet \
-        && git push origin $branch --quiet \
-        && ok fetch_commit_rebase_push \
+        && git rebase origin/$upstream --quiet || err rebase onto origin/$upstream
+
+    while read remote
+    do
+        git push $remote $branch --quiet \
+            && ok push to $remote \
+            || err push to $remote
+
+    done<<<"$(git remote)" \
+        ok fetch_commit_rebase_push \
         || err fetch_commit_rebase_push
 
 }
@@ -112,9 +119,15 @@ main() {
                         && ok merge-ff \
                         || err merge-ff
 
-                    git push origin $branch --quiet \
-                        && ok push \
-                        || err push
+                    while read remote
+                    do
+                        git push $remote $branch --quiet \
+                            && ok push to $remote \
+                            || err push to $remote
+
+                    done<<<"$(git remote)"
+
+
                 else
                     fetch_commit_rebase_push
                 fi
