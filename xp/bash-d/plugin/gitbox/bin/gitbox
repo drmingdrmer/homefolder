@@ -30,7 +30,7 @@ fetch_commit_rebase_push() {
             || err push to $remote
 
     done<<<"$(git remote)" \
-        ok fetch_commit_rebase_push \
+        && ok fetch_commit_rebase_push \
         || err fetch_commit_rebase_push
 
 }
