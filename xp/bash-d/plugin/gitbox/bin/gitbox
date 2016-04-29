@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# cat ~/.gitbox.conf
+#
+# ~/xpkit
+# ~/wiki
+# ~
+
 Brown="$(tput setaf 3)"
 Green="$(tput setaf 2)"
 Red="$(tput setaf 1)"
