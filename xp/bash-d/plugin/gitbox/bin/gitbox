@@ -2,9 +2,13 @@
 
 # cat ~/.gitbox.conf
 #
-# ~/xpkit
+# ~/xpkit fetchpush
 # ~/wiki
 # ~
+
+# option:        "": auto fetch/rebase/commit/push changes
+# option: fetchpush: does not auto commit changes in working dir, but auto fetch/push/rebase
+# option: fetchonly: just auto-fetch, it does not auto commit/push/rebase
 
 Brown="$(tput setaf 3)"
 Green="$(tput setaf 2)"
