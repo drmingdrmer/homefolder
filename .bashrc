@@ -41,7 +41,7 @@ init_prompt()
     ps=$ps"$Yellow${eth0_ip}$NC"
     # ps=$ps" $Red[\d \t]$NC"
     ps=$ps".\j"
-    ps=$ps" $LightGreen\$(parse_git_branch 2>/dev/null || git branch --no-color 2> /dev/null)$NC:"
+    ps=$ps" $LightGreen\$(parse_git_branch 2>/dev/null || git branch --no-color 2> /dev/null)$NC \t:"
     ps=$ps"\$(ps_pwd 2>/dev/null || { echo; pwd; })\n"
     export PS1="$ps"
     d end ps1
