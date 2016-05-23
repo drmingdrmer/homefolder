@@ -1,0 +1,86 @@
+Strings                     Sets                         Hashes
+
+APPEND      Append          SADD        Add item         HDEL         Delete item
+BITCOUNT    Count set       SCARD       Get size         HEXISTS      Check for item
+            bits            SDIFF       Get difference   HGET         Get item
+BITOP       Bitwise         SDIFFSTORE  Store            HGETALL      Return all items
+            operations                  difference       HINCRBY      Add to integer value
+BITPOS      Find first      SINTER      Inters-ection    HINCRBYFLOAT Add to float value
+            set bit         SINTERSTORE Store            HKEYS        Return all keys
+DECR        Decrement                   inters-ection    HLEN         Get number of items
+            integer         SISMEMBER   Check for item   HMGET        Get multiple items
+DECRBY      Subtract from   SMEMBERS    Get all          HMSET        Set multiple items
+            integer         SMOVE       Move item to     HSCAN        Iterate items
+GET         Get by key                  another set      HSET         Set item
+GETBIT      Get bit by      SPOP        Pop random       HSETNX       Set item if doesn't
+            index                       item                          exist
+GETRANGE    Get substring   SRANDMEMBER Get random       HVALS        Return all values
+GETSET      Set,                        item
+            returning old   SREM        Remove           Sorted sets
+            value                       matching
+INCR        Increment       SSCAN       Iterate items    ZADD             Add item
+            integer         SUNION      Union            ZCARD            Get number of
+INCRBY      Add to          SUNIONSTORE Store union                       items
+            integer         [INS::INS]                   ZCOUNT           Number of items
+INCRBYFLOAT Add to float                                                  within score
+MGET        Get multiple    Database                                      range
+MSET        Set multiple                                 ZINCRBY          Add to score
+MSETNX      Set multiple    DEL       Delete item        ZINTERSTORE      Store
+            if don't        DUMP      Serialise item                      inters-ection
+            exist           EXISTS    Check for key      ZLEXCOUNT        Lexico-gra-phical
+PSETEX      Set with        EXPIRE    Set timeout on                      range count
+            expiry (ms)               item               ZRANGE           Get items within
+SET         Set             EXPIREAT  Set timeout by                      rank range
+SETBIT      Set bit by                timestamp          ZLEXRANGE        Get items within
+            index           KEYS      Get all keys                        lexico-gra-phical
+SETEX       Set with                  matching pattern                    range
+            expiry          MIGRATE   Transfer an item   ZRANGEBYSCORE    Get items within
+            (seconds)                 between Redis                       score range
+SETNX       Set if                    instances          ZRANK            Get item rank
+            doesn't exist   MOVE      Transfer an item   ZREM             Remove item(s)
+SETRANGE    Set substring             between            ZREMRANGEBYLEX   Remove items
+STRLEN      Get length                databases                           within
+Strings can be used as      OBJECT    Inspect item                        lexico-gra-phical
+numbers, arrays, bit sets   PERSIST   Remove timeout                      range
+and binary data             PEXPIRE   Set timeout (ms)   ZREMRANGEBYRANK  Remove items
+                            PEXPIREAT Set timeout (ms                     within rank range
+Lists                                 timestamp)         ZREMRANGEBYSCORE Remove items
+                            PTTL      Get item time to                    within score
+BLPOP      Blocking left              live (ms)                           range
+           pop              RANDOMKEY Get random key     ZREVRANGE        ZRANGE in reverse
+BRPOP      Blocking right   RENAME    Change item's                       order
+           pop                        key                ZREVRANGEBYSCORE ZRANGE-BYSCORE in
+BRPOPLPUSH Blocking         RENAMENX  Change item's                       reverse order
+           rotate                     key if new key     ZREVRANK         ZRANK in reverse
+LINDEX     Access by                  doesn't exist                       order
+           index            RESTORE   Deseri-alise       ZSCAN            Iterate items
+LINSERT    Insert next to   SCAN      Iterate keys       ZSCORE           Get item score
+LLEN       Get length       SORT      Get or store       ZUNIONSTORE      Store union
+LPOP       Pop from start             sorted copy of     Lexico-gra-phical commands require
+LPUSH      Push onto                  list, set or       all items to have the same score
+           start                      sorted set
+LPUSHX     Push if list     TTL       Get item time to   HyperL-ogLogs
+           exists                     live
+LRANGE     Access range     TYPE      Get type of item   PFADD   Add items
+LREM       Remove                                        PFCOUNT Get approx-imate size
+LSET       Set item by      Scripts                      PFMERGE Merge HyperL-ogLogs
+           index
+LTRIM      Remove start     EVAL       Run
+           and/or end       EVALSHA    Run cached
+           items            SCRIPT     Check by hash
+RPOP       Pop from end     EXISTS
+RPOPLPUSH  Rotate           SCRIPT     Clear cache
+RPUSH      Push onto end    FLUSH
+RPUSHX     Push onto end    SCRIPT     Kill running
+           if list exists   KILL       script
+                            SCRIPT     Add to cache
+Client-/Server              LOAD
+                            Lua scripts access keys
+AUTH   Request              through the array KEYS and
+       authen-tic-ation     additional arguments
+ECHO   Return message       through the array ARGV.
+PING   Test connection
+QUIT   Close connection
+SELECT Set current
+       database by index
+
