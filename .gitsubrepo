@@ -189,3 +189,6 @@ https://github.com/Chiel92/vim-autoformat.git master
 
 xp/vim-d/plg-git/vim-gitgutter
 https://github.com/airblade/vim-gitgutter.git master
+
+xp/vim-d/plg-git/vim-visual-increment
+https://github.com/triglav/vim-visual-increment.git master
