@@ -80,6 +80,14 @@ let g:autoformat_retab = 0
 let g:autoformat_remove_trailing_spaces = 0
 ```
 
+To disable or re-enable these option for specific buffers, use the buffer local variants:
+`b:autoformat_autoindent`, `b:autoformat_retab` and `b:autoformat_remove_trailing_spaces`.
+So to disable autoindent for filetypes that have incompetent indent files, use
+
+```vim
+autocmd FileType vim,tex let b:autoformat_autoindent=0
+```
+
 You can manually autoindent, retab or remove trailing whitespace with the following respective
 commands.
 
@@ -95,6 +103,7 @@ tries all formatters in this list of applicable formatters, until one succeeds.
 You can set this list manually in your vimrc (see section *How can I change the behaviour of formatters, or add one myself?*,
 or change the formatter with the highest priority by the commands `:NextFormatter` and `:PreviousFormatter`.
 To print the currently selected formatter use `:CurrentFormatter`.
+These latter commands are mostly useful for debugging purposes.
 If you have a composite filetype with dots (like `django.python` or `php.wordpress`),
 vim-autoformat first tries to detect and use formatters for the exact original filetype, and
 then tries the same for all supertypes occuring from left to right in the original filetype
@@ -121,6 +130,19 @@ Here is a list of formatprograms that are supported by default, and thus will be
   For Ubuntu type `sudo apt-get install python-autopep8` in a terminal.
   Here is the link to the repository: https://github.com/hhatto/autopep8.
   And here the link to its page on the python website: http://pypi.python.org/pypi/autopep8/0.5.2.
+
+* `yapf` for __Python__ (supports formatting ranges).
+  It is readily available through PIP. Most users can install with the terminal command `sudo pip install yapf` or `pip --user install yapf`.
+  YAPF has one optional configuration variable to control the formatter style.
+  For example:
+
+  ```vim
+  let g:formatter_yapf_style = 'pep8'
+   ```
+
+  `pep8` is the default value, or you can choose: `google`, `facebook`, `chromium`.
+
+  Here is the link to the repository: https://github.com/google/yapf
 
 * `js-beautify` for __Javascript__ and __JSON__.
   It can be installed by running `npm install -g js-beautify`.
@@ -264,6 +286,9 @@ formatter definition that can be added to the defaults, or if you experience pro
 contact me by creating an issue in this repository.
 
 ## Change log
+
+### April 2016
+* Add `yapf` as a secondary Python formatter.
 
 ### March 2016
 * Add more fallback options.
