@@ -45,6 +45,7 @@ let s:default_config = {
       \ "ref_option" : "rs -e",
       \ "def_option" : "d -e",
       \ "result_option" : "ctags-mod",
+      \ "path_option" : "P -e",
       \ "global_cmd" : "global",
       \ "enable_nearness" : 0,
       \ }
@@ -74,17 +75,17 @@ endif
 endfunction
 
 " execute global command and return result
-function! unite#libs#gtags#exec_global(short_option, long_option, pattern)
-  let l:long_option = a:long_option .
+function! unite#libs#gtags#exec_global(options)
+  let l:long = get(a:options, 'long', '') .
         \ (unite#libs#gtags#get_global_config("enable_nearness") ? " --nearness=\"" . fnamemodify(expand('%:p'), ':h') . "\"" : '') .
         \ (unite#libs#gtags#get_project_config("through_all_tags") ? " --through" : '')
-  let l:short_option = a:short_option . (unite#libs#gtags#get_project_config("absolute_path") ? "a" : '')
+  let l:short = get(a:options, 'short', '') . (unite#libs#gtags#get_project_config("absolute_path") ? "a" : '')
   " build command
   let l:cmd = printf("%s %s -q%s %s",
         \ unite#libs#gtags#get_global_config("global_cmd"),
-        \ l:long_option,
-        \ l:short_option,
-        \ g:unite_source_gtags_shell_quote . a:pattern . g:unite_source_gtags_shell_quote)
+        \ l:long,
+        \ l:short,
+        \ g:unite_source_gtags_shell_quote . get(a:options, 'pattern', '') . g:unite_source_gtags_shell_quote)
 
   let l:gtags_libpath = unite#libs#gtags#get_project_config("gtags_libpath")
   if !empty(l:gtags_libpath)
@@ -97,8 +98,13 @@ function! unite#libs#gtags#exec_global(short_option, long_option, pattern)
   endif
 
   " specify --result option
-  let l:result_option = unite#libs#gtags#get_global_config("result_option")
-  let l:built_cmd = printf("%s --result=%s", l:cmd, result_option)
+  if get(a:options, 'disable_result_option', 0)
+    let l:built_cmd = printf("%s", l:cmd)
+  else
+    let l:result_option = unite#libs#gtags#get_global_config("result_option")
+    let l:built_cmd = printf("%s --result=%s", l:cmd, result_option)
+  endif
+
   let l:result = system(l:built_cmd)
 
   if v:shell_error != 0
@@ -128,6 +134,13 @@ function! unite#libs#gtags#exec_global(short_option, long_option, pattern)
   endif
 endfunction
 
+function! unite#libs#gtags#result_as_filepath(source, result, context)
+  if empty(a:result)
+    return []
+  endif
+  return unite#helper#paths2candidates(split(a:result, '\r\n\|\r\|\n'))
+endfunction
+
 " build unite items from global command result
 function! unite#libs#gtags#result2unite(source, result, context)
   if empty(a:result)
@@ -137,7 +150,7 @@ function! unite#libs#gtags#result2unite(source, result, context)
         \ 's:format["'. unite#libs#gtags#get_global_config("result_option") . '"].func(v:val)')
   let l:candidates = filter(l:candidates, '!empty(v:val)')
   let l:candidates = map(l:candidates, 'extend(v:val, {"source" : a:source})')
-  let a:context.is_treelized = !(a:context.immediately && len(l:candidates) == 1) && 
+  let a:context.is_treelized = !(a:context.immediately && len(l:candidates) == 1) &&
         \ unite#libs#gtags#get_project_config('treelize')
   if a:context.is_treelized
     return unite#libs#gtags#treelize(l:candidates)
