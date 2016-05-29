@@ -27,7 +27,12 @@ env_init_path()
 
         for binfolder in sbin bin; do
             p2=:$p/$binfolder
-            PATH=$p2$(echo $PATH | awk -v rep=$p2 -F: '{ gsub(rep, ""); print $0; }')
+            if echo $PATH | grep -q "$p2:"
+            then
+                :
+            else
+                PATH=$p2$(echo $PATH | awk -v rep=$p2 -F: '{ gsub(rep, ""); print $0; }')
+            fi
         done
 
         # # /etc/mdm/Xsession complain "Bad substitute" for following lines
