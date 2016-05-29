@@ -119,7 +119,7 @@ export HISTCONTROL=ignoreboth
 [ -d $HOME/xp/gopath ] && { export GOPATH=$HOME/xp/gopath; export PATH=$PATH:$GOPATH/bin; }
 
 export PYTHONPATH=/usr/lib/python2.6/site-packages/:$PYTHONPATH
-export HISTIGNORE="ll:ls"
+export HISTIGNORE="ll:ls:,st:gl"
 export GREP_COLORS="ms=01;33:mc=01;31:sl=0;33:cx=:fn=35:ln=32:bn=32:se=36"
 
 if [ "$os" = "linux" ] ; then
