@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source _git_xp_lib.sh
+
 # to commit index on to its own branch and merge it back
 
 dest_branch=""
@@ -9,7 +11,7 @@ find_parent=0
 init()
 { #{{{
     arg_no_edit="--no-edit"
-    local v=$(_git_ver)
+    local v=$(git_ver)
     if [ "$v" -lt "001008" ]; then
         arg_no_edit=""
     fi
