@@ -123,7 +123,7 @@ export HISTIGNORE="ll:ls:,st:gl"
 export GREP_COLORS="ms=01;33:mc=01;31:sl=0;33:cx=:fn=35:ln=32:bn=32:se=36"
 
 if [ "$os" = "linux" ] ; then
-    eth0_ip=`/sbin/ifconfig  | grep 'inet \(addr:\)\?'| grep -v '127.0.0.1' |  grep -v 'Mask:255.255.255.255' | awk '{gsub("addr:","",$2); print "<"$2">"}' `
+    eth0_ip=`echo $(/sbin/ifconfig  | grep 'inet \(addr:\)\?'| grep -v '127.0.0.1' |  grep -v 'Mask:255.255.255.255' | awk '{gsub("addr:","",$2); print " <"$2">"}')`
     mainip=`/sbin/ifconfig | grep 'inet addr:' | grep -v "127.0.0.1" | grep -v 'addr:10\.\|addr:172.16' | head -n1 | awk '/inet addr/{i = i substr($2, 6) } END{print i}'`
 elif [ "$os" = "bsd" ]; then
     eth0_ip=`/sbin/ifconfig | grep "inet"|awk -F "." '{print $3"."$4}'| awk '{print $2}' | head -n 3`
