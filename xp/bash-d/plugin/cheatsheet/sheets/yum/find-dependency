@@ -1,1 +1,3 @@
 repoquery --requires MySQL-python.x86_64
+
+yum deplist MySQL-python.x86_64
