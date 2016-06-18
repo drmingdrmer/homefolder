@@ -1,5 +1,7 @@
 #!/bin/sh
 
+cd ~
+
 g=git-2.9.0
 package=$g.tar.xz
 wget http://kernel.org/pub/software/scm/git/$package
@@ -8,7 +10,4 @@ tar -xf $package
 
 cd $g
 
-./configure --prefix=$HOME ; make install
-
-cd -
-
+./configure --prefix=$HOME && make install
