@@ -146,3 +146,5 @@ d end brew
 
 # TODO when to fix GOROOT?
 # [ ".$GOROOT" = "." ] && { export GOROOT=/usr/local/go; export PATH=$PATH:$GOROOT/bin; }
+
+test -f $HOME/.xp-bashrc && source $HOME/.xp-bashrc
