@@ -1,11 +1,12 @@
 #!/bin/sh
 
+g=git-2.9.0
+package=$g.tar.xz
+wget http://kernel.org/pub/software/scm/git/$package
 
-wget http://kernel.org/pub/software/scm/git/git-1.7.3.3.tar.bz2
+tar -xf $package
 
-tar -xjf git-1.7.3.3.tar.bz2
-
-cd git-1.7.3.3
+cd $g
 
 ./configure --prefix=$HOME ; make install
 
