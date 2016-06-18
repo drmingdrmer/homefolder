@@ -1,0 +1,5 @@
+#!/bin/sh
+
+# bash config for regular home
+
+export GITBOX_CONF_FN="$XPBASE/conf/gitbox.conf"
