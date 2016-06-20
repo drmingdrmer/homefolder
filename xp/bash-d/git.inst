@@ -39,6 +39,10 @@ $gconf merge.defaultToUpstream true
 $gconf color.diff true
 $gconf color.interactive true
 
+$gconf i18n.commitencoding utf-8
+$gconf i18n.logoutputencoding utf-8
+$gconf core.quotepath 'false'
+
 $gconf alias.log-full      "$log"
 $gconf alias.lg            "$log"
 $gconf alias.log-summary   "$log1"
