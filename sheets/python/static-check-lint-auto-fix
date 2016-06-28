@@ -1,0 +1,7 @@
+# auto fix pep 8 issues
+autoflake --remove-all-unused-imports --remove-unused-variables -i *
+
+# sort import
+# add import
+# remove import
+isort *
