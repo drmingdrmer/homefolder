@@ -157,14 +157,14 @@ if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'go') == -1
 let s:current_fileformats = ''
 let s:current_fileencodings = ''
 function! s:gofiletype_pre(type)
-    let s:current_fileformats = &g:fileformats
-    let s:current_fileencodings = &g:fileencodings
-    set fileencodings=utf-8 fileformats=unix
-    let &l:filetype = a:type
+  let s:current_fileformats = &g:fileformats
+  let s:current_fileencodings = &g:fileencodings
+  set fileencodings=utf-8 fileformats=unix
+  let &l:filetype = a:type
 endfunction
 function! s:gofiletype_post()
-    let &g:fileformats = s:current_fileformats
-    let &g:fileencodings = s:current_fileencodings
+  let &g:fileformats = s:current_fileformats
+  let &g:fileencodings = s:current_fileencodings
 endfunction
 au BufNewFile *.go setfiletype go | setlocal fileencoding=utf-8 fileformat=unix
 au BufRead *.go call s:gofiletype_pre("go")
@@ -198,7 +198,7 @@ au BufNewFile,BufRead *.js setf javascript
 au BufNewFile,BufRead *.jsm setf javascript
 au BufNewFile,BufRead Jakefile setf javascript
 fun! s:SelectJavascript()
-  if getline(1) =~# '^#!.*/bin/env\s\+node\>'
+  if getline(1) =~# '^#!.*/bin/\%(env\s\+\)\?node\>'
     set ft=javascript
   endif
 endfun
@@ -276,12 +276,8 @@ au BufRead,BufNewFile *.mako     set filetype=mako
 endif
 if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'markdown') == -1
   
-autocmd BufNewFile,BufRead *.markdown,*.md,*.mdown,*.mkd,*.mkdn
-      \ if &ft =~# '^\%(conf\|modula2\)$' |
-      \   set ft=markdown |
-      \ else |
-      \   setf markdown |
-      \ endif
+au BufRead,BufNewFile *.{md,mdown,mkd,mkdn,markdown,mdwn} set filetype=markdown
+au BufRead,BufNewFile *.{md,mdown,mkd,mkdn,markdown,mdwn}.{des3,des,bf,bfa,aes,idea,cast,rc2,rc4,rc5,desx} set filetype=markdown
 endif
 if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'perl') == -1
   
@@ -306,7 +302,7 @@ au BufRead,BufNewFile nginx.conf set ft=nginx
 endif
 if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'nim') == -1
   
-au BufNewFile,BufRead *.nim set filetype=nim
+au BufNewFile,BufRead *.nim,*.nims set filetype=nim
 endif
 if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'nix') == -1
   
@@ -356,8 +352,8 @@ if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'plantuml') == -
 if did_filetype()
 	  finish
 endif
-autocmd BufRead,BufNewFile * :if getline(1) =~ '^.*startuml.*$'|  setfiletype plantuml | endif
-autocmd BufRead,BufNewFile *.pu,*.uml,*.plantuml set filetype=plantuml
+autocmd BufRead,BufNewFile * :if getline(1) =~ '^.*startuml.*$'| setfiletype plantuml | set filetype=plantuml | endif
+autocmd BufRead,BufNewFile *.pu,*.uml,*.plantuml setfiletype plantuml | set filetype=plantuml
 endif
 if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'protobuf') == -1
   
@@ -399,30 +395,46 @@ function! s:setf(filetype) abort
     let &filetype = a:filetype
   endif
 endfunction
-au BufNewFile,BufRead *.rb,*.rbw,*.gemspec	call s:setf('ruby')
-au BufNewFile,BufRead *.builder,*.rxml,*.rjs,*.ruby call s:setf('ruby')
-au BufNewFile,BufRead [rR]akefile,*.rake	call s:setf('ruby')
-au BufNewFile,BufRead [rR]antfile,*.rant	call s:setf('ruby')
-au BufNewFile,BufRead .irbrc,irbrc		call s:setf('ruby')
-au BufNewFile,BufRead .pryrc			call s:setf('ruby')
-au BufNewFile,BufRead *.ru			call s:setf('ruby')
-au BufNewFile,BufRead Capfile,*.cap 		call s:setf('ruby')
-au BufNewFile,BufRead Gemfile			call s:setf('ruby')
-au BufNewFile,BufRead Guardfile,.Guardfile	call s:setf('ruby')
+func! s:StarSetf(ft)
+  if expand("<amatch>") !~ g:ft_ignore_pat
+    exe 'setf ' . a:ft
+  endif
+endfunc
+au BufNewFile,BufRead *.erb,*.rhtml				call s:setf('eruby')
+au BufNewFile,BufRead .irbrc,irbrc				call s:setf('ruby')
+au BufNewFile,BufRead *.rb,*.rbw,*.gemspec			call s:setf('ruby')
+au BufNewFile,BufRead *.ru					call s:setf('ruby')
+au BufNewFile,BufRead Gemfile					call s:setf('ruby')
+au BufNewFile,BufRead *.builder,*.rxml,*.rjs,*.ruby		call s:setf('ruby')
+au BufNewFile,BufRead [rR]akefile,*.rake			call s:setf('ruby')
+au BufNewFile,BufRead [rR]akefile*				call s:StarSetf('ruby')
+au BufNewFile,BufRead [rR]antfile,*.rant			call s:setf('ruby')
+endif
+if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'ruby') == -1
+  
+function! s:setf(filetype) abort
+  if &filetype !=# a:filetype
+    let &filetype = a:filetype
+  endif
+endfunction
+au BufNewFile,BufRead Appraisals		call s:setf('ruby')
+au BufNewFile,BufRead .autotest			call s:setf('ruby')
+au BufNewFile,BufRead [Bb]uildfile		call s:setf('ruby')
+au BufNewFile,BufRead Capfile,*.cap		call s:setf('ruby')
 au BufNewFile,BufRead Cheffile			call s:setf('ruby')
 au BufNewFile,BufRead Berksfile			call s:setf('ruby')
-au BufNewFile,BufRead [vV]agrantfile		call s:setf('ruby')
-au BufNewFile,BufRead .autotest			call s:setf('ruby')
-au BufNewFile,BufRead *.erb,*.rhtml		call s:setf('eruby')
-au BufNewFile,BufRead [tT]horfile,*.thor	call s:setf('ruby')
-au BufNewFile,BufRead *.rabl			call s:setf('ruby')
-au BufNewFile,BufRead *.jbuilder		call s:setf('ruby')
-au BufNewFile,BufRead Puppetfile		call s:setf('ruby')
-au BufNewFile,BufRead [Bb]uildfile		call s:setf('ruby')
-au BufNewFile,BufRead Appraisals		call s:setf('ruby')
 au BufNewFile,BufRead Podfile,*.podspec		call s:setf('ruby')
+au BufNewFile,BufRead Guardfile,.Guardfile	call s:setf('ruby')
+au BufNewFile,BufRead *.jbuilder		call s:setf('ruby')
+au BufNewFile,BufRead KitchenSink		call s:setf('ruby')
+au BufNewFile,BufRead *.opal			call s:setf('ruby')
+au BufNewFile,BufRead .pryrc			call s:setf('ruby')
+au BufNewFile,BufRead Puppetfile		call s:setf('ruby')
+au BufNewFile,BufRead *.rabl			call s:setf('ruby')
 au BufNewFile,BufRead [rR]outefile		call s:setf('ruby')
-au BufNewFile,BufRead .simplecov		set filetype=ruby
+au BufNewFile,BufRead .simplecov		call s:setf('ruby')
+au BufNewFile,BufRead [tT]horfile,*.thor	call s:setf('ruby')
+au BufNewFile,BufRead [vV]agrantfile		call s:setf('ruby')
 endif
 if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'rust') == -1
   
@@ -445,7 +457,7 @@ au BufRead,BufNewFile *.sbt setfiletype sbt.scala
 endif
 if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'slim') == -1
   
-autocmd BufNewFile,BufRead *.slim set filetype=slim
+autocmd BufNewFile,BufRead *.slim setf slim
 endif
 if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'solidity') == -1
   
@@ -491,8 +503,7 @@ au BufNewFile,BufRead *.thrift setlocal filetype=thrift
 endif
 if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'tmux') == -1
   
-autocmd BufNewFile,BufRead {.,}tmux.conf{.*,} setlocal filetype=tmux
-autocmd BufNewFile,BufRead {.,}tmux.conf{.*,} setlocal commentstring=#\ %s
+autocmd BufNewFile,BufRead {.,}tmux*.conf* setfiletype tmux
 endif
 if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'toml') == -1
   
