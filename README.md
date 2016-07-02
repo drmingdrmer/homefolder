@@ -1,4 +1,4 @@
-# vim-javascript v1.0.0
+# vim-javascript
 
 JavaScript bundle for vim, this bundle provides syntax highlighting and
 improved indentation.
@@ -35,24 +35,37 @@ And install it:
 
 ## Configuration Variables
 
-The following variables control certain syntax highlighting features. You can
-add them to your `.vimrc` to enable/disable their features.
+The following variables control certain syntax highlighting plugins. You can
+add them to your `.vimrc` to enable their features.
+
+-----------------
 
 ```
-let g:javascript_enable_domhtmlcss = 1
+let g:javascript_plugin_jsdoc = 1
 ```
 
-Enables HTML/CSS syntax highlighting in your JavaScript file.
+Enables syntax highlighting for [JSDocs](http://usejsdoc.org/).
 
 Default Value: 0
 
 -----------------
 
 ```
-let g:javascript_ignore_javaScriptdoc = 1
+let g:javascript_plugin_ngdoc = 1
 ```
 
-Disables JSDoc syntax highlighting
+Enables some additional syntax highlighting for NGDocs. Requires JSDoc plugin
+to be enabled as well.
+
+Default Value: 0
+
+-----------------
+
+```
+let g:javascript_plugin_flow = 1
+```
+
+Enables syntax highlighting for [Flow](https://flowtype.org/).
 
 Default Value: 0
 
@@ -99,18 +112,6 @@ proposed change and how it is valuable.
 ## Bug Reports
 
 Report a bug on [GitHub Issues](https://github.com/pangloss/vim-javascript/issues).
-
-
-## A Quick Note on Regexes
-
-Vim 7.4 with patches LESS than 1-7 exhibits a bug that broke how we handle
-javascript regexes. Please update to a newer version or run the following
-commands to fix:
-
-```
-:set regexpengine=1
-:syntax enable
-```
 
 
 ## License
