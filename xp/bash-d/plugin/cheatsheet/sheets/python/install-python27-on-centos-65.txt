@@ -1,0 +1,4 @@
+yum update
+yum install -y centos-release-scl
+yum install -y python27
+
