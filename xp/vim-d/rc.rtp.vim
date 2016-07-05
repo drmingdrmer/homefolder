@@ -5,15 +5,9 @@ let g:__RC_RTP_VIM__ = 1
 
 fun! s:GenerateRTP()
     let xp_rtp = []
-
-    let xp_rtp += [	'private'				]
-
-    let xp_rtp += [	'plugins.modified/' . 'matchparen'	]
-
-    let xp_rtp += [	'plugins/' . 'colorschemes'	]
-
-    let xp_rtp += [ '.vim'	]
-    let xp_rtp += [ 'after'	]
+    let xp_rtp += ['private']
+    let xp_rtp += ['.vim']
+    let xp_rtp += ['after']
     return xp_rtp
 endfunction
 
