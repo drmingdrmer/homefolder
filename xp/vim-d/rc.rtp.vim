@@ -7,6 +7,7 @@ fun! s:GenerateRTP()
     let xp_rtp = []
     let xp_rtp += ['private']
     let xp_rtp += ['.vim']
+    let xp_rtp += ['dot-vim-tmp']
     let xp_rtp += ['after']
     return xp_rtp
 endfunction
