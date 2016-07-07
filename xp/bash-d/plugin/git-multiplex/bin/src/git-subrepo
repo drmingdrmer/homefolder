@@ -17,19 +17,31 @@ main()
     [ -f .gitsubrepo_refs ] && rm .gitsubrepo_refs
     > .gitsubrepo_refs
 
+    local base=
     local prefix=
     local url=
     local ref=
     local localtag=
     local status=prefix
-    while read a b; do
+    while read a b c; do
         if [ "x$a" = "x" ]; then
             continue
         fi
 
         if [ "$status" = 'prefix' ]; then
-            prefix="$a"
-            status=url_and_ref
+
+            # [ xp/vim-d ]
+            # declare base dir for following sub repo
+            if test "${a:0:1}" = '['
+            then
+                base="$b"
+                base="${base%%]}"
+                base="${base%/}/"
+            else
+                prefix="$a"
+                status=url_and_ref
+            fi
+
         else
             status=prefix
             if [ "x$match" != "x" ] && [ "x$prefix" != "x$match" ]; then
@@ -45,7 +57,7 @@ main()
                 fi
             fi
 
-            fetch_remote "$prefix" "$url" "$ref" &
+            fetch_remote "$base$prefix" "$url" "$ref" &
         fi
 
     done<"$conf_fn"
