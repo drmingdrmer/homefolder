@@ -229,8 +229,6 @@ main()
     done<"$conf_fn"
     wait
 
-    exit 0
-
     while read prefix url ref localtag
     do
         if [ -d "$prefix" ]; then
