@@ -160,50 +160,76 @@ main()
     > .gitsubrepo_refs
 
     local base=
+    local remote=
+    local remote_suffix=
     local prefix=
     local url=
     local ref=
     local localtag=
-    local status=prefix
-    while read a b c; do
+    while read a b c d; do
+
         if [ "x$a" = "x" ]; then
             continue
         fi
 
-        if [ "$status" = 'prefix' ]; then
+        # [ base: xp/vim-d ]
+        # declare base dir for following sub repo
+        # [ remote: https://github.com/ ]
+        # declare remote base url for following sub repo
+        if test "${a:0:1}" = '['
+        then
 
-            # [ xp/vim-d ]
-            # declare base dir for following sub repo
-            if test "${a:0:1}" = '['
-            then
-                base="$b"
-                base="${base%%]}"
-                base="${base%/}/"
-            else
-                prefix="$a"
-                status=url_and_ref
-            fi
+            case $b in
+                base:)
+                    base="$c"
+                    base="${base%%]}"
+                    base="${base%/}/"
+                    ;;
+                remote:)
+                    remote="$c"
+                    ;;
+                remote_suffix:)
+                    remote="$c"
+                    ;;
+                *)
+                    echo "invalid tag: $b"
+                    exit 1
+            esac
+            continue
+        fi
 
-        else
-            status=prefix
-            if [ "x$match" != "x" ] && [ "x$prefix" != "x$match" ]; then
+        prefix="$a"
+        url="$b"
+        ref="$c"
+
+        if [ "x$match" != "x" ] && [ "x$prefix" != "x$match" ]; then
+            continue
+        fi
+
+        if [ ".$cmd" = ".add" ]; then
+            if [ -d "$prefix" ]; then
                 continue
             fi
-
-            url="$a"
-            ref="$b"
-
-            if [ ".$cmd" = ".add" ]; then
-                if [ -d "$prefix" ]; then
-                    continue
-                fi
-            fi
-
-            fetch_remote "$base$prefix" "$url" "$ref" &
         fi
+
+        # "xpt drmingdrmer/${prefix} master" is translated to "xpt drmingdrmer/xpt master"
+        url=$(eval "echo $url")
+
+        if test "${url%/}" != "$url"; then
+            url="${url}$prefix"
+        fi
+
+        if test "${url:0:8}" != "https://" && test "${url:0:4}" != "git@"
+        then
+            url="$remote$url$remote_suffix"
+        fi
+
+        fetch_remote "$base$prefix" "$url" "$ref" &
 
     done<"$conf_fn"
     wait
+
+    exit 0
 
     while read prefix url ref localtag
     do
