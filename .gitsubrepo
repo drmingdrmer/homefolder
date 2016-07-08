@@ -1,201 +1,73 @@
-[ xp/bash-d/plugin ]
-
-    shbookmark
-    https://github.com/drmingdrmer/shbookmark.git master
-
-    cosmin.git-hg
-    https://github.com/cosmin/git-hg.git master
-
-    php-markdown.michelf
-    https://github.com/michelf/php-markdown.git master
-
-    xunlei-lixian.iambus/bin
-    https://github.com/iambus/xunlei-lixian.git master
-
-    vdisk_lib.drmingdrmer/bin
-    https://github.com/drmingdrmer/vdisk_lib.git master
-
-    git-imerge.mhagger/bin
-    https://github.com/mhagger/git-imerge.git master
-
-    lualint-again.drmingdrmer/bin
-    https://github.com/drmingdrmer/lualint-again.git master
-
-    Dropbox-Uploader.andreafabrizi/bin
-    https://github.com/andreafabrizi/Dropbox-Uploader.git master
-
-[ xp/vim-d/plg-git ]
-
-    vcscommand.vim.git
-    git@github.com:vim-scripts/vcscommand.vim.git master
-
-    vim-multiple-cursors
-    git@github.com:terryma/vim-multiple-cursors.git master
-
-    xp-vim-git
-    git@github.com:drmingdrmer/xp-vim-git.git master
-
-    clang_complete
-    git@github.com:Rip-Rip/clang_complete.git master
-
-    xptemplate
-    git@github.com:drmingdrmer/xptemplate.git rc
-
-    vim-tabbar
-    git@github.com:drmingdrmer/vim-tabbar.git master
-
-    vim-ShowMarks
-    git@github.com:drmingdrmer/vim-ShowMarks.git master
-
-    vim-syntax-markdown
-    git@github.com:drmingdrmer/vim-syntax-markdown.git master
-
-    vim-jsx
-    git@github.com:mxw/vim-jsx.git master
-
-    ultisnips
-    git@github.com:SirVer/ultisnips.git master
-
-    vim-snippets.honza
-    git@github.com:honza/vim-snippets.git master
-
-    vim-polyglot
-    git@github.com:sheerun/vim-polyglot.git master
-
-    vim-toggle-quickfix
-    git@github.com:drmingdrmer/vim-toggle-quickfix.git master
-
-    vim-syntax-util
-    git@github.com:drmingdrmer/vim-syntax-util.git master
-
-    vim-color-edit
-    git@github.com:drmingdrmer/vim-color-edit.git master
-
-    vim-highlight-emphasize
-    git@github.com:drmingdrmer/vim-highlight-emphasize.git master
-
-    xp-vim-colorscheme
-    git@github.com:drmingdrmer/xp-vim-colorscheme.git master
-
-    supertab
-    https://github.com/ervandew/supertab.git master
-
-    auto-pairs
-    https://github.com/jiangmiao/auto-pairs.git master
-
-    ZenCoding.vim
-    https://github.com/vim-scripts/ZenCoding.vim.git master
-
-    snipmate-snippets.git
-    https://github.com/scrooloose/snipmate-snippets.git master
-
-    github_vim_theme
-    https://github.com/nono/github_vim_theme.git master
-
-    vim-yaml
-    https://github.com/stephpy/vim-yaml.git master
-
-    vim-mac-classic-theme
-    https://github.com/nelstrom/vim-mac-classic-theme.git master
-
-    vim-fugitive
-    https://github.com/tpope/vim-fugitive.git master
-
-    python-mode.git
-    https://github.com/klen/python-mode.git master
-
-    vim-javascript
-    https://github.com/pangloss/vim-javascript.git master
-
-    vim-go.fatih
-    https://github.com/fatih/vim-go.git master
-
-    tagbar.majutsushi
-    https://github.com/majutsushi/tagbar.git master
-
-    ansible-vim
-    https://github.com/DavidWittman/ansible-vim.git master
-
-    Align
-    https://github.com/vim-scripts/Align.git master
-
-    colorsel.vim
-    https://github.com/vim-scripts/colorsel.vim.git master
-
-    diffchanges.vim
-    https://github.com/vim-scripts/diffchanges.vim.git master
-
-    FuzzyFinder
-    https://github.com/vim-scripts/FuzzyFinder.git master
-
-    grep.vim
-    https://github.com/vim-scripts/grep.vim.git master
-
-    Hints-for-C-Library-Functions
-    https://github.com/vim-scripts/Hints-for-C-Library-Functions.git master
-
-    Hints-for-C-Library-Functions-B
-    https://github.com/vim-scripts/Hints-for-C-Library-Functions-B.git master
-
-    IndentAnything
-    https://github.com/vim-scripts/IndentAnything.git master
-
-    L9
-    https://github.com/vim-scripts/L9.git master
-
-    ManPageView
-    https://github.com/vim-scripts/ManPageView.git 23
-
-    neocomplcache
-    https://github.com/vim-scripts/neocomplcache.git master
-
-    OmniCppComplete
-    https://github.com/vim-scripts/OmniCppComplete.git master
-
-    taglist.vim
-    https://github.com/vim-scripts/taglist.vim.git master
-
-    The-NERD-Commenter
-    https://github.com/vim-scripts/The-NERD-Commenter.git master
-
-    The-NERD-tree
-    https://github.com/vim-scripts/The-NERD-tree.git master
-
-    VimExplorer
-    https://github.com/vim-scripts/VimExplorer.git master
-
-    xmledit
-    https://github.com/vim-scripts/xmledit.git master
-
-    gtags.vim
-    https://github.com/vim-scripts/gtags.vim.git master
-
-    vim-pathogen
-    https://github.com/tpope/vim-pathogen.git master
-
-    unite-gtags
-    https://github.com/hewes/unite-gtags.git master
-
-    unite.vim
-    https://github.com/Shougo/unite.vim.git master
-
-    Mark--Karkat
-    https://github.com/vim-scripts/Mark--Karkat.git master
-
-    vim-fuzzyjumpto
-    https://github.com/drmingdrmer/vim-fuzzyjumpto.git master
-
-    vim-tiny-unittest
-    https://github.com/drmingdrmer/vim-tiny-unittest.git master
-
-    vim-autoformat
-    https://github.com/Chiel92/vim-autoformat.git master
-
-    vim-gitgutter
-    https://github.com/airblade/vim-gitgutter.git master
-
-    vim-visual-increment
-    https://github.com/triglav/vim-visual-increment.git master
-
-    ctrlp
-    https://github.com/ctrlpvim/ctrlp.vim.git master
+[ remote_suffix: .git ]
+[ remote: https://github.com/ ]
+[ base: xp/bash-d/plugin ]
+
+Dropbox-Uploader.andreafabrizi/bin andreafabrizi/Dropbox-Uploader master
+cosmin.git-hg                      cosmin/git-hg                  master
+lualint-again.drmingdrmer/bin      drmingdrmer/lualint-again      master
+shbookmark                         drmingdrmer/                   master
+vdisk_lib.drmingdrmer/bin          drmingdrmer/vdisk_lib          master
+xunlei-lixian.iambus/bin           iambus/xunlei-lixian           master
+git-imerge.mhagger/bin             mhagger/git-imerge             master
+php-markdown.michelf               michelf/php-markdown           master
+
+[ base: xp/vim-d/plg-git ]
+
+vim-autoformat                  Chiel92/                     master
+ansible-vim                     DavidWittman/                master
+clang_complete                  Rip-Rip/                     master
+unite.vim                       Shougo/                      master
+ultisnips                       SirVer/                      master
+vim-gitgutter                   airblade/                    master
+ctrlp                           ctrlpvim/ctrlp.vim           master
+vim-ShowMarks                   drmingdrmer/                 master
+vim-color-edit                  drmingdrmer/                 master
+vim-fuzzyjumpto                 drmingdrmer/                 master
+vim-highlight-emphasize         drmingdrmer/                 master
+vim-syntax-markdown             drmingdrmer/                 master
+vim-syntax-util                 drmingdrmer/                 master
+vim-tabbar                      drmingdrmer/                 master
+vim-tiny-unittest               drmingdrmer/                 master
+vim-toggle-quickfix             drmingdrmer/                 master
+xp-vim-colorscheme              drmingdrmer/                 master
+xp-vim-git                      drmingdrmer/                 master
+xptemplate                      drmingdrmer/                 rc
+supertab                        ervandew/                    master
+vim-go.fatih                    fatih/vim-go                 master
+unite-gtags                     hewes/                       master
+vim-snippets.honza              honza/vim-snippets           master
+auto-pairs                      jiangmiao/                   master
+python-mode.git                 klen/python-mode             master
+tagbar.majutsushi               majutsushi/tagbar            master
+vim-jsx                         mxw/                         master
+vim-mac-classic-theme           nelstrom/                    master
+github_vim_theme                nono/                        master
+vim-javascript                  pangloss/                    master
+snipmate-snippets.git           scrooloose/snipmate-snippets master
+vim-polyglot                    sheerun/                     master
+vim-yaml                        stephpy/                     master
+vim-multiple-cursors            terryma/                     master
+vim-fugitive                    tpope/                       master
+vim-pathogen                    tpope/                       master
+vim-visual-increment            triglav/                     master
+Align                           vim-scripts/                 master
+FuzzyFinder                     vim-scripts/                 master
+Hints-for-C-Library-Functions-B vim-scripts/                 master
+Hints-for-C-Library-Functions   vim-scripts/                 master
+IndentAnything                  vim-scripts/                 master
+L9                              vim-scripts/                 master
+ManPageView                     vim-scripts/                 23
+Mark--Karkat                    vim-scripts/                 master
+OmniCppComplete                 vim-scripts/                 master
+The-NERD-Commenter              vim-scripts/                 master
+The-NERD-tree                   vim-scripts/                 master
+VimExplorer                     vim-scripts/                 master
+ZenCoding.vim                   vim-scripts/                 master
+colorsel.vim                    vim-scripts/                 master
+diffchanges.vim                 vim-scripts/                 master
+grep.vim                        vim-scripts/                 master
+gtags.vim                       vim-scripts/                 master
+neocomplcache                   vim-scripts/                 master
+taglist.vim                     vim-scripts/                 master
+vcscommand.vim.git              vim-scripts/vcscommand.vim   master
+xmledit                         vim-scripts/                 master
