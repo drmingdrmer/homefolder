@@ -10,3 +10,12 @@ nnoremap <buffer> F :s/\v^\S* /fixup /<CR>:let @/=""<CR><Down>
 " s, squash = use commit, but meld into previous commit
 " f, fixup = like "squash", but discard this commit's log message
 " x, exec = run command (the rest of the line) using shell
+
+
+fun! s:cword() "{{{
+    let w = expand('<cword>')
+    return w
+endfunction "}}}
+
+nnoremap <buffer> o     :Gpedit <C-r>=<SID>cword()<CR><CR>
+nnoremap <buffer> <CR>  :Gpedit <C-r>=<SID>cword()<CR><CR>:wincmd p<CR>:wincmd L<CR>:wincmd p<CR>:wincmd =<CR>
