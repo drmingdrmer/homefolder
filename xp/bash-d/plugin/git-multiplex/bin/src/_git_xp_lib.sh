@@ -1,6 +1,8 @@
 #!/bin/sh
 
 _git_xp_verbose=1
+_git_log_before=''
+_git_log_after=''
 
 die()
 {
@@ -20,6 +22,7 @@ set_verbose()
 {
     _git_xp_verbose=${1-1}
 }
+
 log()
 {
     local color="$1"
@@ -31,9 +34,9 @@ log()
     local NC="$(tput sgr0)"
 
     if [ -t 1 ]; then
-        echo "$color$title$NC $mes"
+        echo "$(eval "$_git_log_before")" "$color$title$NC $mes" "$(eval "$_git_log_after")"
     else
-        echo "$title $mes"
+        echo "$(eval "$_git_log_before")" "$title $mes" "$(eval "$_git_log_after")"
     fi
 }
 dd()
@@ -57,8 +60,16 @@ mes()
     local Green="$(tput setaf 2)"
     log "$Green" "$@"
 }
+ok() {
+    local Green="$(tput setaf 2)"
+    log "${Green}"  "ok:  $@"
+}
+err() {
+    local Red="$(tput setaf 1)"
+    log "${Red}"    "err: $@"
+}
 
-_colors()
+_init_colors()
 {
     Black="$(tput setaf 0)"
     BlackBG="$(tput setab 0)"
