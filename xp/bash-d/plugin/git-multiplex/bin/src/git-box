@@ -46,7 +46,7 @@ fetch_commit_rebase_push() {
 
 
 _date() {
-    date +"%Y-%m-%d %H:%M:%S"
+    date +"%Y-%m-%d %H:%M:%S "
 }
 
 get_pwd() {
@@ -59,7 +59,7 @@ get_pwd() {
     else
         stripped="~$stripped"
     fi
-    echo -n "$stripped"
+    echo -n " $stripped"
 }
 
 main() {

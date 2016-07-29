@@ -34,9 +34,9 @@ log()
     local NC="$(tput sgr0)"
 
     if [ -t 1 ]; then
-        echo "$(eval "$_git_log_before")" "$color$title$NC $mes" "$(eval "$_git_log_after")"
+        echo "$(eval "$_git_log_before")""$color$title$NC $mes""$(eval "$_git_log_after")"
     else
-        echo "$(eval "$_git_log_before")" "$title $mes" "$(eval "$_git_log_after")"
+        echo "$(eval "$_git_log_before")""$title $mes""$(eval "$_git_log_after")"
     fi
 }
 dd()

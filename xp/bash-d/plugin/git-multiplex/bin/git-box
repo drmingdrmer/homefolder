@@ -1,7 +1,14 @@
-#!/bin/sh
+#!/bin/bash
 
-PATH=$PATH:$(git --exec-path)
-. git-sh-setup
+# cat ~/.gitbox.conf
+#
+# ~/xpkit fetchpush
+# ~/wiki
+# ~
+
+# option:        "": auto fetch/rebase/commit/push changes
+# option: fetchpush: does not auto commit changes in working dir, but auto fetch/push/rebase
+# option: fetchonly: just auto-fetch, it does not auto commit/push/rebase
 
 #include '_git_xp_lib.sh' begin
 #!/bin/sh
@@ -158,83 +165,115 @@ git_head_branch()
 }
 #include '_git_xp_lib.sh' end
 
-dd "git dir: $GIT_DIR"
+set_verbose 1
+_init_colors
 
-# cat <<-END
-# dir:    "dir/path"
-# remote: origin  git://github.com/jquery/jquery-tmpl.git
-# remote: bkp     git://github.com/jquery/jquery-tmpl.git
-# head:   origin  master
-# END
+_git_log_before=_date
+_git_log_after=get_pwd
 
-init()
-{
-    working_dir="$(git_working_root)"
-    die_empty "$working_dir" no git working dir found
 
-    conf_fn="$working_dir/.gitrepo"
-    test -r "$conf_fn" \
-        || die "$conf_fn" is unreadable
+fetch_commit_rebase_push() {
+    # old git does not add deleted file into index when 'git add .'
+    git add .
+    git add -u .
+    mes="$(git status --short --ignore-submodules --untracked-files=no | head -n1)"
+    git commit -m "$mes" > /dev/null
+
+    branch=$(git_head_branch)
+    upstream=$(git_branch_default_upstream $branch)
+
+    git fetch origin --quiet \
+        && git rebase origin/$upstream --quiet || err rebase onto origin/$upstream
+
+    while read remote
+    do
+        git push $remote $branch --quiet \
+            && ok push to $remote \
+            || err push to $remote
+
+    done<<<"$(git remote)" \
+        && ok fetch_commit_rebase_push \
+        || err fetch_commit_rebase_push
+
 }
 
-doit()
-{
-    local k=
-    local a1=
-    local a2=
 
-    local dirpath=
-    local remote=
-    local url=
-    local tip=
-    local repo_path=
+_date() {
+    date +"%Y-%m-%d %H:%M:%S "
+}
 
-    local state=nil
+get_pwd() {
+    local _pwd=$(pwd)
+    local p=${1-$_pwd}
+    local home=$HOME
+    local stripped=${p#$home}
+    if [ ".$stripped" == ".$p" ]; then
+        :
+    else
+        stripped="~$stripped"
+    fi
+    echo -n " $stripped"
+}
 
-    { cat "$conf_fn"; echo ""; } | while read k a1 a2; do
+main() {
+    while ``; do
+        local conffn="${GITBOX_CONF_FN-$HOME/.gitbox.conf}"
+        if [ -f $conffn ]; then
+            while read path option; do
+                (
+                option=${option:-fetch_commit_rebase_push}
+                # change ~ to real home path
 
-        case "$k" in
-            '')
-                if test -z "$dirpath"; then
-                    dd "no conf read, continue"
-                    continue
+                eval "p=$path"
+                cd "$p" || die not-found: "$p"
+
+                mes "$option"
+                branch=$(git_head_branch)
+
+                if [ ".$option" = ".fetchonly" ]; then
+
+                    git fetch --all --quiet \
+                        && ok fetch
+
+                elif [ ".$option" = ".fetchpush" ]; then
+
+                    git fetch --all --quiet \
+                        && ok fetch \
+                        || err fetch
+
+                    git merge --no-edit --commit --ff-only \
+                        && ok merge-ff \
+                        || err merge-ff
+
+                    while read remote
+                    do
+                        git push $remote $branch --quiet \
+                            && ok push to $remote \
+                            || err push to $remote
+
+                    done<<<"$(git remote)"
+
+
+                else
+                    fetch_commit_rebase_push
                 fi
-                repo_path="$working_dir/$dirpath"
+                )
+                # ) &
+            done <$conffn
+            # wait
+        else
+            echo "no conf file: $conffn"
+        fi
 
-                if test -d "$repo_path"; then
-                fi
-
-                # dirpath=
-                # remote=
-                # url=
-                # tip=
-                ;;
-
-            dir:)
-                dirpath="$a1"
-                dd "find dir: $dirpath"
-                ;;
-
-            remote:)
-                remote="$a1"
-                url="$a2"
-                dd "remote: $remote : $url"
-                ;;
-            head:)
-                head="$a1"
-                dd "head: $head"
-                ;;
-        esac
+        if mac-power is-battery
+        then
+            echo using battery.. sleep 10 minutes
+            sleep 60*10
+        else
+            sleep 20
+        fi
     done
-
-    dd "finished"
 }
 
-main()
-{
-    init
-    doit
-}
+main
 
-
-main "$@"
