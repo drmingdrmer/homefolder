@@ -34,6 +34,7 @@ fun! s:switchers.clean() "{{{
         set showtabline=2
         set laststatus=2
         set ruler
+        set number
         set cmdheight=2
         call system('tmux set status on >/dev/null 2>/dev/null')
         call system('screen -X hardstatus alwayslastline >/dev/null 2>/dev/null')
@@ -41,6 +42,7 @@ fun! s:switchers.clean() "{{{
         set showtabline=0
         set laststatus=0
         set noruler
+        set nonumber
         set cmdheight=1
         call system('tmux set status off >/dev/null 2>/dev/null')
         call system('screen -X hardstatus ignore >/dev/null 2>/dev/null')
