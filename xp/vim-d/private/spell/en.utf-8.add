@@ -101,3 +101,9 @@ datetime
 CacheControl
 env
 utf
+sha1
+ver
+phy
+del
+mysql
+CRC32
