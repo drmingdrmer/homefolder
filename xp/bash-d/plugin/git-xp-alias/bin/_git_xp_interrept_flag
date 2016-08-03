@@ -58,6 +58,7 @@ if [ "$is_flags" = "1" ]; then
     flags=""
     if [ "$has_context_specified" = "1" ]; then
         _out="$_out --unified=$nr_context"
+        _out="$_out --pretty=medium"
     fi
 else
     _out=""
