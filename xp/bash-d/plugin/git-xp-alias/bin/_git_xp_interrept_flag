@@ -12,6 +12,15 @@ is_flags=1
 nr_context=0
 use_graph=1
 has_context_specified=0
+opt_format=
+
+fmt_hash='%C(dim yellow)%h%C(reset)'
+fmt_time='%C(bold cyan)%ar%C(reset)'
+fmt_subject='%C(white)%s%C(reset)'
+fmt_author='%C(dim magenta)%an%C(reset)'
+fmt_ref='%C(dim yellow)%d%C(reset)'
+
+format_for_diff="format:'%<(8)$fmt_hash%<(8,trunc)$fmt_author %<(7,trunc)$fmt_time $fmt_subject $fmt_ref'"
 
 for i in $(seq 0 ${#flags}); do
     k=${flags:$i:1}
@@ -27,6 +36,8 @@ for i in $(seq 0 ${#flags}); do
         G) use_graph=0
             ;;
         i) _out="$_out --ignore-all-space"
+            ;;
+        l) opt_format="$format_for_diff"
             ;;
         n) _out="$_out --name-only"
             ;;
@@ -54,18 +65,26 @@ for i in $(seq 0 ${#flags}); do
 
 done
 
+
+
 if [ "$is_flags" = "1" ]; then
+
     flags=""
+
     if [ "$has_context_specified" = "1" ]; then
         _out="$_out --unified=$nr_context"
-        _out="$_out --pretty=medium"
+        opt_format="${opt_format:-$format_for_diff}"
     fi
+
+    if [ "$use_graph" = "1" ]; then
+        _out="$_out --graph"
+    fi
+
+    opt_format="${opt_format:-oneline}"
+
+    _out="$_out --format=$opt_format"
+
+    echo "$_out"
 else
-    _out=""
+    echo "$flags"
 fi
-
-if [ "$use_graph" = "1" ]; then
-    _out="$_out --graph"
-fi
-
-echo "$_out" "$flags"
