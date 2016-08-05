@@ -2,7 +2,7 @@ fun! s:AlignTable() range
 
     AlignCtrl p0111111111111P1
 
-    '<,'>Align
+    '<,'>Align |
     '<,'>s/\s$//
 
 endfunction
