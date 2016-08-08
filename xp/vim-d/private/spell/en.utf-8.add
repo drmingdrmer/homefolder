@@ -107,3 +107,5 @@ phy
 del
 mysql
 CRC32
+uri
+db
