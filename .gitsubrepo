@@ -43,6 +43,7 @@ vim-jsx                         mxw/                         master
 vim-mac-classic-theme           nelstrom/                    master
 github_vim_theme                nono/                        master
 vim-javascript                  pangloss/                    master
+vim-markdown                    plasticboy/                  master
 snipmate-snippets.git           scrooloose/snipmate-snippets master
 vim-polyglot                    sheerun/                     master
 vim-yaml                        stephpy/                     master
