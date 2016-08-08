@@ -1,3 +1,12 @@
+" Enable jsx syntax by default
+if !exists('g:jsx_ext_required')
+  let g:jsx_ext_required = 0
+endif
+
+" Disable json concealing by default
+if !exists('g:vim_json_syntax_conceal')
+  let g:vim_json_syntax_conceal = 0
+endif
 " ftdetect/ansible.vim
 if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'ansible') == -1
   
@@ -163,9 +172,9 @@ if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'emberscript') =
 " Language:    ember-script
 " Maintainer:  Yulij Andreevich Lesov <yalesov@gmail.com>>
 " URL:         http://github.com/yalesov/vim-ember-script
-" Version:     1.0.3
-" Last Change: 2016 Jul 5
-" License:     GPL-3.0
+" Version:     1.0.4
+" Last Change: 2016 Jul 6
+" License:     ISC
 
 if !exists('g:vim_ember_script')
   let g:vim_ember_script = 1
@@ -182,9 +191,9 @@ if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'emblem') == -1
 " Language:    emblem
 " Maintainer:  Yulij Andreevich Lesov <yalesov@gmail.com>
 " URL:         http://github.com/yalesov/vim-emblem
-" Version:     2.0.0
-" Last Change: 2016 Jul 5
-" License:     GPL-3.0
+" Version:     2.0.1
+" Last Change: 2016 Jul 6
+" License:     ISC
 
 if !exists('g:vim_emblem')
   let g:vim_emblem = 1
@@ -400,8 +409,9 @@ endif
 " ftdetect/json.vim
 if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'json') == -1
   
-autocmd BufNewFile,BufRead *.json set filetype=json
-autocmd BufNewFile,BufRead *.jsonp set filetype=json
+autocmd BufNewFile,BufRead *.json setlocal filetype=json
+autocmd BufNewFile,BufRead *.jsonp setlocal filetype=json
+autocmd BufNewFile,BufRead *.geojson setlocal filetype=json
 
 endif
 
@@ -462,6 +472,19 @@ au BufNewFile,BufRead *.markdown,*.mkd,*.mkdn,*.md
 au BufNewFile,BufRead */templates/**.liquid,*/layout/**.liquid,*/snippets/**.liquid
       \ let b:liquid_subtype = 'html' |
       \ set ft=liquid |
+
+endif
+
+" ftdetect/ls.vim
+if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'livescript') == -1
+  
+" Language:    LiveScript
+" Maintainer:  George Zahariev
+" URL:         http://github.com/gkz/vim-ls
+" License:     WTFPL
+"
+autocmd BufNewFile,BufRead *.ls set filetype=ls
+autocmd BufNewFile,BufRead *Slakefile set filetype=ls
 
 endif
 
