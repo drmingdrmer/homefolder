@@ -16,11 +16,13 @@ opt_format=
 
 fmt_hash='%C(dim yellow)%h%C(reset)'
 fmt_time='%C(bold cyan)%ar%C(reset)'
-fmt_subject='%C(white)%s%C(reset)'
+fmt_subject='%C(bold green)%s%C(reset)'
 fmt_author='%C(dim magenta)%an%C(reset)'
 fmt_ref='%C(dim yellow)%d%C(reset)'
+fmt_body='%C(white)%+b%C(reset)'
 
-format_for_diff="format:'%<(8)$fmt_hash%<(8,trunc)$fmt_author %<(7,trunc)$fmt_time $fmt_subject $fmt_ref%+b'"
+format_for_diff="format:'%<(8)$fmt_hash%<(8,trunc)$fmt_author %<(7,trunc)$fmt_time $fmt_subject $fmt_ref$fmt_body'"
+# format_for_diff="format:'%<(8)$fmt_hash%<(8,trunc)$fmt_author %<(7,trunc)$fmt_time $fmt_ref$fmt_body'"
 
 for i in $(seq 0 ${#flags}); do
     k=${flags:$i:1}
