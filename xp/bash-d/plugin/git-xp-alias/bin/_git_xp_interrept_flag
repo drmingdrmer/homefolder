@@ -20,7 +20,7 @@ fmt_subject='%C(white)%s%C(reset)'
 fmt_author='%C(dim magenta)%an%C(reset)'
 fmt_ref='%C(dim yellow)%d%C(reset)'
 
-format_for_diff="format:'%<(8)$fmt_hash%<(8,trunc)$fmt_author %<(7,trunc)$fmt_time $fmt_subject $fmt_ref'"
+format_for_diff="format:'%<(8)$fmt_hash%<(8,trunc)$fmt_author %<(7,trunc)$fmt_time $fmt_subject $fmt_ref%+b'"
 
 for i in $(seq 0 ${#flags}); do
     k=${flags:$i:1}
