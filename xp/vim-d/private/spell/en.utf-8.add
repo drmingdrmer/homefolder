@@ -109,3 +109,6 @@ mysql
 CRC32
 uri
 db
+nondeleted
+timestamp
+SHA1
