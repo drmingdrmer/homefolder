@@ -112,3 +112,11 @@ db
 nondeleted
 timestamp
 SHA1
+binlog
+core2
+#ransfered
+#ransfered
+ansible
+sql
+json
+dbshard
