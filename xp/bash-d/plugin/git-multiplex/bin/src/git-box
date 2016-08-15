@@ -7,12 +7,12 @@
 # ~
 
 # option: sequence of action to do:
-#         add-all
-#         commit
-#         fetch
-#         merge-ff
-#         rebase
-#         push
+#         add-all       a
+#         commit        c
+#         fetch         f
+#         merge-ff      m
+#         rebase        r
+#         push          p
 
 source _git_xp_lib.sh
 
