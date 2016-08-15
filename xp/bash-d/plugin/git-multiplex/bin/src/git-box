@@ -2,13 +2,17 @@
 
 # cat ~/.gitbox.conf
 #
-# ~/xpkit fetchpush
+# ~/xpkit fetch,push
 # ~/wiki
 # ~
 
-# option:        "": auto fetch/rebase/commit/push changes
-# option: fetchpush: does not auto commit changes in working dir, but auto fetch/push/rebase
-# option: fetchonly: just auto-fetch, it does not auto commit/push/rebase
+# option: sequence of action to do:
+#         add-all
+#         commit
+#         fetch
+#         merge-ff
+#         rebase
+#         push
 
 source _git_xp_lib.sh
 
@@ -18,36 +22,38 @@ _init_colors
 _git_log_before=_date
 _git_log_after=get_pwd
 
+_convert_option()
+{
+    local option=$1
+    local actions="$option"
 
-fetch_commit_rebase_push() {
-    # old git does not add deleted file into index when 'git add .'
-    git add .
-    git add -u .
-    mes="$(git status --short --ignore-submodules --untracked-files=no | head -n1)"
-    git commit -m "$mes" > /dev/null
+    case $option in
+        fetchonly)
+            actions="fetch"
+            ;;
+        fetchpush)
+            actions="fetch,merge-ff,push"
+            ;;
+        "")
+            actions="add-all,commit,fetch,rebase,push"
+            ;;
+    esac
+    echo $actions
+}
 
-    branch=$(git_head_branch)
-    upstream=$(git_branch_default_upstream $branch)
 
-    git fetch origin --quiet \
-        && git rebase origin/$upstream --quiet || err rebase onto origin/$upstream
-
-    while read remote
-    do
-        git push $remote $branch --quiet \
-            && ok push to $remote \
-            || err push to $remote
-
-    done<<<"$(git remote)" \
-        && ok fetch_commit_rebase_push \
-        || err fetch_commit_rebase_push
-
+_has_act()
+{
+    local actions=",$1,"
+    local act="$2"
+    expr "$actions" : ".*,$act,.*" >/dev/null
 }
 
 
 _date() {
     date +"%Y-%m-%d %H:%M:%S "
 }
+
 
 get_pwd() {
     local _pwd=$(pwd)
@@ -62,36 +68,85 @@ get_pwd() {
     echo -n " $stripped"
 }
 
-main() {
-    while ``; do
-        local conffn="${GITBOX_CONF_FN-$HOME/.gitbox.conf}"
-        if [ -f $conffn ]; then
-            while read path option; do
-                (
-                option=${option:-fetch_commit_rebase_push}
-                # change ~ to real home path
 
-                eval "p=$path"
+_sleep()
+{
+    if mac-power is-battery
+    then
+        echo using battery.. sleep 10 minutes
+        sleep 60*10
+    else
+        sleep 20
+    fi
+}
+
+
+main() {
+
+    while ``; do
+
+        local conffn="${GITBOX_CONF_FN-$HOME/.gitbox.conf}"
+
+        if [ ! -f $conffn ]
+        then
+            echo "no conf file: $conffn"
+            _sleep
+            continue
+        fi
+
+        while read path option; do
+
+            if test ".$path" = "." || expr "$path" : "[ 	]*#" >/dev/null
+            then
+                continue
+            fi
+
+            actions="$(_convert_option "$option")"
+
+            # change ~ to real home path, and expand *
+            eval "ls -dp $path" | while read p; do
+
+                if test ! -d "$p/.git"; then
+                    continue
+                fi
+
+                (
                 cd "$p" || die not-found: "$p"
 
-                mes "$option"
+                mes "actions: $actions"
                 branch=$(git_head_branch)
+                upstream=$(git_branch_default_upstream $branch)
 
-                if [ ".$option" = ".fetchonly" ]; then
+                if _has_act $actions add-all; then
+                    git add .
+                    git add -u .
+                fi
 
-                    git fetch --all --quiet \
-                        && ok fetch
+                if _has_act $actions commit; then
+                    mes="$(git status --short --ignore-submodules --untracked-files=no | head -n1)"
+                    git commit -m "$mes" >/dev/null \
+                        && ok commit
+                fi
 
-                elif [ ".$option" = ".fetchpush" ]; then
-
+                if _has_act $actions fetch; then
                     git fetch --all --quiet \
                         && ok fetch \
                         || err fetch
+                fi
 
+                if _has_act $actions rebase; then
+                    git rebase origin/$upstream --quiet \
+                        && ok rebase onto origin/$upstream \
+                        || err rebase onto origin/$upstream
+                fi
+
+                if _has_act $actions merge-ff; then
                     git merge --no-edit --commit --ff-only \
                         && ok merge-ff \
                         || err merge-ff
+                fi
 
+                if _has_act $actions push; then
                     while read remote
                     do
                         git push $remote $branch --quiet \
@@ -99,28 +154,15 @@ main() {
                             || err push to $remote
 
                     done<<<"$(git remote)"
-
-
-                else
-                    fetch_commit_rebase_push
                 fi
                 )
-                # ) &
-            done <$conffn
-            # wait
-        else
-            echo "no conf file: $conffn"
-        fi
+            done
 
-        if mac-power is-battery
-        then
-            echo using battery.. sleep 10 minutes
-            sleep 60*10
-        else
-            sleep 20
-        fi
+        done <$conffn
+
+        _sleep
+
     done
 }
 
 main
-
