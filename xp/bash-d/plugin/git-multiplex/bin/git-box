@@ -281,8 +281,14 @@ main() {
                         && ok commit
                 fi
 
-                if _has_act $actions fetch; then
-                    git fetch --all --quiet \
+                if _has_act $actions fetch || _has_act $actions "fetch-p"; then
+
+                    local arg=""
+                    if _has_act $actions "fetch-p"; then
+                        arg=" --prune "
+                    fi
+
+                    git fetch --all --quiet $arg \
                         && ok fetch \
                         || err fetch
                 fi
