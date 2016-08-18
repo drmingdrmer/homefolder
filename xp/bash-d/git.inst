@@ -3,10 +3,6 @@
 
 log="log --color --graph --decorate -M"
 
-time_fmt_summary="%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim yellow)- %an%C(reset)%C(bold yellow)%d%C(reset)"
-log_fmt_summary="--date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim yellow)- %an%C(reset)%C(bold yellow)%d%C(reset)'"
-
-log1="log --color --graph --decorate --abbrev-commit --date=relative --format=format:'$time_fmt_summary'"
 logShort="$log --pretty=oneline --abbrev-commit -M"
 diff="diff --color"
 
@@ -45,7 +41,6 @@ $gconf core.quotepath 'false'
 
 $gconf alias.log-full      "$log"
 $gconf alias.lg            "$log"
-$gconf alias.log-summary   "$log1"
 $gconf alias.log-short     "$logShort"
 $gconf alias.l             "$logShort"
 
