@@ -1,3 +1,18 @@
+
+    function foo()
+    end
+
+    function foo()
+    end
+
+    a, b, c =
+            function_name(x,
+                          y, z)
+
+    x = y +
+            c +
+            variable
+
 function foo()
 end
 

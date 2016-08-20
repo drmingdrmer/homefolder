@@ -92,7 +92,28 @@ function! GetLuaIndent()
 
         return s:get_indent_of_pair(pair_left_pos, matched, trailing)
     else
-        return 0
+        let _ind = s:continuous_line_indent(v:lnum)
+        call s:dd('continuous line indent: ' . _ind)
+        if _ind != -9999
+            return _ind
+        end
+
+        let cur = prevnonblank(v:lnum - 1)
+        if cur == 0
+            return 0
+        endif
+
+        while 1
+            let p = s:search_for_pair(cur, s:lua_start, s:lua_mid, s:lua_end)
+            call s:dd("found prev pair:" . string(p))
+            if p[0] == 0 || p[0] == 1
+                break
+            endif
+            let cur = p[0]
+        endwhile
+
+        let head_ln = s:find_continous_head(cur)
+        return indent(head_ln)
     endif
 
 endfunction
@@ -152,27 +173,10 @@ fun! s:get_indent_of_pair(matched_pos, matched, trailing) "{{{
     " or if () then-end.
     " but not for {}
     if ! has_key(s:lua_single_expr_block, m)
-        let cur_ln = v:lnum
-        let is_following = 0
-        call s:dd('looking for trailing_op: from: ' . cur_ln)
-
-        while 1
-
-            let prev_ln = prevnonblank(cur_ln - 1)
-
-            if getline(prev_ln) =~ s:lua_trailing_op
-                \  && ! s:is_literal(prev_ln, col([prev_ln, '$']) - 1)
-
-                let cur_ln = prev_ln
-                let is_following = 1
-            else
-                break
-            endif
-        endwhile
-
-        if is_following
-            return indent(cur_ln) + sw * 2
-        endif
+        let _ind = s:continuous_line_indent(v:lnum)
+        if _ind != -9999
+            return _ind
+        end
     endif
 
     " indent each line in a block, count in unit 'shiftwidth'
@@ -181,5 +185,37 @@ fun! s:get_indent_of_pair(matched_pos, matched, trailing) "{{{
 
 endfunction "}}}
 
+fun! s:continuous_line_indent(cur_ln) "{{{
+    let sw = &shiftwidth
+    let head_ln = s:find_continous_head(a:cur_ln)
+
+    if head_ln == a:cur_ln
+        return -9999
+    else
+        return indent(head_ln) + sw * 2
+    endif
+
+endfunction "}}}
+
+fun! s:find_continous_head(cur_ln) "{{{
+    let cur_ln = a:cur_ln
+    call s:dd('looking for trailing_op: from: ' . cur_ln)
+
+    while 1
+
+        let prev_ln = prevnonblank(cur_ln - 1)
+
+        if getline(prev_ln) =~ s:lua_trailing_op
+            \  && ! s:is_literal(prev_ln, col([prev_ln, '$']) - 1)
+
+            let cur_ln = prev_ln
+        else
+            break
+        endif
+    endwhile
+
+    return cur_ln
+
+endfunction "}}}
 
 " vim: sw=4
