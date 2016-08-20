@@ -24,6 +24,7 @@ vim-ShowMarks                   drmingdrmer/                 master
 vim-color-edit                  drmingdrmer/                 master
 vim-fuzzyjumpto                 drmingdrmer/                 master
 vim-highlight-emphasize         drmingdrmer/                 master
+vim-indent-lua                  drmingdrmer/                 master
 vim-syntax-markdown             drmingdrmer/                 master
 vim-syntax-util                 drmingdrmer/                 master
 vim-tabbar                      drmingdrmer/                 master
