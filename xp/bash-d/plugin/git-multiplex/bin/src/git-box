@@ -128,7 +128,7 @@ main() {
                         && ok commit
                 fi
 
-                if _has_act $actions fetch || _has_act $actions "fetch-p"; then
+                if _has_act $actions "fetch.*"; then
 
                     local arg=""
                     if _has_act $actions "fetch-p"; then
