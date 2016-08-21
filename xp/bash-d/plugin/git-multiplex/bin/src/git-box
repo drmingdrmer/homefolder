@@ -81,90 +81,113 @@ _sleep()
 }
 
 
+sync_once()
+{
+    local conffn="${GITBOX_CONF_FN-$HOME/.gitbox.conf}"
+
+    if [ ! -f $conffn ]
+    then
+        echo "no conf file: $conffn"
+        return 0
+    fi
+
+    while read path option; do
+
+        if test ".$path" = "." || expr "$path" : "[ 	]*#" >/dev/null
+        then
+            continue
+        fi
+
+        actions="$(_convert_option "$option")"
+
+        # change ~ to real home path, and expand *
+        eval "ls -dp $path" | while read p; do
+
+            if test ! -d "$p/.git"; then
+                continue
+            fi
+
+            (
+            cd "$p" || die not-found: "$p"
+
+            mes "actions: $actions"
+            branch=$(git_head_branch)
+            upstream=$(git_branch_default_upstream $branch)
+
+            if _has_act $actions add-all; then
+                git add .
+                git add -u .
+            fi
+
+            if _has_act $actions commit; then
+                mes="$(git status --short --ignore-submodules --untracked-files=no | head -n1)"
+                git commit -m "$mes" >/dev/null \
+                    && ok commit
+            fi
+
+            if _has_act $actions "fetch.*"; then
+
+                local arg=""
+                if _has_act $actions "fetch-p"; then
+                    arg=" --prune "
+                fi
+
+                git fetch --all --quiet $arg \
+                    && ok fetch \
+                    || err fetch
+            fi
+
+            if _has_act $actions rebase; then
+                git rebase origin/$upstream --quiet \
+                    && ok rebase onto origin/$upstream \
+                    || err rebase onto origin/$upstream
+            fi
+
+            if _has_act $actions merge-ff; then
+                git merge --no-edit --commit --ff-only \
+                    && ok merge-ff \
+                    || err merge-ff
+            fi
+
+            if _has_act $actions push; then
+                while read remote
+                do
+                    git push $remote $branch --quiet \
+                        && ok push to $remote \
+                        || err push to $remote
+
+                done<<<"$(git remote)"
+            fi
+            )
+        done
+
+    done <$conffn
+}
+
+
 main() {
 
     while ``; do
 
-        local conffn="${GITBOX_CONF_FN-$HOME/.gitbox.conf}"
+        {
+            mes box-sync-start...
+            sync_once
+            mes sync-done
+        } &
+        local sync_pid="$!"
 
-        if [ ! -f $conffn ]
-        then
-            echo "no conf file: $conffn"
-            _sleep
-            continue
-        fi
+        {
+            sleep 300
+            kill $sync_pid
+            err sync-timeout, killed $sync_pid
+        } &
+        local kill_pid="$!"
 
-        while read path option; do
-
-            if test ".$path" = "." || expr "$path" : "[ 	]*#" >/dev/null
-            then
-                continue
-            fi
-
-            actions="$(_convert_option "$option")"
-
-            # change ~ to real home path, and expand *
-            eval "ls -dp $path" | while read p; do
-
-                if test ! -d "$p/.git"; then
-                    continue
-                fi
-
-                (
-                cd "$p" || die not-found: "$p"
-
-                mes "actions: $actions"
-                branch=$(git_head_branch)
-                upstream=$(git_branch_default_upstream $branch)
-
-                if _has_act $actions add-all; then
-                    git add .
-                    git add -u .
-                fi
-
-                if _has_act $actions commit; then
-                    mes="$(git status --short --ignore-submodules --untracked-files=no | head -n1)"
-                    git commit -m "$mes" >/dev/null \
-                        && ok commit
-                fi
-
-                if _has_act $actions "fetch.*"; then
-
-                    local arg=""
-                    if _has_act $actions "fetch-p"; then
-                        arg=" --prune "
-                    fi
-
-                    git fetch --all --quiet $arg \
-                        && ok fetch \
-                        || err fetch
-                fi
-
-                if _has_act $actions rebase; then
-                    git rebase origin/$upstream --quiet \
-                        && ok rebase onto origin/$upstream \
-                        || err rebase onto origin/$upstream
-                fi
-
-                if _has_act $actions merge-ff; then
-                    git merge --no-edit --commit --ff-only \
-                        && ok merge-ff \
-                        || err merge-ff
-                fi
-
-                if _has_act $actions push; then
-                    while read remote
-                    do
-                        git push $remote $branch --quiet \
-                            && ok push to $remote \
-                            || err push to $remote
-
-                    done<<<"$(git remote)"
-                fi
-                )
-            done
-
-        done <$conffn
+        # if sync_pid done, cancel killing
+        # if sync_pid timed out, kill_pid will kill it, makes it return.
+        wait $sync_pid 2>/dev/null \
+            && kill $kill_pid \
+            || echo wait for $sync_pid timeout
 
         _sleep
 
