@@ -8,5 +8,6 @@ eval git log --color \
     --abbrev-commit \
     --find-renames \
     "$(_git_xp_interrept_flag $flags)" "$(_git_xp_interrept_flag l)" "$@" \
-    | sed 's/|/|                         /' \
-    | less -R --quit-if-one-screen -X
+
+    # | sed 's/|/|                         /' \
+    # | less -R --quit-if-one-screen -X
