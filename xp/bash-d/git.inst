@@ -35,6 +35,16 @@ $gconf merge.defaultToUpstream true
 $gconf color.diff true
 $gconf color.interactive true
 
+$gconf diff.algorithm histogram
+$gconf diff.compactionHeuristic true
+
+$gconf color.diff-highlight.oldhighlight 'bold white red'
+$gconf color.diff-highlight.newhighlight 'bold white green'
+
+$gconf pager.log 'diff-highlight | less'
+$gconf pager.show 'diff-highlight | less'
+$gconf pager.diff 'diff-highlight | less'
+
 $gconf i18n.commitencoding utf-8
 $gconf i18n.logoutputencoding utf-8
 $gconf core.quotepath 'false'
