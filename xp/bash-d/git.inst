@@ -41,9 +41,11 @@ $gconf diff.compactionHeuristic true
 $gconf color.diff-highlight.oldhighlight 'bold white red'
 $gconf color.diff-highlight.newhighlight 'bold white green'
 
-$gconf pager.log 'diff-highlight | less'
-$gconf pager.show 'diff-highlight | less'
-$gconf pager.diff 'diff-highlight | less'
+if [ -x /usr/local/share/git-core/contrib/diff-highlight/diff-highlight ]; then
+    $gconf pager.log 'diff-highlight | less'
+    $gconf pager.show 'diff-highlight | less'
+    $gconf pager.diff 'diff-highlight | less'
+fi
 
 $gconf i18n.commitencoding utf-8
 $gconf i18n.logoutputencoding utf-8
