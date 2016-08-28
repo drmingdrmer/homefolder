@@ -34,8 +34,10 @@ $gconf color.interactive true
 $gconf diff.algorithm histogram
 $gconf diff.compactionHeuristic true
 
-$gconf color.diff-highlight.oldhighlight 'bold white red'
-$gconf color.diff-highlight.newhighlight 'bold white green'
+$gconf color.diff-highlight.oldhighlight 'bold red'
+$gconf color.diff-highlight.newhighlight 'bold green'
+$gconf color.diff-highlight.oldreset 'nobold red'
+$gconf color.diff-highlight.newreset 'nobold green'
 
 if [ -x $git_base/share/git-core/contrib/diff-highlight/diff-highlight ]; then
     $gconf pager.log 'diff-highlight | less'
