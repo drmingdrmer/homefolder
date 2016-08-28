@@ -1,5 +1,11 @@
 #!/bin/bash
 
+git_version=$(git --version | awk '{print $NF}')
+git_version_1=${git_version%%.*}
+git_version_2=${git_version#*.}
+git_version_2=${git_version_2%%.*}
+
+git_base=$(dirname $(dirname $(which git)))
 
 log="log --color --graph --decorate -M"
 
@@ -9,16 +15,6 @@ diff="diff --color"
 gconf="git config --global"
 
 $gconf core.excludesfile ~/xp/git-d/gitignore
-
-galias() { $gconf alias.$1 "$2"; }
-ggalias() { galias $1 "$(geta $2)"; }
-geta() { git config --get alias.$1; }
-lista() { git config --get-regexp "^alias\.l.*" | awk '{print $1}' | cut -c 7-; }
-
-git_version=$(git --version | awk '{print $NF}')
-git_version_1=${git_version%%.*}
-git_version_2=${git_version#*.}
-git_version_2=${git_version_2%%.*}
 
 # git older than 1.8 has no option --no-edit
 git_arg_no_edit="--no-edit"
@@ -41,7 +37,7 @@ $gconf diff.compactionHeuristic true
 $gconf color.diff-highlight.oldhighlight 'bold white red'
 $gconf color.diff-highlight.newhighlight 'bold white green'
 
-if [ -x /usr/local/share/git-core/contrib/diff-highlight/diff-highlight ]; then
+if [ -x $git_base/share/git-core/contrib/diff-highlight/diff-highlight ]; then
     $gconf pager.log 'diff-highlight | less'
     $gconf pager.show 'diff-highlight | less'
     $gconf pager.diff 'diff-highlight | less'
