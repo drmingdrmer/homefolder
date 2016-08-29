@@ -45,6 +45,8 @@ for i in $(seq 0 ${#flags}); do
             ;;
         r) _out="$_out --relative"
             ;;
+        s) _out="$_out --max-count "$(expr $(tput lines) / 2)
+            ;;
         t) _out="$_out --stat"
             opt_format="${opt_format:-$format_for_diff}"
             ;;
