@@ -1,0 +1,30 @@
+#!/bin/sh
+
+source _git_xp_lib.sh
+
+obj=$1
+is_obj_file=0
+
+if test "$(git cat-file -t $obj 2>/dev/null)" = "commit"
+then
+    commit=$obj
+else
+    # it is a file path
+    # find the latest commit touched this file
+    commit=$(git log -n1 --format="%h" "$obj")
+    is_obj_file=1
+fi
+
+sed_remove_after_blank="'"'/^$/,$d'"'"
+
+sed_edit_commit="s/pick $commit/edit $commit/"
+# add quote
+sed_edit_commit="'$sed_edit_commit'"
+
+GIT_EDITOR='f(){ cat "$1" | sed '$sed_remove_after_blank' | sed '$sed_edit_commit' >"$1-tmp"; mv "$1-tmp" $1; }; f' \
+    git rebase --interactive $commit~
+
+if test "$is_obj_file" = "1"
+then
+    vim "$obj"
+fi
