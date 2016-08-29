@@ -48,6 +48,8 @@ for i in $(seq 0 ${#flags}); do
             ;;
         r) _out="$_out --relative"
             ;;
+        R) _out="$_out --reverse"
+            ;;
         s) _out="$_out --max-count "$(expr $(tput lines) / 2)
             ;;
         t) _out="$_out --stat"
