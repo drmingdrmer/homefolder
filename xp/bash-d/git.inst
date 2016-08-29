@@ -41,6 +41,12 @@ $gconf color.diff-highlight.newhighlight 'bold green cyan'
 $gconf color.diff-highlight.oldreset 'nobold red black'
 $gconf color.diff-highlight.newreset 'nobold green black'
 
+$gconf color.diff.meta      'bold white'
+$gconf color.diff.context        'white'
+$gconf color.diff.frag           'blue'
+$gconf color.diff.func      'bold blue'
+$gconf color.diff.commit         'yellow'
+
 if [ -x $git_base/share/git-core/contrib/diff-highlight/diff-highlight ]; then
     $gconf pager.log 'diff-highlight | less'
     $gconf pager.show 'diff-highlight | less'
