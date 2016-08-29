@@ -32,6 +32,7 @@ $gconf color.diff true
 $gconf color.interactive true
 
 $gconf diff.noprefix true
+$gconf diff.context  10
 
 $gconf diff.algorithm histogram
 $gconf diff.compactionHeuristic true
