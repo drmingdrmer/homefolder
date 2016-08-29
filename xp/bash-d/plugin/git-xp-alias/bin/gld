@@ -1,0 +1,11 @@
+#!/bin/sh
+
+flags=$1
+[ ".$flags" != "." ] && shift
+
+eval git log --color \
+    --decorate \
+    --abbrev-commit \
+    --find-renames \
+    --patch \
+    "$(GIT_XP_GRAPH=0 GIT_XP_FORMAT=diff _git_xp_interrept_flag $flags)" "$@"

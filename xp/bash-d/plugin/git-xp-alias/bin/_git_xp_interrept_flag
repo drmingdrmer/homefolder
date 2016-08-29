@@ -10,9 +10,9 @@ fi
 _out=""
 is_flags=1
 nr_context=0
-use_graph=1
-has_context_specified=0
-opt_format=
+use_graph=${GIT_XP_GRAPH:-1}
+has_context_specified=${GIT_XP_SHOW_PATCH}
+opt_format=${GIT_XP_FORMAT}
 
 fmt_hash='%C(dim yellow)%h%C(reset)'
 fmt_time='%C(bold cyan)%ar%C(reset)'
@@ -23,6 +23,10 @@ fmt_body='%C(white)%+b%C(reset)'
 
 # format_for_diff="format:'%<(8)$fmt_hash%<(8,trunc)$fmt_author %<(7,trunc)$fmt_time $fmt_subject $fmt_ref%>(1,ltrunc)%b$fmt_body'"
 format_for_diff="format:'$fmt_subject - $fmt_author $fmt_time $fmt_hash$fmt_ref%>(1,ltrunc)%b$fmt_body'"
+
+if [ "$opt_format" = "diff" ]; then
+    opt_format="$format_for_diff"
+fi
 
 for i in $(seq 0 ${#flags}); do
     k=${flags:$i:1}
