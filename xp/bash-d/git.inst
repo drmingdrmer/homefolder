@@ -31,6 +31,8 @@ $gconf merge.defaultToUpstream true
 $gconf color.diff true
 $gconf color.interactive true
 
+$gconf diff.noprefix true
+
 $gconf diff.algorithm histogram
 $gconf diff.compactionHeuristic true
 
