@@ -9,7 +9,7 @@ while read name gist_id; do
                 ( cd $name && git push origin master; )
                 ;;
             fetch)
-                ( cd $name && git push fetch origin; )
+                ( cd $name && git fetch origin; )
                 ;;
             status)
                 ( cd $name && git status; )
