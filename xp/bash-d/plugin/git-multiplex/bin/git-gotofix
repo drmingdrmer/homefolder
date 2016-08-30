@@ -5,8 +5,8 @@ usage()
     cat >&2 <<-END
 	usage: git gotofix <fn>
 
-	    Go back to an earlier commit in which <fn> is modified.
-	    And get HEAD back to where before using git-gotfix.
+	    Fix <fn> at the commit where <fn> is lastly modified.
+	    And get HEAD back to where before using git-gotofix.
 
 	    This script accomplish this by running a customized
 	    git-rebase--interactive.
