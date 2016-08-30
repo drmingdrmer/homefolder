@@ -1,0 +1,9 @@
+#!/bin/sh
+
+while read name gist_id; do
+    if [ ! -d "$name" ]; then
+        git clone git@gist.github.com:$gist_id.git $name
+    fi
+done <<-END
+git-gotofix             241dd1b3655f04190b0c6d06aa1dd258
+END
