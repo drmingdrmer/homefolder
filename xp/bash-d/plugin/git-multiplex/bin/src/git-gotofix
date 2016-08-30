@@ -2,8 +2,42 @@
 
 source _git_xp_lib.sh
 
+usage()
+{
+    cat >&2 <<-END
+	usage: git gotofix <fn>
+
+	    Go back to an earlier commit in which <fn> is modified.
+	    And get HEAD back to where before using git-gotfix.
+
+	    This script accomplish this by running a customized
+	    git-rebase--interactive.
+
+	Example:
+
+	    # go to commit in which <fn> was modified. And VIM is
+	    # automatically opened this file.
+	    git gotofix <fn>
+
+	    # hack..hack..
+
+	    # get fix ready.
+	    git add <fn>
+
+	    # apply changes and go back to where you started.
+	    git rebase --continue
+	    # or discard changes and restore.
+	    git rebase --abort
+	END
+}
+
 obj=$1
 is_obj_file=0
+
+if test -z "$obj" || test "$obj" = "-h" || test "$obj" = "--help"; then
+    usage
+    exit 1
+fi
 
 if test "$(git cat-file -t $obj 2>/dev/null)" = "commit"
 then
