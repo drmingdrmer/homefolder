@@ -1,7 +1,5 @@
 #!/bin/sh
 
-source _git_xp_lib.sh
-
 usage()
 {
     cat >&2 <<-END
@@ -30,6 +28,8 @@ usage()
 	    git rebase --abort
 	END
 }
+
+source _git_xp_lib.sh
 
 obj=$1
 is_obj_file=0

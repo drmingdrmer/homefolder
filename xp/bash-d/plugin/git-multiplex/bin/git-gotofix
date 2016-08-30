@@ -1,5 +1,34 @@
 #!/bin/sh
 
+usage()
+{
+    cat >&2 <<-END
+	usage: git gotofix <fn>
+
+	    Go back to an earlier commit in which <fn> is modified.
+	    And get HEAD back to where before using git-gotfix.
+
+	    This script accomplish this by running a customized
+	    git-rebase--interactive.
+
+	Example:
+
+	    # go to commit in which <fn> was modified. And VIM is
+	    # automatically opened this file.
+	    git gotofix <fn>
+
+	    # hack..hack..
+
+	    # get fix ready.
+	    git add <fn>
+
+	    # apply changes and go back to where you started.
+	    git rebase --continue
+	    # or discard changes and restore.
+	    git rebase --abort
+	END
+}
+
 #include '_git_xp_lib.sh' begin
 #!/bin/sh
 
@@ -154,35 +183,6 @@ git_head_branch()
     git symbolic-ref --short HEAD
 }
 #include '_git_xp_lib.sh' end
-
-usage()
-{
-    cat >&2 <<-END
-	usage: git gotofix <fn>
-
-	    Go back to an earlier commit in which <fn> is modified.
-	    And get HEAD back to where before using git-gotfix.
-
-	    This script accomplish this by running a customized
-	    git-rebase--interactive.
-
-	Example:
-
-	    # go to commit in which <fn> was modified. And VIM is
-	    # automatically opened this file.
-	    git gotofix <fn>
-
-	    # hack..hack..
-
-	    # get fix ready.
-	    git add <fn>
-
-	    # apply changes and go back to where you started.
-	    git rebase --continue
-	    # or discard changes and restore.
-	    git rebase --abort
-	END
-}
 
 obj=$1
 is_obj_file=0
