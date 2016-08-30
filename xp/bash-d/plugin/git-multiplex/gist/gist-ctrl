@@ -6,10 +6,13 @@ while read name gist_id; do
     if [ -d "$name" ]; then
         case $cmd in
             push)
-                (
-                cd $name \
-                    && git push origin master
-                )
+                ( cd $name && git push origin master; )
+                ;;
+            fetch)
+                ( cd $name && git push fetch origin; )
+                ;;
+            status)
+                ( cd $name && git status; )
                 ;;
         esac
     else
