@@ -1,13 +1,5 @@
 #!/bin/sh
 
-flags=$1
-[ ".$flags" != "." ] && shift
+export GIT_XP_GRAPH=0 GIT_XP_FORMAT=diff
 
-eval git log --color \
-    --decorate \
-    --abbrev-commit \
-    --find-renames \
-    "$(_git_xp_interrept_flag lG$flags)" "$@" \
-
-    # | sed 's/|/|                         /' \
-    # | less -R --quit-if-one-screen -X
+gl "$@"

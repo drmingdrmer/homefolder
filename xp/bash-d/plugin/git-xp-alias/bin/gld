@@ -1,11 +1,5 @@
 #!/bin/sh
 
-flags=$1
-[ ".$flags" != "." ] && shift
+export GIT_XP_GRAPH=0 GIT_XP_FORMAT=diff GIT_XP_MAX_COUNT=
 
-eval git log --color \
-    --decorate \
-    --abbrev-commit \
-    --find-renames \
-    --patch \
-    "$(GIT_XP_GRAPH=0 GIT_XP_FORMAT=diff _git_xp_interrept_flag $flags)" "$@"
+gl "$@" --patch

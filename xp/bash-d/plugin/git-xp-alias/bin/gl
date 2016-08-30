@@ -3,8 +3,9 @@
 flags=$1
 [ ".$flags" != "." ] && shift
 
-eval git log --color \
+eval git $(_git_xp_interrept_flag conf $flags) \
+    log --color \
     --decorate \
     --abbrev-commit \
     --find-renames \
-    "$(_git_xp_interrept_flag $flags)" "$@"
+    "$(_git_xp_interrept_flag arg $flags)" "$@"

@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# arg | conf
+cmd=$1
+shift
 
 flags=${1-}
 
@@ -7,12 +10,15 @@ if [ ".$flags" == ".-" ]; then
     flags=""
 fi
 
+screen_height=$(expr $(tput lines) - 5)
+
 _out=""
 is_flags=1
 nr_context=0
 use_graph=${GIT_XP_GRAPH:-1}
 has_context_specified=${GIT_XP_SHOW_PATCH}
 opt_format=${GIT_XP_FORMAT}
+opt_max_count=${GIT_XP_MAX_COUNT-$screen_height}
 
 fmt_hash='%C(dim yellow)%h%C(reset)'
 fmt_time='%C(bold cyan)%ar%C(reset)'
@@ -23,6 +29,8 @@ fmt_body='%C(white)%+b%C(reset)'
 
 # format_for_diff="format:'%<(8)$fmt_hash%<(8,trunc)$fmt_author %<(7,trunc)$fmt_time $fmt_subject $fmt_ref%>(1,ltrunc)%b$fmt_body'"
 format_for_diff="format:'$fmt_subject - $fmt_author $fmt_time $fmt_hash$fmt_ref%>(1,ltrunc)%b$fmt_body'"
+format_for_diff="format:'$fmt_hash $fmt_subject - $fmt_author $fmt_time $fmt_ref%>(1,ltrunc)%b$fmt_body'"
+format_for_diff="format:'$fmt_hash %C(bold green)%s%C(reset) - $fmt_author $fmt_time %C(bold red)% D%C(reset) %>(1,ltrunc)%b$fmt_body'"
 
 if [ "$opt_format" = "diff" ]; then
     opt_format="$format_for_diff"
@@ -41,6 +49,9 @@ for i in $(seq 0 ${#flags}); do
             ;;
         G) use_graph=0
             ;;
+        h) opt_max_count=
+            # history: remove max_count limit
+            ;;
         i) _out="$_out --ignore-all-space"
             ;;
         l) opt_format="$format_for_diff"
@@ -53,8 +64,6 @@ for i in $(seq 0 ${#flags}); do
         r) _out="$_out --relative"
             ;;
         R) _out="$_out --reverse"
-            ;;
-        s) _out="$_out --max-count "$(expr $(tput lines) / 2)
             ;;
         t) _out="$_out --stat"
             opt_format="${opt_format:-$format_for_diff}"
@@ -78,6 +87,15 @@ for i in $(seq 0 ${#flags}); do
     esac
 
 done
+
+if [ "$cmd" = "conf" ]; then
+    if [ "$is_flags" = "1" ]; then
+        if [ -n "$opt_max_count" ]; then
+            echo " -c pager.log='head -n $screen_height'"
+        fi
+    fi
+    exit 0
+fi
 
 
 
