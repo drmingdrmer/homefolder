@@ -15,6 +15,9 @@ while read name gist_id; do
             status)
                 ( cd $name && git status; )
                 ;;
+            commit)
+                ( cd $name && git add -u && git commit -m ''; )
+                ;;
         esac
     else
         case $cmd in
