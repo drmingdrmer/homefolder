@@ -15,10 +15,10 @@ screen_height=$(expr $(tput lines) - 5)
 _out=""
 is_flags=1
 nr_context=0
-use_graph=${GIT_XP_GRAPH:-1}
-has_context_specified=${GIT_XP_SHOW_PATCH}
+flag_use_graph=${GIT_XP_GRAPH:-1}
+flag_show_patch=${GIT_XP_SHOW_PATCH}
 opt_format=${GIT_XP_FORMAT}
-opt_max_count=${GIT_XP_MAX_COUNT-$screen_height}
+max_lines=${GIT_XP_MAX_LINES-$screen_height}
 
 fmt_hash='%C(dim yellow)%h%C(reset)'
 fmt_time='%C(bold cyan)%ar%C(reset)'
@@ -47,9 +47,9 @@ for i in $(seq 0 ${#flags}); do
             ;;
         f) _out="$_out --first-parent"
             ;;
-        G) use_graph=0
+        G) flag_use_graph=0
             ;;
-        h) opt_max_count=
+        h) max_lines=
             # history: remove max_count limit
             ;;
         i) _out="$_out --ignore-all-space"
@@ -59,7 +59,7 @@ for i in $(seq 0 ${#flags}); do
         n) _out="$_out --name-only"
             ;;
         p) _out="$_out --patch"
-            has_context_specified=1
+            flag_show_patch=1
             ;;
         r) _out="$_out --relative"
             ;;
@@ -74,7 +74,7 @@ for i in $(seq 0 ${#flags}); do
             ;;
 
         [0123456789])
-            has_context_specified=1
+            flag_show_patch=1
             let nr_context=nr_context*10+k
             ;;
 
@@ -88,9 +88,16 @@ for i in $(seq 0 ${#flags}); do
 
 done
 
+if [ "$is_flags" = "1" ]; then
+    if [ "$flag_show_patch" = "1" ]; then
+        max_lines=
+    fi
+fi
+
+
 if [ "$cmd" = "conf" ]; then
     if [ "$is_flags" = "1" ]; then
-        if [ -n "$opt_max_count" ]; then
+        if [ -n "$max_lines" ]; then
             echo " -c pager.log='head -n $screen_height'"
         fi
     fi
@@ -98,19 +105,18 @@ if [ "$cmd" = "conf" ]; then
 fi
 
 
-
 if [ "$is_flags" = "1" ]; then
 
     flags=""
 
-    if [ "$has_context_specified" = "1" ]; then
+    if [ "$flag_show_patch" = "1" ]; then
         if [ "$nr_context" != 0 ]; then
             _out="$_out --unified=$nr_context"
         fi
         opt_format="${opt_format:-$format_for_diff}"
     fi
 
-    if [ "$use_graph" = "1" ]; then
+    if [ "$flag_use_graph" = "1" ]; then
         _out="$_out --graph"
     fi
 
