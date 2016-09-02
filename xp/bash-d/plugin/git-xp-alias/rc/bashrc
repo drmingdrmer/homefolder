@@ -3,5 +3,5 @@
 # show files changed those are not in HEAD, staged or unstaged
 ,sf()
 {
-    git diff --name-only HEAD
+    git diff --name-only --relative HEAD
 }
