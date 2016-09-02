@@ -57,17 +57,15 @@ init_plugin()
 
         plgpath="$XPBASE/plugin/$plg"
 
-        rcpath="$plgpath/rc"
-        if [ -d "$rcpath" ]; then
+        if [ -d "$plgpath/rc" ]; then
             cwd=$(pwd)
             cd $plgpath
-            . $rcpath/${shname}rc
+            . $plgpath/rc/${shname}rc
             cd $cwd
         fi
 
-        binpath="$plgpath/bin"
-        if [ -d "$binpath" ]; then
-            export PATH=$PATH:$binpath
+        if [ -d "$plgpath/bin" ]; then
+            export PATH=$PATH:$plgpath/bin
         fi
 
 
