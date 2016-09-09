@@ -79,6 +79,13 @@ elif [ "$1" = "--palette=xterm" ]; then
    P8=7F7F7F;  P9=FF0000; P10=00FF00; P11=FFFF00;
   P12=5C5CFF; P13=FF00FF; P14=00FFFF; P15=FFFFFF;
   shift;
+elif [ "$1" = "--palette=xp" ]; then
+   # Gnome default
+   P0=000000;  P1=E65050;  P2=4E9A06;  P3=C4A000;
+   P4=54A2DE;  P5=75507B;  P6=06989A;  P7=D3D7CF;
+   P8=555753;  P9=EF2929; P10=8AE234; P11=FCE94F;
+  P12=729FCF; P13=AD7FA8; P14=34E2E2; P15=EEEEEC;
+  shift;
 else # linux console
    P0=000000;  P1=AA0000;  P2=00AA00;  P3=AA5500;
    P4=0000AA;  P5=AA00AA;  P6=00AAAA;  P7=AAAAAA;
