@@ -43,6 +43,8 @@ for i in $(seq 0 ${#flags}); do
             ;;
         b) _out="$_out --simplify-by-decoration"
             ;;
+        c) _out="$_out --cached"
+            ;;
         d) _out="$_out --date-order"
             ;;
         f) _out="$_out --first-parent"
