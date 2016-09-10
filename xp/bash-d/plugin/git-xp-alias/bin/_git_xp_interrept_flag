@@ -124,7 +124,9 @@ if [ "$is_flags" = "1" ]; then
 
     opt_format="${opt_format:-oneline}"
 
-    _out="$_out --format=$opt_format"
+    if [ "$opt_format" != "0" ]; then
+        _out="$_out --format=$opt_format"
+    fi
 
     echo "$_out"
 else

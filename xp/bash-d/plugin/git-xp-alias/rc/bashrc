@@ -5,3 +5,6 @@
 {
     git diff --name-only --relative HEAD
 }
+
+# make "," a ", "
+bind '",":", "'

@@ -1,0 +1,41 @@
+#!/bin/sh
+
+cmd="$1"
+shift
+
+case $cmd in
+    d*)
+        arg1=${cmd:1}
+        cmd="diff --color --find-renames"
+        ;;
+    l*)
+        arg1=${cmd:1}
+        cmd="log --color --decorate --abbrev-commit --find-renames"
+        ;;
+    mc*)
+        arg1=${cmd:2}
+        cmd="mc"
+        ;;
+    mf*)
+        arg1=${cmd:2}
+        cmd="mf"
+        ;;
+    st*)
+        export GIT_XP_GRAPH=0
+        export GIT_XP_FORMAT=0
+        arg1=${cmd:2}
+        cmd="status"
+        ;;
+    sf)
+        arg1=""
+        cmd="diff --name-only --relative HEAD"
+        ;;
+    *)
+        echo invalid command $cmd >&2
+        exit 1
+esac
+
+eval git $(_git_xp_interrept_flag conf $arg1) \
+    $cmd \
+    "$(_git_xp_interrept_flag arg $arg1)" "$@"
+
