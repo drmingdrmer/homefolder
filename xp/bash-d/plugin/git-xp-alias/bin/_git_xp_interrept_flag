@@ -68,7 +68,6 @@ for i in $(seq 0 ${#flags}); do
         R) _out="$_out --reverse"
             ;;
         t) _out="$_out --stat"
-            opt_format="${opt_format:-$format_for_diff}"
             ;;
         W) _out="$_out --word-diff=color"
             ;;
