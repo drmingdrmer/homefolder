@@ -19,14 +19,14 @@ do
             ;;
         -a)
             shift
-            _author=$1
+            _author="$1"
             shift
             ;;
     esac
 done
 
 if [ "$_author" = "me" ]; then
-    _author=$(git config --local --get user.name)
+    _author="$(git config --local --get user.name)"
 fi
 
 arg_author=""
@@ -34,7 +34,7 @@ fmt="%s"
 awk_filter='{print $0}'
 
 if [ ".$_author" != "." ]; then
-    arg_author="--author=$_author"
+    arg_author="--author=\"$_author\""
 fi
 
 if [ "$_show_time" = "1" ]; then
@@ -42,9 +42,9 @@ if [ "$_show_time" = "1" ]; then
     awk_filter='{$4="";$5="";$6="     "; print $0}'
 fi
 
-git shortlog \
+eval git shortlog \
     $arg_author \
-    --since="$_days days ago" \
+    --since="'$_days days ago'" \
     --no-merges \
-    --format="$fmt" \
+    --format="'$fmt'" \
     | awk "$awk_filter"
