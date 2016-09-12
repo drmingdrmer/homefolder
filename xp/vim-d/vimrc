@@ -74,3 +74,4 @@ endif
 exe "so ".g:XPvimrcCurrentDir."/gvimrc"
 
 runtime macros/matchit.vim
+autocmd User Flags call Hoist("window", "SyntasticStatuslineFlag")
