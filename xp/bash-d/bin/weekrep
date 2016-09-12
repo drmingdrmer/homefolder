@@ -7,8 +7,10 @@ git log --format="%b" --since="1 week before" \
     | sort \
     | awk -v p="$pattern" '{gsub(p" *", "", $0); print $0}' \
     | awk -F: '{
-                if (prev != $1) { print "##" $1 ":"; };
-                prev = $1;
-                gsub($1": *", "", $0);
-                print "-   "$0;
+                if (prev != $1) {
+                    print "##" $1
+                }
+                prev = $1
+                gsub($1": *", "", $0)
+                print "-   "$0
             }'
