@@ -9,3 +9,19 @@ __git_complete gll _git_log
 __git_complete gld _git_log
 __git_complete gh  _git_log
 
+_git_comma()
+{
+  # local _cur=${COMP_WORDS[COMP_CWORD]}
+  local cc=${COMP_WORDS[1]}
+  local shortcut=$(, get_shortcut "$cc" 2>/dev/null)
+  case $shortcut in
+      d|sf)     _git_diff ;;
+      l)        _git_log ;;
+      mc|mf)    _git_merge ;;
+      *)
+          COMPREPLY=( $( compgen -W 'd l mc mf st sf' -- $cc ) )
+          ;;
+  esac
+}
+__git_complete ,  _git_comma
+
