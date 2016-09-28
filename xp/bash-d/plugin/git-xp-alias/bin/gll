@@ -1,5 +1,5 @@
 #!/bin/sh
 
-export GIT_XP_GRAPH=0 GIT_XP_FORMAT=diff
+export GIT_XP_FLAG=-gld
 
 gl "$@"
