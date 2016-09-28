@@ -1,5 +1,0 @@
-#!/bin/sh
-
-export GIT_XP_MAX_LINES=
-
-gl "$@"
