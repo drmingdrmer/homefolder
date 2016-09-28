@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# args > env variables > default
+
 # arg | conf
 cmd=$1
 shift
@@ -12,13 +14,46 @@ fi
 
 screen_height=$(expr $(tput lines) - 5)
 
-_out=""
 is_flags=1
 nr_context=0
-flag_use_graph=${GIT_XP_GRAPH:-1}
-flag_show_patch=${GIT_XP_SHOW_PATCH}
-opt_format=${GIT_XP_FORMAT}
-max_lines=${GIT_XP_MAX_LINES-$screen_height}
+limit_lines=$screen_height
+
+opt_all=""
+opt_simplify_by_decoration=""
+opt_cached=""
+opt_date_order=""
+opt_first_parent=""
+opt_graph=""
+opt_ignore_all_space=""
+opt_format=""
+opt_name_only=""
+opt_patch=""
+opt_relative=""
+opt_reverse=""
+opt_stat=""
+opt_word_diff=""
+opt_color_words=""
+
+opt_unified=""
+
+options='a   all
+         b   simplify-by-decoration
+         c   cached
+         d   date-order
+         f   first-parent
+         g   graph
+         i   ignore-all-space
+         ld  format=diff
+         lo  format=oneline
+         n   name-only
+         p   patch
+         r   relative
+         R   reverse
+         t   stat
+         W   word-diff=color
+         w   color-words=[[:alpha:]]+|[^[:space:]]'
+
+default_flags=""
 
 fmt_hash='%C(dim yellow)%h%C(reset)'
 fmt_time='%C(bold cyan)%ar%C(reset)'
@@ -28,107 +63,141 @@ fmt_ref='%C(dim yellow)%d%C(reset)'
 fmt_body='%C(white)%+b%C(reset)'
 
 # format_for_diff="format:'%<(8)$fmt_hash%<(8,trunc)$fmt_author %<(7,trunc)$fmt_time $fmt_subject $fmt_ref%>(1,ltrunc)%b$fmt_body'"
-format_for_diff="format:'$fmt_subject - $fmt_author $fmt_time $fmt_hash$fmt_ref%>(1,ltrunc)%b$fmt_body'"
-format_for_diff="format:'$fmt_hash $fmt_subject - $fmt_author $fmt_time $fmt_ref%>(1,ltrunc)%b$fmt_body'"
+# format_for_diff="format:'$fmt_subject - $fmt_author $fmt_time $fmt_hash$fmt_ref%>(1,ltrunc)%b$fmt_body'"
+# format_for_diff="format:'$fmt_hash $fmt_subject - $fmt_author $fmt_time $fmt_ref%>(1,ltrunc)%b$fmt_body'"
 format_for_diff="format:'$fmt_hash %C(bold green)%s%C(reset) - $fmt_author $fmt_time %C(bold red)% D%C(reset) %>(1,ltrunc)%b$fmt_body'"
 
-if [ "$opt_format" = "diff" ]; then
-    opt_format="$format_for_diff"
+apply_options()
+{
+    local flags="$1"
+    local not=0
+    local k=
+    local found=
+    local len_shortcut=
+    local shortcut=
+    local option=
+    local option_name=
+    local implied_flags=
+
+
+    while [ -n "$flags" ]; do
+
+        # echo "apply flags:'$flags'" >&2
+
+        while [ -n "${flags}" ]; do
+
+            k=${flags:0:1}
+            # echo "k:'$k'" >&2
+
+            if [ "$k" = "-" ]; then
+                not=1
+                flags=${flags:1}
+                continue
+            fi
+
+            found=0
+            while read shortcut option; do
+
+                len_shortcut=${#shortcut}
+
+                if [ "${shortcut}" = "${flags:0:$len_shortcut}" ]; then
+
+                    found=1
+                    option_name=$(echo "${option%%=*}" | tr "-" "_")
+                    if [ "$not" = "1" ]; then
+                        eval opt_$option_name'=""'
+                    else
+                        eval opt_$option_name'=" --'"$option"' "'
+                    fi
+                    flags=${flags:$len_shortcut}
+                fi
+
+            done <<<"$options"
+
+            case $k in
+                h) limit_lines=0
+                    flags=${flags:1}
+                    found=1
+                    ;;
+                [0123456789])
+                    implied_flags="${implied_flags}p"
+                    nr_context=${nr_context}$k
+                    flags=${flags:1}
+                    found=1
+                    ;;
+            esac
+
+            not=0
+
+            if [ "$found" = "0" ]; then
+                # echo "not flag: k='$k'" >&2
+                return 1
+            fi
+        done
+
+        flags="$implied_flags"
+        implied_flags=
+    done
+}
+
+apply_options "$default_flags"
+apply_options "${GIT_XP_FLAG}"
+
+# echo "cli-flags:$flags" >&2
+
+is_flags=0
+if apply_options "$flags"; then
+    is_flags=1
 fi
 
-for i in $(seq 0 ${#flags}); do
-    k=${flags:$i:1}
-    case $k in
-        a) _out="$_out --all"
-            ;;
-        b) _out="$_out --simplify-by-decoration"
-            ;;
-        c) _out="$_out --cached"
-            ;;
-        d) _out="$_out --date-order"
-            ;;
-        f) _out="$_out --first-parent"
-            ;;
-        G) flag_use_graph=0
-            ;;
-        h) max_lines=
-            # history: remove max_count limit
-            ;;
-        i) _out="$_out --ignore-all-space"
-            ;;
-        l) opt_format="$format_for_diff"
-            ;;
-        n) _out="$_out --name-only"
-            ;;
-        p) _out="$_out --patch"
-            flag_show_patch=1
-            ;;
-        r) _out="$_out --relative"
-            ;;
-        R) _out="$_out --reverse"
-            ;;
-        t) _out="$_out --stat"
-            ;;
-        W) _out="$_out --word-diff=color"
-            ;;
-        w) _out="$_out --color-words=[[:alpha:]]+|[^[:space:]]"
-            ;;
-
-        [0123456789])
-            flag_show_patch=1
-            let nr_context=nr_context*10+k
-            ;;
-
-        "")
-            ;;
-        *)
-            is_flags=0
-            break
-            ;;
-    esac
-
-done
-
-if [ "$is_flags" = "1" ]; then
-    if [ "$flag_show_patch" = "1" ]; then
-        max_lines=
+if [ -n "$opt_patch" ]; then
+    limit_lines=0
+    if [ "$nr_context" != 0 ]; then
+        opt_unified=" --unified=$nr_context"
     fi
 fi
 
+if [ "$opt_format" = " --format=diff " ]; then
+    opt_format=" --format=$format_for_diff "
+fi
 
 if [ "$cmd" = "conf" ]; then
     if [ "$is_flags" = "1" ]; then
-        if [ -n "$max_lines" ]; then
+        if [ "$limit_lines" != "0" ]; then
             echo " -c pager.log='head -n $screen_height'"
         fi
     fi
     exit 0
 fi
 
+# echo "is_flags:$is_flags" >&2
 
 if [ "$is_flags" = "1" ]; then
 
-    flags=""
+    _out=""
+    prev_option_name=
+    while read shortcut option; do
 
-    if [ "$flag_show_patch" = "1" ]; then
-        if [ "$nr_context" != 0 ]; then
-            _out="$_out --unified=$nr_context"
+        option_name=$(echo "${option%%=*}" | tr "-" "_")
+
+        if [ "$option_name" = "$prev_option_name" ]; then
+            continue
         fi
-        opt_format="${opt_format:-$format_for_diff}"
-    fi
 
-    if [ "$flag_use_graph" = "1" ]; then
-        _out="$_out --graph"
-    fi
+        opt_cc='$opt_'$option_name
+        # echo $option_name >&2
+        # eval "echo \"$opt_cc\"" >&2
+        _out="$_out$(eval "echo \"$opt_cc\"")"
 
-    opt_format="${opt_format:-oneline}"
+        prev_option_name="$option_name"
 
-    if [ "$opt_format" != "0" ]; then
-        _out="$_out --format=$opt_format"
-    fi
+    done <<<"$options"
+
+    _out="$_out$opt_unified"
+
+    # echo "out: $_out" >&2
 
     echo "$_out"
 else
-    opt_format="${opt_format:-oneline}"
-    echo " --format=$opt_format $flags"
+    echo " $flags"
 fi

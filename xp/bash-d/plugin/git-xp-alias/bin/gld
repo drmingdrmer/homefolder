@@ -1,5 +1,5 @@
 #!/bin/sh
 
-export GIT_XP_GRAPH=0 GIT_XP_FORMAT=diff GIT_XP_MAX_LINES=
+export GIT_XP_GRAPH=0 GIT_XP_FORMAT=diff GIT_XP_MAX_LINES=0
 
 gl "$@" --patch

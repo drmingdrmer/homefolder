@@ -16,10 +16,10 @@ _git_comma()
   local shortcut=$(, get_shortcut "$cc" 2>/dev/null)
   case $shortcut in
       d|sf)     _git_diff ;;
-      l)        _git_log ;;
+      l|g)      _git_log ;;
       mc|mf)    _git_merge ;;
       *)
-          COMPREPLY=( $( compgen -W 'd l mc mf st sf' -- $cc ) )
+          COMPREPLY=( $( compgen -W 'd g l mc mf st sf' -- $cc ) )
           ;;
   esac
 }
