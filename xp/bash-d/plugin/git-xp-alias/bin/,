@@ -18,12 +18,12 @@ case $shortcmd in
         ;;
     l*)
         shortcut=l
-        export GIT_XP_FLAG=ld
+        export GIT_XP_FLAG=ldr
         cmd="log --color --decorate --abbrev-commit --find-renames"
         ;;
     g*)
         shortcut=g
-        export GIT_XP_FLAG=glo
+        export GIT_XP_FLAG=glor
         cmd="log --color --decorate --abbrev-commit --find-renames"
         ;;
     mc*)
