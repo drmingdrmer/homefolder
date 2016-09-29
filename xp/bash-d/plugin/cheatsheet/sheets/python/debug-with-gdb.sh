@@ -6,3 +6,5 @@ gdb python 5940
 
 # display backtrace for python
 py-bt
+
+# https://fedoraproject.org/wiki/Features/EasierPythonDebugging
