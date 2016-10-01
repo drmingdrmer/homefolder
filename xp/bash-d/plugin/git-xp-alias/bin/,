@@ -38,7 +38,11 @@ case $shortcmd in
         shortcut=st
         cmd="status"
         ;;
-    sf)
+    sb*) # status with branch info
+        shortcut=sb
+        cmd="status --short --branch"
+        ;;
+    sf) # status about file changes
         shortcut=sf
         cmd="diff --name-only --relative HEAD"
         ;;
