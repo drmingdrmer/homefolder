@@ -85,6 +85,7 @@ $gconf alias.co  "checkout"
 $gconf alias.tr  "checkout --track"
 
 $gconf alias.pu  "push --set-upstream"
+$gconf alias.please  "push --force-with-lease"
 $gconf alias.pullall "pull --recurse-submodules=on-demand"
 
 $gconf alias.s   "status --short --ignore-submodules"
