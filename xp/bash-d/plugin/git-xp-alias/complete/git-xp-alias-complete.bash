@@ -17,7 +17,7 @@ _git_comma()
       l|g)      _git_log ;;
       mc|mf)    _git_merge ;;
       *)
-          COMPREPLY=( $( compgen -W 'd g l mc mf st sf' -- $cc ) )
+          COMPREPLY=( $( compgen -W "$(, list_shortcut)" -- $cc ) )
           ;;
   esac
 }

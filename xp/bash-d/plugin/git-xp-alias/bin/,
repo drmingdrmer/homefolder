@@ -1,9 +1,30 @@
 #!/bin/bash
 
+git_option_no_edit="--no-edit"
+
+commands="
+d    ,        diff --color --find-renames
+g    g,lo,r,  log --color --decorate --abbrev-commit --find-renames
+l    ld,r,    log --color --decorate --abbrev-commit --find-renames
+mc   ,        merge $git_option_no_edit --commit --no-ff
+mf   ,        merge $git_option_no_edit --commit --ff-only
+sb   ,        status --short --branch                         # status with branch info
+sf   ,        diff --name-only --relative HEAD                # status about file changes
+st   ,        status
+"
+
 get_shortcut=0
 
 shortcmd="$1"
 shift
+
+if [ "$shortcmd" = "list_shortcut" ]; then
+    while read shortcut xx; do
+        [ -z "$shortcut" ] && continue
+        echo $shortcut
+    done<<<"$commands"
+    exit 0
+fi
 
 if [ "$shortcmd" = "get_shortcut" ]; then
     get_shortcut=1
@@ -11,47 +32,22 @@ if [ "$shortcmd" = "get_shortcut" ]; then
     shift
 fi
 
-case $shortcmd in
-    d*)
-        shortcut=d
-        cmd="diff --color --find-renames"
-        ;;
-    l*)
-        shortcut=l
-        export GIT_COMMA_FLAG=ldr
-        cmd="log --color --decorate --abbrev-commit --find-renames"
-        ;;
-    g*)
-        shortcut=g
-        export GIT_COMMA_FLAG=glor
-        cmd="log --color --decorate --abbrev-commit --find-renames"
-        ;;
-    mc*)
-        shortcut=mc
-        cmd="mc"
-        ;;
-    mf*)
-        shortcut=mf
-        cmd="mf"
-        ;;
-    st*)
-        shortcut=st
-        cmd="status"
-        ;;
-    sb*) # status with branch info
-        shortcut=sb
-        cmd="status --short --branch"
-        ;;
-    sf) # status about file changes
-        shortcut=sf
-        cmd="diff --name-only --relative HEAD"
-        ;;
-    *)
-        echo invalid command $cmd >&2
-        exit 1
-esac
+found=0
+while read shortcut flag cmd; do
+    [ -z "$shortcut" ] && continue
+    len_shortcut=${#shortcut}
+    if [ "$shortcut" = "${shortcmd:0:$len_shortcut}" ]; then
+        export GIT_COMMA_FLAG="$(echo "$flag" | tr -d ',')"
+        found=1
+        break
+    fi
+done<<<"$commands"
 
-len_shortcut=${#shortcut}
+[ "$found" = "0" ] && {
+    echo invalid command $shortcmd >&2
+    exit 1
+}
+
 arg1=${shortcmd:$len_shortcut}
 
 if [ "$get_shortcut" = "1" ]; then
