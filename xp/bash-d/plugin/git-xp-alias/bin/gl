@@ -3,7 +3,7 @@
 flags=$1
 [ ".$flags" != "." ] && shift
 
-export GIT_XP_FLAG=glo
+export GIT_COMMA_FLAG=glo
 
 eval git $(_git_xp_interrept_flag conf $flags) \
     log --color \

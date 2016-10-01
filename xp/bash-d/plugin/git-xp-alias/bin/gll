@@ -1,5 +1,5 @@
 #!/bin/sh
 
-export GIT_XP_FLAG=-gld
+export GIT_COMMA_FLAG=-gld
 
 gl "$@"

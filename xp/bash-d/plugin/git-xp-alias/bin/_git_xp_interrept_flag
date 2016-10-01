@@ -141,7 +141,7 @@ apply_options()
 }
 
 apply_options "$default_flags"
-apply_options "${GIT_XP_FLAG}"
+apply_options "${GIT_COMMA_FLAG}"
 
 # echo "cli-flags:$flags" >&2
 
