@@ -118,6 +118,9 @@ $gconf alias.lss "ls-files --stage"
 $gconf alias.lsk "ls-files --killed"
 $gconf alias.lsu "ls-files --unmerged"
 
+$gconf alias.root  'commit -m root --allow-empty'
+$gconf alias.it    '!git init && git commit -m root --allow-empty'
+
 $gconf alias.sub "submodule"
 $gconf alias.subadd "submodule add --branch master"
 $gconf alias.subeach "submodule foreach"
