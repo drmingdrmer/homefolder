@@ -2,3 +2,54 @@
 
 # make "," a ", "
 bind '",":", "'
+
+export git_comma_options='a   all
+b   simplify-by-decoration
+c   cached
+d   date-order
+f   first-parent
+g   graph
+i   ignore-all-space
+ld  format=diff
+lo  format=oneline
+n   name-only
+p   patch
+r   relative
+R   reverse
+t   stat
+W   word-diff=color
+w   color-words=[[:alpha:]]+|[^[:space:]]'
+
+git_comma_make_option_expr()
+{
+    local vars=""
+    local prev_option_name=
+    while read shortcut option; do
+
+        option_name=$(echo "${option%%=*}" | tr "-" "_")
+
+        if [ "$option_name" = "$prev_option_name" ]; then
+            continue
+        fi
+
+        opt_cc='$opt_'$option_name
+        vars="${vars}${opt_cc}"
+        prev_option_name="$option_name"
+
+    done <<<"$git_comma_options"
+    echo "echo \"$vars\""
+}
+
+export git_comma_option_expr="$(git_comma_make_option_expr)"
+
+fmt_hash='%C(dim yellow)%h%C(reset)'
+fmt_time='%C(bold cyan)%ar%C(reset)'
+fmt_subject='%C(bold green)%s%C(reset)'
+fmt_author='%C(dim magenta)%an%C(reset)'
+fmt_ref='%C(dim yellow)%d%C(reset)'
+fmt_body='%C(white)%+b%C(reset)'
+
+# git_comma_format_for_diff="format:'%<(8)$fmt_hash%<(8,trunc)$fmt_author %<(7,trunc)$fmt_time $fmt_subject $fmt_ref%>(1,ltrunc)%b$fmt_body'"
+# git_comma_format_for_diff="format:'$fmt_subject - $fmt_author $fmt_time $fmt_hash$fmt_ref%>(1,ltrunc)%b$fmt_body'"
+# git_comma_format_for_diff="format:'$fmt_hash $fmt_subject - $fmt_author $fmt_time $fmt_ref%>(1,ltrunc)%b$fmt_body'"
+export git_comma_format_for_diff="format:'$fmt_hash %C(bold green)%s%C(reset) - $fmt_author $fmt_time %C(bold red)% D%C(reset) %>(1,ltrunc)%b$fmt_body'"

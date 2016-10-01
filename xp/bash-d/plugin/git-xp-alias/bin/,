@@ -1,8 +1,10 @@
 #!/bin/bash
 
+# PS4='$(gdate "+%s.%N ($LINENO) + ")'
+
 git_option_no_edit="--no-edit"
 
-commands="
+commands="\
 d    ,        diff --color --find-renames
 g    g,lo,r,  log --color --decorate --abbrev-commit --find-renames
 l    ld,r,    log --color --decorate --abbrev-commit --find-renames
@@ -10,7 +12,7 @@ mc   ,        merge $git_option_no_edit --commit --no-ff
 mf   ,        merge $git_option_no_edit --commit --ff-only
 sb   ,        status --short --branch                         # status with branch info
 sf   ,        diff --name-only --relative HEAD                # status about file changes
-st   ,        status
+st   ,        status\
 "
 
 get_shortcut=0
@@ -34,7 +36,7 @@ fi
 
 found=0
 while read shortcut flag cmd; do
-    [ -z "$shortcut" ] && continue
+    # [ -z "$shortcut" ] && continue
     len_shortcut=${#shortcut}
     if [ "$shortcut" = "${shortcmd:0:$len_shortcut}" ]; then
         export GIT_COMMA_FLAG="$(echo "$flag" | tr -d ',')"

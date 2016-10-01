@@ -2,6 +2,8 @@
 
 # args > env variables > default
 
+# PS4='PROFILE: $(gdate "+%s.%N ($LINENO) + ")'
+
 # arg | conf
 cmd=$1
 shift
@@ -36,36 +38,8 @@ opt_color_words=""
 
 opt_unified=""
 
-options='a   all
-         b   simplify-by-decoration
-         c   cached
-         d   date-order
-         f   first-parent
-         g   graph
-         i   ignore-all-space
-         ld  format=diff
-         lo  format=oneline
-         n   name-only
-         p   patch
-         r   relative
-         R   reverse
-         t   stat
-         W   word-diff=color
-         w   color-words=[[:alpha:]]+|[^[:space:]]'
-
 default_flags=""
 
-fmt_hash='%C(dim yellow)%h%C(reset)'
-fmt_time='%C(bold cyan)%ar%C(reset)'
-fmt_subject='%C(bold green)%s%C(reset)'
-fmt_author='%C(dim magenta)%an%C(reset)'
-fmt_ref='%C(dim yellow)%d%C(reset)'
-fmt_body='%C(white)%+b%C(reset)'
-
-# format_for_diff="format:'%<(8)$fmt_hash%<(8,trunc)$fmt_author %<(7,trunc)$fmt_time $fmt_subject $fmt_ref%>(1,ltrunc)%b$fmt_body'"
-# format_for_diff="format:'$fmt_subject - $fmt_author $fmt_time $fmt_hash$fmt_ref%>(1,ltrunc)%b$fmt_body'"
-# format_for_diff="format:'$fmt_hash $fmt_subject - $fmt_author $fmt_time $fmt_ref%>(1,ltrunc)%b$fmt_body'"
-format_for_diff="format:'$fmt_hash %C(bold green)%s%C(reset) - $fmt_author $fmt_time %C(bold red)% D%C(reset) %>(1,ltrunc)%b$fmt_body'"
 
 apply_options()
 {
@@ -82,12 +56,9 @@ apply_options()
 
     while [ -n "$flags" ]; do
 
-        # echo "apply flags:'$flags'" >&2
-
         while [ -n "${flags}" ]; do
 
             k=${flags:0:1}
-            # echo "k:'$k'" >&2
 
             if [ "$k" = "-" ]; then
                 not=1
@@ -112,7 +83,7 @@ apply_options()
                     flags=${flags:$len_shortcut}
                 fi
 
-            done <<<"$options"
+            done <<<"$(echo "$git_comma_options" | grep "^${flags:0:1}" )"
 
             case $k in
                 h) limit_lines=0
@@ -140,7 +111,7 @@ apply_options()
     done
 }
 
-apply_options "$default_flags"
+# apply_options "$default_flags"
 apply_options "${GIT_COMMA_FLAG}"
 
 # echo "cli-flags:$flags" >&2
@@ -158,7 +129,7 @@ if [ -n "$opt_patch" ]; then
 fi
 
 if [ "$opt_format" = " --format=diff " ]; then
-    opt_format=" --format=$format_for_diff "
+    opt_format=" --format=$git_comma_format_for_diff "
 fi
 
 if [ "$cmd" = "conf" ]; then
@@ -174,25 +145,7 @@ fi
 
 if [ "$is_flags" = "1" ]; then
 
-    _out=""
-    prev_option_name=
-    while read shortcut option; do
-
-        option_name=$(echo "${option%%=*}" | tr "-" "_")
-
-        if [ "$option_name" = "$prev_option_name" ]; then
-            continue
-        fi
-
-        opt_cc='$opt_'$option_name
-        # echo $option_name >&2
-        # eval "echo \"$opt_cc\"" >&2
-        _out="$_out$(eval "echo \"$opt_cc\"")"
-
-        prev_option_name="$option_name"
-
-    done <<<"$options"
-
+    _out="$(eval "$git_comma_option_expr")"
     _out="$_out$opt_unified"
 
     # echo "out: $_out" >&2
