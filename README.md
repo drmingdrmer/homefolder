@@ -97,6 +97,9 @@ variables:
     let g:javascript_conceal_super          = "Ω"
     let g:javascript_conceal_arrow_function = "⇒"
 
+## Indentation Specific
+
+* `:h cino-:`
 
 ## Contributing
 
