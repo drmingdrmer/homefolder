@@ -1,6 +1,0 @@
-
-
-bkpconfdir=~/.xp/bkp
-bkpconf=$bkpconfdir/conf
-bkpfileFn=$bkpconfdir/file
-bkpfilterFn=$bkpconfdir/filter
