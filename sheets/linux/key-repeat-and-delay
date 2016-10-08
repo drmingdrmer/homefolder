@@ -1,0 +1,4 @@
+#!/bin/sh
+
+# repeat delay in millisecond, and repeat speed
+xset r rate 160 160
