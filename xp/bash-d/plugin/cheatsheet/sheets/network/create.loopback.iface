@@ -1,0 +1,3 @@
+/sbin/ifconfig lo:9 inet 218.30.114.237 netmask 255.255.255.255
+/sbin/arptables -A IN -d 218.30.114.237 -j DROP
+/sbin/arptables -A OUT -s 218.30.114.237 -j mangle --mangle-ip-s 218.30.114.74
