@@ -74,6 +74,6 @@ taglist.vim                     vim-scripts/                 master
 vcscommand.vim.git              vim-scripts/vcscommand.vim   master
 xmledit                         vim-scripts/                 master
 
-[ base: xp/gdb-d ]
+[ base: xp/gdb-d/plugin ]
 
 gdb-dashboard                   cyrus-and/                   master
