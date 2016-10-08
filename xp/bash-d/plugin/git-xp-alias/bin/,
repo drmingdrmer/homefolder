@@ -4,14 +4,18 @@
 
 git_option_no_edit="--no-edit"
 
+one_changed='"$(git diff --name-only --relative HEAD | head -n1)"'
+commit_message_one_file='"$(git status --short --ignore-submodules --untracked-files=no | head -n1)"'
+
 commands="\
+c1   ,        commit -m $commit_message_one_file $one_changed           # commit one file
 d    ,        diff --color --find-renames
 g    g,lo,r,  log --color --decorate --abbrev-commit --find-renames
 l    ld,r,    log --color --decorate --abbrev-commit --find-renames
 mc   ,        merge $git_option_no_edit --commit --no-ff
 mf   ,        merge $git_option_no_edit --commit --ff-only
-sb   ,        status --short --branch                         # status with branch info
-sf   ,        diff --name-only --relative HEAD                # status about file changes
+sb   ,        status --short --branch                                   # status with branch info
+sf   ,        diff --name-only --relative HEAD                          # status about file changes
 st   ,        status\
 "
 
