@@ -103,7 +103,7 @@ fi
 os=$(os_detect)
 export OS=$os
 
-. $XPBASE/script/tmp.to.shm.sh
+mkdir -p $HOME/tmp
 d end tmp
 
 . $XPBASE/rc/alias
