@@ -23,7 +23,7 @@ cd ~
 git clone https://github.com/drmingdrmer/cheatsheet.git
 
 mkdir -p ~/bin
-ln -s ~/cheatsheet/bin/cheat .
+ln -s ~/cheatsheet/bin/cheat ./bin/
 
 # And make sure ~/bin is in your $PATH env.
 # Usually by adding a line "export PATH=$PATH:$HOME/bin" to your ~/.bashrc
