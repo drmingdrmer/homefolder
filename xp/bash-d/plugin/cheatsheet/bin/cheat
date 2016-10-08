@@ -1,5 +1,98 @@
 #!/bin/bash
 
+
+screen_width()
+{
+    local chr="${1--}"
+    chr="${chr:0:1}"
+
+    local width=$(tput cols 2||echo 80)
+    width="${COLUMNS:-$width}"
+
+    echo $width
+}
+
+hr()
+{
+    # generate a full screen width horizontal ruler
+    local width=$(screen_width)
+
+    printf -vl "%${width}s\n" && echo ${l// /$chr};
+}
+
+remove_color()
+{
+    # remove color control chars from stdin or first argument
+
+    local sed=gsed
+    which -s $sed || sed=sed
+
+    local s="$1"
+    if [ -z "$s" ]; then
+        $sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[mGK]//g"
+    else
+        echo "$s" | remove_color
+    fi
+
+}
+
+text_hr()
+{
+    # generate a full screen width sperator line with text.
+    # text_hr "-" "a title"
+    # > a title -----------------------------------------
+    #
+    # variable LR=l|m|r controls alignment
+
+    local chr="$1"
+    shift
+
+    local bb="$(echo "$@" | remove_color)"
+    local text_len=${#bb}
+
+    local width=$(screen_width)
+    let width=width-text_len
+
+    local lr=${LR-m}
+    case $lr in
+        m)
+            let left=width/2
+            let right=width-left
+            echo "$(printf -vl "%${left}s\n" && echo ${l// /$chr})$@$(printf -vl "%${right}s\n" && echo ${l// /$chr})"
+            ;;
+        r)
+
+            echo "$(printf -vl "%${width}s\n" && echo ${l// /$chr})$@"
+            ;;
+        *)
+            # l by default
+            echo "$@$(printf -vl "%${width}s\n" && echo ${l// /$chr})"
+            ;;
+    esac
+
+}
+
+White="$(        tput bold; tput setaf 7)"
+Red="$(                     tput setaf 1)"
+RedBG="$(                   tput setab 1)"
+LightRed="$(     tput bold; tput setaf 1)"
+Green="$(                   tput setaf 2)"
+GreenBG="$(                 tput setab 2)"
+LightGreen="$(   tput bold; tput setaf 2)"
+Brown="$(                   tput setaf 3)"
+BrownBG="$(                 tput setab 3)"
+Yellow="$(       tput bold; tput setaf 3)"
+Blue="$(                    tput setaf 4)"
+BlueBG="$(                  tput setab 4)"
+LightBlue="$(    tput bold; tput setaf 4)"
+Purple="$(                  tput setaf 5)"
+PurpleBG="$(                tput setab 5)"
+Pink="$(         tput bold; tput setaf 5)"
+Cyan="$(                    tput setaf 6)"
+CyanBG="$(                  tput setab 6)"
+LightCyan="$(    tput bold; tput setaf 6)"
+NC="$(                      tput sgr0)" # No Color
+
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 fpattern=$1
@@ -10,10 +103,11 @@ cd $DIR/../sheets
 
 files=$(find . -type f -path "*$fpattern*" | grep -i "$1")
 for f in $files; do
-    echo '---' $f '---'
+    LR=l text_hr "$Yellow=$NC" "$White##  ${f}$NC  "
+    echo ""
     cat $f
     echo ""
     echo ""
-done | less
+done | less -R +"/^##"
 
 )
