@@ -1,7 +1,20 @@
+#!/bin/sh
+
 # for msgfmt
 apt-get install gettext
 
 
 yum install -y openssl.* libcurl-devel* gettext.* expat-devel.*
 
+cd ~
+
+g=git-2.9.0
+package=$g.tar.xz
+wget http://kernel.org/pub/software/scm/git/$package
+
+tar -xf $package
+
+cd $g
 make prefix=$HOME/local NO_TCLTK=YesPlease
+
+# ./configure --prefix=$HOME && make install
