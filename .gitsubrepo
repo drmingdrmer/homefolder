@@ -73,3 +73,7 @@ neocomplcache                   vim-scripts/                 master
 taglist.vim                     vim-scripts/                 master
 vcscommand.vim.git              vim-scripts/vcscommand.vim   master
 xmledit                         vim-scripts/                 master
+
+[ base: xp/gdb-d ]
+
+gdb-dashboard                   cyrus-and/gdb-dashboard      master
