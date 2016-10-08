@@ -1,1 +1,0 @@
-sudo tcpdump -vvv -n -X -iwlan0 -s2048 "dst port 80 and dst host 10.29.14.74"
