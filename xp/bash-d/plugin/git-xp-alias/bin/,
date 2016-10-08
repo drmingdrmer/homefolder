@@ -5,7 +5,7 @@
 git_option_no_edit="--no-edit"
 
 one_changed='"$(git rev-parse --show-toplevel)/$(git diff --name-only HEAD | head -n1)"'
-commit_message_one_file='"$(git status --short --ignore-submodules --untracked-files=no | head -n1)"'
+commit_message_one_file='"$(git diff --name-only HEAD | head -n1)"'
 
 commands="\
 c1   ,        commit -m $commit_message_one_file $one_changed           # commit one file
