@@ -108,6 +108,6 @@ for f in $files; do
     cat $f
     echo ""
     echo ""
-done | less -R +"/^##"
+done | less -r +"/##"
 
 )
