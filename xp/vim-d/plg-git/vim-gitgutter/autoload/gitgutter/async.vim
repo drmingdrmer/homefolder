@@ -10,9 +10,11 @@ let s:jobs = {}
 " MacVim-GUI didn't support async until 7.4.1832 (actually commit
 " 88f4fe0 but 7.4.1832 was the first subsequent patch release).
 let s:available = has('nvim') || (
-      \ (has('patch-7-4-1826') && !has('gui_running')) ||
-      \ (has('patch-7-4-1850') &&  has('gui_running')) ||
-      \ (has('patch-7-4-1832') &&  has('gui_macvim'))
+      \ has('job') && (
+		  \ (has('patch-7-4-1826') && !has('gui_running')) ||
+		  \ (has('patch-7-4-1850') &&  has('gui_running')) ||
+		  \ (has('patch-7-4-1832') &&  has('gui_macvim'))
+		  \ )
       \ )
 
 function! gitgutter#async#available()
@@ -88,13 +90,17 @@ function! gitgutter#async#handle_diff_job_nvim(job_id, data, event) abort
     if a:event == 'stdout'
       " a:data is a list
       call s:job_finished(a:job_id)
-      call gitgutter#handle_diff(gitgutter#utility#stringify(a:data))
+      if gitgutter#utility#is_active()
+        call gitgutter#handle_diff(gitgutter#utility#stringify(a:data))
+      endif
 
     elseif a:event == 'exit'
       " If the exit event is triggered without a preceding stdout event,
       " the diff was empty.
       if s:is_job_started(a:job_id)
-        call gitgutter#handle_diff("")
+        if gitgutter#utility#is_active()
+          call gitgutter#handle_diff("")
+        endif
         call s:job_finished(a:job_id)
       endif
 
@@ -128,7 +134,9 @@ function! gitgutter#async#handle_diff_job_vim_close(channel) abort
     let current_buffer = gitgutter#utility#bufnr()
     call gitgutter#utility#set_buffer(job_bufnr)
 
-    call gitgutter#handle_diff(s:job_output(channel_id))
+    if gitgutter#utility#is_active()
+      call gitgutter#handle_diff(s:job_output(channel_id))
+    endif
 
     call gitgutter#utility#set_buffer(current_buffer)
   endif
