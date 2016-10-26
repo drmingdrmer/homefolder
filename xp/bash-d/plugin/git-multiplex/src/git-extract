@@ -23,7 +23,7 @@ for c in $(git log --reverse $range --format="%H" -- $fns); do
 
     mes=$(git log -n1 --format="%B" $c)
 
-    p=$(git diff $c~ $c -- $fns)
+    p="$(git diff --src-prefix=a/ --dst-prefix=b/ $c~ $c -- $fns)"
     git apply <<<"$p"
 
     git commit -am "$mes"
