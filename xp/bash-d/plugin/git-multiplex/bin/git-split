@@ -100,7 +100,8 @@ extract()
 
         mes=$(git log -n1 --format="%B" $c)
 
-        git diff --binary $c~ $c -- $fns | git apply --index
+        # force prefix when diff, since .gitconfig could hide prefix
+        git diff --src-prefix=a/ --dst-prefix=b/ --binary $c~ $c -- $fns | git apply --index
 
         mes "== after patch $c =="
         git status --short
