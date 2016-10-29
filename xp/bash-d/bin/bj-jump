@@ -1,0 +1,3 @@
+#!/bin/sh
+
+ssh zhangyanpo@36.110.61.125 -i ~/wiki/baishan/dev/ssh/baishan_rsa -p 10007
