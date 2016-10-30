@@ -28,6 +28,8 @@ $gconf user.email drdr.xp@gmail.com
 $gconf push.default current
 $gconf merge.defaultToUpstream true
 
+$gconf pull.ff only
+
 $gconf color.diff true
 $gconf color.interactive true
 
