@@ -29,6 +29,7 @@ $gconf push.default current
 $gconf merge.defaultToUpstream true
 
 $gconf pull.ff only
+$gconf pull.rebase true
 
 $gconf color.diff true
 $gconf color.interactive true
