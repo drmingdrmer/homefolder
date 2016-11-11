@@ -184,6 +184,7 @@ main()
 
         # [ base: xp/vim-d ]
         # declare base dir for following sub repo
+        #
         # [ remote: https://github.com/ ]
         # declare remote base url for following sub repo
         if test "${a:0:1}" = '['
