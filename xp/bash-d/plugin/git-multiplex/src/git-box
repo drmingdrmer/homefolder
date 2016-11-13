@@ -110,9 +110,11 @@ sync_once()
             (
             cd "$p" || die not-found: "$p"
 
-            mes "actions: $actions"
             branch=$(git_head_branch)
             upstream=$(git_branch_default_upstream $branch)
+            mes "actions:  $actions"
+            mes "branch:   ($branch)"
+            mes "upstream: ($upstream)"
 
             if _has_act $actions add-all; then
                 git add .
@@ -144,19 +146,27 @@ sync_once()
             fi
 
             if _has_act $actions merge-ff; then
-                git merge --no-edit --commit --ff-only \
-                    && ok  "    merge-ff" \
-                    || err "    merge-ff"
+                if test -n "$branch"; then
+                    git merge --no-edit --commit --ff-only \
+                        && ok  "    merge-ff" \
+                        || err "    merge-ff"
+                else
+                    mes "HEAD is not a branch, skip merge"
+                fi
             fi
 
             if _has_act $actions push; then
-                while read remote
-                do
-                    git push $remote $branch --quiet \
-                        && ok  "    push to $remote" \
-                        || err "    push to $remote"
+                if test -n "$branch"; then
+                    while read remote
+                    do
+                        git push $remote $branch --quiet \
+                            && ok  "    push to $remote" \
+                            || err "    push to $remote"
 
-                done<<<"$(git remote)"
+                    done<<<"$(git remote)"
+                else
+                    mes "HEAD is not a branch, skip push"
+                fi
             fi
             )
         done
