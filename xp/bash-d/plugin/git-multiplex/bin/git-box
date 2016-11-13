@@ -319,27 +319,31 @@ sync_once()
 
 main() {
 
-    while ``; do
+    running=1
+
+    trap 'running=0; echo killing mypid: $$, subprocess: $sync_pid, $kill_pid; kill $sync_pid $kill_pid' SIGINT SIGTERM EXIT
+
+    while test "$running" = "1"; do
 
         {
             mes box-sync-start...
             sync_once
             mes sync-done
         } &
-        local sync_pid="$!"
+        sync_pid="$!"
 
         {
             sleep 1800
             kill $sync_pid
             err sync-timeout, killed $sync_pid
         } &
-        local kill_pid="$!"
+        kill_pid="$!"
 
         # if sync_pid done, cancel killing
         # if sync_pid timed out, kill_pid will kill it, makes it return.
         wait $sync_pid 2>/dev/null \
             && kill $kill_pid \
-            || echo wait for $sync_pid timeout
+            || echo wait for sync process $sync_pid timeout
 
         _sleep
 
