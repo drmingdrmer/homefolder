@@ -177,7 +177,7 @@ main() {
         local sync_pid="$!"
 
         {
-            sleep 300
+            sleep 1800
             kill $sync_pid
             err sync-timeout, killed $sync_pid
         } &
