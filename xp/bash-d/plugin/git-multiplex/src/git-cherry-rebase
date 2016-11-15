@@ -1,0 +1,63 @@
+#!/bin/sh
+
+source _git_xp_lib.sh
+
+onto=
+
+while [ $# -gt 0 ]; do
+
+    case $1 in
+
+        --onto)
+            shift
+            onto="$1"
+            shift
+            ;;
+        *)
+            break
+            ;;
+
+    esac
+done
+
+from=${1-HEAD~}
+head_sha1=$(git_hash HEAD)
+
+onto="${onto:-$from}"
+onto="$(git_hash $onto)"
+
+commits=""
+for c in $(git log --first-parent  --format="%H" $from..$head_sha1); do
+    commits="$c $commits"
+done
+commits=${commits% }
+
+echo ""
+echo "---- reset to $onto ----"
+git reset --hard $onto
+
+for hsh in $commits; do
+    if git_is_merge $hsh; then
+        info "---- cherry-pick $hsh (merge) ----"
+        git cherry-pick -m1 $hsh
+
+        # cherry-pick does not maintain secondary parent.
+        tree=$(git_tree_hash HEAD)
+
+        parents="$(git_parents $hsh)"
+
+        # remove old first-parent, the first item.
+        parents="${parents#* }"
+
+        parents="$(for p in $parents; do echo ' -p '$p; done)"
+
+        new_commit=$(git log -n1 --format="%B" | git commit-tree $parents $tree)
+        git reset --hard $new_commit
+    else
+        info "---- cherry-pick $hsh ----"
+        git cherry-pick $hsh
+    fi
+
+done
+
+exit

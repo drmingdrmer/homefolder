@@ -1,8 +1,5 @@
 #!/bin/sh
 
-PATH=$PATH:$(git --exec-path)
-. git-sh-setup
-
 #include '_git_xp_lib.sh' begin
 #!/bin/sh
 
@@ -169,83 +166,62 @@ git_head_branch()
 }
 #include '_git_xp_lib.sh' end
 
-dd "git dir: $GIT_DIR"
+onto=
 
-# cat <<-END
-# dir:    "dir/path"
-# remote: origin  git://github.com/jquery/jquery-tmpl.git
-# remote: bkp     git://github.com/jquery/jquery-tmpl.git
-# head:   origin  master
-# END
+while [ $# -gt 0 ]; do
 
-init()
-{
-    working_dir="$(git_working_root)"
-    die_empty "$working_dir" no git working dir found
+    case $1 in
 
-    conf_fn="$working_dir/.gitrepo"
-    test -r "$conf_fn" \
-        || die "$conf_fn" is unreadable
-}
+        --onto)
+            shift
+            onto="$1"
+            shift
+            ;;
+        *)
+            break
+            ;;
 
-doit()
-{
-    local k=
-    local a1=
-    local a2=
+    esac
+done
 
-    local dirpath=
-    local remote=
-    local url=
-    local tip=
-    local repo_path=
+from=${1-HEAD~}
+head_sha1=$(git_hash HEAD)
 
-    local state=nil
+onto="${onto:-$from}"
+onto="$(git_hash $onto)"
 
-    { cat "$conf_fn"; echo ""; } | while read k a1 a2; do
+commits=""
+for c in $(git log --first-parent  --format="%H" $from..$head_sha1); do
+    commits="$c $commits"
+done
+commits=${commits% }
 
-        case "$k" in
-            '')
-                if test -z "$dirpath"; then
-                    dd "no conf read, continue"
-                    continue
-                fi
-                repo_path="$working_dir/$dirpath"
+echo ""
+echo "---- reset to $onto ----"
+git reset --hard $onto
 
-                if test -d "$repo_path"; then
-                fi
+for hsh in $commits; do
+    if git_is_merge $hsh; then
+        info "---- cherry-pick $hsh (merge) ----"
+        git cherry-pick -m1 $hsh
 
-                # dirpath=
-                # remote=
-                # url=
-                # tip=
-                ;;
+        # cherry-pick does not maintain secondary parent.
+        tree=$(git_tree_hash HEAD)
 
-            dir:)
-                dirpath="$a1"
-                dd "find dir: $dirpath"
-                ;;
+        parents="$(git_parents $hsh)"
 
-            remote:)
-                remote="$a1"
-                url="$a2"
-                dd "remote: $remote : $url"
-                ;;
-            head:)
-                head="$a1"
-                dd "head: $head"
-                ;;
-        esac
-    done
+        # remove old first-parent, the first item.
+        parents="${parents#* }"
 
-    dd "finished"
-}
+        parents="$(for p in $parents; do echo ' -p '$p; done)"
 
-main()
-{
-    init
-    doit
-}
+        new_commit=$(git log -n1 --format="%B" | git commit-tree $parents $tree)
+        git reset --hard $new_commit
+    else
+        info "---- cherry-pick $hsh ----"
+        git cherry-pick $hsh
+    fi
 
+done
 
-main "$@"
+exit

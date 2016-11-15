@@ -102,6 +102,14 @@ git_hash()
     git rev-parse $1 \
         || die "'git_hash $@'"
 }
+git_is_merge()
+{
+    test $(git cat-file -p "$1" | grep "^parent " | wc -l) -gt 1
+}
+git_parents()
+{
+    git rev-list --parents -n 1 $1
+}
 git_rev_list()
 {
     # --parents
@@ -115,6 +123,10 @@ git_rev_list()
         --simplify-merges \
         "$@" \
         || die "'git rev-list $@'"
+}
+git_tree_hash()
+{
+    git rev-parse "$1^{tree}"
 }
 git_ver()
 {
