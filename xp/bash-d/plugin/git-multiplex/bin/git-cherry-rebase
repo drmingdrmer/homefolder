@@ -111,7 +111,7 @@ git_is_merge()
 }
 git_parents()
 {
-    git rev-list --parents -n 1 $1
+    git rev-list --parents -n 1 ${1-HEAD} | { read self parents; echo $parents; }
 }
 git_rev_list()
 {
@@ -211,10 +211,11 @@ for hsh in $commits; do
         parents="$(git_parents $hsh)"
 
         # remove old first-parent, the first item.
-        parents="${parents#* }"
+        parents="$(echo $parents | while read first_parent other; do echo $other; done)"
 
-        parents="$(for p in $parents; do echo ' -p '$p; done)"
+        parents=" -p $(git rev-parse HEAD~) $(for p in $parents; do echo ' -p '$p; done)"
 
+        # using the same tree create a commit with secondary parents
         new_commit=$(git log -n1 --format="%B" | git commit-tree $parents $tree)
         git reset --hard $new_commit
     else

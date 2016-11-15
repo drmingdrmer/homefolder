@@ -114,7 +114,7 @@ git_is_merge()
 }
 git_parents()
 {
-    git rev-list --parents -n 1 $1
+    git rev-list --parents -n 1 ${1-HEAD} | { read self parents; echo $parents; }
 }
 git_rev_list()
 {
