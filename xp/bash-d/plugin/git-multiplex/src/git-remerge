@@ -1,7 +1,30 @@
 #!/bin/sh
 
+source _git_xp_lib.sh
+
+onto=
+
+while [ $# -gt 0 ]; do
+
+    case $1 in
+
+        --onto)
+            shift
+            onto="$1"
+            shift
+            ;;
+        *)
+            break
+            ;;
+
+    esac
+done
+
 from=${1-HEAD~}
 head_sha1=$(git rev-list -n1 HEAD)
+
+onto="${onto:-$from}"
+onto="$(git_hash $onto)"
 
 # Merge branch 'fea.front' into t.xp
 
@@ -12,8 +35,8 @@ done
 commits=${commits% }
 
 echo ""
-echo "---- reset to $from ----"
-git reset --hard $from
+echo "---- reset to $onto ----"
+git reset --hard $onto
 
 for hsh in $commits; do
     log=$(git log -n1 --format="%s" $hsh)
