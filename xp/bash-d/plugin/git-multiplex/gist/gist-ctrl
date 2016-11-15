@@ -12,6 +12,9 @@ while read name gist_id; do
             fetch)
                 ( cd $name && git fetch origin; )
                 ;;
+            pull)
+                ( cd $name && git pull --ff-only origin; )
+                ;;
             status)
                 ( cd $name && git status; )
                 ;;
