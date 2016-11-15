@@ -18,6 +18,10 @@ while read name gist_id; do
             commit)
                 ( cd $name && git add -u && git commit -m 'auto commit'; )
                 ;;
+            *)
+                ( cd $name && git "$@"; )
+                ;;
+
         esac
     else
         case $cmd in
