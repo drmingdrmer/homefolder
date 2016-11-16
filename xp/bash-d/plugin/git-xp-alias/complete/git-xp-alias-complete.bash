@@ -14,7 +14,7 @@ _git_comma()
   local shortcut=$(, get_shortcut "$cc" 2>/dev/null)
   case $shortcut in
       d|sf)     _git_diff ;;
-      l|g)      _git_log ;;
+      3|f|g|l)    _git_log ;;
       mc|mf)    _git_merge ;;
       *)
           COMPREPLY=( $( compgen -W "$(, list_shortcut)" -- $cc ) )

@@ -8,15 +8,17 @@ one_changed='"$(git rev-parse --show-toplevel)/$(git diff --name-only HEAD | hea
 commit_message_one_file='"$(git status --porcelain | head -n1)"'
 
 commands="\
-c1   ,        commit -m $commit_message_one_file $one_changed           # commit one file
-d    ,        diff --color --find-renames
-g    g,lo,r,  log --color --decorate --abbrev-commit --find-renames
-l    ld,r,    log --color --decorate --abbrev-commit --find-renames
-mc   ,        merge $git_option_no_edit --commit --no-ff
-mf   ,        merge $git_option_no_edit --commit --ff-only
-sb   ,        status --short --branch                                   # status with branch info
-sf   ,        diff --name-only --relative HEAD                          # status about file changes
-st   ,        status\
+c1   ,          commit -m $commit_message_one_file $one_changed           # commit one file
+d    ,          diff --color --find-renames
+f    g,h,lo,r,  log --color --decorate --abbrev-commit --find-renames
+g    g,lo,r,    log --color --decorate --abbrev-commit --find-renames
+l    ld,r,      log --color --decorate --abbrev-commit --find-renames
+3    ld,r,10    log --color --decorate --abbrev-commit --find-renames
+mc   ,          merge $git_option_no_edit --commit --no-ff
+mf   ,          merge $git_option_no_edit --commit --ff-only
+sb   ,          status --short --branch                                   # status with branch info
+sf   ,          diff --name-only --relative HEAD                          # status about file changes
+st   ,          status\
 "
 
 get_shortcut=0
