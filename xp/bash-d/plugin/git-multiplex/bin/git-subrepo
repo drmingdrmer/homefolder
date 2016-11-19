@@ -207,6 +207,9 @@ main()
                     base="$c"
                     base="${base%%]}"
                     base="${base%/}/"
+                    if test "$base" = "/"; then
+                        base=
+                    fi
                     ;;
                 remote:)
                     remote="$c"
