@@ -1,0 +1,49 @@
+#!/bin/sh
+
+cmd=${1:-clone}
+
+while read name gist_id; do
+    echo === $name ===
+    if [ -d "$name" ]; then
+        case $cmd in
+            push)
+                ( cd $name && git push origin master; )
+                ;;
+            fetch)
+                ( cd $name && git fetch origin; )
+                ;;
+            pull)
+                ( cd $name && git pull --ff-only origin; )
+                ;;
+            status)
+                ( cd $name && git status; )
+                ;;
+            commit)
+                ( cd $name && git add -u && git commit -m 'auto commit'; )
+                ;;
+            clone)
+                ;;
+            *)
+                ( cd $name && git "$@"; )
+                ;;
+
+        esac
+    else
+        case $cmd in
+            clone)
+                (
+                url=git@github.com:baishancloud/$name.git
+                mkdir -p $name \
+                    && cd $name \
+                    && git init \
+                    && git remote add origin $url \
+                    && git fetch \
+                    && git checkout master
+                )
+
+                ;;
+        esac
+    fi
+done <<-END
+git-subrepo
+END
