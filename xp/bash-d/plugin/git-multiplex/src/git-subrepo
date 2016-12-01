@@ -26,7 +26,7 @@ main()
     local localtag=
     while read a b c d; do
 
-        if [ "x$a" = "x" ]; then
+        if [ "x$a" = "x" ] || [ "${a:0:1}" = "#" ]; then
             continue
         fi
 
@@ -51,7 +51,7 @@ main()
                     remote="$c"
                     ;;
                 remote_suffix:)
-                    remote="$c"
+                    remote_suffix="$c"
                     ;;
                 *)
                     echo "invalid tag: $b"
@@ -83,7 +83,7 @@ main()
 
         if test "${url:0:8}" != "https://" && test "${url:0:4}" != "git@"
         then
-            url="$remote$url$remote_suffix"
+            url="${remote}${url}${remote_suffix}"
         fi
 
         fetch_remote "$base$prefix" "$url" "$ref" &
