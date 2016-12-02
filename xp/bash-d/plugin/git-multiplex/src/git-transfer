@@ -59,7 +59,9 @@ cat $conffn | while read folder src dst x; do
     src="$src_remote$src"
     dst="$dst_remote$dst"
 
-    info "transfer git: $src to $dst stored in $folder"
+    info "transfer: $folder"
+    info "    from: $src"
+    info "      to: $dst"
 
     mkdir -p "$(dirname "$folder")" || die mkdir "$(dirname "$folder")"
 
