@@ -35,15 +35,15 @@ cat $conffn | while read folder src dst x; do
                 if test "$base" = "/"; then
                     base=
                 fi
-                info "set base to '$base'"
+                info "set base to" "'$base'"
                 ;;
             src:)
                 src_remote="$dst"
-                info "set src base to '$src_remote'"
+                info "set src base to" "'$src_remote'"
                 ;;
             dst:)
                 dst_remote="$dst"
-                info "set dst base to '$dst_remote'"
+                info "set dst base to" "'$dst_remote'"
                 ;;
             *)
                 echo "invalid tag: $b"
@@ -59,9 +59,9 @@ cat $conffn | while read folder src dst x; do
     src="$src_remote$src"
     dst="$dst_remote$dst"
 
-    info "transfer: $folder"
-    info "    from: $src"
-    info "      to: $dst"
+    info "transfer:" "$folder"
+    info "    from:" "$src"
+    info "      to:" "$dst"
 
     mkdir -p "$(dirname "$folder")" || die mkdir "$(dirname "$folder")"
 
