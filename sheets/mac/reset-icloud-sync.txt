@@ -1,0 +1,12 @@
+
+I found the solution on Yosemite!
+
+Go to ~/Library/Application Support
+
+Move the folder CloudDocs to the trash.
+
+Kill the processes cloudd and bird using Activiy Monitor or Temrinal.
+
+Your iCloud Drive starts downloading your stuff suddenly.
+
+Stupid, Apple, stupid!!!
