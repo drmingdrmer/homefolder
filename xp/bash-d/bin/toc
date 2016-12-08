@@ -1,0 +1,11 @@
+#!/bin/sh
+
+doctoc --title 'Table of Content' $(
+if [ "$#" -gt 0 ]; then
+    for ptn in "$@"; do
+        find . -name "$ptn"
+    done
+else
+    find . -name "*.md"
+fi
+)
