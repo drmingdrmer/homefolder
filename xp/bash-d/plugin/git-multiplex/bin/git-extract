@@ -19,7 +19,7 @@ fns="$@"
 for c in $(git log --reverse $range --format="%H" -- $fns); do
 
     echo "to pick $fns from:"
-    git log --color --stat --decorate --pretty=oneline --abbrev-commit -M -n1 $c
+    git --no-pager log --color --stat --decorate --pretty=oneline --abbrev-commit -M -n1 $c
 
     mes=$(git log -n1 --format="%B" $c)
 
