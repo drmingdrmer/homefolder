@@ -52,7 +52,9 @@ XPT freturn
 
 XPT farguments
 **arguments**:
-`^
+-   \``x^\`:
+    `cursor^
+
 
 XPT largument
 -   \``x^\`:
