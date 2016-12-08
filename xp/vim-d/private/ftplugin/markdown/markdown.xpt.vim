@@ -1,29 +1,30 @@
 XPTemplate priority=personal
 
 XPTvar $code_quote ```
+XPTvar $bquote `
 
 XPTinclude
       \ _common/common
 
 XPT readme " template of README.md
 
-# `name^
+#   Name
 
 x
 
-# Status
+#   Status
 
 This library is considered production ready.
 
-# Description
+#   Description
 
 `cursor^
 
-# Author
+#   Author
 
 Zhang Yanpo (张炎泼) <drdr.xp@gmail.com>
 
-# Copyright and License
+#   Copyright and License
 
 The MIT License (MIT)
 
@@ -39,3 +40,20 @@ XPT install
 make
 sudo make install
 `$code_quote^
+
+
+XPT fsyntax
+**syntax**:
+\``^\`
+
+XPT freturn
+**return**:
+`^
+
+XPT farguments
+**arguments**:
+`^
+
+XPT largument
+-   \``x^\`:
+    `cursor^
