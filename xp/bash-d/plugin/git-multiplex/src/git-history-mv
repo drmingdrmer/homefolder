@@ -1,0 +1,21 @@
+#!/bin/sh
+
+from="$1"
+to="$2"
+shift
+shift
+
+if [ "${to%/}" = "${to}" ]; then
+    # "to" is a file path
+    todir="$(dirname "$to")"
+else
+    todir="$to"
+fi
+
+script='
+mkdir -p "'"$todir"'"
+mv "'"$from"'" "'"$to"'"
+``
+'
+echo "script: ($script)"
+git filter-branch -f --tree-filter "$script" "$@"
