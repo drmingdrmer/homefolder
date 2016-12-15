@@ -18,8 +18,13 @@ mc   ,          merge $git_option_no_edit --commit --no-ff
 mf   ,          merge $git_option_no_edit --commit --ff-only
 sb   ,          status --short --branch                                   # status with branch info
 sf   ,          diff --name-only --relative HEAD                          # status about file changes
-st   ,          status\
-"
+st   ,          status
+xi   ,          clean -dXf                                                # remove all ignored files
+xi0  ,          clean -dXfn                                               # remove all ignored files; dry run
+xu   ,          clean -df                                                 # remove all untracked files
+xu0  ,          clean -dnf                                                # remove all untracked files; dry run
+xx   ,          clean -dxf                                                # remove all untracked and ignored files
+xx0  ,          clean -dxf                                                # remove all untracked and ignored files; dry run"
 
 get_shortcut=0
 
