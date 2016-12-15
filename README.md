@@ -25,6 +25,7 @@ Please refer to the [Wiki](https://github.com/andreafabrizi/Dropbox-Uploader/wik
 * Shell wildcard expansion (only for upload)
 * Delete/Move/Rename/Copy/List/Share files
 * Create share link
+* Monitor for changes
 
 ## Getting started
 
@@ -64,10 +65,10 @@ The syntax is quite simple:
 
 * **upload** &lt;LOCAL_FILE/DIR ...&gt; &lt;REMOTE_FILE/DIR&gt;  
 Upload a local file or directory to a remote Dropbox folder.  
-If the file is bigger than 150Mb the file is uploaded using small chunks (default 4Mb); 
+If the file is bigger than 150Mb the file is uploaded using small chunks (default 50Mb); 
 in this case a . (dot) is printed for every chunk successfully uploaded and a * (star) if an error 
 occurs (the upload is retried for a maximum of three times).
-Only if the file is smaller than 150Mb, the standard upload API is used, and if the -p option is used
+Only if the file is smaller than 150Mb, the standard upload API is used, and if the -p option is specified
 the default curl progress bar is displayed during the upload process.  
 The local file/dir parameter supports wildcards expansion.
 
@@ -84,10 +85,13 @@ Move or rename a remote file or directory
 Copy a remote file or directory
 
 * **mkdir** &lt;REMOTE_DIR&gt;  
-Create a remote directory on DropBox
+Create a remote directory on Dropbox
 
 * **list** [REMOTE_DIR]  
 List the contents of the remote Dropbox folder
+
+* **monitor** [REMOTE_DIR] [TIMEOUT]  
+Monitor the remote Dropbox folder for changes. If timeout is specified, at the first change event the function will return.
 
 * **share** &lt;REMOTE_FILE&gt;  
 Get a public share link for the specified file or directory
