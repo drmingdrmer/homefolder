@@ -22,34 +22,34 @@ if [ "$git_version_1" = "1" ] && [ "$git_version_2" -lt "8" ]; then
     git_arg_no_edit=""
 fi
 
-$gconf user.name "drdr xp"
-$gconf user.email drdr.xp@gmail.com
-# $gconf push.default upstream
-$gconf push.default current
-$gconf merge.defaultToUpstream true
+$gconf user.name                "drdr xp"
+$gconf user.email               drdr.xp@gmail.com
+#$gconf push.default            upstream
+$gconf push.default             current
+$gconf merge.defaultToUpstream  true
 
-$gconf pull.ff only
-$gconf pull.rebase true
+$gconf pull.ff                  only
+$gconf pull.rebase              true
 
-$gconf color.diff true
-$gconf color.interactive true
+$gconf color.diff               true
+$gconf color.interactive        true
 
-$gconf diff.noprefix true
-$gconf diff.context  10
+$gconf diff.noprefix            true
+$gconf diff.context             10
 
-$gconf diff.algorithm histogram
+$gconf diff.algorithm           histogram
 $gconf diff.compactionHeuristic true
 
-$gconf color.diff-highlight.oldhighlight 'bold red cyan'
-$gconf color.diff-highlight.newhighlight 'bold green cyan'
-$gconf color.diff-highlight.oldreset 'nobold red black'
-$gconf color.diff-highlight.newreset 'nobold green black'
+$gconf color.diff-highlight.oldhighlight    'bold   red   cyan'
+$gconf color.diff-highlight.newhighlight    'bold   green cyan'
+$gconf color.diff-highlight.oldreset        'nobold red   black'
+$gconf color.diff-highlight.newreset        'nobold green black'
 
-$gconf color.diff.meta      'bold white'
-$gconf color.diff.context        'white'
-$gconf color.diff.frag           'blue'
-$gconf color.diff.func      'bold blue'
-$gconf color.diff.commit         'yellow'
+$gconf color.diff.meta                      'bold white'
+$gconf color.diff.context                        'white'
+$gconf color.diff.frag                           'blue'
+$gconf color.diff.func                      'bold blue'
+$gconf color.diff.commit                         'yellow'
 
 if [ -x $git_base/share/git-core/contrib/diff-highlight/diff-highlight ]; then
     $gconf pager.log 'diff-highlight | less'
@@ -57,9 +57,9 @@ if [ -x $git_base/share/git-core/contrib/diff-highlight/diff-highlight ]; then
     $gconf pager.diff 'diff-highlight | less'
 fi
 
-$gconf i18n.commitencoding utf-8
+$gconf i18n.commitencoding    utf-8
 $gconf i18n.logoutputencoding utf-8
-$gconf core.quotepath 'false'
+$gconf core.quotepath         'false'
 
 $gconf alias.log-full      "$log"
 $gconf alias.lg            "$log"
@@ -67,66 +67,66 @@ $gconf alias.log-short     "$logShort"
 $gconf alias.l             "$logShort"
 
 
-$gconf alias.bb   "!git   $logShort --simplify-by-decoration --no-pager"
-$gconf alias.bmv "branch -m"
+$gconf alias.bb            "!git   $logShort --simplify-by-decoration --no-pager"
+$gconf alias.bmv           "branch -m"
 
-$gconf alias.d   "$diff"
-$gconf alias.ds  "$diff --stat"
-$gconf alias.dc  "$diff --cached"
-$gconf alias.d0  "$diff --unified=0"
+$gconf alias.d             "$diff"
+$gconf alias.ds            "$diff --stat"
+$gconf alias.dc            "$diff --cached"
+$gconf alias.d0            "$diff --unified=0"
 
-$gconf alias.cc  '!git commit --verbose -m "squash! $(msg=$(git log -n1 --pretty=format:%s);echo ${msg#squash! })"'
-$gconf alias.ci  "commit --verbose"
-$gconf alias.cit "commit --verbose -s recursive -X theirs"
-$gconf alias.cia "commit --verbose --amend"
-$gconf alias.fixup '!git commit --verbose -m "fixup! $(msg=$(git log -n1 --pretty=format:%s);echo ${msg#fixup! })"'
+$gconf alias.cc            '!git commit --verbose -m "squash! $(msg=$(git log -n1 --pretty=format:%s);echo ${msg#squash! })"'
+$gconf alias.ci            "commit --verbose"
+$gconf alias.cit           "commit --verbose -s recursive -X theirs"
+$gconf alias.cia           "commit --verbose --amend"
+$gconf alias.fixup         '!git commit --verbose -m "fixup! $(msg=$(git log -n1 --pretty=format:%s);echo ${msg#fixup! })"'
 
-$gconf alias.p  "cherry-pick"
-$gconf alias.pe "cherry-pick --edit"
+$gconf alias.p             "cherry-pick"
+$gconf alias.pe            "cherry-pick --edit"
 
-$gconf alias.co  "checkout"
-$gconf alias.tr  "checkout --track"
+$gconf alias.co            "checkout"
+$gconf alias.tr            "checkout --track"
 
-$gconf alias.pu  "push --set-upstream"
-$gconf alias.please  "push --force-with-lease"
-$gconf alias.pullall "pull --recurse-submodules=on-demand"
-$gconf alias.pp  "pull --ff-only"
+$gconf alias.pu            "push --set-upstream"
+$gconf alias.please        "push --force-with-lease"
+$gconf alias.pullall       "pull --recurse-submodules=on-demand"
+$gconf alias.pp            "pull --ff-only"
 
-$gconf alias.s   "status --short --ignore-submodules"
-$gconf alias.si  "status --ignore-submodules"
-$gconf alias.st  "status"
+$gconf alias.s             "status --short --ignore-submodules"
+$gconf alias.si            "status --ignore-submodules"
+$gconf alias.st            "status"
 
-$gconf alias.r   "rebase"
-$gconf alias.ri  "rebase --interactive"
-$gconf alias.ris "rebase --interactive --autosquash"
-$gconf alias.rp  "rebase --preserve-merges"
+$gconf alias.r             "rebase"
+$gconf alias.ri            "rebase --interactive"
+$gconf alias.ris           "rebase --interactive --autosquash"
+$gconf alias.rp            "rebase --preserve-merges"
 
-$gconf alias.ss  "stash save"
-$gconf alias.ssk "stash save --keep-index"
-$gconf alias.sl  "stash list"
-$gconf alias.sp  "stash pop"
-$gconf alias.sa  "stash apply"
+$gconf alias.ss            "stash save"
+$gconf alias.ssk           "stash save --keep-index"
+$gconf alias.sl            "stash list"
+$gconf alias.sp            "stash pop"
+$gconf alias.sa            "stash apply"
 
-$gconf alias.m   "merge"
-$gconf alias.mf  "merge $git_arg_no_edit --commit --ff-only"
-$gconf alias.mc  "merge $git_arg_no_edit --commit --no-ff"
-$gconf alias.mt  "mergetool -y -t vimdiff"
-$gconf alias.mtg "mergetool -y -t gvimdiff"
+$gconf alias.m             "merge"
+$gconf alias.mf            "merge $git_arg_no_edit --commit --ff-only"
+$gconf alias.mc            "merge $git_arg_no_edit --commit --no-ff"
+$gconf alias.mt            "mergetool -y -t vimdiff"
+$gconf alias.mtg           "mergetool -y -t gvimdiff"
 
-$gconf alias.ls  "ls-files"
-$gconf alias.lsd "ls-files --deleted"
-$gconf alias.lsm "ls-files --modified"
-$gconf alias.lso "ls-files --others"
-$gconf alias.lsi "ls-files --ignored"
-$gconf alias.lss "ls-files --stage"
-$gconf alias.lsk "ls-files --killed"
-$gconf alias.lsu "ls-files --unmerged"
+$gconf alias.ls            "ls-files"
+$gconf alias.lsd           "ls-files --deleted"
+$gconf alias.lsm           "ls-files --modified"
+$gconf alias.lso           "ls-files --others"
+$gconf alias.lsi           "ls-files --ignored"
+$gconf alias.lss           "ls-files --stage"
+$gconf alias.lsk           "ls-files --killed"
+$gconf alias.lsu           "ls-files --unmerged"
 
-$gconf alias.root  'commit -m root --allow-empty'
-# $gconf alias.it    '!git init && git commit -m root --allow-empty'
+$gconf alias.root          'commit -m root --allow-empty'
+# $gconf alias.it          '!git init && git commit -m root --allow-empty'
 
-$gconf alias.sub "submodule"
-$gconf alias.subadd "submodule add --branch master"
-$gconf alias.subeach "submodule foreach"
+$gconf alias.sub           "submodule"
+$gconf alias.subadd        "submodule add --branch master"
+$gconf alias.subeach       "submodule foreach"
 
-$gconf alias.cnf "config --get-regexp "
+$gconf alias.cnf           "config --get-regexp "
