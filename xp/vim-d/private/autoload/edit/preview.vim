@@ -1,5 +1,8 @@
 fun! edit#preview#Open() "{{{
 
+    " edit current buffer in preview window.
+    " and place preview window on the right
+
     pedit
     wincmd P
     wincmd L
