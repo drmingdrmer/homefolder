@@ -40,6 +40,7 @@ s/\bv2\b//ig;
 s/yyets//ig;
 s/人人影视(制作)?//ig;
 s/WOLF字幕组//ig;
+s/新Www-Cc//ig;
 s/中英字幕//ig;
 s/chi_jap//ig;
 s/国粤日英//ig;
