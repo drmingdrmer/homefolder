@@ -11,6 +11,7 @@ endtry
 
 nnoremap <silent> <Plug>edit:highlight_none             :let @/=""<CR>
 nnoremap <silent> <Plug>plugin:nerd_tree:toggle         :silent! WinRem<cr>:silent! NERDTreeToggle<cr>:silent! WinBack<cr>
+xnoremap <Plug>edit:visual:delete                       d
 
 nmap ,,                         <Plug>view:highlight_cursor_word
 nmap <Leader>h                  <Plug>edit:highlight_none
@@ -111,6 +112,7 @@ fun! s:DoMap() "{{{
           \ [ 'xmap', "<M-c>",                "<Plug>edit:copy_to_tmp" ],
           \ [ 'xmap', "c",                    "<Plug>edit:x_copy" ],
           \ [ 'xmap', "dw",                   ":call edit#align#VerticalDeleteToWordStart()<CR>" ],
+          \ [ 'xmap', "dd",                   "<Plug>edit:visual:delete" ],
           \ ]
     for [ cmd, key, cont ] in mapping
         exe cmd "<unique>" key cont

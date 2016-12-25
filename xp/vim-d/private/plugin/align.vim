@@ -77,14 +77,6 @@ vmap <Plug>format:c:func_split_args :call Al(3)<cr>
 "map}}}
 
 
-" fun! s:AlignOp(c)
-  " let c = a:c
-  " let patt = '\v[+-*\\]='
-  " if c == ","
-  " elseif c == "="
-  " elseif c == "+"
-" endfunction
-
-
-
-
+xnoremap a<Space>   :call edit#align#VerticalAlign('\V \+\S')<CR>
+xnoremap aa         :call edit#align#VerticalAlign('\V \+' . nr2char(getchar()))<CR>
+xnoremap af         :call edit#align#VerticalAlign('')<CR>
