@@ -1,5 +1,5 @@
 fun! edit#align#VerticalDeleteToWordStart() "{{{
-    let c = virtcol("'<")
-    exe 's/\%>' . c . 'v */'
+    let vcol = virtcol("'<")
+    exe 's/\%>' . (vcol-1) . 'v */'
     call cursor(getpos("'<")[1:2])
 endfunction "}}}
