@@ -11,3 +11,10 @@ pip install web.py -i http://pypi.douban.com/simple
 # ~/.pip/pip.conf
 # [global]
 # index-url = http://pypi.douban.com/simple
+# [install]
+# trusted-host=pypi.douban.com
+
+# [global]
+# index-url = http://mirrors.aliyun.com/pypi/simple/
+# [install]
+# trusted-host=mirrors.aliyun.com
