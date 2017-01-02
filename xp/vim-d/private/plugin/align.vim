@@ -77,6 +77,7 @@ vmap <Plug>format:c:func_split_args :call Al(3)<cr>
 "map}}}
 
 
-xnoremap a<Space>   :call edit#align#VerticalAlign('\V \+\S')<CR>
-xnoremap aa         :call edit#align#VerticalAlign('\V \+' . nr2char(getchar()))<CR>
-xnoremap af         :call edit#align#VerticalAlign('')<CR>
+xnoremap ,a<Space>   :call edit#align#VerticalAlignVisual('\V \+\S')<CR>
+nnoremap ,a<Space>   :call edit#align#VerticalAlign('\V \+\S', edit#align#FindParagraph(), virtcol('.'))<CR>
+xnoremap ,aa         :call edit#align#VerticalAlignVisual('\V \+' . nr2char(getchar()))<CR>
+xnoremap ,af         :call edit#align#VerticalAlignVisual('')<CR>

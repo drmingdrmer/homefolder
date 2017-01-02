@@ -6,13 +6,11 @@ endfunction "}}}
 
 hi def link FooGotoCandidate Visual
 
-fun! edit#align#VerticalAlign(regex) range "{{{
+fun! edit#align#VerticalAlign(regex, range, vcol) "{{{
 
-    " passed as "a:firstline" and "a:lastline".  If [range]
-
-    let line_start = a:firstline
-    let line_end = a:lastline
-    let vcol = virtcol("'<")
+    let save_cursor = getpos('.')[1:2]
+    let [line_start, line_end] = a:range
+    let vcol       = a:vcol
 
     if a:regex == ''
         let regex_before = edit#align#FindRegex(line_start, line_end)
@@ -20,8 +18,8 @@ fun! edit#align#VerticalAlign(regex) range "{{{
             return
         endif
     else
-        let ptn  = '\V\%>' . (a:firstline-1) . 'l'
-        let ptn .=   '\%<' . (a:lastline+1) . 'l'
+        let ptn  = '\V\%>' . (line_start-1) . 'l'
+        let ptn .=   '\%<' . (line_end+1) . 'l'
         let ptn .=   '\%>' . (vcol-1) . 'v' . a:regex
         let regex_before = ptn
     endif
@@ -62,6 +60,16 @@ fun! edit#align#VerticalAlign(regex) range "{{{
 
         let i += 1
     endwhile
+
+    call cursor(save_cursor)
+
+endfunction "}}}
+
+fun! edit#align#VerticalAlignVisual(regex) range "{{{
+
+    " passed as "a:firstline" and "a:lastline".  If [range]
+
+    call edit#align#VerticalAlign(a:regex, [a:firstline, a:lastline], virtcol("'<"))
 
     call cursor(getpos("'<")[1:2])
 
@@ -117,6 +125,26 @@ fun! edit#align#FindRegex(line_start, line_end) "{{{
         redraw!
 
     endwhile
+endfunction "}}}
+
+fun! edit#align#FindParagraph() "{{{
+    let top = getpos("'{")[1]
+    if getline(top) == ''
+        let top += 1
+    endif
+
+    let bot = getpos("'}")[1]
+    if getline(bot) == ''
+        let bot -= 1
+    end
+
+    echom string([top, bot])
+
+    return [top, bot]
+endfunction "}}}
+
+fun! edit#align#n() "{{{
+    
 endfunction "}}}
 
 fun! s:clearMatch() "{{{
