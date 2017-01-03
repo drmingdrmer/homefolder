@@ -24,6 +24,6 @@ wget http://kernel.org/pub/software/scm/git/$package
 tar -xf $package
 
 cd $g
-make prefix=$HOME/local NO_TCLTK=YesPlease
+make prefix=$HOME/local NO_TCLTK=YesPlease install
 
 # ./configure --prefix=$HOME && make install
