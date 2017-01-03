@@ -1,14 +1,23 @@
 #!/bin/sh
 
 # for msgfmt
-apt-get install gettext
+which -s apt-get \
+    && apt-get install gettext
 
 
-yum install -y openssl.* libcurl-devel* gettext.* expat-devel.*
+yum install -y              \
+    curl-devel              \
+    expat-devel             \
+    gcc                     \
+    gettext-devel           \
+    libcurl-devel           \
+    openssl-devel           \
+    perl-ExtUtils-MakeMaker \
+    zlib-devel              \
 
 cd ~
 
-g=git-2.9.0
+g=git-2.11.0
 package=$g.tar.xz
 wget http://kernel.org/pub/software/scm/git/$package
 
