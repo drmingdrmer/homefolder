@@ -1,5 +1,8 @@
-add epel repo for some package like ansible
+# add epel repo for some package like ansible
 
 wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm
 rpm -ivh epel-release-latest-6.noarch.rpm
 
+# or just
+
+yum install epel-release
