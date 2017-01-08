@@ -3,11 +3,12 @@ fun! input#GetChar(...) "{{{
     let lst = []
 
     if a:0 == 0
+        " \ "\<BS>": 'backspace',
         let cancel_code = {
               \ 3      : 'c-c',
               \ 27     : 'esc',
-              \ "\<BS>": 'backspace',
               \ }
+
     else
         let cancel_code = a:1
     endif
