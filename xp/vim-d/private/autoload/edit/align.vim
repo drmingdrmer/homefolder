@@ -138,8 +138,6 @@ fun! edit#align#FindParagraph() "{{{
         let bot -= 1
     end
 
-    echom string([top, bot])
-
     return [top, bot]
 endfunction "}}}
 

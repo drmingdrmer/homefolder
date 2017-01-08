@@ -77,7 +77,22 @@ vmap <Plug>format:c:func_split_args :call Al(3)<cr>
 "map}}}
 
 
+let s:special_char = {
+      \ " ": '\V \+\S',
+      \ }
+
+fun! s:AlignChar() "{{{
+    let chr = input#GetChar()
+    if has_key(s:special_char, chr)
+        let reg = s:special_char[chr]
+    else
+        let reg = '\V\s' . chr
+    endif
+    return edit#align#VerticalAlign(reg, edit#align#FindParagraph(), virtcol('.'))
+endfunction "}}}
+
 xnoremap ,a<Space>   :call edit#align#VerticalAlignVisual('\V \+\S')<CR>
-nnoremap ,a<Space>   :call edit#align#VerticalAlign('\V \+\S', edit#align#FindParagraph(), virtcol('.'))<CR>
-xnoremap ,aa         :call edit#align#VerticalAlignVisual('\V \+' . nr2char(getchar()))<CR>
-xnoremap ,af         :call edit#align#VerticalAlignVisual('')<CR>
+" nnoremap ,a          :call edit#align#VerticalAlign('\V \+\S', edit#align#FindParagraph(), virtcol('.'))<CR>
+nnoremap ,a          :call <SID>AlignChar()<CR>
+" xnoremap ,aa         :call edit#align#VerticalAlignVisual('\V \+' . nr2char(getchar()))<CR>
+" xnoremap ,af         :call edit#align#VerticalAlignVisual('')<CR>
