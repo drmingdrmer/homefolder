@@ -23,6 +23,11 @@ fun! input#GetChar(prompt, ...) "{{{
         return ''
     endif
 
-    return nr2char(chr_nr)
+    " special key is not a number, see :h getchar()
+    if type(chr_nr) == v:t_string
+        return chr_nr
+    else
+        return nr2char(chr_nr)
+    endif
 
 endfunction "}}}
