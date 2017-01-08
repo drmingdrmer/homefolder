@@ -82,7 +82,7 @@ let s:special_char = {
       \ }
 
 fun! s:AlignChar() "{{{
-    let chr = input#GetChar()
+    let chr = input#GetChar('type char> ')
     if has_key(s:special_char, chr)
         let reg = s:special_char[chr]
     else

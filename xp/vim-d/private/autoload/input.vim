@@ -1,4 +1,4 @@
-fun! input#GetChar(...) "{{{
+fun! input#GetChar(prompt, ...) "{{{
     let ptn = ''
     let lst = []
 
@@ -13,7 +13,9 @@ fun! input#GetChar(...) "{{{
         let cancel_code = a:1
     endif
 
-    echo "type char> "
+    if a:prompt != ''
+        echo a:prompt
+    endif
 
     let chr_nr = getchar()
 
