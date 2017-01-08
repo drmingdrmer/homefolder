@@ -20,7 +20,6 @@ unite.vim                       Shougo/                      master
 ultisnips                       SirVer/                      master
 vim-gitgutter                   airblade/                    master
 ctrlp                           ctrlpvim/ctrlp.vim           master
-vim-ShowMarks                   drmingdrmer/                 master
 vim-color-edit                  drmingdrmer/                 master
 vim-fuzzyjumpto                 drmingdrmer/                 master
 vim-highlight-emphasize         drmingdrmer/                 master
