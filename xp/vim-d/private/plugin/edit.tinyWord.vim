@@ -119,7 +119,6 @@ vmap <C-space> :<C-w>NonBlk<cr>:SelWB<cr>mO:<C-w>SelWE<cr>v`O
 vmap <S-space> :<C-w>NonBlk<cr>:SelWB<cr>mO:<C-w>SelWE<cr>v`O
 " nmap <space>w  :NonBlk<cr>:SelWB<cr>mO:<C-w>SelWE<cr>v`O
 
-nmap \w  <Plug>edit:selectWord
 nmap [w  <Plug>edit:selectWord
 
 " nmap <Plug>edit:selectWord :NonBlk<cr>:SelWB<cr>mO:<C-w>SelWE<cr>v`O
