@@ -22,6 +22,9 @@ w   color-words=[[:alpha:]]+|[^[:space:]]'
 
 git_comma_make_option_expr()
 {
+    # output is a concatenated variable string,
+    # such as: '"$opt_all$opt_simplify_by_decoration..."'
+
     local vars=""
     local prev_option_name=
     while read shortcut option; do
@@ -37,7 +40,7 @@ git_comma_make_option_expr()
         prev_option_name="$option_name"
 
     done <<<"$git_comma_options"
-    echo "echo \"$vars\""
+    echo "\"$vars\""
 }
 
 export git_comma_option_expr="$(git_comma_make_option_expr)"

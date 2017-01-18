@@ -226,7 +226,7 @@ if [ "$cmd" = "conf" ]; then
     exit 0
 fi
 
-_out="$(eval "$git_comma_option_expr")"
+_out="$(eval "echo $git_comma_option_expr")"
 _out="$_out$opt_unified"
 
 if [ "$is_flags" = "1" ]; then
