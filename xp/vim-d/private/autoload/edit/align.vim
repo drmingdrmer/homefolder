@@ -55,6 +55,10 @@ fun! edit#align#VerticalAlign(regex, range, vcol) "{{{
             let i += 1
             continue
         endif
+        " echom ptn
+        " echom string(pos)
+        " echom virtcol(pos)
+        " echom maxvcol
 
         exec 's/' . ptn . '/' . repeat(' ', maxvcol - virtcol(pos)) . '/'
 
