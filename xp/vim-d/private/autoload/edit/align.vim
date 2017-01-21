@@ -13,15 +13,12 @@ fun! edit#align#VerticalAlign(regex, range, vcol) "{{{
     let vcol       = a:vcol
 
     if a:regex == ''
-        let regex_before = edit#align#FindRegex(line_start, line_end)
+        let regex_before = edit#align#InteractiveInputRegex(line_start, line_end)
         if regex_before == ''
             return
         endif
     else
-        let ptn  = '\V\%>' . (line_start-1) . 'l'
-        let ptn .=   '\%<' . (line_end+1) . 'l'
-        let ptn .=   '\%>' . (vcol-1) . 'v' . a:regex
-        let regex_before = ptn
+        let regex_before = a:regex
     endif
 
     " find max virtical col
@@ -55,12 +52,9 @@ fun! edit#align#VerticalAlign(regex, range, vcol) "{{{
             let i += 1
             continue
         endif
-        " echom ptn
-        " echom string(pos)
-        " echom virtcol(pos)
-        " echom maxvcol
 
-        exec 's/' . ptn . '/' . repeat(' ', maxvcol - virtcol(pos)) . '/'
+        " leave another space before regex_before
+        exec 's/' . ptn . '/' . repeat(' ', maxvcol - virtcol(pos) + 1) . '/'
 
         let i += 1
     endwhile
@@ -71,15 +65,13 @@ endfunction "}}}
 
 fun! edit#align#VerticalAlignVisual(regex) range "{{{
 
-    " passed as "a:firstline" and "a:lastline".  If [range]
-
     call edit#align#VerticalAlign(a:regex, [a:firstline, a:lastline], virtcol("'<"))
 
     call cursor(getpos("'<")[1:2])
 
 endfunction "}}}
 
-fun! edit#align#FindRegex(line_start, line_end) "{{{
+fun! edit#align#InteractiveInputRegex(line_start, line_end) "{{{
 
     let ptn = ''
     let lst = []
@@ -91,7 +83,7 @@ fun! edit#align#FindRegex(line_start, line_end) "{{{
 
     while 1
 
-        echo "foo_ goto>" . join( lst, '' )
+        echo "regex>" . join( lst, '' )
         let chr_nr = getchar()
 
         call s:clearMatch()

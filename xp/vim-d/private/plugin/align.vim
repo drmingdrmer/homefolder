@@ -78,7 +78,7 @@ vmap <Plug>format:c:func_split_args :call Al(3)<cr>
 
 
 let s:special_char = {
-      \ " ": '\V \+\S',
+      \ " ": '\V\s\ze\S',
       \ }
 
 fun! s:AlignChar(mode) range "{{{
@@ -86,7 +86,7 @@ fun! s:AlignChar(mode) range "{{{
     if has_key(s:special_char, chr)
         let reg = s:special_char[chr]
     else
-        let reg = '\V\s\+' . chr
+        let reg = '\V\s\{-}' . chr
     endif
     if a:mode == 'normal'
         return edit#align#VerticalAlign(reg, edit#align#FindParagraph(), virtcol('.'))
@@ -95,8 +95,6 @@ fun! s:AlignChar(mode) range "{{{
     endif
 endfunction "}}}
 
-xnoremap ,a<Space>   :call edit#align#VerticalAlignVisual('\V \+\S')<CR>
-" nnoremap ,a          :call edit#align#VerticalAlign('\V \+\S', edit#align#FindParagraph(), virtcol('.'))<CR>
 nnoremap ,a          :call <SID>AlignChar('normal')<CR>
 xnoremap ,a          :call <SID>AlignChar('visual')<CR>
 
