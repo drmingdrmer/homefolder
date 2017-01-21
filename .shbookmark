@@ -1,6 +1,7 @@
 /usr/local/s2/current
 /usr/local/s2/links/log_dir
 ~/Library/Containers/com.tencent.xinWeChat/Data/Library/Application Support
+~/sec/passwdgen/acc
 ~/vcs/coding-baishancloud/baishancloud/mysql-devops
 ~/vcs/coding-baishancloud/baishancloud/mysql-monitor
 ~/vcs/coding-baishancloud/baishancloud/s2-doc-internal/src/client-project
@@ -10,9 +11,9 @@
 ~/vcs/coding-baishancloud/baishancloud/storage-dashboard
 ~/vcs/coding-baishancloud/drmingdrmer/bscweb
 ~/vcs/coding-baishancloud/drmingdrmer/vcs-coding-manifest
-~/vcs/github-baishancloud/drmingdrmer/baishancloud-manifest
+~/vcs/github-baishancloud/baishancloud/luajit2
 ~/vcs/github-baishancloud/baishancloud/pykit
-~/sec/passwdgen/acc
+~/vcs/github-baishancloud/drmingdrmer/baishancloud-manifest
 ~/vcs/xp/JakSprats/datanet
 ~/vcs/xp/baishancloud/lrc-erasure-code
 ~/vcs/xp/drmingdrmer/shlib
