@@ -26,9 +26,9 @@ fun! edit#align#VerticalAlign(regex, range, vcol) "{{{
     let maxvcol = vcol
     let i = line_start
     while i <= line_end
-        let ptn = '\V\%' . i . 'l\%>' . (vcol-1) . 'v' . regex_before
+        let ptn = '\V\%' . i . 'l\%>' . (vcol-1) . 'v \*' . regex_before
 
-        let pos = searchpos(ptn)
+        let pos = searchpos(ptn, 'c')
         if pos[0] == 0
             let i += 1
             continue
@@ -47,7 +47,7 @@ fun! edit#align#VerticalAlign(regex, range, vcol) "{{{
     while i <= line_end
         let ptn = '\V\%' . i . 'l\%>' . (vcol-1) . 'v \*\ze' . regex_before
 
-        let pos = searchpos(ptn)
+        let pos = searchpos(ptn, 'c')
         if pos[0] == 0
             let i += 1
             continue
