@@ -1,0 +1,3 @@
+#!/bin/sh
+varname="$1"
+tmux display -p '#{'"$1"'}'
