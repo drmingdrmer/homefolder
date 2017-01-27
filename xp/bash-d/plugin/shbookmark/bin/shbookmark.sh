@@ -176,7 +176,7 @@ case $cmd in
             else
                 caseflag=" -i "
             fi
-            filteringCommand="cat $bookmarkFile"
+            filteringCommand='cat '"'$bookmarkFile'"' | while read p; do [ -d "$(eval echo "$p")" ] && echo "$p"; done'
             keywords=""
             for cond in $params;do
                 if [ "${cond:0:1}" == "-" ];then
@@ -197,7 +197,7 @@ case $cmd in
             fi
 
 
-            echo "::$params"
+            echo "params: $params"
 
             hm=${HOME//\//\\\/}
             count=`eval $filteringCommand | wc -l`
