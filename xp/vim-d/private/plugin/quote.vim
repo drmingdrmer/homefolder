@@ -18,6 +18,7 @@ xnoremap q.       <esc>`>a.<esc>`<i.<esc>gvlol
 xnoremap q+       <esc>`>a+<esc>`<i+<esc>gvlol
 xnoremap q`       <esc>`>a`<esc>`<i`<esc>gvlol
 xnoremap q=       <esc>`>a=<esc>`<i=<esc>gvlol
+xnoremap q$       <esc>`>a$<esc>`<i$<esc>gvlol
 xnoremap q*       <esc>`>a*<esc>`<i*<esc>gvlol
 xnoremap q<       <esc>`>a><esc>`<i<<esc>gvlol
 xnoremap q(       <esc>`>a)<esc>`<i(<esc>gvlol
@@ -37,6 +38,7 @@ nmap q.       <Plug>edit:selectWordq.v
 nmap q+       <Plug>edit:selectWordq+v
 nmap q`       <Plug>edit:selectWordq`v
 nmap q=       <Plug>edit:selectWordq=v
+nmap q$       <Plug>edit:selectWordq$v
 nmap q*       <Plug>edit:selectWordq*v
 nmap q<       <Plug>edit:selectWordq<v
 nmap q(       <Plug>edit:selectWordq(v
