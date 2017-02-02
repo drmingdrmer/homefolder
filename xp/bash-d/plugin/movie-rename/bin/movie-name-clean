@@ -93,5 +93,5 @@ $season_to_right;
 $move_num_right;
 "
 
-rename "$ptns" *.rmvb *.avi *.mp4 *.mkv *.srt *.torrent */ \
-                  .*.rmvb .*.avi .*.mp4 .*.mkv .*.srt *.torrent
+rename "$ptns" *.rmvb *.avi *.mp4 *.mkv *.srt *.torrent *.sub *.ass */ \
+                  .*.rmvb .*.avi .*.mp4 .*.mkv .*.srt *.torrent *.sub *.ass
