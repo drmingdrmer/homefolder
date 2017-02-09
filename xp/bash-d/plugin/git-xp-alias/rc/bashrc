@@ -11,6 +11,8 @@ f   first-parent
 g   graph
 i   ignore-all-space
 ld  format=diff
+lf  format=fuller
+lm  format=medium
 lo  format=oneline
 n   name-only
 p   patch

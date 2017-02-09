@@ -12,10 +12,10 @@ c1   ,          commit -m $commit_message_one_file $one_changed           # comm
 cc   ,          commit -m $commit_message_one_file                        # commit all staged(cached)
 ca   ,          commit -m $commit_message_one_file -a                     # commit all staged(cached) or not
 d    ,          diff --color --find-renames
-f    g,h,lo,r,  log --color --decorate --abbrev-commit --find-renames
-g    g,lo,r,    log --color --decorate --abbrev-commit --find-renames
-l    ld,r,      log --color --decorate --abbrev-commit --find-renames
-3    ld,r,10    log --color --decorate --abbrev-commit --find-renames
+f    g,h,lo,r,  log --color --decorate --abbrev-commit --find-renames     # graph and full history
+g    g,lo,r,    log --color --decorate --abbrev-commit --find-renames     # graph one screen
+l    ld,r,      log --color --decorate --abbrev-commit --find-renames     # list mode, no graph, more info
+3    ld,r,10    log --color --decorate --abbrev-commit --find-renames     # list mode, with diff
 mc   ,          merge $git_option_no_edit --commit --no-ff
 mf   ,          merge $git_option_no_edit --commit --ff-only
 sb   ,          status --short --branch                                   # status with branch info
@@ -54,6 +54,7 @@ while read shortcut flag cmd; do
     if [ "$shortcut" = "${shortcmd:0:$len_shortcut}" ]; then
         export GIT_COMMA_FLAG="$(echo "$flag" | tr -d ',')"
         found=1
+        cmd="${cmd%#*}"
         break
     fi
 done<<<"$commands"
