@@ -120,3 +120,8 @@ ansible
 sql
 json
 dbshard
+tcp
+loopback
+portlock
+PortLock
+张炎泼

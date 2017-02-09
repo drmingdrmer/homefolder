@@ -9,6 +9,8 @@ commit_message_one_file='"$(git status --porcelain | head -n1)"'
 
 commands="\
 c1   ,          commit -m $commit_message_one_file $one_changed           # commit one file
+cc   ,          commit -m $commit_message_one_file                        # commit all staged(cached)
+ca   ,          commit -m $commit_message_one_file -a                     # commit all staged(cached) or not
 d    ,          diff --color --find-renames
 f    g,h,lo,r,  log --color --decorate --abbrev-commit --find-renames
 g    g,lo,r,    log --color --decorate --abbrev-commit --find-renames
