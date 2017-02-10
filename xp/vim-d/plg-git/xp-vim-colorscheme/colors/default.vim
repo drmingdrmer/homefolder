@@ -58,6 +58,7 @@ hi Statement    cterm=none         ctermfg=darkyellow
 hi StorageClass cterm=none         ctermfg=darkgreen
 hi String       cterm=none         ctermfg=magenta
 
+hi Title        cterm=none ctermfg=yellow  ctermbg=none
 hi Type         cterm=none ctermfg=green  ctermbg=none
 
 
