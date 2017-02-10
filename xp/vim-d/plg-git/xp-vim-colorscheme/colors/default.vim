@@ -1,6 +1,6 @@
 " Vim color file
-" Maintainer:	Bram Moolenaar <Bram@vim.org>
-" Last Change:	2001 Jul 23
+" Maintainer:   Bram Moolenaar <Bram@vim.org>
+" Last Change:  2001 Jul 23
 
 " This is the default color scheme.  It doesn't define the Normal
 " highlighting, it uses whatever the colors used to be.
@@ -20,63 +20,40 @@ endif
 
 let colors_name = "default"
 
-"
-"
 hi Normal       cterm=none ctermbg=black       ctermfg=grey
-hi IncSearch    cterm=none ctermbg=blue       ctermfg=white
-hi Search       cterm=none ctermfg=black     ctermbg=white
-hi ColorColumn             ctermfg=yellow    ctermbg=none
-
-" hi Comment      cterm=none         ctermfg=darkcyan
-hi Comment      cterm=none         ctermfg=darkblue
-hi Conditional  cterm=none         ctermfg=green
-hi CursorColumn cterm=none         ctermfg=none       ctermbg=darkmagenta
-" hi CursorLine   cterm=underline    ctermfg=none       ctermbg=none
-" hi CursorLine   cterm=bold	    ctermfg=none       ctermbg=black
-hi CursorLine   cterm=none     ctermfg=none       ctermbg=none
-" hi CursorLine   cterm=none	    ctermfg=none       ctermbg=darkcyan
-hi Folded       cterm=none         ctermfg=grey       ctermbg=none
-hi VertSplit    cterm=none         ctermfg=darkgrey
-
-
-hi Function     cterm=none         ctermfg=blue
-hi Identifier   cterm=none	   ctermfg=cyan
-hi LineNr       cterm=none         ctermfg=darkgrey      ctermbg=black
-hi Label        cterm=none         ctermfg=yellow
-
-hi MatchParen   cterm=none         ctermfg=none      ctermbg=cyan
-
-" hi NonText      cterm=none         ctermfg=darkgrey
-hi NonText      cterm=none         ctermfg=darkcyan
-hi Operator     cterm=none         ctermfg=darkyellow
-hi PmenuSel     cterm=none         ctermfg=black      ctermbg=white
-hi PmenuThumb   cterm=none         ctermfg=black      ctermbg=green
-
-hi Repeat       cterm=none         ctermfg=green
-hi SpecialKey   cterm=none         ctermfg=darkcyan
-hi Statement    cterm=none         ctermfg=darkyellow
-hi StorageClass cterm=none         ctermfg=darkgreen
-hi String       cterm=none         ctermfg=magenta
-
-hi Title        cterm=none ctermfg=yellow  ctermbg=none
-hi Type         cterm=none ctermfg=green  ctermbg=none
-
-
-hi TabLineFill  cterm=none         ctermfg=grey      ctermbg=cyan
-hi TabLine      cterm=none         ctermfg=white      ctermbg=cyan
-hi TabLineSel   cterm=none         ctermfg=black      ctermbg=white
-
-hi Visual       cterm=none         ctermbg=darkCyan
-
-
-" hi DiffAdd      term=none ctermbg=green guibg=LightBlue
-" hi DiffChange   term=bold ctermfg=white ctermbg=darkblue guibg=LightMagenta
-" hi DiffDelete   term=bold ctermfg=white ctermbg=darkmagenta guibg=LightMagenta
-
-hi DiffAdd      term=none ctermfg=white ctermbg=green guibg=LightBlue
-hi DiffChange   cterm=none         ctermbg=darkCyan
-hi DiffDelete   cterm=none         ctermfg=darkgrey      ctermbg=black
-hi DiffText      term=none      ctermbg=darkblue ctermfg=white
+hi IncSearch    cterm=none ctermbg=blue        ctermfg=white
+hi Search       cterm=none ctermbg=white       ctermfg=black
+hi ColorColumn  cterm=none ctermbg=none        ctermfg=yellow
+hi Comment      cterm=none                     ctermfg=darkblue
+hi Conditional  cterm=none                     ctermfg=green
+hi CursorColumn cterm=none ctermbg=darkmagenta ctermfg=none
+hi CursorLine   cterm=none ctermbg=none        ctermfg=none
+hi Folded       cterm=none ctermbg=none        ctermfg=grey
+hi VertSplit    cterm=none                     ctermfg=darkgrey
+hi Function     cterm=none                     ctermfg=blue
+hi Identifier   cterm=none                     ctermfg=cyan
+hi LineNr       cterm=none ctermbg=black       ctermfg=darkgrey
+hi Label        cterm=none                     ctermfg=yellow
+hi MatchParen   cterm=none ctermbg=cyan        ctermfg=none
+hi NonText      cterm=none                     ctermfg=darkcyan
+hi Operator     cterm=none                     ctermfg=darkyellow
+hi PmenuSel     cterm=none ctermbg=white       ctermfg=black
+hi PmenuThumb   cterm=none ctermbg=green       ctermfg=black
+hi Repeat       cterm=none                     ctermfg=green
+hi SpecialKey   cterm=none                     ctermfg=darkcyan
+hi Statement    cterm=none                     ctermfg=darkyellow
+hi StorageClass cterm=none                     ctermfg=darkgreen
+hi String       cterm=none                     ctermfg=magenta
+hi Title        cterm=none ctermbg=none        ctermfg=yellow
+hi Type         cterm=none ctermbg=none        ctermfg=green
+hi TabLineFill  cterm=none ctermbg=cyan        ctermfg=grey
+hi TabLine      cterm=none ctermbg=cyan        ctermfg=white
+hi TabLineSel   cterm=none ctermbg=white       ctermfg=black
+hi Visual       cterm=none ctermbg=darkCyan
+hi DiffAdd      cterm=none ctermbg=green       ctermfg=white       guibg=LightBlue
+hi DiffChange   cterm=none ctermbg=darkCyan
+hi DiffDelete   cterm=none ctermbg=black       ctermfg=darkgrey
+hi DiffText     cterm=none ctermbg=darkblue    ctermfg=white
 
 
 hi def link MyTagListTagName Visual
