@@ -1,8 +1,8 @@
-nmap <unique> ,a                        <Plug>MarkSet
-vmap <unique> ,a                        <Plug>MarkSet
-nmap <unique> <Plug>MarkRegex-disabled  <Plug>MarkRegex
-vmap <unique> <Plug>MarkRegex-disabled  <Plug>MarkRegex
-nmap <unique> <Plug>MarkClear-disabled  <Plug>MarkClear
+nmap <unique> <Leader>ms               <Plug>MarkSet
+vmap <unique> <Leader>ms               <Plug>MarkSet
+nmap <unique> <Plug>MarkRegex-disabled <Plug>MarkRegex
+vmap <unique> <Plug>MarkRegex-disabled <Plug>MarkRegex
+nmap <unique> <Plug>MarkClear-disabled <Plug>MarkClear
 
 nmap <unique> <M-n>                         <Plug>MarkSearchCurrentNext
 nmap <unique> <M-N>                         <Plug>MarkSearchCurrentPrev
