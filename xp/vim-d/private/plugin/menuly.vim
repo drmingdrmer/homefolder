@@ -4,18 +4,19 @@ endif
 let g:__MENULY_VIM_jfklsdfjdksl__ = 1
 
 let g:menuly_menu = {
-      \ 'c': ['cursor...', {
+      \ 'c': ['cursor', {
       \          'l': 'cursorline',
       \          'r': 'cursorcolumn',
       \ }],
-      \ 'f': ['folding...', {
+      \ 'f': ['folding', {
       \          'c': ['foldcolumn', 0, 3],
+      \          'm': ['foldmethod', 'manual', 'indent', 'expr', 'marker', 'syntax', 'diff'],
       \ }],
       \ 'l': 'list',
       \ 'm': 'modifiable',
       \ 'n': 'number',
       \ 'p': 'spell',
-      \ 't': ['tabline...', {
+      \ 't': ['tabline', {
       \         'l': ['showtabline', 0, 2],
       \ }],
       \ 'w': 'wrap',
@@ -66,7 +67,7 @@ fun! s:X(...) "{{{
         if has_key(menu_item, 'values')
             let values = menu_item.values
             let setting_value = values[ctx.nth_call % len(values)]
-            let cmd = "let &" . scope_key . setting_name . "=" . setting_value
+            let cmd = "let &" . scope_key . setting_name . "=" . string(setting_value)
         else
             if scope_key == 'l:'
                 let cmd = "setlocal " . setting_name . "!"

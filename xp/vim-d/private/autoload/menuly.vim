@@ -239,16 +239,22 @@ fun! menuly#MakeMenuItemStr(keystroke, item, indent) "{{{
 
     let keystroke = a:keystroke
     let item = a:item
-    let indent = a:indent
+    let indent = repeat(' ', a:indent)
 
-    let lines = [printf('%s%-4s - %s', repeat(' ', indent), keystroke . ')', item.title)]
+    " let lines = [printf('%-4s%s - %s', keystroke . ')', repeat(' ', indent), item.title)]
+    let lines = [printf('%s%-4s%s', indent, keystroke . ':', item.title)]
 
     if has_key(item, 'submenu')
         let sub_lines = items(item.submenu)
         call sort(sub_lines, function('menuly#SortMenu'))
+        let last = lines[-1]
+
+        let _sub = []
         for [_k, _item] in sub_lines
-            let lines += menuly#MakeMenuItemStr(_k, _item, indent + 4)
+            let _sub += menuly#MakeMenuItemStr(_k, _item, indent + 4)
         endfor
+
+        let lines += _sub
     endif
 
     return lines
