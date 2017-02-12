@@ -87,15 +87,25 @@ fun! menuly#GetContext(scope, menu_names) "{{{
     return node
 endfunction "}}}
 
+fun! menuly#NormalizeMenu(menu) "{{{
+    let norm_menu = {}
+    for [key, item] in items(a:menu)
+        let norm_menu[key] = menuly#NormalizeMenuItem(item)
+    endfor
+    return norm_menu
+endfunction "}}}
+
+
 fun! menuly#NormalizeMenuItem(menu_item) "{{{
 
     let item = a:menu_item
+    let norm = {}
 
     if type(item) == v:t_string
 
-        return {
-              \ "scope": "local",
+        let norm = {
               \ "title": item,
+              \ "scope": "local",
               \ "setting": item,
               \ }
 
@@ -103,21 +113,55 @@ fun! menuly#NormalizeMenuItem(menu_item) "{{{
 
         if type(item[1]) == v:t_dict
 
-            return {
+            let sub_menu = item[1]
+            let new_submenu = {}
+            for key in keys(sub_menu)
+                let subitem = sub_menu[key]
+                let new_submenu[key] = menuly#NormalizeMenuItem(subitem)
+            endfor
+
+            let norm = {
                   \ "title": item[0],
-                  \ "submenu": item[1],
+                  \ "submenu": new_submenu,
                   \ }
 
         else
 
-            return {
-                  \ "scope": "local",
+            " [setting, value-1, value-2]
+
+            let norm = {
                   \ "title": item[0],
+                  \ "scope": "local",
                   \ "setting": item[0],
                   \ "values": item[1:-1],
                   \ }
         endif
+
+    elseif type(item) == v:t_dict
+
+        " already normal
+        let norm = item
+
     endif
+
+    if has_key(norm, 'submenu')
+        let norm.submenu = menuly#NormalizeMenu(norm.submenu)
+    endif
+
+    return norm
+
+endfunction "}}}
+
+fun! menuly#MakeTitle(menu_item) "{{{
+
+    let item = a:menu_item
+
+    if type(item) == v:t_dict
+        return get(item, '_title', 'no-title')
+    endif
+
+    return 'xxx'
+
 endfunction "}}}
 
 fun! menuly#ShowMenu(menu_title, menu_dict) "{{{
@@ -139,31 +183,31 @@ fun! menuly#ShowMenu(menu_title, menu_dict) "{{{
         endfor
 
         if matched == []
-            return ['', '']
+            return ['', {}]
         endif
 
         let &cmdheight = len(matched) + 1 + 1
         redraw!
 
+        for [keystroke, val] in matched
+            let menu_item = val
+            echo printf('%-4s - %s', '(' . keystroke . ')', menu_item.title)
+        endfor
+
         echohl WildMenu
         echo a:menu_title
         echohl None
-
-        for [keystroke, val] in matched
-            let menu_item = menuly#NormalizeMenuItem(val)
-            echo printf('%-4s - %s', '(' . keystroke . ')', menu_item.title)
-        endfor
 
         try
             let c = input#GetChar('')
         catch /.*/
             " maybe <C-c> by user
-            return ['', '']
+            return ['', {}]
         endtry
 
         if c == ''
             " cancel char pressed
-            return ['', '']
+            return ['', {}]
         elseif c == "\<BS>"
             let pref = pref[:-2]
         else
@@ -174,9 +218,6 @@ fun! menuly#ShowMenu(menu_title, menu_dict) "{{{
 endfunction " }}}
 
 fun! menuly#xxx() "{{{
-
-
-
 
     let c = pref
 

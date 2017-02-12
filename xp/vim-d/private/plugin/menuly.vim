@@ -5,8 +5,6 @@ let g:__MENULY_VIM_jfklsdfjdksl__ = 1
 
 let g:menuly_menu = {
       \ "w": 'wrap',
-      \ "cl": 'cursorline',
-      \ "cc": 'cursorcolumn',
       \ "c": ['cursor-setting', {
       \         "l": "cursorline",
       \         "r": "cursorcolumn",
@@ -23,11 +21,10 @@ fun! s:X(...) "{{{
     let oldcmdheight = &cmdheight
 
     let prefixes = ['menuly']
-    let menu_dict = g:menuly_menu
+    let menu_dict = menuly#NormalizeMenu(g:menuly_menu)
     let menu_title = join(prefixes, ' > ') . ' >'
     while 1
         let [pref, menu_item] = menuly#ShowMenu(menu_title, menu_dict)
-        let menu_item = menuly#NormalizeMenuItem(menu_item)
 
         if has_key(menu_item, 'submenu')
             let menu_dict = menu_item.submenu
