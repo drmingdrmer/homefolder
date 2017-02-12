@@ -186,12 +186,16 @@ fun! menuly#ShowMenu(menu_title, menu_dict) "{{{
             return ['', {}]
         endif
 
-        let &cmdheight = len(matched) + 1 + 1
+        let lines = []
+        for [keystroke, val] in matched
+            let lines += menuly#MakeMenuItemStr(keystroke, val, 0)
+        endfor
+
+        let &cmdheight = len(lines) + 1 + 1
         redraw!
 
-        for [keystroke, val] in matched
-            let menu_item = val
-            echo printf('%-4s - %s', '(' . keystroke . ')', menu_item.title)
+        for l in lines
+            echo l
         endfor
 
         echohl WildMenu
@@ -216,6 +220,24 @@ fun! menuly#ShowMenu(menu_title, menu_dict) "{{{
     endwhile
 
 endfunction " }}}
+
+fun! menuly#MakeMenuItemStr(keystroke, item, indent) "{{{
+
+    let keystroke = a:keystroke
+    let item = a:item
+    let indent = a:indent
+
+    let lines = [printf('%s%-4s - %s', repeat(' ', indent), '(' . keystroke . ')', item.title)]
+
+    if has_key(item, 'submenu')
+        for [_k, _item] in items(item.submenu)
+            let lines += menuly#MakeMenuItemStr(_k, _item, indent + 4)
+        endfor
+    endif
+
+    return lines
+
+endfunction "}}}
 
 fun! menuly#xxx() "{{{
 
