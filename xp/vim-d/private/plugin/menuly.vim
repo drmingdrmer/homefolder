@@ -4,20 +4,21 @@ endif
 let g:__MENULY_VIM_jfklsdfjdksl__ = 1
 
 let g:menuly_menu = {
-      \ "w": 'wrap',
+      \ 'c': ['cursor...', {
+      \          'l': 'cursorline',
+      \          'r': 'cursorcolumn',
+      \ }],
+      \ 'f': ['folding...', {
+      \          'c': ['foldcolumn', 0, 3],
+      \ }],
       \ 'l': 'list',
       \ 'm': 'modifiable',
       \ 'n': 'number',
       \ 'p': 'spell',
-      \ "c": ['cursor...', {
-      \         "l": "cursorline",
-      \         "r": "cursorcolumn",
-      \     },
-      \ ],
-      \ "t": ['tabline', {
-      \         "l": ['showtabline', 0, 2],
-      \     },
-      \ ],
+      \ 't': ['tabline...', {
+      \         'l': ['showtabline', 0, 2],
+      \ }],
+      \ 'w': 'wrap',
       \ }
 
 fun! s:X(...) "{{{
