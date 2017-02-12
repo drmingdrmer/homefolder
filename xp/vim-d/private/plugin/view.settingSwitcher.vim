@@ -8,14 +8,6 @@ let s:settings = {
             \'.fc':  'foldcolumn',
             \
             \'x'  :  'conceal',
-            \'cc' :  'cursorcolumn',
-            \'cl' :  'cursorline',
-            \'l'  :  'list',
-            \'m'  :  'modifiable',
-            \'n'  :  'number',
-            \'tl' :  'showtabline',
-            \'p'  :  'spell',
-            \'r'  :  'wrap',
             \}
 
 let s:switchers = {}

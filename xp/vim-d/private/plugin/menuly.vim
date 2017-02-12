@@ -5,7 +5,11 @@ let g:__MENULY_VIM_jfklsdfjdksl__ = 1
 
 let g:menuly_menu = {
       \ "w": 'wrap',
-      \ "c": ['cursor-setting', {
+      \ 'l': 'list',
+      \ 'm': 'modifiable',
+      \ 'n': 'number',
+      \ 'p': 'spell',
+      \ "c": ['cursor...', {
       \         "l": "cursorline",
       \         "r": "cursorcolumn",
       \     },
@@ -55,7 +59,9 @@ fun! s:X(...) "{{{
     endif
 
     if has_key(menu_item, 'setting')
+
         let setting_name = menu_item.setting
+
         if has_key(menu_item, 'values')
             let values = menu_item.values
             let setting_value = values[ctx.nth_call % len(values)]
@@ -68,8 +74,8 @@ fun! s:X(...) "{{{
             endif
         endif
 
-        echo cmd
-        exe cmd
+        exe 'silent' cmd
+        exe 'echo "' scope_key . setting_name . '="&' . scope_key . setting_name
     endif
 
 

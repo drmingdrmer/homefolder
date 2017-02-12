@@ -87,6 +87,7 @@ fun! menuly#GetContext(scope, menu_names) "{{{
     return node
 endfunction "}}}
 
+
 fun! menuly#NormalizeMenu(menu) "{{{
     let norm_menu = {}
     for [key, item] in items(a:menu)
@@ -164,6 +165,17 @@ fun! menuly#MakeTitle(menu_item) "{{{
 
 endfunction "}}}
 
+fun! menuly#SortMenu(a, b) "{{{
+    let [a, b] = [a:a, a:b]
+    if a[0] == b[0]
+        return 0
+    elseif a[0] > b[0]
+        return 1
+    else
+        return -1
+    endif
+endfunction "}}}
+
 fun! menuly#ShowMenu(menu_title, menu_dict) "{{{
 
     let pref = ''
@@ -185,6 +197,8 @@ fun! menuly#ShowMenu(menu_title, menu_dict) "{{{
         if matched == []
             return ['', {}]
         endif
+
+        call sort(matched, function('menuly#SortMenu'))
 
         let lines = []
         for [keystroke, val] in matched
@@ -227,10 +241,12 @@ fun! menuly#MakeMenuItemStr(keystroke, item, indent) "{{{
     let item = a:item
     let indent = a:indent
 
-    let lines = [printf('%s%-4s - %s', repeat(' ', indent), '(' . keystroke . ')', item.title)]
+    let lines = [printf('%s%-4s - %s', repeat(' ', indent), keystroke . ')', item.title)]
 
     if has_key(item, 'submenu')
-        for [_k, _item] in items(item.submenu)
+        let sub_lines = items(item.submenu)
+        call sort(sub_lines, function('menuly#SortMenu'))
+        for [_k, _item] in sub_lines
             let lines += menuly#MakeMenuItemStr(_k, _item, indent + 4)
         endfor
     endif
