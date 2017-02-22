@@ -25,3 +25,7 @@ convert -define jpeg:size=200x200 x.jpg  -thumbnail 400x400^ -gravity center -ex
 # draw rectangle
 # draw text
 convert t.jpg  -weight 700  -pointsize 80  -fill black -draw "rectangle 0,320 400,400" -draw "gravity north fill white text 0,320 'ZK' " u.jpg
+
+
+# extent image
+convert -gravity north -background black -extent 400x400 i.jpg j.jpg
