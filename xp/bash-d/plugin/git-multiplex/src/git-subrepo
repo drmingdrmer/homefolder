@@ -115,6 +115,10 @@ main()
 
     done<".gitsubrepo_refs"
 
+    while read a b c localtag; do
+        git update-ref -d $localtag
+    done<".gitsubrepo_refs"
+
     rm .gitsubrepo_refs
 }
 
