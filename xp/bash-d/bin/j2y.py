@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# convert json to yaml
+# convert json to yaml:
+#     cat x.json | j2y.py
+# or
+#     j2y.py x.json
 
 import sys
 
