@@ -19,7 +19,11 @@ fun! XpDiff()
         let opt += ["--ignore-space-change"]
     endif
 
-    silent execute "!diff " . join(opt, ' ') . " ". v:fname_in . " ". v:fname_new . " > ". v:fname_out
+    try
+        silent execute "!diff " . join(opt, ' ') . " ". v:fname_in . " ". v:fname_new . " > ". v:fname_out
+    catch /.*/
+        echo v:exception . ' while diff ' . v:fname_in . " ". v:fname_new . " > ". v:fname_out
+    endtry
 endfunction
 
 set diffexpr=XpDiff()
