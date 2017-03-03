@@ -2,7 +2,7 @@
 " Language: Javascript
 " Maintainer: Chris Paul ( https://github.com/bounceme )
 " URL: https://github.com/pangloss/vim-javascript
-" Last Change: December 31, 2016
+" Last Change: February 25, 2017
 
 " Only load this indent file when no other was loaded.
 if exists('b:did_indent')
@@ -48,34 +48,40 @@ else
 endif
 
 " Regex of syntax group names that are or delimit string or are comments.
-let s:syng_strcom = 'string\|comment\|regex\|special\|doc\|template'
-let s:syng_str = 'string\|template'
+let s:syng_strcom = 'string\|comment\|regex\|special\|doc\|template\%(braces\)\@!'
+let s:syng_str = 'string\|template\|special'
 let s:syng_com = 'comment\|doc'
 " Expression used to check whether we should skip a match with searchpair().
 let s:skip_expr = "synIDattr(synID(line('.'),col('.'),0),'name') =~? '".s:syng_strcom."'"
 
+function s:parse_cino(f)
+  let cin = matchlist(&cino,'.*'.a:f.'\zs\(-\)\=\(\d*\)\(\.\d\+\)\=\(s\)\=\C')
+  return get(cin,0) =~ '^[-0]*$' ? 0 : (cin[1].1) *
+        \ ((strlen(cin[2].cin[3]) ? str2nr(cin[2].str2nr(cin[3][1])) : 10) *
+        \ (cin[4] is '' ? 1 : s:W)) / 10
+endfunction
+
 function s:skip_func()
-  if !s:free || search('\m`\|\*\/','nW',s:looksyn)
+  if getline('.') =~ '\%<'.col('.').'c\/.\{-}\/\|\%>'.col('.').'c[''"]\|\\$'
+    return eval(s:skip_expr)
+  elseif !s:free || search('\m`\|\${\|\*\/','nW',s:looksyn)
     let s:free = !eval(s:skip_expr)
-    let s:looksyn = s:free ? line('.') : s:looksyn
-    return !s:free
   endif
   let s:looksyn = line('.')
-  return (search('\m\/','nbW',s:looksyn) || search('\m[''"\\]','nW',s:looksyn)) && eval(s:skip_expr)
+  return !s:free
 endfunction
 
 function s:alternatePair(stop)
   let pos = getpos('.')[1:2]
   while search('\m[][(){}]','bW',a:stop)
-    if !s:skip_func()
-      let idx = stridx('])}',s:looking_at())
-      if idx + 1
-        if !s:GetPair(['\[','(','{'][idx], '])}'[idx],'bW','s:skip_func()',2000,a:stop)
-          break
-        endif
-      else
-        return
+    if s:skip_func() | continue | endif
+    let idx = stridx('])}',s:looking_at())
+    if idx + 1
+      if s:GetPair(['\[','(','{'][idx], '])}'[idx],'bW','s:skip_func()',2000,a:stop) <= 0
+        break
       endif
+    else
+      return
     endif
   endwhile
   call call('cursor',pos)
@@ -100,89 +106,87 @@ function s:token()
   return s:looking_at() =~ '\k' ? expand('<cword>') : s:looking_at()
 endfunction
 
-function s:b_token()
-  if s:looking_at() =~ '\k'
-    call search('\m\<','cbW')
-  endif
-  return search('\m\S','bW')
-endfunction
-
 function s:previous_token()
-  let l:n = line('.')
-  let token = ''
-  while s:b_token()
-    if (s:looking_at() == '/' || line('.') != l:n && search('\m\/\/','nbW',
-          \ line('.'))) && s:syn_at(line('.'),col('.')) =~? s:syng_com
-      call search('\m\_[^/]\zs\/[/*]','bW')
+  let l:pos = getpos('.')[1:2]
+  if (s:looking_at() !~ '\k' || search('\m\<','cbW')) && search('\m\S','bW')
+    if (getline('.')[col('.')-2:col('.')-1] == '*/' || line('.') != l:pos[0] &&
+          \ getline('.') =~ '\%<'.col('.').'c\/\/') && s:syn_at(line('.'),col('.')) =~? s:syng_com
+      while search('\m\S\ze\_s*\/[/*]','bW')
+        if s:syn_at(line('.'),col('.')) !~? s:syng_com
+          return s:token()
+        endif
+      endwhile
     else
-      let token = s:token()
-      break
+      return s:token()
     endif
-  endwhile
-  return token
-endfunction
-
-function s:others(p)
-  return "((line2byte(line('.')) + col('.')) <= ".(line2byte(a:p[0]) + a:p[1]).") || ".s:skip_expr
-endfunction
-
-function s:tern_skip(p)
-  return s:GetPair('{','}','nbW',s:others(a:p),200,a:p[0]) > 0
-endfunction
-
-function s:tern_col(p)
-  return s:GetPair('?',':\@<!::\@!','nbW',s:others(a:p)
-        \ .' || s:tern_skip('.string(a:p).')',200,a:p[0]) > 0
-endfunction
-
-function s:label_col()
-  let pos = getpos('.')[1:2]
-  let [s:looksyn,s:free] = pos
-  call s:alternatePair(0)
-  if s:save_pos('s:IsBlock')
-    let poss = getpos('.')[1:2]
-    return call('cursor',pos) || !s:tern_col(poss)
-  elseif s:looking_at() == ':'
-    return !s:tern_col([0,0])
   endif
+  call call('cursor',l:pos)
+  return ''
+endfunction
+
+function s:expr_col()
+  if getline('.')[col('.')-2] == ':'
+    return 1
+  endif
+  let [l:pos,bal] = [getpos('.')[1:2],0]
+  try
+    while search('\m[{}?:;]','bW')
+      if eval(s:skip_expr) | continue | endif
+      if s:looking_at() == '}'
+        if s:GetPair('{','}','bW',s:skip_expr,200) <= 0
+          return
+        endif
+      elseif s:looking_at() == '{'
+        return getpos('.')[1:2] != b:js_cache[1:] && !s:IsBlock()
+      elseif s:looking_at() == ';'
+        return
+      elseif s:looking_at() == ':'
+        let bal -= getline('.')[max([col('.')-2,0]):col('.')] !~ '::'
+      else
+        let bal += 1
+        if bal > 0
+          return 1
+        endif
+      endif
+    endwhile
+  finally
+    call call('cursor',l:pos)
+  endtry
 endfunction
 
 " configurable regexes that define continuation lines, not including (, {, or [.
 let s:opfirst = '^' . get(g:,'javascript_opfirst',
-      \ '\%([<>=,?^%|*/&]\|\([-.:+]\)\1\@!\|!=\|in\%(stanceof\)\=\>\)')
+      \ '\C\%([<>=,?^%|*/&]\|\([-.:+]\)\1\@!\|!=\|in\%(stanceof\)\=\>\)')
 let s:continuation = get(g:,'javascript_continuation',
-      \ '\%([<=,.~!?/*^%|&:]\|+\@<!+\|-\@<!-\|=\@<!>\|\<\%(typeof\|delete\|void\|in\|instanceof\)\)') . '$'
+      \ '\C\%([-+<>=,.~!?/*^%|&:]\|\<\%(typeof\|new\|delete\|void\|in\|instanceof\|await\)\)') . '$'
 
 function s:continues(ln,con)
   return !cursor(a:ln, match(' '.a:con,s:continuation)) &&
-        \ eval((['s:syn_at(line("."),col(".")) !~? "regex"'] +
-        \ repeat(['s:previous_token() != "."'],5) + [1])[
-        \ index(split('/ typeof in instanceof void delete'),s:token())])
+        \ eval(['s:syn_at(line("."),col(".")) !~? "regex"',
+        \ 'getline(".")[col(".")-2] != tr(s:looking_at(),">","=")',
+        \ 's:previous_token() != "."','s:expr_col()',1][
+        \ match(matchlist(s:looking_at(),'\(\/\)\|\([-+>]\)\|\(\l\)\|\(:\)')[1:],'.')])
 endfunction
 
-" get the line of code stripped of comments. if called with two args, leave
-" cursor at the last non-comment char.
-function s:Trim(ln,...)
-  let pline = substitute(getline(a:ln),'\s*$','','')
-  let l:max = max([match(pline,'.*[^/]\zs\/[/*]'),0])
-  while l:max && s:syn_at(a:ln, strlen(pline)) =~? s:syng_com
-    let pline = substitute(strpart(pline, 0, l:max),'\s*$','','')
-    let l:max = max([match(pline,'.*[^/]\zs\/[/*]'),0])
-  endwhile
-  return !a:0 || cursor(a:ln,strlen(pline)) ? pline : pline
+" get the line of code stripped of comments and move cursor to the last
+" non-comment char.
+function s:Trim(ln)
+  call cursor(a:ln+1,1)
+  call s:previous_token()
+  return strpart(getline('.'),0,col('.'))
 endfunction
 
 " Find line above 'lnum' that isn't empty or in a comment
 function s:PrevCodeLine(lnum)
   let l:n = prevnonblank(a:lnum)
   while l:n
-    if getline(l:n) =~ '^\s*\%(\/[/*]\|-->\|<!--\|#\)' 
+    if getline(l:n) =~ '^\s*\/[/*]' 
       if (stridx(getline(l:n),'`') > 0 || getline(l:n-1)[-1:] == '\') &&
             \ s:syn_at(l:n,1) =~? s:syng_str
         return l:n
       endif
       let l:n = prevnonblank(l:n-1)
-    elseif s:syn_at(l:n,1) =~? s:syng_com
+    elseif getline(l:n) =~ '\([/*]\)\1\@![/*]' && s:syn_at(l:n,1) =~? s:syng_com
       let l:n = s:save_pos('eval',
             \ 'cursor('.l:n.',1) + search(''\m\/\*'',"bW")')
     else
@@ -209,7 +213,7 @@ function s:Balanced(lnum)
 endfunction
 
 function s:OneScope(lnum)
-  let pline = s:Trim(a:lnum,1)
+  let pline = s:Trim(a:lnum)
   let kw = 'else do'
   if pline[-1:] == ')' && s:GetPair('(', ')', 'bW', s:skip_expr, 100) > 0
     call s:previous_token()
@@ -248,18 +252,20 @@ function s:IsBlock()
   if s:looking_at() == '{'
     let l:n = line('.')
     let char = s:previous_token()
-    let syn = char =~ '[{>/]' ? s:syn_at(line('.'),col('.')-(char == '{')) : ''
-    if syn =~? 'xml\|jsx'
+    if match(s:stack,'\cxml\|jsx') + 1 && s:syn_at(line('.'),col('.')-1) =~? 'xml\|jsx'
       return char != '{'
     elseif char =~ '\k'
-      return index(split('return const let import export yield default delete var await void typeof throw case new in instanceof')
-            \ ,char) < (line('.') != l:n) || s:previous_token() == '.'
+      return index(split('return const let import export extends yield default delete var await void typeof throw case new of in instanceof')
+            \ ,char) < (line('.') != l:n) || s:save_pos('s:previous_token') == '.'
     elseif char == '>'
-      return getline('.')[col('.')-2] == '=' || syn =~? '^jsflow'
+      return getline('.')[col('.')-2] == '=' || s:syn_at(line('.'),col('.')) =~? '^jsflow'
     elseif char == ':'
-      return getline('.')[col('.')-2] != ':' && s:label_col()
+      return !s:expr_col()
+    elseif char == '/'
+      return s:syn_at(line('.'),col('.')) =~? 'regex'
     endif
-    return syn =~? 'regex' || char !~ '[-=~!<*+,/?^%|&([]'
+    return char !~ '[=~!<*,?^%|&([]' &&
+          \ (char !~ '[-+]' || l:n != line('.') && getline('.')[col('.')-2] == char)
   endif
 endfunction
 
@@ -268,7 +274,9 @@ function GetJavascriptIndent()
   " Get the current line.
   call cursor(v:lnum,1)
   let l:line = getline('.')
-  let syns = s:syn_at(v:lnum, 1)
+  " use synstack as it validates syn state and works in an empty line
+  let s:stack = map(synstack(v:lnum,1),"synIDattr(v:val,'name')")
+  let syns = get(s:stack,-1,'')
 
   " start with strings,comments,etc.
   if syns =~? s:syng_com
@@ -277,7 +285,7 @@ function GetJavascriptIndent()
     elseif l:line !~ '^\s*\/[/*]'
       return -1
     endif
-  elseif syns =~? s:syng_str && l:line !~ '^[''"]'
+  elseif syns =~? s:syng_str
     if b:js_cache[0] == v:lnum - 1 && s:Balanced(v:lnum-1)
       let b:js_cache[0] = v:lnum
     endif
@@ -292,12 +300,12 @@ function GetJavascriptIndent()
   if l:line[:1] == '/*'
     let l:line = substitute(l:line,'^\%(\/\*.\{-}\*\/\s*\)*','','')
   endif
-  if l:line =~ '^\%(\/[/*]\|-->\|<!--\|#\)'
+  if l:line =~ '^\/[/*]'
     let l:line = ''
   endif
 
   " the containing paren, bracket, or curly. Many hacks for performance
-  let idx = strlen(l:line) ? stridx('])}',l:line[0]) : -1
+  let idx = index([']',')','}'],l:line[0])
   if b:js_cache[0] >= l:lnum && b:js_cache[0] < v:lnum &&
         \ (b:js_cache[0] > l:lnum || s:Balanced(l:lnum))
     call call('cursor',b:js_cache[1:])
@@ -305,19 +313,12 @@ function GetJavascriptIndent()
     let [s:looksyn, s:free, top] = [v:lnum - 1, 1, (!indent(l:lnum) &&
           \ s:syn_at(l:lnum,1) !~? s:syng_str) * l:lnum]
     if idx + 1
-      call s:GetPair(['\[','(','{'][idx], '])}'[idx],'bW','s:skip_func()',2000,top)
-    elseif indent(v:lnum) && syns =~? 'block'
+      call s:GetPair(['\[','(','{'][idx],'])}'[idx],'bW','s:skip_func()',2000,top)
+    elseif getline(v:lnum) !~ '^\S' && syns =~? 'block'
       call s:GetPair('{','}','bW','s:skip_func()',2000,top)
     else
       call s:alternatePair(top)
     endif
-  endif
-
-  if idx + 1 || l:line[:1] == '|}'
-    if idx == 2 && search('\m\S','bW',line('.')) && s:looking_at() == ')'
-      call s:GetPair('(',')','bW',s:skip_expr,200)
-    endif
-    return indent('.')
   endif
 
   let b:js_cache = [v:lnum] + (line('.') == v:lnum ? [0,0] : getpos('.')[1:2])
@@ -325,41 +326,40 @@ function GetJavascriptIndent()
 
   let [s:W, isOp, bL, switch_offset] = [s:sw(),0,0,0]
   if !num || s:IsBlock()
-    let pline = s:Trim(l:lnum)
+    let ilnum = line('.')
+    let pline = s:save_pos('s:Trim',l:lnum)
     if num && s:looking_at() == ')' && s:GetPair('(', ')', 'bW', s:skip_expr, 100) > 0
-      let num = line('.')
-      if s:previous_token() ==# 'switch' && s:previous_token() != '.'
-        if &cino !~ ':' || !has('float')
+      let num = ilnum == num ? line('.') : num
+      if idx < 0 && s:previous_token() ==# 'switch' && s:previous_token() != '.'
+        if &cino !~ ':'
           let switch_offset = s:W
         else
-          let cinc = matchlist(&cino,'.*:\(-\)\=\([0-9.]*\)\(s\)\=\C')
-          let switch_offset = float2nr(str2float(cinc[1].(strlen(cinc[2]) ? cinc[2] : strlen(cinc[3])))
-                \ * (strlen(cinc[3]) ? s:W : 1))
+          let switch_offset = max([-indent(num),s:parse_cino(':')])
         endif
-        if pline[-1:] != '.' && l:line =~# '^\%(default\|case\)\>'
+        if pline[-1:] != '.' && l:line =~# '^\%(default\|case'
+              \ .(s:parse_cino('b') ? '\|break' : '').'\)\>'
           return indent(num) + switch_offset
         endif
       endif
     endif
-    if pline[-1:] !~ '[{;]'
-      if pline =~# ':\@<!:$'
-        call cursor(l:lnum,strlen(pline))
-        let isOp = s:tern_col(b:js_cache[1:2])
-      else
-        let isOp = l:line =~# s:opfirst || s:continues(l:lnum,pline)
-      endif
-      let bL = s:iscontOne(l:lnum,num,isOp)
+    if idx < 0 && pline !~ '[{;]$'
+      let isOp = (l:line =~# s:opfirst || s:continues(l:lnum,pline)) * s:W
+      let bL = s:iscontOne(l:lnum,b:js_cache[1],isOp)
       let bL -= (bL && l:line[0] == '{') * s:W
     endif
+  elseif idx < 0 && getline(b:js_cache[1])[b:js_cache[2]-1] == '(' && &cino =~ '('
+    let pval = s:parse_cino('(')
+    return !pval ? (s:parse_cino('w') ? 0 : -(!!search('\m\S','W',num))) + col('.') :
+          \ max([indent('.') + pval + (s:GetPair('(',')','nbrmW',s:skip_expr,100,num) * s:W),0])
   endif
 
   " main return
-  if isOp
-    return (num ? indent(num) : -s:W) + (s:W * 2) + switch_offset + bL
+  if idx + 1 || l:line[:1] == '|}'
+    return max([indent(num),0])
   elseif num
-    return indent(num) + s:W + switch_offset + bL
+    return indent(num) + s:W + switch_offset + bL + isOp
   endif
-  return bL
+  return bL + isOp
 endfunction
 
 let &cpo = s:cpo_save
