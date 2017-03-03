@@ -10,6 +10,7 @@ vdisk_lib.drmingdrmer/bin          drmingdrmer/vdisk_lib          master
 xunlei-lixian.iambus/bin           iambus/xunlei-lixian           master
 git-imerge.mhagger/bin             mhagger/git-imerge             master
 php-markdown.michelf               michelf/php-markdown           master
+grc                                garabik/grc                    master
 
 [ base: xp/vim-d/plg-git ]
 
