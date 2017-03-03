@@ -21,12 +21,12 @@ mf   ,          merge $git_option_no_edit --commit --ff-only
 sb   ,          status --short --branch                                   # status with branch info
 sf   ,          diff --name-only --relative HEAD                          # status about file changes
 st   ,          status
-xi   ,          clean -dXf                                                # remove all ignored files
-xi0  ,          clean -dXfn                                               # remove all ignored files; dry run
-xu   ,          clean -df                                                 # remove all untracked files
-xu0  ,          clean -dnf                                                # remove all untracked files; dry run
-xx   ,          clean -dxf                                                # remove all untracked and ignored files
-xx0  ,          clean -dxf                                                # remove all untracked and ignored files; dry run"
+xI   ,          clean -dXf                                                # remove all ignored files
+xi   ,          clean -dXfn                                               # remove all ignored files; dry run
+xU   ,          clean -df                                                 # remove all untracked files
+xu   ,          clean -dnf                                                # remove all untracked files; dry run
+xX   ,          clean -dxf                                                # remove all untracked and ignored files
+xx   ,          clean -dxfn                                               # remove all untracked and ignored files; dry run"
 
 get_shortcut=0
 
@@ -72,6 +72,9 @@ if [ "$get_shortcut" = "1" ]; then
 fi
 
 eval git $(_git_xp_interrept_flag conf $arg1) \
+    $cmd \
+    "$(_git_xp_interrept_flag arg $arg1)" "$@" \
+    || echo git $(_git_xp_interrept_flag conf $arg1) \
     $cmd \
     "$(_git_xp_interrept_flag arg $arg1)" "$@"
 
