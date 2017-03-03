@@ -968,32 +968,39 @@ location, if available. Optionally list the frame arguments and locals too."""
         return 'Stack'
 
     def lines(self, term_width, style_changed):
-        frames = []
-        number = 0
+        # find the selected frame (i.e., the first to display)
         selected_index = 0
         frame = gdb.newest_frame()
         while frame:
-            frame_lines = []
+            if frame == gdb.selected_frame():
+                break
+            frame = frame.older()
+            selected_index += 1
+        # format up to "limit" frames
+        frames = []
+        number = selected_index
+        more = False
+        while frame:
+            # the first is the selected one
+            selected = (len(frames) == 0)
             # fetch frame info
-            selected = (frame == gdb.selected_frame())
-            if selected:
-                selected_index = number
             style = R.style_selected_1 if selected else R.style_selected_2
             frame_id = ansi(str(number), style)
             info = Stack.get_pc_line(frame, style)
+            frame_lines = []
             frame_lines.append('[{}] {}'.format(frame_id, info))
             # fetch frame arguments and locals
             decorator = gdb.FrameDecorator.FrameDecorator(frame)
             if self.show_arguments:
                 frame_args = decorator.frame_args()
-                args_lines = self.fetch_frame_info(frame, frame_args, 'arg')
+                args_lines = Stack.fetch_frame_info(frame, frame_args, 'arg')
                 if args_lines:
                     frame_lines.extend(args_lines)
                 else:
                     frame_lines.append(ansi('(no arguments)', R.style_low))
             if self.show_locals:
                 frame_locals = decorator.frame_locals()
-                locals_lines = self.fetch_frame_info(frame, frame_locals, 'loc')
+                locals_lines = Stack.fetch_frame_info(frame, frame_locals, 'loc')
                 if locals_lines:
                     frame_lines.extend(locals_lines)
                 else:
@@ -1003,24 +1010,23 @@ location, if available. Optionally list the frame arguments and locals too."""
             # next
             frame = frame.older()
             number += 1
+            # check finished according to the limit
+            if self.limit and len(frames) == self.limit:
+                # more frames to show but limited
+                if frame:
+                    more = True
+                break
         # format the output
-        if not self.limit or self.limit >= len(frames):
-            start = 0
-            end = len(frames)
-            more = False
-        else:
-            start = selected_index
-            end = min(len(frames), start + self.limit)
-            more = (len(frames) - start > self.limit)
         lines = []
-        for frame_lines in frames[start:end]:
+        for frame_lines in frames:
             lines.extend(frame_lines)
         # add the placeholder
         if more:
             lines.append('[{}]'.format(ansi('+', R.style_selected_2)))
         return lines
 
-    def fetch_frame_info(self, frame, data, prefix):
+    @staticmethod
+    def fetch_frame_info(frame, data, prefix):
         prefix = ansi(prefix, R.style_low)
         lines = []
         for elem in data or []:
@@ -1223,7 +1229,7 @@ class Registers(Dashboard.Module):
             if '.' in name:
                 continue
             value = gdb.parse_and_eval('${}'.format(name))
-            string_value = self.format_value(value)
+            string_value = Registers.format_value(value)
             changed = self.table and (self.table.get(name, '') != string_value)
             self.table[name] = string_value
             registers.append((name, string_value, changed))
@@ -1254,7 +1260,8 @@ class Registers(Dashboard.Module):
             out.append(' '.join(partial[i:i + per_line]).rstrip())
         return out
 
-    def format_value(self, value):
+    @staticmethod
+    def format_value(value):
         try:
             if value.type.code in [gdb.TYPE_CODE_INT, gdb.TYPE_CODE_PTR]:
                 int_value = to_unsigned(value, value.type.sizeof)
