@@ -8,9 +8,13 @@ one_changed='"$(git rev-parse --show-toplevel)/$(git diff --name-only HEAD | hea
 commit_message_one_file='"$(git status --porcelain | head -n1)"'
 
 commands="\
+a.   ,          add .
+aa   ,          add --all
+au   ,          add -u
 c1   ,          commit -m $commit_message_one_file $one_changed           # commit one file
 cc   ,          commit -m $commit_message_one_file                        # commit all staged(cached)
 ca   ,          commit -m $commit_message_one_file -a                     # commit all staged(cached) or not
+co   ,          checkout
 d    ,          diff --color --find-renames
 f    g,h,lo,r,  log --color --decorate --abbrev-commit --find-renames     # graph and full history
 g    g,lo,r,    log --color --decorate --abbrev-commit --find-renames     # graph one screen
@@ -18,6 +22,11 @@ l    ld,r,      log --color --decorate --abbrev-commit --find-renames     # list
 3    ld,r,10    log --color --decorate --abbrev-commit --find-renames     # list mode, with diff
 mc   ,          merge $git_option_no_edit --commit --no-ff
 mf   ,          merge $git_option_no_edit --commit --ff-only
+ra   ,          rebase --abort
+rc   ,          rebase --continue
+ri   ,          rebase --interactive
+rp   ,          rebase --preserve-merges
+rr   ,          rebase
 sb   ,          status --short --branch                                   # status with branch info
 sf   ,          diff --name-only --relative HEAD                          # status about file changes
 st   ,          status
