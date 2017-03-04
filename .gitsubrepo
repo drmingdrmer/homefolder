@@ -52,6 +52,7 @@ vim-multiple-cursors            terryma/                     master
 vim-fugitive                    tpope/                       master
 vim-pathogen                    tpope/                       master
 vim-visual-increment            triglav/                     master
+syntastic                       vim-syntastic/               master
 Align                           vim-scripts/                 master
 FuzzyFinder                     vim-scripts/                 master
 Hints-for-C-Library-Functions-B vim-scripts/                 master
