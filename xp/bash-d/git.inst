@@ -101,6 +101,10 @@ $gconf alias.ri            "rebase --interactive"
 $gconf alias.ris           "rebase --interactive --autosquash"
 $gconf alias.rp            "rebase --preserve-merges"
 
+$gconf alias.rr            "reset"
+$gconf alias.rs            "reset --soft"
+$gconf alias.rh            "reset --hard"
+
 $gconf alias.ss            "stash save"
 $gconf alias.ssk           "stash save --keep-index"
 $gconf alias.sl            "stash list"
