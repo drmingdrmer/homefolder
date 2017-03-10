@@ -22,7 +22,7 @@ let g:menuly_menu = {
       \ 'w': 'wrap',
       \ }
 
-fun! s:X(...) "{{{
+fun! s:ShowMenu(...) "{{{
 
     let oldcmdheight = &cmdheight
 
@@ -84,4 +84,4 @@ fun! s:X(...) "{{{
 endfunction "}}}
 
 " expr mapping does not work with redraw
-nmap \ :call <SID>X()<CR>
+nmap \ :call <SID>ShowMenu()<CR>
