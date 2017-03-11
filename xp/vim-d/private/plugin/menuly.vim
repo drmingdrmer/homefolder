@@ -7,6 +7,7 @@ let g:menuly_menu = {
       \ '\': ['plugin', {
       \          's': ['syntastic', {
       \                     't': ':SyntasticToggleMode',
+      \                     'c': ':SyntasticCheck',
       \          }],
       \ }],
       \ 'c': ['cursor', {
