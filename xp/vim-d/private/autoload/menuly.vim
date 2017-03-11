@@ -104,11 +104,20 @@ fun! menuly#NormalizeMenuItem(menu_item) "{{{
 
     if type(item) == v:t_string
 
-        let norm = {
-              \ "title": item,
-              \ "scope": "local",
-              \ "setting": item,
-              \ }
+        if item[0] == ':'
+            let norm = {
+                  \ "title": item,
+                  \ "scope": "global",
+                  \ "command": item[1 : ],
+                  \ }
+        else
+            let norm = {
+                  \ "title": item,
+                  \ "scope": "local",
+                  \ "setting": item,
+                  \ }
+        endif
+
 
     elseif type(item) == v:t_list
 
@@ -124,6 +133,13 @@ fun! menuly#NormalizeMenuItem(menu_item) "{{{
             let norm = {
                   \ "title": item[0],
                   \ "submenu": new_submenu,
+                  \ }
+
+        elseif type(item[1]) == v:t_func
+
+            let norm = {
+                  \ "title": item[0],
+                  \ "func": item[1],
                   \ }
 
         else
@@ -251,7 +267,7 @@ fun! menuly#MakeMenuItemStr(keystroke, item, indent) "{{{
 
         let _sub = []
         for [_k, _item] in sub_lines
-            let _sub += menuly#MakeMenuItemStr(_k, _item, indent + 4)
+            let _sub += menuly#MakeMenuItemStr(_k, _item, a:indent + 4)
         endfor
 
         let lines += _sub

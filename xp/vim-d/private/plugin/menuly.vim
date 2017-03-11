@@ -4,6 +4,11 @@ endif
 let g:__MENULY_VIM_jfklsdfjdksl__ = 1
 
 let g:menuly_menu = {
+      \ '\': ['plugin', {
+      \          's': ['syntastic', {
+      \                     't': ':SyntasticToggleMode',
+      \          }],
+      \ }],
       \ 'c': ['cursor', {
       \          'l': 'cursorline',
       \          'r': 'cursorcolumn',
@@ -78,6 +83,15 @@ fun! s:ShowMenu(...) "{{{
 
         exe 'silent' cmd
         exe 'echo "' scope_key . setting_name . '="&' . scope_key . setting_name
+
+    elseif has_key(menu_item, 'command')
+
+        exec menu_item.command
+
+    elseif has_key(menu_item, 'func')
+
+        call menu_item.func(ctx)
+
     endif
 
 
