@@ -7,7 +7,7 @@ d()
 }
 parse_git_branch()
 {
-   git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/' 
+   git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'
 }
 ps_pwd()
 {
@@ -113,14 +113,12 @@ d end tmp
 d end alias
 
 export EDITOR=vim
-export SVN_EDITOR='vim'
 export HISTSIZE=50000
 export HISTCONTROL=ignoreboth
 [ -d /usr/local/go/bin ] && { export PATH=$PATH:/usr/local/go/bin; export GOROOT=/usr/local/go; }
 [ -d $HOME/xp/gopath ] && { export GOPATH=$HOME/xp/gopath; export PATH=$PATH:$GOPATH/bin; }
 
-export PYTHONPATH=/usr/lib/python2.6/site-packages/:$PYTHONPATH
-export HISTIGNORE="ll:ls:,st:gl"
+export HISTIGNORE="l:la:ll:ls:gl"
 export GREP_COLORS="ms=01;33:mc=01;31:sl=0;33:cx=:fn=35:ln=32:bn=32:se=36"
 
 if [ "$os" = "linux" ] ; then
