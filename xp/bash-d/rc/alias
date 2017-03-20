@@ -56,16 +56,6 @@ mk_alias cb 'cd -'
 
 mk_alias mkdir 'mkdir -p '
 
-# svn
-mk_alias ignsvn "svn propedit svn:ignore --editor-cmd=vim "
-mk_alias addsvn "svn st | grep ^? | awk '{system(\"svn add \"\$2)}'"
-mk_alias asvn   "svn add --depth=empty "
-mk_alias rmsvn  "svn st | grep ^! | awk '{system(\"svn rm \"\$2)}'"
-mk_alias msvn   "svn st | grep -v '^[?]'"
-
-# curl
-mk_alias xput     "curl -v sandbox2.sinastorage.com/xp/ -T"
-
 mk_alias h1 " head -n1 "
 
 # space separated
@@ -80,14 +70,7 @@ mk_alias c7 "c 7"
 mk_alias c8 "c 8"
 mk_alias c9 "c 9"
 
-
 mk_alias xh "l=\$PWD"
-
-# SAE support
-mk_alias am "php am.php"
-mk_alias amu "am upload -f0 -v1 -p 123qwe -n"
-mk_alias am2 "am upload -f0 -v2 -p 123qwe -n"
-mk_alias amd "am download -f0 -v1 -p 123qwe -n"
 
 mac_vim_folder="/Applications/MacPorts/MacVim.app/Contents/MacOS"
 mac_vim="$mac_vim_folder/Vim"
