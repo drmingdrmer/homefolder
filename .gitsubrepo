@@ -46,12 +46,13 @@ github_vim_theme                nono/                        master
 vim-javascript                  pangloss/                    master
 vim-markdown                    plasticboy/                  master
 snipmate-snippets.git           scrooloose/snipmate-snippets master
-vim-polyglot                    sheerun/                     master
-vim-yaml                        stephpy/                     master
-vim-multiple-cursors            terryma/                     master
+vim-autopep8                    tell-k/                      master
 vim-fugitive                    tpope/                       master
+vim-multiple-cursors            terryma/                     master
 vim-pathogen                    tpope/                       master
+vim-polyglot                    sheerun/                     master
 vim-visual-increment            triglav/                     master
+vim-yaml                        stephpy/                     master
 syntastic                       vim-syntastic/               master
 Align                           vim-scripts/                 master
 FuzzyFinder                     vim-scripts/                 master
