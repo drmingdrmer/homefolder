@@ -1,0 +1,12 @@
+#!/bin/sh
+
+echo "$@" \
+    | while read fn; do
+        # tail -r to reverse order, autopep8 may add or remove lines
+        git-changed-ln --cached $fn \
+            | tail -r \
+            | while read f t; do
+                autopep8 -i --line-range $f $t $fn
+            done
+    done
+
