@@ -18,12 +18,17 @@
 # by diff work-tree(unstaged) with HEAD,
 # or by diff index(staged or cached) with HEAD.
 
+cmd_reverse=tac
+which -s $cmd_reverse || cmd_reverse="tail -r"
+
 {
     cat
 } | while read fn; do
-    # tail -r to reverse order, autopep8 may add or remove lines
+
+    # reverse order, autopep8 may add or remove lines
+
     git-changed-ln "$@" $fn \
-        | tail -r \
+        | $cmd_reverse \
         | while read f t; do
             autopep8 -i --line-range $f $t $fn
         done
