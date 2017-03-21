@@ -219,6 +219,26 @@ git_copy_commit()
     git commit-tree "$2" $3  # reads the rest of stdin
     ) || die "Can't copy commit $1"
 }
+
+git_diff_ln_new()
+{
+    # output is changed line number: <from> <end>; inclusive:
+    # 27 7
+    # 307 7
+    # 316 5
+    # 325 10
+    # 350 1
+
+    git diff -U0 "$@" \
+        | grep '^@@' \
+        | awk '{
+    l=$3
+    gsub("^+", "", l)
+    split(l",1", x, ",")
+    x[2]+=x[1]
+    print x[1] " " x[2]
+}'
+}
 #include '_git_xp_lib.sh' end
 
 usage()
