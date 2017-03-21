@@ -1,4 +1,4 @@
-GRC="$(type -p grc)"
+GRC="$(which grc)"
 if [ "$TERM" != dumb ] && [ -n "$GRC" ]; then
     alias colourify="$GRC -es --colour=auto"
     alias blkid='colourify blkid'
@@ -18,7 +18,7 @@ if [ "$TERM" != dumb ] && [ -n "$GRC" ]; then
     alias as='colourify as'
     alias gas='colourify gas'
     alias ld='colourify ld'
-    alias ls='colourify ls --color'
+    #alias ls='colourify ls'
     alias lsblk='colourify lsblk'
     alias lspci='colourify lspci'
     alias netstat='colourify netstat'
@@ -35,3 +35,4 @@ if [ "$TERM" != dumb ] && [ -n "$GRC" ]; then
     alias getsebool='colourify setsebool'
     alias ifconfig='colourify ifconfig'
 fi
+
