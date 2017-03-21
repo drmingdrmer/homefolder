@@ -220,7 +220,10 @@ git_diff_ln_new()
     l=$3
     gsub("^+", "", l)
     split(l",1", x, ",")
-    x[2]+=x[1]
+    
+    # inclusive
+    x[2]=x[1]+x[2]-1
+
     print x[1] " " x[2]
 }'
 }
