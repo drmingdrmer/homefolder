@@ -39,7 +39,6 @@ init_prompt()
 
     local ps="$Green\u \h$NC"
     ps=$ps"$Yellow${eth0_ip}$NC"
-    # ps=$ps" $Red[\d \t]$NC"
     ps=$ps".\j"
     ps=$ps" $LightGreen\$(parse_git_branch 2>/dev/null || git branch --no-color 2> /dev/null)$NC"
     ps=$ps" -> $Red\$(git config --get branch.\$(git symbolic-ref --short HEAD 2>/dev/null).remote 2>/dev/null)/$NC"
@@ -115,6 +114,7 @@ d end alias
 export EDITOR=vim
 export HISTSIZE=50000
 export HISTCONTROL=ignoreboth
+export HISTTIMEFORMAT="%Y/%m/%d %H:%M:%S "
 [ -d /usr/local/go/bin ] && { export PATH=$PATH:/usr/local/go/bin; export GOROOT=/usr/local/go; }
 [ -d $HOME/xp/gopath ] && { export GOPATH=$HOME/xp/gopath; export PATH=$PATH:$GOPATH/bin; }
 
