@@ -4,6 +4,12 @@
 cd src \
     && make
 ) || exit 1
+
+(
+cd repo \
+    && ./ctl commit \
+    && ./ctl push
+) || exit 1
  
 (
 cd gist \
@@ -11,8 +17,3 @@ cd gist \
     && ./gist-ctrl push
 ) || exit 1
 
-(
-cd repo \
-    && ./ctl commit \
-    && ./ctl push
-) || exit 1
