@@ -284,6 +284,7 @@ main()
         prefix="$a"
         url="$b"
         ref="$c"
+        dir="$d"
 
         if [ "x$match" != "x" ] && [ "x$prefix" != "x$match" ]; then
             continue
@@ -307,67 +308,68 @@ main()
             url="${remote}${url}${remote_suffix}"
         fi
 
-        fetch_remote "$base$prefix" "$url" "$ref" &
+        fetch_remote "$base$prefix" "$url" "$ref" "$dir" &
 
     done<"$conf_fn"
     wait
 
-    while read prefix url ref localtag; do
+    while read prefix url ref localtag dir; do
 
+        dd "$prefix, $url, $ref, $localtag, $dir"
+
+
+        local tag_hash=$(git_hash "$localtag") || die get hash of $localtag
+        local head_hash=$(git_hash HEAD)
+
+        dd "tag_hash:   $tag_hash"
+        dd "head_hash:  $head_hash"
+
+        # clear old $prefix
         if [ -d "$prefix" ]; then
+            git rm -r "$prefix" >/dev/null || die rm "$prefix"
+        fi
 
-            local tag_hash=$(git_hash "$localtag") || die get hash of $localtag
-            local head_hash=$(git_hash HEAD)
+        local sub_tree=$(git ls-tree $tag_hash $dir| awk '{print $3}') || die "get tree-ish of $tag_hash $dir"
+        dd "sub_tree:   $sub_tree"
 
-            dd "tag_hash:   $tag_hash"
-            dd "head_hash:  $head_hash"
 
-            # clear old $prefix
-            if [ -d "$prefix" ]; then
-                git rm -r "$prefix" >/dev/null || die rm "$prefix"
-            fi
+        # load files into index at $prefix
+        git read-tree --prefix="$prefix" "$sub_tree" || die "read-tree $prefix $sub_tree"
 
-            # load files into index at $prefix
-            git read-tree --prefix="$prefix" "$localtag" || die "read-tree $prefix $localtag"
+        # remove not in index files
+        git checkout -- "$prefix" || die "checkout $prefix"
 
-            # remove not in index files
-            git checkout -- "$prefix" || die "checkout $prefix"
+        # get tree object
+        local tree=$(git write-tree) || die git write-tree
+        dd "tree:       $tree"
 
-            # get tree object
-            local tree=$(git write-tree) || die git write-tree
-            dd "tree:       $tree"
+        if [ "$tree" = "$(git_tree_hash HEAD)" ]; then
+            info "Nothing changed: $prefix"
+            continue
+        fi
 
-            if [ "$tree" = "$(git_tree_hash HEAD)" ]; then
-                info "Nothing changed: $prefix"
-                continue
-            fi
-
-            local commit=$(
-            {
-                cat <<-END
-		Squashed $prefix from $url $ref, local tag: $localtag hash: $tag_hash
+        local commit=$(
+        {
+            cat <<-END
+		Squashed $prefix from $url $ref $dir, local tag: $localtag hash: $tag_hash
 		
 		git-subrepo-dir: $prefix
 		git-subrepo-hash: $tag_hash
 		END
-            } | git commit-tree $tree -p $head_hash
-            ) || die commit
-            dd "commit:     $commit"
+        } | git commit-tree $tree -p $head_hash
+        ) || die commit
+        dd "commit:     $commit"
 
-            git merge --ff-only --no-edit --commit $commit
+        git merge --ff-only --no-edit --commit $commit
 
-            # git subtree merge --squash \
-            #     --message="Merge squashed $url $ref" \
-            #     --prefix "$prefix" "$localtag" || die merge
-        else
-            git subtree add --squash \
-                --message="Add squashed $url $ref" \
-                --prefix "$prefix" "$localtag" || die add
-        fi
+        # git subtree merge --squash \
+        #     --message="Merge squashed $url $ref" \
+        #     --prefix "$prefix" "$localtag" || die merge
 
     done<".gitsubrepo_refs"
 
-    while read a b c localtag; do
+    while read a b c localtag dir; do
+        dd $a, $b, $c, $localtag, $dir
         git update-ref -d $localtag
     done<".gitsubrepo_refs"
 
@@ -379,13 +381,14 @@ fetch_remote()
     local prefix="$1"
     local url="$2"
     local ref="$3"
+    local dir="$4"
 
     local localtag=refs/tags/_gitsubrepo/$prefix
     local mes="$url $ref -> $localtag"
 
     dd "Start fetching $mes"
     git fetch --no-tags "$url" "$ref:$localtag" || die fetch "$mes"
-    echo "$prefix $url $ref $localtag" >> .gitsubrepo_refs
+    echo "$prefix $url $ref $localtag" "$dir" >> .gitsubrepo_refs
     dd "Done fetching $mes"
 }
 
@@ -400,23 +403,34 @@ usage: git subrepo
 
     Configure file ".gitsubrepo" syntax:
 
+
         # set base of remote url to "https://github.com/"
         [ remote: https://github.com/ ]
+
 
         # set base of local dir to "plugin"
         [ base: plugin ]
 
-        # <local dir>   <remote uri>            <ref to fetch>
-        gutter          airblade/vim-gitgutter  master
+
+        # <local dir>   <remote uri>            <ref to fetch>    [<dir>]
+        gutter          airblade/vim-gitgutter  master            src
+
 
         # if <remote uri> ends with "/", <local dir> will be added after "/"
         ansible-vim     DavidWittman/           master
 
+
         # change base to "root"
         [ base: ]
 
+
         # use a specific commit 1a2b3c4
         ultisnips       SirVer/                 1a2b3c4
+
+
+        # add a sub-directory
+        ultisnips       SirVer/                 1a2b3c4           src
+
 
     With above config, "git subrepo" will:
 
