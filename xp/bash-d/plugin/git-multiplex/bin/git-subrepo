@@ -312,19 +312,58 @@ main()
     done<"$conf_fn"
     wait
 
-    while read prefix url ref localtag
-    do
+    while read prefix url ref localtag; do
+
         if [ -d "$prefix" ]; then
-            git subtree merge --squash \
-                --message="Merge squashed $url $ref" \
-                --prefix "$prefix" "$localtag" || die merge
+
+            local tag_hash=$(git_hash "$localtag") || die get hash of $localtag
+            local head_hash=$(git_hash HEAD)
+
+            dd "tag_hash:   $tag_hash"
+            dd "head_hash:  $head_hash"
+
+            # clear old $prefix
+            if [ -d "$prefix" ]; then
+                git rm -r "$prefix" >/dev/null || die rm "$prefix"
+            fi
+
+            # load files into index at $prefix
+            git read-tree --prefix="$prefix" "$localtag" || die "read-tree $prefix $localtag"
+
+            # remove not in index files
+            git checkout -- "$prefix" || die "checkout $prefix"
+
+            # get tree object
+            local tree=$(git write-tree) || die git write-tree
+            dd "tree:       $tree"
+
+            if [ "$tree" = "$(git_tree_hash HEAD)" ]; then
+                info "Nothing changed: $prefix"
+                continue
+            fi
+
+            local commit=$(
+            {
+                cat <<-END
+		Squashed $prefix from $url $ref, local tag: $localtag hash: $tag_hash
+		
+		git-subrepo-dir: $prefix
+		git-subrepo-hash: $tag_hash
+		END
+            } | git commit-tree $tree -p $head_hash
+            ) || die commit
+            dd "commit:     $commit"
+
+            git merge --ff-only --no-edit --commit $commit
+
+            # git subtree merge --squash \
+            #     --message="Merge squashed $url $ref" \
+            #     --prefix "$prefix" "$localtag" || die merge
         else
             git subtree add --squash \
                 --message="Add squashed $url $ref" \
                 --prefix "$prefix" "$localtag" || die add
         fi
-
-        # git update-ref -d $localtag
 
     done<".gitsubrepo_refs"
 
