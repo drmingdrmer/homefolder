@@ -116,7 +116,12 @@ main()
             git rm -r "$prefix" >/dev/null || die rm "$prefix"
         fi
 
-        local sub_tree=$(git ls-tree $tag_hash $dir| awk '{print $3}') || die "get tree-ish of $tag_hash $dir"
+        local sub_tree
+        if [ -z "$dir" ]; then
+            sub_tree=$(git_tree_hash $tag_hash)
+        else
+            sub_tree=$(git ls-tree $tag_hash $dir| awk '{print $3}') || die "get tree-ish of $tag_hash $dir"
+        fi
         dd "sub_tree:   $sub_tree"
 
 
