@@ -336,10 +336,19 @@ main()
             sub_tree=$(git ls-tree $tag_hash $dir| awk '{print $3}') || die "get tree-ish of $tag_hash $dir"
         fi
         dd "sub_tree:   $sub_tree"
+        dd "prefix:     $prefix"
 
+        if [ "$(git cat-file -t $sub_tree)" = "blob" ]; then
+            # the object imported is a file, not a dir
 
-        # load files into index at $prefix
-        git read-tree --prefix="$prefix" "$sub_tree" || die "read-tree $prefix $sub_tree"
+            dd "make dir: $(dirname $prefix)"
+            mkdir -p "$(dirname $prefix)"
+            git cat-file -p $sub_tree > "$prefix"
+            git add "$prefix"
+        else
+            # load files into index at $prefix
+            git read-tree --prefix="$prefix" "$sub_tree" || die "read-tree $prefix $sub_tree"
+        fi
 
         # remove not in index files
         git checkout -- "$prefix" || die "checkout $prefix"
