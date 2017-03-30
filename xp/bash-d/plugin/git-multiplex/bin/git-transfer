@@ -195,14 +195,18 @@ git_copy_commit()
     ) || die "Can't copy commit $1"
 }
 
+
 git_diff_ln_new()
 {
-    # output is changed line number: <from> <end>; inclusive:
-    # 27 7
-    # 307 7
-    # 316 5
-    # 325 10
-    # 350 1
+    # output changed line number of a file: <from> <end>; inclusive:
+    # 27 28
+    # 307 309
+    # 350 350
+    #
+    # add lines:
+    # @@ -53 +72,8
+    # remove lines:
+    # @@ -155 +179,0
 
     git diff -U0 "$@" \
         | grep '^@@' \
@@ -210,11 +214,15 @@ git_diff_ln_new()
     l=$3
     gsub("^+", "", l)
     split(l",1", x, ",")
-    
-    # inclusive
+
+    # inclusive line range: 
     x[2]=x[1]+x[2]-1
 
-    print x[1] " " x[2]
+    # line remove: @@ -155, +179,0
+    if (x[2] >= x[1]) {
+        print x[1] " " x[2]
+    }
+
 }'
 }
 #include '_git_xp_lib.sh' end
