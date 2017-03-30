@@ -27,6 +27,9 @@ which -s $cmd_reverse || cmd_reverse="tail -r"
 
     # reverse order, autopep8 may add or remove lines
 
+    echo $fn
+    git-changed-ln "$@" $fn
+
     git-changed-ln "$@" $fn \
         | $cmd_reverse \
         | while read f t; do
