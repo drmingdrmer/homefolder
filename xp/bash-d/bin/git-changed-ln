@@ -6,6 +6,11 @@ git_diff_ln_new()
     # 27 28
     # 307 309
     # 350 350
+    #
+    # add lines:
+    # @@ -53 +72,8
+    # remove lines:
+    # @@ -155 +179,0
 
     git diff -U0 "$@" \
         | grep '^@@' \
@@ -14,10 +19,14 @@ git_diff_ln_new()
     gsub("^+", "", l)
     split(l",1", x, ",")
 
-    # inclusive
+    # inclusive line range: 
     x[2]=x[1]+x[2]-1
 
-    print x[1] " " x[2]
+    # line remove: @@ -155, +179,0
+    if (x[2] >= x[1]) {
+        print x[1] " " x[2]
+    }
+
 }'
 }
 
