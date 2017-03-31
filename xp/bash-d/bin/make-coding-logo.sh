@@ -1,5 +1,11 @@
 #!/bin/sh
 
+# usage:
+# > make-coding-log.sh x.png title
+#
+# dependency:
+# > brew install imagemagick
+
 name=$2
 
 convert -define jpeg:size=200x200 "$1"  -thumbnail 400x400^ -gravity center -extent 400x400 tmp.gif
