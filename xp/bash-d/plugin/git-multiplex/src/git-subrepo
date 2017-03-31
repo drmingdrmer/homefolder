@@ -152,7 +152,7 @@ main()
         local commit=$(
         {
             cat <<-END
-		Squashed $prefix $ref:$dir
+		Squashed $prefix $ref:$dir ${tag_hash:0:9}
 		
 		url:      $url
 		ref:      $ref
