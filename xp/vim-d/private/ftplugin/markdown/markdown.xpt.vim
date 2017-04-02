@@ -42,6 +42,17 @@ sudo make install
 `$code_quote^
 
 
+XPT mth
+##  `mth^
+
+**syntax**:
+\``mth^(`arg^, `cursor^)\`
+
+**arguments**:
+-   \``arg^\`:
+
+**return**:
+
 XPT fsyntax
 **syntax**:
 \``^\`
