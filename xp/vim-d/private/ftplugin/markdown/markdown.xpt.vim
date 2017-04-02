@@ -49,6 +49,7 @@ XPT mth
 \``mth^(`arg^, `cursor^)\`
 
 **arguments**:
+
 -   \``arg^\`:
 
 **return**:
@@ -63,6 +64,7 @@ XPT freturn
 
 XPT farguments
 **arguments**:
+
 -   \``x^\`:
     `cursor^
 
