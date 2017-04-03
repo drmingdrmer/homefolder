@@ -14,7 +14,7 @@ if [ ".$flags" == ".-" ]; then
     flags=""
 fi
 
-screen_height=$(expr $(tput lines) - 7)
+screen_height=$(expr $(tput lines) - 8)
 
 is_flags=1
 nr_context=0
