@@ -79,3 +79,4 @@ xmledit                         vim-scripts/                 master
 [ base: xp/gdb-d/plugin ]
 
 gdb-dashboard                   cyrus-and/                   master
+git-multiplex/src/shlib.sh      baishancloud/shlib           master   dist/shlib.sh
