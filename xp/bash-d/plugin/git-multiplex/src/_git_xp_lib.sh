@@ -188,7 +188,6 @@ git_copy_commit()
     ) || die "Can't copy commit $1"
 }
 
-
 git_diff_ln_new()
 {
     # output changed line number of a file: <from> <end>; inclusive:
