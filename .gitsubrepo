@@ -1,5 +1,6 @@
 [ remote_suffix: .git ]
 [ remote: https://github.com/ ]
+
 [ base: xp/bash-d/plugin ]
 
 Dropbox-Uploader.andreafabrizi/bin andreafabrizi/Dropbox-Uploader master
@@ -11,6 +12,7 @@ xunlei-lixian.iambus/bin           iambus/xunlei-lixian           master
 git-imerge.mhagger/bin             mhagger/git-imerge             master
 php-markdown.michelf               michelf/php-markdown           master
 grc/bin                            garabik/grc                    master
+git-multiplex/src/shlib.sh         baishancloud/shlib             master   dist/shlib.sh
 
 [ base: xp/vim-d/plg-git ]
 
@@ -79,4 +81,3 @@ xmledit                         vim-scripts/                 master
 [ base: xp/gdb-d/plugin ]
 
 gdb-dashboard                   cyrus-and/                   master
-git-multiplex/src/shlib.sh      baishancloud/shlib           master   dist/shlib.sh
