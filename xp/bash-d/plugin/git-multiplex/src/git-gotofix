@@ -29,7 +29,7 @@ usage()
 	END
 }
 
-source _git_xp_lib.sh
+source shlib.sh
 
 obj=$1
 is_obj_file=0

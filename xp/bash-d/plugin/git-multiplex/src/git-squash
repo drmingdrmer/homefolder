@@ -1,6 +1,6 @@
 #!/bin/sh
 
-source _git_xp_lib.sh
+source shlib.sh
 
 if test -z "$1" || test "-h" = "$1" || test "--help" = "$1"
 then

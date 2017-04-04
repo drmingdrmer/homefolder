@@ -29,7 +29,7 @@
 # |/
 # * 82554be fix doc of Build
 
-source _git_xp_lib.sh
+source shlib.sh
 
 usage()
 {

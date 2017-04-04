@@ -4,7 +4,7 @@
 # 1 clone in "bare" mode
 # 2 push all to another host
 
-source _git_xp_lib.sh
+source shlib.sh
 
 conffn=${GIT_TRANSFER_CONF-$HOME/.git-transfer.conf}
 

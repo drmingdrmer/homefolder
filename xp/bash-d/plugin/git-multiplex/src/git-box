@@ -14,7 +14,7 @@
 #         rebase        r
 #         push          p
 
-source _git_xp_lib.sh
+source shlib.sh
 
 set_verbose 1
 _init_colors

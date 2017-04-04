@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source _git_xp_lib.sh
+source shlib.sh
 
 # to commit index on to its own branch and merge it back
 
