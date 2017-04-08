@@ -65,6 +65,8 @@ $gconf alias.log-full      "$log"
 $gconf alias.lg            "$log"
 $gconf alias.log-short     "$logShort"
 $gconf alias.l             "$logShort"
+$gconf alias.lpr           "log --format='## %C(bold yellow)%s%C(reset)%+b'"
+
 
 
 $gconf alias.bb            "!git   $logShort --simplify-by-decoration --no-pager"
