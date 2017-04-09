@@ -1,0 +1,50 @@
+#!/bin/sh
+
+# Format python source codes with autopep8 on changed lines.
+#
+# Usage:
+#   format all uncommitted lines:
+#   > p8ln
+#
+#   format file:
+#   > p8ln a.py b.py
+#
+# ---
+# # Explaination:
+#
+# # show all changed file names:
+#   git diff --name-only --relative HEAD
+#
+# And a helper script `git-changed-ln` outputs changed line numbers,
+# by diff work-tree(unstaged) with HEAD,
+# or by diff index(staged or cached) with HEAD.
+
+cmd_reverse=tac
+which -s $cmd_reverse || cmd_reverse="tail -r"
+
+{
+    if [ "$#" -gt 0 ]; then
+        # fns specified by command line args
+        while [ "$#" -gt 0 ]; do
+            echo "$1"
+            shift
+        done
+    else
+        # find fns by diff
+        # get changed fn
+        git diff --name-only --relative HEAD
+    fi
+} | while read fn; do
+
+    # reverse order, autopep8 may add or remove lines
+
+    echo formating "$fn" ...
+    git-changed-ln HEAD -- "$fn"
+
+    git-changed-ln HEAD -- "$fn" \
+        | $cmd_reverse \
+        | while read f t; do
+            autopep8 -i --line-range $f $t "$fn"
+        done
+done
+
