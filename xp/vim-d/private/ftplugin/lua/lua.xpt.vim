@@ -1,15 +1,7 @@
 XPTemplate priority=lang
 
-let s:f = g:XPTfuncs()
-
-" use snippet 'varConst' to generate contant variables
-" use snippet 'varFormat' to generate formatting variables
-" use snippet 'varSpaces' to generate spacing variables
-
-
 XPTinclude
       \ _common/common
-
 
 XPT case
 function test.`foo^(t)
@@ -19,9 +11,13 @@ function test.`foo^(t)
     }
 
     for ii, c in ipairs(cases) do
+
         local inp, expected, desc = unpack(c)
 
+        local msg = 'case: ' .. tostring(ii) .. '-th: ' .. c
+        dd(msg)
+
         local rst = `foo^(inp)
-        t:eq(expected, rst, tostring(i) .. 'th: ' .. desc)
+        t:eq(expected, rst, msg)
     end
 end
