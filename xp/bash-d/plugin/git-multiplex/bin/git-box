@@ -402,9 +402,9 @@ sync_once()
 
             branch=$(git_head_branch)
             upstream=$(git_branch_default_upstream $branch)
-            mes "actions:  $actions"
-            mes "branch:   ($branch)"
-            mes "upstream: ($upstream)"
+            info "actions:  $actions"
+            info "branch:   ($branch)"
+            info "upstream: ($upstream)"
 
             if _has_act $actions add-all; then
                 git add .
@@ -441,7 +441,7 @@ sync_once()
                         && ok  "    merge-ff" \
                         || err "    merge-ff"
                 else
-                    mes "HEAD is not a branch, skip merge"
+                    info "HEAD is not a branch, skip merge"
                 fi
             fi
 
@@ -455,7 +455,7 @@ sync_once()
 
                     done<<<"$(git remote)"
                 else
-                    mes "HEAD is not a branch, skip push"
+                    info "HEAD is not a branch, skip push"
                 fi
             fi
             )
@@ -474,9 +474,9 @@ main() {
     while test "$running" = "1"; do
 
         {
-            mes box-sync-start...
+            info box-sync-start...
             sync_once
-            mes sync-done
+            info sync-done
         } &
         sync_pid="$!"
 
