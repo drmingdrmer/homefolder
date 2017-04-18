@@ -36,6 +36,7 @@ set nobackup
 " parse vim setting in comment
 set modeline
 set hlsearch
+set noswapfile
 
 colorscheme default
 
