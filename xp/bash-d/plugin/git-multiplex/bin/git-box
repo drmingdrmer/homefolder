@@ -307,7 +307,7 @@ git_diff_ln_new()
 #include 'shlib.sh' end
 
 set_verbose 1
-_init_colors
+shlib_init_colors
 
 _git_log_before=_date
 _git_log_after=get_pwd
