@@ -34,13 +34,12 @@ source shlib.sh
 obj=$1
 is_obj_file=0
 
-if test -z "$obj" || test "$obj" = "-h" || test "$obj" = "--help"; then
+if [ -z "$obj" ] || [ "$obj" = "-h" ] || [ "$obj" = "--help" ]; then
     usage
     exit 1
 fi
 
-if test "$(git cat-file -t $obj 2>/dev/null)" = "commit"
-then
+if [ "$(git_object_type $obj)" = "commit" ]; then
     commit=$obj
 else
     # it is a file path
@@ -58,7 +57,6 @@ sed_edit_commit="'$sed_edit_commit'"
 GIT_EDITOR='f(){ cat "$1" | sed '$sed_remove_after_blank' | sed '$sed_edit_commit' >"$1-tmp"; mv "$1-tmp" $1; }; f' \
     git rebase --interactive $commit~
 
-if test "$is_obj_file" = "1"
-then
+if [ "$is_obj_file" = "1" ]; then
     vim "$obj"
 fi
