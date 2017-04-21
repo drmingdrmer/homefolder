@@ -16,8 +16,8 @@ cd repo \
 (
 cd gist \
     && ./gist-ctrl commit \
-    && ./ctl fetch \
-    && ./ctl rebase origin/master \
+    && ./gist-ctrl fetch \
+    && ./gist-ctrl rebase origin/master \
     && ./gist-ctrl push
 ) || exit 1
 
