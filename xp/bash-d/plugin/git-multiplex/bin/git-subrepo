@@ -386,7 +386,7 @@ main()
         ref="$c"
         dir="$d"
 
-        if [ "x$match" != "x" ] && ! fn_match "$prefix" $match; then
+        if [ "x$match" != "x" ] && ! fn_match "$prefix" *$match*; then
             continue
         fi
 
