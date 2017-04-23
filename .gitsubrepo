@@ -19,6 +19,7 @@ git-multiplex/src/shlib.sh         baishancloud/shlib             master   dist/
 vim-autoformat                  Chiel92/                     master
 ansible-vim                     DavidWittman/                master
 clang_complete                  Rip-Rip/                     master
+gv.vim                          junegunn/                    master
 unite.vim                       Shougo/                      master
 ultisnips                       SirVer/                      master
 vim-gitgutter                   airblade/                    master
