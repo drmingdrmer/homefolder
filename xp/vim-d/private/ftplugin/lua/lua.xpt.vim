@@ -12,7 +12,7 @@ function test.`foo^(t)
 
     for ii, c in ipairs(cases) do
 
-        local inp, expected, desc = unpack(c)
+        local inp, expected, desc = t:unpack(c)
         local msg = 'case: ' .. tostring(ii) .. '-th: '
         dd(msg, c)
 
