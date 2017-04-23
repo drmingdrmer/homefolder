@@ -3,7 +3,7 @@
 # PATH=$PATH:$(git --exec-path)
 # . git-sh-setup
 
-source _git_xp_lib.sh
+source shlib.sh
 
 if test $# -gt 1; then
     base="$1"
