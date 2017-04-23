@@ -9,6 +9,16 @@ let g:menuly_menu = {
       \                     't': ':SyntasticToggleMode',
       \                     'c': ':SyntasticCheck',
       \          }],
+      \          'g': ['fugitive', {
+      \                     'b': ':Gblame',
+      \                     'd': ['diff...', {
+      \                                's': ':Gvdiff',
+      \                                'h': ':Gvdiff HEAD',
+      \                                'H': ':Gvdiff HEAD~',
+      \                     }],
+      \                     'a': ':GV --all -n1024',
+      \                     'v': ':GV       -n1024',
+      \          }],
       \ }],
       \ 'c': ['cursor', {
       \          'l': 'cursorline',
