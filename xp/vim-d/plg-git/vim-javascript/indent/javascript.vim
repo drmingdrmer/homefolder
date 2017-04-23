@@ -2,7 +2,7 @@
 " Language: Javascript
 " Maintainer: Chris Paul ( https://github.com/bounceme )
 " URL: https://github.com/pangloss/vim-javascript
-" Last Change: March 31, 2017
+" Last Change: April 21, 2017
 
 " Only load this indent file when no other was loaded.
 if exists('b:did_indent')
@@ -11,6 +11,7 @@ endif
 let b:did_indent = 1
 
 " indent correctly if inside <script>
+" vim/vim@690afe1 for the switch from cindent
 let b:html_indent_script1 = 'inc'
 
 " Now, set up our indentation expression and keys that trigger it.
@@ -195,6 +196,10 @@ function s:PrevCodeLine(lnum)
   let [l:pos, l:n] = [getpos('.')[1:2], prevnonblank(a:lnum)]
   while l:n
     if getline(l:n) =~ '^\s*\/[/*]'
+      if (stridx(getline(l:n),'`') > 0 || getline(l:n-1)[-1:] == '\') &&
+            \ s:syn_at(l:n,1) =~? s:syng_str
+        break
+      endif
       let l:n = prevnonblank(l:n-1)
     elseif stridx(getline(l:n), '*/') + 1 && s:syn_at(l:n,1) =~? s:syng_com
       call cursor(l:n,1)
@@ -247,13 +252,13 @@ function s:doWhile()
   if expand('<cword>') ==# 'while'
     call search('\m\<','cbW')
     let bal = 0
-    while search('\m\C[{}]\|\<\%(do\|while\)\>','bW',b:js_cache[1])
+    while search('\m\C[{}]\|\<\%(do\|while\)\>','bW')
       if eval(s:skip_expr) | continue | endif
-      " switch (token())
-      exe get({'}': "if s:GetPair('{','}','bW',s:skip_expr,200) < 1 | return | endif",
+      " switch (looking_at())
+      exe {    '}': "if s:GetPair('{','}','bW',s:skip_expr,200) < 1 | return | endif",
             \  '{': "return",
-            \  'do': "let bal += s:save_pos('s:IsBlock',1)"}, s:token(),
-            \        "let bal -= s:save_pos('s:previous_token') != '.'")
+            \  'd': "let bal += s:save_pos('s:IsBlock',1)",
+            \  'w': "let bal -= s:save_pos('s:previous_token') != '.'" }[s:looking_at()]
       if bal > 0
         return 1
       endif
@@ -291,18 +296,20 @@ function s:IsBlock(...)
       return char != '{'
     elseif char =~ '\k'
       if char ==# 'type'
-        return s:previous_token() !~# '^\%(im\|ex\)port$'
+        return s:save_pos('s:previous_token') !~# '^\%(im\|ex\)port$'
       endif
       return index(split('return const let import export extends yield default delete var await void typeof throw case new of in instanceof')
             \ ,char) < (line('.') != l:n) || s:save_pos('s:previous_token') == '.'
     elseif char == '>'
       return getline('.')[col('.')-2] == '=' || s:syn_at(line('.'),col('.')) =~? 'jsflow\|^html'
+    elseif char == '*'
+      return s:save_pos('s:previous_token') == ':'
     elseif char == ':'
       return !s:save_pos('s:expr_col')
     elseif char == '/'
       return s:syn_at(line('.'),col('.')) =~? 'regex'
     endif
-    return char !~ '[=~!<*,.?^%|&([]' &&
+    return char !~ '[=~!<,.?^%|&([]' &&
           \ (char !~ '[-+]' || l:n != line('.') && getline('.')[col('.')-2] == char)
   endif
 endfunction
