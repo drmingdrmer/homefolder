@@ -24,7 +24,7 @@ fun! input#GetChar(prompt, ...) "{{{
     endif
 
     " special key is not a number, see :h getchar()
-    if type(chr_nr) == v:t_string
+    if type(chr_nr) == type('')
         return chr_nr
     else
         return nr2char(chr_nr)

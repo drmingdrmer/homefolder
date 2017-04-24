@@ -102,7 +102,7 @@ fun! menuly#NormalizeMenuItem(menu_item) "{{{
     let item = a:menu_item
     let norm = {}
 
-    if type(item) == v:t_string
+    if type(item) == type('')
 
         if item[0] == ':'
             let norm = {
@@ -119,9 +119,9 @@ fun! menuly#NormalizeMenuItem(menu_item) "{{{
         endif
 
 
-    elseif type(item) == v:t_list
+    elseif type(item) == type([])
 
-        if type(item[1]) == v:t_dict
+        if type(item[1]) == type({})
 
             let sub_menu = item[1]
             let new_submenu = {}
@@ -135,7 +135,7 @@ fun! menuly#NormalizeMenuItem(menu_item) "{{{
                   \ "submenu": new_submenu,
                   \ }
 
-        elseif type(item[1]) == v:t_func
+        elseif type(item[1]) == type(function("tr"))
 
             let norm = {
                   \ "title": item[0],
@@ -154,7 +154,7 @@ fun! menuly#NormalizeMenuItem(menu_item) "{{{
                   \ }
         endif
 
-    elseif type(item) == v:t_dict
+    elseif type(item) == type({})
 
         " already normal
         let norm = item
@@ -173,7 +173,7 @@ fun! menuly#MakeTitle(menu_item) "{{{
 
     let item = a:menu_item
 
-    if type(item) == v:t_dict
+    if type(item) == type({})
         return get(item, '_title', 'no-title')
     endif
 
