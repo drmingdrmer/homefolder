@@ -117,6 +117,7 @@ export HISTCONTROL=ignoreboth
 export HISTTIMEFORMAT="%Y/%m/%d %H:%M:%S "
 [ -d /usr/local/go/bin ] && { export PATH=$PATH:/usr/local/go/bin; export GOROOT=/usr/local/go; }
 [ -d $HOME/xp/gopath ] && { export GOPATH=$HOME/xp/gopath; export PATH=$PATH:$GOPATH/bin; }
+[ -d '/usr/local/opt/opencv3/bin' ] && export PATH="/usr/local/opt/opencv3/bin:$PATH"
 
 export HISTIGNORE="l:la:ll:ls:gl"
 export GREP_COLORS="ms=01;33:mc=01;31:sl=0;33:cx=:fn=35:ln=32:bn=32:se=36"
