@@ -124,17 +124,28 @@ fun! edit#align#InteractiveInputRegex(line_start, line_end) "{{{
 endfunction "}}}
 
 fun! edit#align#FindParagraph() "{{{
-    let top = getpos("'{")[1]
-    if getline(top) == ''
-        let top += 1
-    endif
 
-    let bot = getpos("'}")[1]
-    if getline(bot) == ''
-        let bot -= 1
-    end
+    let cur_ln = getpos(".")[1]
+    let cur_indent = indent(".")
 
-    return [top, bot]
+    let start_ln = cur_ln
+
+    while start_ln >= 1 && indent(start_ln) == cur_indent
+        let start_ln -= 1
+    endwhile
+
+    let start_ln += 1
+
+    let end_ln = cur_ln
+
+    while indent(end_ln) == cur_indent
+        let end_ln += 1
+    endwhile
+
+    let end_ln -= 1
+
+    return [start_ln, end_ln]
+
 endfunction "}}}
 
 fun! edit#align#n() "{{{
