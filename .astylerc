@@ -50,3 +50,6 @@ preserve-date
 lineend=linux
 #show detail
 verbose
+
+# do not create backup
+suffix=none
