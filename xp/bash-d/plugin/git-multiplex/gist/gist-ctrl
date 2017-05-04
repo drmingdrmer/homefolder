@@ -19,7 +19,10 @@ while read name gist_id; do
                 ( cd $name && git status; )
                 ;;
             commit)
-                ( cd $name && git add -u && git commit -m 'auto commit'; )
+                (
+                cd $name && git add -u || exit 1
+                { git diff-index --name-only HEAD -- | grep -qs .; } && git commit -m 'auto commit' || exit 0
+                    )
                 ;;
             clone)
                 ;;
