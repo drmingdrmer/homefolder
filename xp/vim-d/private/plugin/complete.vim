@@ -1,4 +1,4 @@
-set pumheight=8
+set pumheight=40
 
 " imap        <tab> <Plug>edit:complete_noselect
 inoremap    <M-.> <C-x><C-o>
