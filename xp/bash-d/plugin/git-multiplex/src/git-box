@@ -1,18 +1,29 @@
 #!/bin/bash
 
-# cat ~/.gitbox.conf
+# Usage:
+#   1.  create config file ~/.gitbox.conf
 #
-# ~/xpkit fetch,push
-# ~/wiki
-# ~
-
-# option: sequence of action to do:
-#         add-all       a
-#         commit        c
-#         fetch         f
-#         merge-ff      m
-#         rebase        r
-#         push          p
+#       cat ~/.gitbox.conf
+#       ~/xpkit fetch,push
+#       ~/wiki
+#
+#       # format:
+#       # <git-work-dir>  action-1,action-2...
+#
+#
+#   2.  run:
+#       > git box
+#
+# Valid actions:
+#    add-all            add all files, dirs, tracked and untracked.
+#    commit             commit staged changes.
+#    fetch              fetch all remote.
+#    fetch-p            fetch all remote with argument "-p", to purge remote branch those are not on remote any more.
+#    merge-ff           merge --ff-only to default tracking remote branch.
+#    rebase             rebase onto default tracking remote branch.
+#    push               push current branch to default tracking remote.
+#
+# without actions, by default it is a full-sync action set: add-all,commit,fetch,rebase,push
 
 source shlib.sh
 
