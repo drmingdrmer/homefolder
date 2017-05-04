@@ -58,17 +58,6 @@ shlib_init_colors()
     NC="$(                      tput sgr0)" # No Color
 }
 
-fn_match()
-{
-    # $0 a.txt *.txt
-    case "$1" in
-        $2)
-            return 0
-            ;;
-    esac
-    return 1
-}
-
 screen_width()
 {
     local chr="${1--}"
@@ -141,6 +130,7 @@ text_hr()
 }
 
 
+
 SHLIB_LOG_VERBOSE=1
 SHLIB_LOG_FORMAT='[$(date +"%Y-%m-%d %H:%M:%S")] $level $title $mes'
 
@@ -204,7 +194,6 @@ err() {
     local Red="$(tput setaf 1)"
     _LOG_LEVEL="ERROR" log "${Red}" "$@"
 }
-
 
 git_hash()
 {
@@ -338,6 +327,74 @@ git_diff_ln_new()
 
 }'
 }
+
+
+os_detect()
+{
+    local os
+    case $(uname -s) in
+        Linux)
+            os=linux ;;
+        *[bB][sS][dD])
+            os=bsd ;;
+        Darwin)
+            os=mac ;;
+        *)
+            os=unix ;;
+    esac
+    echo $os
+}
+
+mac_ac_power_connection()
+{
+    #  Connected: (Yes|No)
+    system_profiler SPPowerDataType \
+        | sed '1,/^ *AC Charger Information:/d' \
+        | grep Connected:
+}
+
+
+mac_power()
+{
+
+    # $0 is-battery          exit code 0 if using battery.
+    # $0 is-ac-power         exit code 0 if using ac power.
+
+    local cmd="$1"
+    local os=$(os_detect)
+
+    if [ "$os" != "mac" ]; then
+        err "not mac but: $os"
+        return 1
+    fi
+
+    case $cmd in
+
+        is-battery)
+            mac_ac_power_connection | grep -q No
+            ;;
+
+        is-ac-power)
+            mac_ac_power_connection | grep -q Yes
+            ;;
+
+        *)
+            err "invalid cmd: $cmd"
+            return 1
+            ;;
+    esac
+}
+
+fn_match()
+{
+    # $0 a.txt *.txt
+    case "$1" in
+        $2)
+            return 0
+            ;;
+    esac
+    return 1
+}
 #include 'shlib.sh' end
 
 set_verbose 1
@@ -395,7 +452,7 @@ get_pwd() {
 
 _sleep()
 {
-    if mac-power is-battery
+    if mac_power is-battery
     then
         echo using battery.. sleep 10 minutes
         sleep 60*10
@@ -448,7 +505,7 @@ sync_once()
             if _has_act $actions commit; then
                 mes="$(git status --short --ignore-submodules --untracked-files=no | head -n1)"
                 git commit -m "$mes" >/dev/null \
-                    && ok "    commit"
+                    && ok "commit"
             fi
 
             if _has_act $actions "fetch.*"; then
@@ -459,21 +516,21 @@ sync_once()
                 fi
 
                 git fetch --all --quiet $arg \
-                    && ok  "    fetch" \
-                    || err "    fetch"
+                    && ok  "fetch" \
+                    || err "fetch"
             fi
 
             if _has_act $actions rebase; then
                 git rebase origin/$upstream --quiet \
-                    && ok  "    rebase onto origin/$upstream" \
-                    || err "    rebase onto origin/$upstream"
+                    && ok  "rebase onto origin/$upstream" \
+                    || err "rebase onto origin/$upstream"
             fi
 
             if _has_act $actions merge-ff; then
                 if test -n "$branch"; then
                     git merge --no-edit --commit --ff-only \
-                        && ok  "    merge-ff" \
-                        || err "    merge-ff"
+                        && ok  "merge-ff" \
+                        || err "merge-ff"
                 else
                     info "HEAD is not a branch, skip merge"
                 fi
@@ -484,8 +541,8 @@ sync_once()
                     while read remote
                     do
                         git push $remote $branch --quiet \
-                            && ok  "    push to $remote" \
-                            || err "    push to $remote"
+                            && ok  "push to $remote" \
+                            || err "push to $remote"
 
                     done<<<"$(git remote)"
                 else
