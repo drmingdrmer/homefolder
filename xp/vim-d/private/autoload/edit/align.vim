@@ -130,7 +130,7 @@ fun! edit#align#FindParagraph() "{{{
 
     let start_ln = cur_ln
 
-    while start_ln >= 1 && indent(start_ln) == cur_indent && getline(start_ln) != ""
+    while start_ln >= 1 && indent(start_ln) == cur_indent && getline(start_ln) !~ '\v^\s*$'
         let start_ln -= 1
     endwhile
 
@@ -138,7 +138,7 @@ fun! edit#align#FindParagraph() "{{{
 
     let end_ln = cur_ln
 
-    while indent(end_ln) == cur_indent && getline(end_ln) != ""
+    while indent(end_ln) == cur_indent && getline(end_ln) !~ '\v^\s*$'
         let end_ln += 1
     endwhile
 
