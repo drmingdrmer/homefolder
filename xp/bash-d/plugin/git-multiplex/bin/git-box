@@ -493,6 +493,7 @@ sync_once()
 
             branch=$(git_head_branch)
             upstream=$(git_branch_default_upstream $branch)
+            info "path:     $p"
             info "actions:  $actions"
             info "branch:   ($branch)"
             info "upstream: ($upstream)"
