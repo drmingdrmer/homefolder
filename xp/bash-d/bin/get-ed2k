@@ -1,8 +1,10 @@
 #!/bin/sh
 
 url=$1
+ptn=${2-ed2k}
+
 curl "$url" \
-    | grep "ed2k" \
-    | sed 's/ed2k/ ed2k/g' \
+    | grep $ptn \
+    | sed 's/'$ptn'/ '$ptn'/g' \
     | awk '{for ( i=1; i<=NF; i++ ) { gsub("'"'"'", "", $i); print $i; }}' \
-    | grep ed2k
+    | grep $ptn
