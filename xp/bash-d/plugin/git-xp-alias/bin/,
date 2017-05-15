@@ -14,6 +14,7 @@ au   ,          add -u
 c1   ,          commit -m $commit_message_one_file $one_changed           # commit one file
 cc   ,          commit -m $commit_message_one_file                        # commit all staged(cached)
 ca   ,          commit -m $commit_message_one_file -a                     # commit all staged(cached) or not
+ci   ,          commit                                                    # commit
 co   ,          checkout
 d    ,          diff --color --find-renames
 f    ,          fetch --prune
