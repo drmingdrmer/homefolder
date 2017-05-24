@@ -6,6 +6,13 @@ fn=$1
 fn=${fn%.des3}.des3
 [ -f "$fn" ] || touch $fn
 
-openssl des3 -d -in $fn \
-    | vim - -c ':set buftype=nofile' -c ':nnoremap zz :w !cat \| openssl des3 > '$fn'<CR>:qa!<CR>'
+printf "enter des-ede3-cbc decryption password:"
+read -s pass
 
+content="$(cat "$fn" | openssl des3 -d -k $pass)"
+
+CONTENT="$content" vim \
+    -c 'put=$CONTENT' \
+    -c 'file des3-b64://des3-content' \
+    -c 'set buftype=acwrite' \
+    -c 'au BufWriteCmd * exec "silent w !cat | openssl des3 -k '$pass' > '"$fn"'"'
