@@ -1,0 +1,15 @@
+#!/bin/sh
+
+ip=$1
+port=10007
+
+case $ip in
+    bj)   ip=36.110.61.125 ; port=10007 ;;
+    bji)  ip=172.18.1.7    ; port=10007 ;;
+    bj2i) ip=172.18.1.55   ; port=10007 ;;
+    xm)   ip=110.80.37.10  ; port=10070 ;;
+    xmi)  ip=172.18.12.70  ; port=10070 ;;
+    xm2i) ip=172.18.12.71  ; port=10070 ;;
+esac
+
+ssh zhangyanpo@$ip -i ~/wiki/baishan/dev/ssh/baishan_rsa -p $port -v
