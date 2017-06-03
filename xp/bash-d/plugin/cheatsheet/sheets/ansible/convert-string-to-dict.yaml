@@ -1,0 +1,1 @@
+- set_fact: port_to_master_id="{{tmp_r.results[0].stdout}}"

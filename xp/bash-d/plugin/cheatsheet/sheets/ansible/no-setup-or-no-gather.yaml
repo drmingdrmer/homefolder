@@ -1,0 +1,4 @@
+- hosts: s2
+  serial: 1
+  gather_facts: False
+  tasks:
