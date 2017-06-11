@@ -20,6 +20,10 @@ set cinoptions+=(0,W2s          " parentheses indent
 set cinoptions+=M0              " parentheses indent
 set cinoptions+=m1              " closing parenthese
 
-
 " let c_c_vim_compatible = 1
 " let c_C99 = 1
+
+
+" supertab
+
+let b:SuperTabDefaultCompletionType = 'context'

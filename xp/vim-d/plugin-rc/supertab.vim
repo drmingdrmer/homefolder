@@ -5,7 +5,7 @@ let g:__SUPERTAB_CONTINUED_VIM__ = 1
 
 " let g:SuperTabMappingForward = '<Plug>supertabKey'
 
-let g:SuperTabDefaultCompletionType = 'context'
+let g:SuperTabDefaultCompletionType = '<c-p>'
 let g:SuperTabContextDefaultCompletionType = '<c-x><c-u>'
 
 let g:SuperTabCompletionContexts = ['s:ContextText', 's:ContextDiscover']
