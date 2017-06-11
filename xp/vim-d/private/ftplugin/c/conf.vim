@@ -22,8 +22,3 @@ set cinoptions+=m1              " closing parenthese
 
 " let c_c_vim_compatible = 1
 " let c_C99 = 1
-
-
-" supertab
-
-let b:SuperTabDefaultCompletionType = 'context'
