@@ -38,13 +38,6 @@ inoremap <M-h> <Left>
 inoremap <M-j> <Down>
 inoremap <M-k> <Up>
 inoremap <M-l> <Right>
-        
-" inoremap <M-e> <End>
-inoremap <C-j> <End><CR>
-
-inoremap <C-k> <C-o>==<Up><END><CR>
-
-" inoremap <C-0> <Home>
 
 
 fun! s:ToHome(isVisual) range "{{{
