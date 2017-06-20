@@ -18,7 +18,14 @@ bindkey -k k8 next
 bindkey -k k7 prev
 # <M-h>
 # \033 is <ESC>
-bindkey -t "\033l" next
 bindkey -t "\033h" prev
+bindkey -t "\033l" next
+bindkey -t "\033H" exec screen-ctl move-left
+bindkey -t "\033L" exec screen-ctl move-right
+# bindkey -t "\033L" exec screen -X number 10
 # bindkey -t "^a" next
 # bindkey -t "^b" prev
+
+# how long to display error message
+msgwait 1
+startup_message off

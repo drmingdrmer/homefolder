@@ -1,0 +1,13 @@
+#!/bin/sh
+
+screen -X msgwait 0
+
+if [ "$1" = "move-right" ]; then
+    n=$(screen -Q number | awk '{print $1 + 1}')
+elif [ "$1" = "move-left" ]; then
+    n=$(screen -Q number | awk '{print $1 - 1}')
+fi
+
+screen -X number "$n"
+
+screen -X msgwait 1
