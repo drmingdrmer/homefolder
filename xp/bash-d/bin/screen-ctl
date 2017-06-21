@@ -11,3 +11,5 @@ fi
 screen -X number "$n"
 
 screen -X msgwait 1
+
+# 'screen -X msgwait 0; n=$(screen -Q number | grep -o "[0-9]*"); let n=n+1; screen -X number "$n"; screen -X msgwait 1;'
