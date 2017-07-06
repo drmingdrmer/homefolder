@@ -37,7 +37,7 @@ set wildmode=longest:full
 
 set lazyredraw
 
-set textwidth=78
+set textwidth=80
 
 set noerrorbells
 set visualbell
@@ -54,10 +54,11 @@ augroup END
 
 set updatetime=200
 
+" =======================================================================================================================================================================
 if v:version >=703
     " high light 3 columns after textwidth
     " see hi-ColorColumn
-    set colorcolumn=+1,+2,+3
+    set colorcolumn=-3,-2,-1,-0,+40
 endif
 
 nmap <Leader><Leader>wm  <Plug>view:width_max
