@@ -46,10 +46,11 @@ shift
 
 # , , to list all command
 if [ "$shortcmd" = "," ]; then
+    regex="${1-.}"
     echo
     echo "commands =================================================="
     echo
-    echo "$commands"
+    echo "$commands" | grep "$regex"
     echo
     echo "flags ====================================================="
     echo
