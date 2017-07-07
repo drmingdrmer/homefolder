@@ -14,7 +14,7 @@ _git_comma()
   local shortcut=$(, get_shortcut "$cc" 2>/dev/null)
   case $shortcut in
 
-      ra|rc|ri|rp|rr) _git_rebase ;;
+      ra|rc|rh|ri|rp|rr) _git_rebase ;;
       a*)          _git_add    ;;
       d|sf)        _git_diff   ;;
       3|f|g|l)     _git_log    ;;

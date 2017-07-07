@@ -25,10 +25,10 @@ mc   ,          merge $git_option_no_edit --commit --no-ff
 mf   ,          merge $git_option_no_edit --commit --ff-only
 ra   ,          rebase --abort
 rc   ,          rebase --continue
-rh   ,          rebase --hard
 ri   ,          rebase --interactive
 rp   ,          rebase --preserve-merges
 rr   ,          rebase
+RH   ,          reset --hard
 sb   ,          status --short --branch                                   # status with branch info
 sf   ,          diff --name-only --relative HEAD                          # status about file changes
 st   ,          status
