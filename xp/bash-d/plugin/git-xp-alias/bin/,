@@ -44,6 +44,19 @@ get_shortcut=0
 shortcmd="$1"
 shift
 
+# , , to list all command
+if [ "$shortcmd" = "," ]; then
+    echo
+    echo "commands =================================================="
+    echo
+    echo "$commands"
+    echo
+    echo "flags ====================================================="
+    echo
+    echo "$git_comma_options"
+    exit 0
+fi
+
 if [ "$shortcmd" = "list_shortcut" ]; then
     while read shortcut xx; do
         [ -z "$shortcut" ] && continue
