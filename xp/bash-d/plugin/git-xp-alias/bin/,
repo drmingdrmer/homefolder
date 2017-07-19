@@ -23,6 +23,7 @@ l    ld,        log --color --decorate --abbrev-commit --find-renames     # list
 3    ld,10      log --color --decorate --abbrev-commit --find-renames     # list mode, with diff
 mc   ,          merge $git_option_no_edit --commit --no-ff
 mf   ,          merge $git_option_no_edit --commit --ff-only
+pu   ,          push
 ra   ,          rebase --abort
 rc   ,          rebase --continue
 ri   ,          rebase --interactive
