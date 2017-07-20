@@ -48,10 +48,15 @@ shift
 # , , to list all command
 if [ "$shortcmd" = "," ]; then
     regex="${1-.}"
+    if [ -n "$regex" ]; then
+        grep_flag="--color"
+    else
+        grep_flag=
+    fi
     echo
     echo "commands =================================================="
     echo
-    echo "$commands" | grep "$regex"
+    echo "$commands" | grep $grep_flag "$regex"
     echo
     echo "flags ====================================================="
     echo
