@@ -14,7 +14,7 @@ endfunction
 fun! s:f.CountInput()
     let v = self.ItemValue()
     let v = substitute(v, '\v[^,]', '', 'g')
-    return strlen(v) + 1
+    return strlen(v) + 2
 endfunction
 
 XPT case
