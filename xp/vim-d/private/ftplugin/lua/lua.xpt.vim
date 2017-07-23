@@ -1,24 +1,32 @@
 XPTemplate priority=lang
 
+let s:f = g:XPTfuncs()
+
 XPTinclude
       \ _common/common
+
+fun! s:f.ModName()
+    let fn = expand('%:t')
+    let fn = matchstr(fn, '\Vtest_\zs\.\*\ze.lua')
+    return fn
+endfunction
+
+fun! s:f.CountInput()
+    let v = self.ItemValue()
+    let v = substitute(v, '\v[^,]', '', 'g')
+    return strlen(v) + 1
+endfunction
 
 XPT case
 function test.`foo^(t)
 
-    local cases = {
+    for `inp^, expected, desc in t:case_iter(`inp^CountInput()^, {
         {`cursor^},
-    }
+    }) do
 
-    for ii, c in ipairs(cases) do
-
-        local inp, expected, desc = t:unpack(c)
-        local msg = 'case: ' .. tostring(ii) .. '-th '
-        dd(msg, c)
-
-        local rst = `foo^(inp)
+        local rst = `ModName()^.`foo^(`inp^)
         dd('rst: ', rst)
 
-        t:eq(expected, rst, msg)
+        t:eq(expected, rst, desc)
     end
 end
