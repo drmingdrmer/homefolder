@@ -1,6 +1,6 @@
 # embed sourced file into each
 
-fns = $(shell ls git-*)
+fns = $(shell ls git-*) p8ln
 
 all:
 	for f in $(fns); do cat $$f | awk -f preproc.awk > ../bin/$$f && chmod +x ../bin/$$f; done

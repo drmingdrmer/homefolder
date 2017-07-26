@@ -19,6 +19,8 @@
 # by diff work-tree(unstaged) with HEAD,
 # or by diff index(staged or cached) with HEAD.
 
+source shlib.sh
+
 cmd_reverse=tac
 which -s $cmd_reverse || cmd_reverse="tail -r"
 
@@ -39,9 +41,9 @@ which -s $cmd_reverse || cmd_reverse="tail -r"
     # reverse order, autopep8 may add or remove lines
 
     echo formating "$fn" ...
-    git-changed-ln HEAD -- "$fn"
+    git_diff_ln_new HEAD -- "$fn"
 
-    git-changed-ln HEAD -- "$fn" \
+    git_diff_ln_new HEAD -- "$fn" \
         | $cmd_reverse \
         | while read f t; do
             autopep8 -i --line-range $f $t "$fn"

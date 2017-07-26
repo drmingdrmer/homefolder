@@ -1,8 +1,7 @@
-#!/bin/sh
+#!/bin/bash
 
-# transfer git repo from one host to another
-# 1 clone in "bare" mode
-# 2 push all to another host
+# PATH=$PATH:$(git --exec-path)
+# . git-sh-setup
 
 #include 'shlib.sh' begin
 #!/bin/sh
@@ -396,78 +395,25 @@ fn_match()
 }
 #include 'shlib.sh' end
 
-conffn=${GIT_TRANSFER_CONF-$HOME/.git-transfer.conf}
+if test $# -gt 1; then
+    base="$1"
+    mes="$2"
+else
+    base=HEAD
+    mes="$1"
+fi
 
-base=
-src_remote=
-dst_remote=
+if test -z "$mes"; then
+    die "usage: $0 'message'"
+fi
 
-cat $conffn | while read folder src dst x; do
+branch_name=$(echo "$mes" | sed 's/[^a-zA-Z0-9]\+/-/g' | sed 's/^-\|-$//g')
 
-    if [ "x$folder" = "x" ]; then
-        continue
-    fi
+echo message: $mes
+echo base: $base
+echo branch: $branch_name
 
-    # [ base: xp/vim-d ]
-    # declare base dir for following sub repo
-    #
-    # [ src: https://github.com/ ]
-    # declare src base url for following sub repo
-    if test "${folder:0:1}" = '['
-    then
+git stash \
+    && git checkout -b "$branch_name" $base \
+    && git commit --allow-empty -m "$mes"
 
-        case $src in
-            base:)
-                base="$dst"
-                base="${base%%]}"
-                base="$(eval echo "$base")"
-                base="${base%/}/"
-                if test "$base" = "/"; then
-                    base=
-                fi
-                info "set base to" "'$base'"
-                ;;
-            src:)
-                src_remote="$dst"
-                info "set src base to" "'$src_remote'"
-                ;;
-            dst:)
-                dst_remote="$dst"
-                info "set dst base to" "'$dst_remote'"
-                ;;
-            *)
-                echo "invalid tag: $b"
-                exit 1
-        esac
-        continue
-    fi
-
-
-    dst="${dst:-$src}"
-
-    folder="$base$folder"
-    src="$src_remote$src"
-    dst="$dst_remote$dst"
-
-    info "transfer:" "$folder"
-    info "    from:" "$src"
-    info "      to:" "$dst"
-
-    mkdir -p "$(dirname "$folder")" || die mkdir "$(dirname "$folder")"
-
-    if [ -d $folder ]; then
-        :
-    else
-        info clone $src to $folder
-        git clone --bare $src $folder
-    fi
-
-    (
-    cd $folder \
-        && git config remote.origin.fetch '+refs/heads/*:refs/heads/*' \
-        && git fetch -p \
-        && { { git remote | grep -q "^b$"; } || git remote add b $dst; } \
-        && info push to "b($dst)" \
-        && git push b --all --prune -f
-    )
-done

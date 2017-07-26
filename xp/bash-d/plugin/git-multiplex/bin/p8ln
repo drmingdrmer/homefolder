@@ -1,8 +1,23 @@
 #!/bin/sh
 
-# transfer git repo from one host to another
-# 1 clone in "bare" mode
-# 2 push all to another host
+# Format python source codes with autopep8 on changed lines.
+#
+# Usage:
+#   format all uncommitted lines:
+#   > p8ln
+#
+#   format file:
+#   > p8ln a.py b.py
+#
+# ---
+# # Explaination:
+#
+# # show all changed file names:
+#   git diff --name-only --relative HEAD
+#
+# And a helper script `git-changed-ln` outputs changed line numbers,
+# by diff work-tree(unstaged) with HEAD,
+# or by diff index(staged or cached) with HEAD.
 
 #include 'shlib.sh' begin
 #!/bin/sh
@@ -396,78 +411,32 @@ fn_match()
 }
 #include 'shlib.sh' end
 
-conffn=${GIT_TRANSFER_CONF-$HOME/.git-transfer.conf}
+cmd_reverse=tac
+which -s $cmd_reverse || cmd_reverse="tail -r"
 
-base=
-src_remote=
-dst_remote=
-
-cat $conffn | while read folder src dst x; do
-
-    if [ "x$folder" = "x" ]; then
-        continue
-    fi
-
-    # [ base: xp/vim-d ]
-    # declare base dir for following sub repo
-    #
-    # [ src: https://github.com/ ]
-    # declare src base url for following sub repo
-    if test "${folder:0:1}" = '['
-    then
-
-        case $src in
-            base:)
-                base="$dst"
-                base="${base%%]}"
-                base="$(eval echo "$base")"
-                base="${base%/}/"
-                if test "$base" = "/"; then
-                    base=
-                fi
-                info "set base to" "'$base'"
-                ;;
-            src:)
-                src_remote="$dst"
-                info "set src base to" "'$src_remote'"
-                ;;
-            dst:)
-                dst_remote="$dst"
-                info "set dst base to" "'$dst_remote'"
-                ;;
-            *)
-                echo "invalid tag: $b"
-                exit 1
-        esac
-        continue
-    fi
-
-
-    dst="${dst:-$src}"
-
-    folder="$base$folder"
-    src="$src_remote$src"
-    dst="$dst_remote$dst"
-
-    info "transfer:" "$folder"
-    info "    from:" "$src"
-    info "      to:" "$dst"
-
-    mkdir -p "$(dirname "$folder")" || die mkdir "$(dirname "$folder")"
-
-    if [ -d $folder ]; then
-        :
+{
+    if [ "$#" -gt 0 ]; then
+        # fns specified by command line args
+        while [ "$#" -gt 0 ]; do
+            echo "$1"
+            shift
+        done
     else
-        info clone $src to $folder
-        git clone --bare $src $folder
+        # find fns by diff
+        # get changed fn
+        git diff --name-only --relative HEAD
     fi
+} | while read fn; do
 
-    (
-    cd $folder \
-        && git config remote.origin.fetch '+refs/heads/*:refs/heads/*' \
-        && git fetch -p \
-        && { { git remote | grep -q "^b$"; } || git remote add b $dst; } \
-        && info push to "b($dst)" \
-        && git push b --all --prune -f
-    )
+    # reverse order, autopep8 may add or remove lines
+
+    echo formating "$fn" ...
+    git_diff_ln_new HEAD -- "$fn"
+
+    git_diff_ln_new HEAD -- "$fn" \
+        | $cmd_reverse \
+        | while read f t; do
+            autopep8 -i --line-range $f $t "$fn"
+        done
 done
+
