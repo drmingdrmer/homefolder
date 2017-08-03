@@ -45,7 +45,7 @@ call s:add('vim-javascript')
 call s:add('vim-jsx')
 call s:add('vim-mac-classic-theme')
 " vim-syntax-markdown must come first
-call s:add('vim-syntax-markdown')
+" call s:add('vim-syntax-markdown')
 call s:add('vim-markdown')
 call s:add('vim-syntax-util')
 call s:add('vim-tabbar')
