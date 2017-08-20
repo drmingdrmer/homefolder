@@ -20,7 +20,7 @@ endfunction
 XPT case
 function test.`foo^(t)
 
-    for `inp^, expected, desc in t:case_iter(`inp^CountInput()^, {
+    for i, `inp^, expected, desc in t:case_iter(`inp^CountInput()^, {
         {`cursor^},
     }) do
 
