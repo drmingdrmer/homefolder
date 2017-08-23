@@ -411,6 +411,8 @@ fn_match()
 }
 #include 'shlib.sh' end
 
+autopep8_options='--max-line-length 120'
+
 cmd_reverse=tac
 which -s $cmd_reverse || cmd_reverse="tail -r"
 
@@ -436,7 +438,7 @@ which -s $cmd_reverse || cmd_reverse="tail -r"
     git_diff_ln_new HEAD -- "$fn" \
         | $cmd_reverse \
         | while read f t; do
-            autopep8 -i --line-range $f $t "$fn"
+            autopep8 $autopep8_options -i --line-range $f $t "$fn"
         done
 done
 
