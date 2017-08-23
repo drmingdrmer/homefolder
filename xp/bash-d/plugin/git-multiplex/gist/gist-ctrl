@@ -42,4 +42,5 @@ done <<-END
 git-box                 07faee6c4f7c8e31da3c5210cfa04034
 git-gotofix             241dd1b3655f04190b0c6d06aa1dd258
 git-subrepo             ff72ee00df7b7a359263fc3b15d093b0
+p8ln                    8dd50b66aca51595e71dc247dcb559c1
 END
