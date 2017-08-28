@@ -6,6 +6,7 @@ let g:__RC_RTP_VIM__ = 1
 fun! s:GenerateRTP()
     let xp_rtp = []
     let xp_rtp += ['private']
+    let xp_rtp += ['my/vim-align-char']
     let xp_rtp += ['.vim']
     let xp_rtp += ['dot-vim-tmp']
     let xp_rtp += ['after']
