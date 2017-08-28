@@ -31,25 +31,25 @@ xnoremap qj       <esc>`>o}<esc>`<kA<space>{<esc>gvj=
 xnoremap qm       <esc>`>a */<esc>`<i/* <esc>
 xnoremap qif      <esc>`>a)<esc>`<iif (<esc>$
 
-nmap q<BS>    <Plug>edit:selectWordq<BS>v
-nmap q<CR>    Vq<CR>v
-nmap q<Space> <Plug>edit:selectWordq<Space>v
-nmap q.       <Plug>edit:selectWordq.v
-nmap q+       <Plug>edit:selectWordq+v
-nmap q`       <Plug>edit:selectWordq`v
-nmap q=       <Plug>edit:selectWordq=v
-nmap q$       <Plug>edit:selectWordq$v
-nmap q*       <Plug>edit:selectWordq*v
-nmap q<       <Plug>edit:selectWordq<v
-nmap q(       <Plug>edit:selectWordq(v
-nmap q[       <Plug>edit:selectWordq[v
-nmap q{       <Plug>edit:selectWordq{v
-nmap q"       <Plug>edit:selectWordq"v
-nmap q'       <Plug>edit:selectWordq'v
-nmap qr       <Plug>edit:selectWordqr
-nmap qj       <Plug>edit:selectWordqj
-nmap qm       <Plug>edit:selectWordqm
-nmap qif      <Plug>edit:selectWordqif
+nmap [q<BS>    <Plug>edit:selectWordq<BS>v
+nmap [q<CR>    Vq<CR>v
+nmap [q<Space> <Plug>edit:selectWordq<Space>v
+nmap [q.       <Plug>edit:selectWordq.v
+nmap [q+       <Plug>edit:selectWordq+v
+nmap [q`       <Plug>edit:selectWordq`v
+nmap [q=       <Plug>edit:selectWordq=v
+nmap [q$       <Plug>edit:selectWordq$v
+nmap [q*       <Plug>edit:selectWordq*v
+nmap [q<       <Plug>edit:selectWordq<v
+nmap [q(       <Plug>edit:selectWordq(v
+nmap [q[       <Plug>edit:selectWordq[v
+nmap [q{       <Plug>edit:selectWordq{v
+nmap [q"       <Plug>edit:selectWordq"v
+nmap [q'       <Plug>edit:selectWordq'v
+nmap [qr       <Plug>edit:selectWordqr
+nmap [qj       <Plug>edit:selectWordqj
+nmap [qm       <Plug>edit:selectWordqm
+nmap [qif      <Plug>edit:selectWordqif
 
 " nnoremap q<Space> <Plug>edit:selectWord<esc>`>a<Space><esc>`<i<Space><esc>
 " nnoremap q<       <Plug>edit:selectWord<esc>`>a*<esc>`<i*<esc>
