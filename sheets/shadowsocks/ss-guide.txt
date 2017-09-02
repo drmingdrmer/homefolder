@@ -1,0 +1,446 @@
+博客导航
+
+关闭
+
+  • 首页
+  • Github - 代码
+  • LOFTER - 生活
+  • Behance - 设计
+  • 平行空间 - 团队
+
+订阅
+导航
+
+使用 Shadowsocks 自建翻墙服务器，实现全平台 100% 翻墙无障碍
+
+2016年02月09日工具, 服务, Shadowsocks, 科学上网
+
+
+    2016 年 9 月 11 日更新：
+
+      □ 本文过于复杂，只适合有技术基础、爱折腾的人阅读，较为简短的版本请阅读淘
+        宝小胡子哥的博文：《Shadowsocks 原理简介及安装指南》
+      □ 另外，结合我一年多的科学上网经验，近日我撰写了一篇更全面便捷的科学上网
+        指南，欢迎阅读：《懒人福音：包学包会的简易科学上网指南》
+
+    2016 年 12 月 26 日更新：
+
+      □ 推荐阅读：一键部署具备 SSR 混淆能力的 ShadowsocksR 服务器教程：《
+        Shadowsocks 部署指南》
+
+众所周知，中国为了“国家安全”和“国家网络安全”等目的，建设了“强大的” GFW（中国防
+火长城），以禁止中国大陆网民访问国外的“敏感网站”和“可能敏感网站”……
+
+在与 GFW 斗争的十几年间，勤劳勇敢的中国劳动人民发现、发明了许许多多“翻墙”软件，
+包括但不限于自由门、GoAgent、Shadowsocks、cow、Lantern……
+
+Shadowsocks 简介
+
+其中，Shadowsocks （下面简称 SS）算是比较出名的一个。下面摘录维基百科，简单介绍
+一下 SS：
+
+    Shadowsocks （中文名稱：影梭）是使用 Python 等语言开发的、基于 Apache 许可
+    证开源的代理软件。Shadowsocks 使用 socks5 代理，用于保护网络流量。在中国大
+    陆被广泛用于突破防火长城（GFW），以瀏覽被封鎖的內容。
+
+    Shadowsocks 分为服务器端和客户端。在使用之前，需要先将服务器端部署在支持
+    Python 的服务器上面，然后通过客户端连接并建立本地代理。此外用户也可以选择购
+    买基于 Shadowsocks 的商业服务，以获得更加稳定可靠的服务，或者免去自行部署的
+    麻烦。
+
+    [S:目前开发者已宣布停止维护。:S]
+
+值得提及的是：
+
+ 1. SS 的作者是 Clowwindy，中国人，貌似就职于知乎；
+ 2. 2015 年被警察请去喝咖啡，被要求删除在 Github 开源的 Shadowsocks 及其衍生项
+    目。现在 SS 已无开发者进行维护；
+ 3. 很多人以为 Shadowsocks 在 Github 的项目真的被删了……其实并没有，作者只是把
+    SS 项目的默认分支设置为了一个叫 rm 的分支，显示被删信息。如果你“足够聪明”，
+    切换到 master 分支后，就可以看到了。另外，项目版本发布页面内的源码包也都还
+    在：https://github.com/shadowsocks/shadowsocks/releases
+
+我的翻墙经历
+
+自由门（FreeGate）
+
+我一开始接触翻墙，用的是自由门，这个软件完全免费，但速度和稳定性都很差，绝对看
+不了视频。自由门之所以被封得厉害，是因为它其实就是用来宣传敏感政治言论的，甚至
+还有 FLG 的东西（一种很神奇的功，十几年前很流行，你懂的）……一打开软件就会默认弹
+出一个浏览器窗口，网页内全是敏感信息……当时第一次用，真有被吓到 Orz……
+
+后来，自由门就真的扛不住了，速度越来越慢……
+
+GoAgent
+
+随即接触到 GoAgent，它是利用 Google 为 Google 应用开发者提供的每月 1G 免费 App
+流量来实现免费翻墙的。
+
+首先，你要登录 Google 注册开发者账号，才能一步步配置 GoAgent，步骤繁琐不说，问
+题是：Google 在中国大陆本来就被墙了的，要翻墙后才能打开 Google……这就陷入了一个
+死循环。
+
+所以出现过这么一幕：我开着自由门，打开了 Google，一步步配置 GoAgent……
+
+GoAgent 还有一个缺点是：它需要配合浏览器代理插件使用，并且只能实现浏览器翻墙，
+无法让其他电脑软件也同时翻墙。
+
+Shadowsocks
+
+SS 有几个特点：
+
+      □ Shadowsocks 使用自行设计的协议进行加密通信。加密算法有 AES、Blowfish、
+        IDEA、RC4 等，除建立 TCP 连接外无需握手，每次请求只转发一个连接，因此使
+        用起来网速较快，在移动设备上也比较省电。
+      □ 所有的流量都经过算法加密，允许自行选择算法，所以比较安全。
+        Shadowsocks 通过异步 I/O 和事件驱动程序运行，响应速度快。
+      □ 客户端覆盖多个主流操作系统和平台，包括 Windows、OS X、Android 和 iOS 系
+        统和路由器（OpenWrt）等。
+      □ 专为移动设备和无线网络优化。
+        ——摘录自维基百科
+
+
+其实我对浏览国外网站的需求并不大，如果我不是从事互联网技术行业，如果没有遇到
+Shadowsocks，我可能永远都不会打开 CNN 的网站。于我而言，SS 足够稳定、快速、高效
+，涵盖各大主流平台、100% 翻墙无障碍，这就足够了。
+
+说到底，下面这几类人的翻墙需求会比较大：
+
+  • 喜欢浏览国外网站或使用相应服务，如 Google 全套办公套件、Facebook、Twitter、
+    Instagram……
+  • 从事技术行业（其实 GFW 并没有封锁大部分技术网站和社区，只是在 GFW 内浏览技
+    术网站的话，会慢得不像话，但大部分情况下还是可以打开的。国外技术资源下载速
+    度也是奇慢。然而，如此低效率，怎么做开发？当然要翻墙！）
+  • 你懂的……我就不说了
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+题外话
+
+去年闹得沸沸扬扬的 XcodeGhost 事件，很大一部分责任应该归咎于国内网络环境和 GFW
+。正是因为国内网络环境下载国外开发资源太慢，才衍生了各大网盘的资源中转和传播服
+务。国内 iOS 开发者为了提高工作效率，下载了存放在百度云网盘的 Xcode 开发套件，
+而不是从苹果官方渠道—— Mac App Store 下载。而不巧的是，这个 Xcode 开发套件是被
+第三方不怀好意者重编译投毒的，这些使用该 Xcode 开发套件的 iOS 开发者都中招了……
+其中不乏国内大公司的 iOS 开发者。
+
+  • XcodeGhost 事件全程回顾：《幽灵入侵，完整的XCodeGhost 事件到底是什么样的？
+    》 - 雷锋网
+  • XcodeGhost 事件影响分析：《XcodeGhost 事件会造成什么影响？》 - 知乎
+  • 还有由此衍生出来的，对迅雷下载资源投毒的测试：《XcodeGhost 事件中，迅雷的污
+    染事件是怎么做到的？》 - 知乎
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+下面以 Shadowsocks 为例，讲解翻墙方法
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Shadowsocks 翻墙教程
+
+概览
+
+SS 的初始版本是使用 Python 语言开发的，而后通过开源社区的贡献，又有了很多不同语
+言、环境、平台下的实现：有 C#、Java、JavaScript、Go 等语言实现的，还适配了
+Windows、OS X、Linux、Android、iOS、OpenWRT（主流路由器固件之一）等主流平台……所
+以 SS 完全是一个多语言、多环境、跨平台的开源项目。
+
+    官网下载页面可以下载到所有平台的不同版本。
+
+Shadowsocks 翻墙方式汇总
+
+  • 懒人必备：愿意付钱，懒得自己搭建 SS 服务器的话，可以购买第三方的
+    Shadowsocks 翻墙服务。我用过这个：Shadowsocks.la，稳定性还不错。其中香港那
+    台服务器，在中国电信宽带下，ping 值（连接延时）能稳定在 40ms。用起来特别爽
+    快！
+  • 穷逼必备：也有免费的 SS 翻墙服务，只不过为了控制服务质量，提供商会在一定时
+    间内更换账号密码，需要使用者修改密码后重新登陆才能使用。如果一周就翻墙那么
+    几次的话，可以考虑：ishadowx.com
+  • 不折腾会死星人看这里：我就是我，是颜色不一样的烟火。SS 翻墙服务器搭建方法见
+    下文。
+
+自行搭建 Shadowsocks 翻墙服务器
+
+说明：本博文不讲解 Linux 系统基本使用方法，不涉及 CentOS 7 操作系统在生产环境下
+的安全性问题。有需要的话，请自行查阅资料。
+
+Linux 版本的 SS 分为服务端和客户端两个功能，前者是对外提供翻墙服务的，后者是接
+受服务的。
+
+具体步骤
+
+步骤 1~5 为 SS 服务端部分的操作，步骤 6~8 为 SS 客户端部分的操作。
+
+ 1. SSH 登录到位于墙外的服务器
+ 2. 安装 Shadowsocks
+ 3. 优化 Shadowsocks 性能
+ 4. 配置 Shadowsocks 配置文件
+ 5. 启动并永久运行 Shadowsocks 服务端
+ 6. 配置 Shadowsocks CentOS 7 客户端（Linux）
+ 7. 配置 Shadowsocks Windows 客户端（Windows）
+ 8. 配置 Shadowsocks Android 客户端（Android）
+
+1. SSH 登录到位于墙外的服务器
+
+SSH 使用方法参照之前的博文《在阿里云 CentOS 7 系统上部署 Ghost 博客》中的步骤 1
+。
+
+2. 安装 Shadowsocks
+
+    说明：以下命令均在最高权限用户 root 下运行。
+
+  • Debian / Ubuntu 用户运行：
+
+     apt-get install python-pip
+     pip install shadowsocks
+
+  • CentOS 用户运行：
+
+    yum install python-setuptools && easy_install pip
+    pip install shadowsocks
+
+3. 优化 Shadowsocks 性能
+
+按照 SS 官方 Wiki，有如下优化策略：
+
+  • 创建 local.conf 配置文件：vim /etc/sysctl.d/local.conf
+
+  • 按键盘 i，输入以下内容：
+
+    # max open files
+    fs.file-max = 51200
+    # max read buffer
+    net.core.rmem_max = 67108864
+    # max write buffer
+    net.core.wmem_max = 67108864
+    # default read buffer
+    net.core.rmem_default = 65536
+    # default write buffer
+    net.core.wmem_default = 65536
+    # max processor input queue
+    net.core.netdev_max_backlog = 4096
+    # max backlog
+    net.core.somaxconn = 4096
+
+    # resist SYN flood attacks
+    net.ipv4.tcp_syncookies = 1
+    # reuse timewait sockets when safe
+    net.ipv4.tcp_tw_reuse = 1
+    # turn off fast timewait sockets recycling
+    net.ipv4.tcp_tw_recycle = 0
+    # short FIN timeout
+    net.ipv4.tcp_fin_timeout = 30
+    # short keepalive time
+    net.ipv4.tcp_keepalive_time = 1200
+    # outbound port range
+    net.ipv4.ip_local_port_range = 10000 65000
+    # max SYN backlog
+    net.ipv4.tcp_max_syn_backlog = 4096
+    # max timewait sockets held by system simultaneously
+    net.ipv4.tcp_max_tw_buckets = 5000
+    # turn on TCP Fast Open on both client and server side
+    net.ipv4.tcp_fastopen = 3
+    # TCP receive buffer
+    net.ipv4.tcp_rmem = 4096 87380 67108864
+    # TCP write buffer
+    net.ipv4.tcp_wmem = 4096 65536 67108864
+    # turn on path MTU discovery
+    net.ipv4.tcp_mtu_probing = 1
+
+    # for high-latency network
+    net.ipv4.tcp_congestion_control = hybla
+
+    # for low-latency network, use cubic instead
+    # net.ipv4.tcp_congestion_control = cubic
+
+  • 退出并保存配置文件：按键盘 Esc 退出编辑，英文输入法状态下，输入 :wq
+
+  • 使配置生效：sysctl --system
+
+4. 配置 Shadowsocks 配置文件
+
+建议把 SS 的配置文件放置在当前用户主目录下的 ss 文件夹内，对于 root 用户而言，
+则是：/root/ss 目录。其余用户一般则是：/home/用户名目录。
+
+下面我们以 root 用户为例：
+
+  • 在 root 文件夹内，新建 ss/ssserver.json 配置文件：vim ~/ss/ssserver.json
+
+  • 编辑配置文件，依然是按 i 进入编辑，按 ESC 退出编辑，按 :wq 保存并退出：
+
+    {
+        "server": "my_server_ip", // 这里输入本机的 IP 地址
+        "server_port": 8388, // 为了安全，可修改为大于 1024 的数字
+        "local_address": "127.0.0.1",
+        "local_port": 1080, // 为了安全，可修改为大于 1024 的数字
+        "password": "mypassword", // 设置一个密码
+        "timeout": 300,
+        "method": "aes-256-cfb",
+        "fast_open": false
+    }
+
+5. 启动并永久运行 Shadowsocks 服务端功能
+
+  • 一句命令即可启动并永久运行：nohup ssserver -c /root/ss/ssserver.json -d
+    start &
+
+        说明： ssserver 是 SS 的服务端命令。-c 表示以配置文件的方式运行 SS，/
+        root/ss/ssserver.json 则是步骤 4 中新建的配置文件的路径。-d 表示在后台
+        运行，这样允许用户进行其他操作。start 就是启动。nohup 以及最后的 & 是让
+        SS 服务端一直运行，并把运行日志输出到当前用户主目录下的 nohup.out 文件
+        中。
+
+  • 停止 SS 服务端：ssserver -c /root/ss/ssserver.json -d stop
+
+        说明：无需 nohup 和 &，把 start 换成 stop
+
+6. 配置 Shadowsocks CentOS 7 客户端（Linux）
+
+其实，我去年就购买了第三方的 Shadowsocks 翻墙服务，我的 Windows 10 和 Android
+手机早已妥妥地翻墙多时。而这次折腾 Shadowsocks 服务器翻墙，主要是最近几个月，在
+玩 CentOS 7 服务器。
+
+我有两个阿里云 ECS 云服务器，一个位于青岛（墙内），一个位于美国硅谷（墙外）。前
+者作为折腾的环境，供平时玩 CentOS 7 练手；后者作为生产环境，部署并运行着“前端养
+成记”这个博客，所以不敢在这上面乱动……
+
+青岛的服务器，无论是 wget、curl、npm 都极其慢（估计 yum 在阿里云内部提供了镜像
+，所以很快），所以当时就想：怎么为这个墙内的服务器翻墙呢？毫无疑问，Shadowsocks
+随即出现在我的视野里。
+
+下面演示 SS 客户端在 CentOS 7 系统上的部署和配置：
+
+  • SSH 登录到墙内服务器，重复步骤 1、2，为其安装 Shadowsocks：
+
+    yum install python-setuptools && easy_install pip
+    pip install shadowsocks
+
+  • 配置 Shadowsocks 配置文件：这次依然把配置文件放置在当前用户主目录下的 ss 文
+    件夹内，只不过配置文件命名为 sslocal.json：
+
+        编辑配置文件，依然是按 i 进入编辑，按 ESC 退出编辑，按 :wq 保存并退出：
+
+    {
+        "server": "my_server_ip", // 这里输入墙外服务器的 IP 地址
+        "server_port": 8388, // 与 ssserver.json 配置文件设置同样的端口
+        "local_address": "127.0.0.1",
+        "local_port": 1080, // 为了安全，可修改为大于 1024 的数字
+        "password": "mypassword", // 填写 ssserver.json 配置文件中设置的密码
+        "timeout": 300,
+        "method": "aes-256-cfb",
+        "fast_open": false
+    }
+
+  • 启动并永久运行 Shadowsocks 客户端功能：nohup sslocal -c /root/ss/
+    sslocal.json -d start &
+
+        停止命令: sslocal -c /root/ss/sslocal.json -d stop
+
+  • 将 Shadowsocks 的 SOCKS5 请求转化为 HTTP 请求
+
+    由于 Shadowsocks 使用的是 SOCKS5 协议，必须把 SOCKS5 请求转化为 HTTP 协议请
+    求，墙内服务器的其他软件才能使用该代理。这里使用 Privoxy 软件进行协议请求转
+    换。
+
+         1. 安装 Privoxy：yum install privoxy -y
+         2. 编辑 Privoxy 配置文件，将 SOCKS5 协议转化为 HTTP 协议：vim /etc/
+            privoxy/config
+         3. 在配置文件中增加这个配置：forward-socks5 / 127.0.0.1:1080 . （这最
+            后面确实有个英文句号，不要遗漏）
+         4. 设置 Privoxy 随系统自动启动：systemctl enable privoxy
+         5. 启动 Privoxy：systemctl start privoxy
+         6. 查看 Privoxy 状态：systemctl status privoxy，如果有 running 和
+            active 字样，说明成功运行。
+
+  • 为当前服务器用户设置 Bash 代理
+
+          ☆ 进入当前用户主目录：cd ~
+          ☆ 编辑 Bash 配置文件 .bash_profile，为当前用户设置 HTTP 代理：vim
+            .bash_profile
+          ☆ 在 .bash_profile 的最后，增加一句命令：export http_proxy=http://
+            127.0.0.1:8118
+          ☆ 使 .bash_profile 设置生效：source .bash_profile
+
+此时，墙内服务器当前用户 root 即可实现无缝翻墙！如果想要该服务器其他用户也实现
+翻墙，可以切换到该用户后，重复上面步骤。
+
+7. 配置 Shadowsocks Windows 客户端（Windows）
+
+  • 点击下载 Shadowsocks Windows 客户端最新版
+
+  • 解压到任意目录，双击启动 Shadowsocks.exe，随机可以在右下角的系统任务栏看到
+    一个纸飞机的图标，右键纸飞机图标，如图勾选设置：
+    Shadowsocks配置
+
+  • 点开服务器，选择编辑服务器：
+    Shadowsocks服务器配置
+
+  • 随即弹出这样的界面，对应 sslocal.json 配置文件，对照相同项目来填写：
+    Shadowsocks编辑服务器
+
+  • 接着右键纸飞机图标，这下图的服务器中，勾选刚刚设置的那个：
+    Shadowsocks服务器配置
+
+    Shadowsocks 还有一个强大的功能： PAC（代理自动设置）。它可以根据在配置文件
+    中设置的网址，来决定哪些网站流量需要经过墙外服务器进行代理。 PAC 功能，可以
+    保证只为国外网站走翻墙代理，国内网站依然直接连接，从而实现加速国外网站的同
+    时，保持国内网站的连接速度。
+
+    Shadowsocks 的 PAC 功能是通过 Shadowsocks 软件目录下的 pac.txt 和
+    user-rule.txt 两个文件同时实现的。前者是 SS 默认自动翻墙的网站列表，后者是
+    用户自己设置的需要翻墙的网站列表。
+
+    如果觉得某个网站的打开速度很慢，可以手动把它添加到 user-rule.txt 文件中，然
+    后更新 PAC，从此该网站就通过翻墙服务器做代理，实现加速了。
+
+下面分享我自己积攒了一年多的 user-rule.txt 文件，主要是跟前端和设计相关的一些网
+站。你可以将下面的内容复制到自己的 user-rule.txt 文件中（网址前面有 @@ 表示该网
+站不需要翻墙）：
+
+    部分手机用户无法正常显示，戳我进入>>
+
+每次编辑完 user-rule.txt 后，需要右键纸飞机图标，选择“PAC” - “从 GFWList 更新本
+地 PAC” 后才能立即生效，如图：
+
+PAC生效
+
+8. 配置 Shadowsocks Android 客户端（Android）
+
+在各大应用商店搜索“Shadowsocks”或者“影梭”，安装后启动 App。按照 sslocal.json 配
+置文件相应项目填写配置后，启动软件即可实现 Android 手机翻墙。
+
+    OS X 用户与 Windows 用户的设置大同小异；iOS 用户可以到 App Store 搜索
+    Shadowsocks。
+
+    Shadowsocks 官网下载页面:
+    https://shadowsocks.org/en/download/clients.html
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Good luck and Have fun !
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Loyalsoldier's Picture
+
+Loyalsoldier
+
+死飞，设计，编码，音乐。美物都值得善待……
+
+Guangzhou, China
+
+分享本文
+
+    
+
+漫谈前端及其自学路径
+
+2017 年 7 月 28 日更新：文章写于一年多前，当时对前端的理解还比较浅显，所以本文
+的参考意义不大，权当一篇技术”感想文“来阅读吧。起源这篇博文的起因是这样的：昨晚
+突然想感慨一下自学前端开发这将近 20 个月的一些心路历程。…
+
+在阿里云 CentOS 7 系统上部署 Ghost 博客（已过时）
+
+2017 年 7 月 28 日更新：由于 Ghost v1.0 正式版已于前几日发布，推荐使用 v1.0。以
+下安装教程已过时。 2016 年 2 月…
+
+前端养成记 (C) 2017 Proudly published with Ghost
