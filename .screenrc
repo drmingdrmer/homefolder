@@ -29,8 +29,10 @@ bindkey -t "\033l" next
 bindkey -t "\033H" exec sh -c 'screen -X msgwait 0; n=$(screen -Q number | grep -o "^[0-9]*"); let n=n-1; screen -X number "$n"; screen -X msgwait 1;'
 bindkey -t "\033L" exec sh -c 'screen -X msgwait 0; n=$(screen -Q number | grep -o "^[0-9]*"); let n=n+1; screen -X number "$n"; screen -X msgwait 1;'
 
+
 # ctrl-a ctrl-r to reload .screenrc
-bindkey "^r" source ~/.screenrc
+# bind uses c-a, bindkey does not
+bind "^r" source ~/.screenrc
 
 # bindkey -t "\033L" exec screen -X number 10
 # bindkey -t "^a" next
