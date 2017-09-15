@@ -496,6 +496,7 @@ main()
 
 
         local tag_hash=$(git_hash "$localtag") || die get hash of $localtag
+        local tag_author_date=$(git log -n1 --format="%ad" --date=format:"%Y-%m-%d %H:%M:%S" "$localtag") || die get authoer date of $localtag
         local head_hash=$(git_hash HEAD)
 
         dd "tag_hash:   $tag_hash"
@@ -542,7 +543,7 @@ main()
         local commit=$(
         {
             cat <<-END
-		Squashed $prefix $ref:$dir ${tag_hash:0:9}
+		Squashed $prefix $ref:$dir ${tag_hash:0:9} (${tag_author_date})
 		
 		url:      $url
 		ref:      $ref
