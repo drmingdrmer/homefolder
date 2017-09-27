@@ -106,7 +106,7 @@ main()
 
 
         local tag_hash=$(git_hash "$localtag") || die get hash of $localtag
-        local tag_author_date=$(git log -n1 --format="%ad" --date=format:"%Y-%m-%d %H:%M:%S" "$localtag") || die get authoer date of $localtag
+        local tag_author_date=$(git_commit_date author "$localtag") || die get authoer date of $localtag
         local head_hash=$(git_hash HEAD)
 
         dd "tag_hash:   $tag_hash"
@@ -150,19 +150,33 @@ main()
             continue
         fi
 
+        local changes=
+        local latest_hash=$(find_latest_squash "$prefix") || die find_latest_squash of "$prefix"
+
+        if [ -n "$latest_hash" ]; then
+            info "latest commit of $prefix: $latest_hash ($(git_commit_date author "$latest_hash"))"
+            # add 4 space indent
+            changes="$(git --no-pager shortlog $latest_hash..$tag_hash | awk '{print "    "$0}')"
+        else
+            info "latest commit of $prefix: not found"
+        fi
+
         local commit=$(
         {
             cat <<-END
 		Squashed $prefix $ref:$dir ${tag_hash:0:9} (${tag_author_date})
-		
+
 		url:      $url
 		ref:      $ref
 		sub-dir:  $dir
-		
+
 		localtag: $localtag $tag_hash
-		
+
 		git-subrepo-dir: $prefix
 		git-subrepo-hash: $tag_hash
+
+		changes: from ${latest_hash:0:9} ($(git_commit_date author "$latest_hash"))
+		$changes
 		END
         } | git commit-tree $tree -p $head_hash
         ) || die commit
@@ -182,6 +196,22 @@ main()
     done<".gitsubrepo_refs"
 
     rm .gitsubrepo_refs
+}
+
+find_latest_squash()
+{
+    # learned from git-subtree: find_latest_squash
+
+    git log --grep="^Squashed $prefix " \
+        --pretty=format:'START %H%n%b%nEND%n' HEAD |
+    while read a b junk; do
+        case $a in
+            git-subrepo-hash:)
+                echo $b
+                return 0
+                ;;
+            esac
+    done
 }
 
 fetch_remote()
