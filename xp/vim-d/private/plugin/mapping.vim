@@ -24,8 +24,6 @@ nmap <Leader><Leader>wr :w<cr>:so %<cr>
 nmap <Leader><Leader>wmk :w<cr>:make<cr>
 nmap <Leader><Leader>wmr :w<cr>:!rake<cr>
 
-nmap <unique> ,q         <Plug>buffer:writeAndQuit
-
 " matchit remap
 nmap [<space> [%
 nmap ]<space> ]%

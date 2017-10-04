@@ -11,45 +11,45 @@ runtime plugin/edit.tinyWord.vim
 " --------------------------------- edit.visual -------------------------------- "{{{
 
 
-xnoremap q<BS>    <esc>`><Right>x`<Xgvhhoh
-xnoremap q<CR>    <esc>`>o<Esc>`<O<Esc>gv
-xnoremap q<Space> <esc>`>a<Space><esc>`<i<Space><esc>gvlol
-xnoremap q.       <esc>`>a.<esc>`<i.<esc>gvlol
-xnoremap q+       <esc>`>a+<esc>`<i+<esc>gvlol
-xnoremap q`       <esc>`>a`<esc>`<i`<esc>gvlol
-xnoremap q=       <esc>`>a=<esc>`<i=<esc>gvlol
-xnoremap q$       <esc>`>a$<esc>`<i$<esc>gvlol
-xnoremap q*       <esc>`>a*<esc>`<i*<esc>gvlol
-xnoremap q<       <esc>`>a><esc>`<i<<esc>gvlol
-xnoremap q(       <esc>`>a)<esc>`<i(<esc>gvlol
-xnoremap q[       <esc>`>a]<esc>`<i[<esc>gvlol
-xnoremap q{       <esc>`>a}<esc>`<i{<esc>gvlol
-xnoremap q"       <esc>`>a"<esc>`<i"<esc>gvlol
-xnoremap q'       <esc>`>a'<esc>`<i'<esc>gvlol
-xnoremap qr       <esc>`>o}<esc>`<O{<esc>gvj=
-xnoremap qj       <esc>`>o}<esc>`<kA<space>{<esc>gvj=
-xnoremap qm       <esc>`>a */<esc>`<i/* <esc>
-xnoremap qif      <esc>`>a)<esc>`<iif (<esc>$
+xnoremap ,.<BS>    <esc>`><Right>x`<Xgvhhoh
+xnoremap ,.<CR>    <esc>`>o<Esc>`<O<Esc>gv
+xnoremap ,.<Space> <esc>`>a<Space><esc>`<i<Space><esc>gvlol
+xnoremap ,..       <esc>`>a.<esc>`<i.<esc>gvlol
+xnoremap ,.+       <esc>`>a+<esc>`<i+<esc>gvlol
+xnoremap ,.`       <esc>`>a`<esc>`<i`<esc>gvlol
+xnoremap ,.=       <esc>`>a=<esc>`<i=<esc>gvlol
+xnoremap ,.$       <esc>`>a$<esc>`<i$<esc>gvlol
+xnoremap ,.*       <esc>`>a*<esc>`<i*<esc>gvlol
+xnoremap ,.<       <esc>`>a><esc>`<i<<esc>gvlol
+xnoremap ,.(       <esc>`>a)<esc>`<i(<esc>gvlol
+xnoremap ,.[       <esc>`>a]<esc>`<i[<esc>gvlol
+xnoremap ,.{       <esc>`>a}<esc>`<i{<esc>gvlol
+xnoremap ,."       <esc>`>a"<esc>`<i"<esc>gvlol
+xnoremap ,.'       <esc>`>a'<esc>`<i'<esc>gvlol
+xnoremap ,.r       <esc>`>o}<esc>`<O{<esc>gvj=
+xnoremap ,.j       <esc>`>o}<esc>`<kA<space>{<esc>gvj=
+xnoremap ,.m       <esc>`>a */<esc>`<i/* <esc>
+xnoremap ,.if      <esc>`>a)<esc>`<iif (<esc>$
 
-nmap [q<BS>    <Plug>edit:selectWordq<BS>v
-nmap [q<CR>    Vq<CR>v
-nmap [q<Space> <Plug>edit:selectWordq<Space>v
-nmap [q.       <Plug>edit:selectWordq.v
-nmap [q+       <Plug>edit:selectWordq+v
-nmap [q`       <Plug>edit:selectWordq`v
-nmap [q=       <Plug>edit:selectWordq=v
-nmap [q$       <Plug>edit:selectWordq$v
-nmap [q*       <Plug>edit:selectWordq*v
-nmap [q<       <Plug>edit:selectWordq<v
-nmap [q(       <Plug>edit:selectWordq(v
-nmap [q[       <Plug>edit:selectWordq[v
-nmap [q{       <Plug>edit:selectWordq{v
-nmap [q"       <Plug>edit:selectWordq"v
-nmap [q'       <Plug>edit:selectWordq'v
-nmap [qr       <Plug>edit:selectWordqr
-nmap [qj       <Plug>edit:selectWordqj
-nmap [qm       <Plug>edit:selectWordqm
-nmap [qif      <Plug>edit:selectWordqif
+nmap ,.<BS>    <Plug>edit:selectWord,.<BS>v
+nmap ,.<CR>    Vq<CR>v
+nmap ,.<Space> <Plug>edit:selectWord,.<Space>v
+nmap ,..       <Plug>edit:selectWord,..v
+nmap ,.+       <Plug>edit:selectWord,.+v
+nmap ,.`       <Plug>edit:selectWord,.`v
+nmap ,.=       <Plug>edit:selectWord,.=v
+nmap ,.$       <Plug>edit:selectWord,.$v
+nmap ,.*       <Plug>edit:selectWord,.*v
+nmap ,.<       <Plug>edit:selectWord,.<v
+nmap ,.(       <Plug>edit:selectWord,.(v
+nmap ,.[       <Plug>edit:selectWord,.[v
+nmap ,.{       <Plug>edit:selectWord,.{v
+nmap ,."       <Plug>edit:selectWord,."v
+nmap ,.'       <Plug>edit:selectWord,.'v
+nmap ,.r       <Plug>edit:selectWord,.r
+nmap ,.j       <Plug>edit:selectWord,.j
+nmap ,.m       <Plug>edit:selectWord,.m
+nmap ,.if      <Plug>edit:selectWord,.if
 
 " nnoremap q<Space> <Plug>edit:selectWord<esc>`>a<Space><esc>`<i<Space><esc>
 " nnoremap q<       <Plug>edit:selectWord<esc>`>a*<esc>`<i*<esc>
