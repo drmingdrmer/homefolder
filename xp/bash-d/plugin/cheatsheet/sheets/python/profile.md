@@ -1,7 +1,9 @@
 
 | feature               | yappi | pyinstrument |
-| :--                   | :--   | :-- |
-| Multithread-profiling | yes   | no |
+| :--                   | :--   | :--          |
+| Multithread-profiling | yes   | no           |
+
+---
 
 python -m cProfile -s cumtime lwn2pocket.py
 
