@@ -12,6 +12,16 @@ python -m cProfile -o prof.out mycode.py
 gprof2dot -f pstats prof.out -o callingGraph.dot
 
 
+# yappi
+
+```
+# pip install yappi
+# pip install gprof2dot
+# brew install graphviz # required by gprof2dot to generate `.dot`
+
+yappi -o yp.out ben.py
+gprof2dot -f pstats yp.out | dot -Tpng -o yp.png
+```
 
 # pyinstrument
 
