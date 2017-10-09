@@ -32,7 +32,7 @@ xnoremap ,.m       <esc>`>a */<esc>`<i/* <esc>
 xnoremap ,.if      <esc>`>a)<esc>`<iif (<esc>$
 
 nmap ,.<BS>    <Plug>edit:selectWord,.<BS>v
-nmap ,.<CR>    Vq<CR>v
+nmap ,.<CR>    V,.<CR>v
 nmap ,.<Space> <Plug>edit:selectWord,.<Space>v
 nmap ,..       <Plug>edit:selectWord,..v
 nmap ,.+       <Plug>edit:selectWord,.+v
