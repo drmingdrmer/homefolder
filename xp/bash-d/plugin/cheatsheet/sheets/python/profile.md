@@ -21,7 +21,6 @@ gprof2dot -f pstats prof.out -o callingGraph.dot
 
 # yappi
 
-
 ```
 # pip install yappi
 # pip install gprof2dot
@@ -32,7 +31,6 @@ gprof2dot -f pstats yp.out | dot -Tpng -o yp.png
 ```
 
 # pyinstrument
-
 
 ```
 pip install pyinstrument
