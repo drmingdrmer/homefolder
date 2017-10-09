@@ -1,3 +1,8 @@
+
+| feature               | yappi | pyinstrument |
+| :--                   | :--   | :-- |
+| Multithread-profiling | yes   | no |
+
 python -m cProfile -s cumtime lwn2pocket.py
 
 python -m cProfile -s cumtime lwn2pocket.py
@@ -14,6 +19,7 @@ gprof2dot -f pstats prof.out -o callingGraph.dot
 
 # yappi
 
+
 ```
 # pip install yappi
 # pip install gprof2dot
@@ -24,6 +30,7 @@ gprof2dot -f pstats yp.out | dot -Tpng -o yp.png
 ```
 
 # pyinstrument
+
 
 ```
 pip install pyinstrument
