@@ -281,8 +281,7 @@ SSH 使用方法参照之前的博文《在阿里云 CentOS 7 系统上部署 Gh
 
 5. 启动并永久运行 Shadowsocks 服务端功能
 
-  • 一句命令即可启动并永久运行：nohup ssserver -c /root/ss/ssserver.json -d
-    start &
+  • 一句命令即可启动并永久运行：nohup ssserver -c /root/ss/ssserver.json -d start &
 
         说明： ssserver 是 SS 的服务端命令。-c 表示以配置文件的方式运行 SS，/
         root/ss/ssserver.json 则是步骤 4 中新建的配置文件的路径。-d 表示在后台
