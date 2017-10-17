@@ -14,6 +14,7 @@ nnoremap <silent> <Plug>plugin:nerd_tree:toggle         :silent! WinRem<cr>:sile
 xnoremap <Plug>edit:visual:delete                       d
 
 nmap ,,                         <Plug>view:highlight_cursor_word
+xmap ,,                         <Plug>view:highlight_cursor_word
 nmap <Leader>h                  <Plug>edit:highlight_none
 nmap <Leader><space>            :XX
 map Q                           gq

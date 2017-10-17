@@ -121,6 +121,7 @@ fun! HLFuncArg(t) " {{{
 endfunction " }}}
 
 nnoremap <silent> <Plug>view:highlight_cursor_word :silent! call <SID>HL()<cr>
+xnoremap <silent> <Plug>view:highlight_cursor_word <ESC>:call view#highlight#Visual()<CR>
 
 nmap <Leader><leader>fa :call HLFuncArg(1)<cr>
 nmap <Leader><leader>fb :call HLFuncArg(0)<cr>
