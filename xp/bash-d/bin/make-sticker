@@ -29,6 +29,7 @@ let text_shadow_top=400-box_height/2-fontsize/2+shadow_offset
 
 convert tmp.gif \
     -weight 700 \
+    -font $HOME/xp/bash-d/font/arukai.ttf \
     -pointsize $fontsize  \
     -draw "gravity north fill black  text $shadow_offset,$text_shadow_top '$text'" \
     -draw "gravity north fill $color text 0,$text_top '$text'" \
