@@ -24,6 +24,14 @@ else
     let fontsize=720/l
 fi
 
+convert -pointsize $fontsize -font arukai.ttf \
+    "label:$text"   tt.gif
+
+width=$(identify -ping -format '%w' tt.gif)
+if [ "$width" -gt 380 ]; then
+    let fontsize=fontsize*380/width
+fi
+
 let text_top=400-box_height/2-fontsize/2
 let text_shadow_top=400-box_height/2-fontsize/2+shadow_offset
 
