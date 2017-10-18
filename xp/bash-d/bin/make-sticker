@@ -1,0 +1,45 @@
+#!/bin/sh
+
+# usage:
+# > make-coding-log.sh x.png title
+#
+# dependency:
+# > brew install imagemagick
+
+path=$1
+text=$2
+color=${3-white}
+
+convert -define jpeg:size=200x200 "$path"  -thumbnail 400x400^ -gravity center -extent 400x400 tmp.gif
+
+box_height=150
+let box_top=400-box_height
+max_width=720
+shadow_offset=4
+
+l=${#text}
+if [ $l -le 6 ]; then
+    fontsize=120
+else
+    let fontsize=720/l
+fi
+
+let text_top=400-box_height/2-fontsize/2
+let text_shadow_top=400-box_height/2-fontsize/2+shadow_offset
+
+convert tmp.gif \
+    -weight 700 \
+    -pointsize $fontsize  \
+    -draw "gravity north fill black  text $shadow_offset,$text_shadow_top '$text'" \
+    -draw "gravity north fill $color text 0,$text_top '$text'" \
+    "$path.logo.gif"
+
+# with background
+# convert tmp.gif \
+#     -weight 700 \
+#     -pointsize $fontsize  \
+#     -fill black \
+#     -draw "rectangle 0,$box_top 400,400" \
+#     -draw "gravity north fill $color text 0,$text_top '$text'" \
+#     "$path.logo.gif"
+
