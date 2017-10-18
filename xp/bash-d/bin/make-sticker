@@ -32,6 +32,8 @@ if [ "$width" -gt 380 ]; then
     let fontsize=fontsize*380/width
 fi
 
+rm tt.gif
+
 let text_top=400-box_height/2-fontsize/2
 let text_shadow_top=400-box_height/2-fontsize/2+shadow_offset
 
