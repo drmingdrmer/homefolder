@@ -1,0 +1,2 @@
+ /:/{print "    "$NF}
+!/:/{print $NF}
