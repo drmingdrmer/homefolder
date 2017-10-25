@@ -1,0 +1,60 @@
+- debug:
+    var: "{{ a_dict.keys() }}"
+
+# extract attribute
+msg: "{{ vv.values() | map(attribute='x') | list }}"
+
+# group by attribute
+msg: "{{ vv.values() | map(attribute='x') | list }}"
+# [
+#     [
+#         1,
+#         [
+#             {
+#                 "x": 1
+#             }
+#         ]
+#     ],
+#     [
+#         2,
+#         [
+#             {
+#                 "x": 2
+#             }
+#         ]
+#     ]
+# ]
+
+# choose object with attribute satisfied by condition:
+{{ vv.values() | selectattr('attr-a', 'equalto', 1) | list}}
+# as bool
+{{ vv.values() | selectattr('is_active') | list}}
+# choose none value
+{{ users|selectattr("email", "none") }}
+
+# {{ numbers|select("odd") }}
+# {{ numbers|select("odd") }}
+# {{ numbers|select("divisibleby", 3) }}
+# {{ numbers|select("lessthan", 42) }}
+# {{ strings|select("equalto", "mystring") }}
+
+# 155 TESTS = {
+# 156     'odd':              test_odd,
+# 157     'even':             test_even,
+# 158     'divisibleby':      test_divisibleby,
+# 159     'defined':          test_defined,
+# 160     'undefined':        test_undefined,
+# 161     'none':             test_none,
+# 162     'lower':            test_lower,
+# 163     'upper':            test_upper,
+# 164     'string':           test_string,
+# 165     'mapping':          test_mapping,
+# 166     'number':           test_number,
+# 167     'sequence':         test_sequence,
+# 168     'iterable':         test_iterable,
+# 169     'callable':         test_callable,
+# 170     'sameas':           test_sameas,
+# 171     'equalto':          test_equalto,
+# 172     'escaped':          test_escaped
+# 173 }
+# 1  ./tests.py
