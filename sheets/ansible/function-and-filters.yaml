@@ -1,6 +1,9 @@
 - debug:
     var: "{{ a_dict.keys() }}"
 
+# list length
+msg: "{{ vv.values() | length }}"
+
 # extract attribute
 msg: "{{ vv.values() | map(attribute='x') | list }}"
 
