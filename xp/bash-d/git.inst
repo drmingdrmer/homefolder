@@ -24,19 +24,14 @@ fi
 
 $gconf user.name                "drdr xp"
 $gconf user.email               drdr.xp@gmail.com
-#$gconf push.default            upstream
 $gconf push.default             current
 $gconf merge.defaultToUpstream  true
-
 $gconf pull.ff                  only
 $gconf pull.rebase              true
-
 $gconf color.diff               true
 $gconf color.interactive        true
-
 $gconf diff.noprefix            true
 $gconf diff.context             10
-
 $gconf diff.algorithm           histogram
 $gconf diff.compactionHeuristic true
 
@@ -66,8 +61,6 @@ $gconf alias.lg            "$log"
 $gconf alias.log-short     "$logShort"
 $gconf alias.l             "$logShort"
 $gconf alias.lpr           "log --format='## %C(bold yellow)%s%C(reset)%+b'"
-
-
 
 $gconf alias.bb            "!git   $logShort --simplify-by-decoration --no-pager"
 $gconf alias.bmv           "branch -m"
@@ -129,7 +122,6 @@ $gconf alias.lsk           "ls-files --killed"
 $gconf alias.lsu           "ls-files --unmerged"
 
 $gconf alias.root          'commit -m root --allow-empty'
-# $gconf alias.it          '!git init && git commit -m root --allow-empty'
 
 $gconf alias.sub           "submodule"
 $gconf alias.subadd        "submodule add --branch master"
