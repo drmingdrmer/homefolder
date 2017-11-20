@@ -11,10 +11,9 @@ fun! s:f.ModName()
     return fn
 endfunction
 
+XPT ##
+/* `cursor^ */
 
-XPT helloxpt " tips about what this snippet does
-Say hello to `xpt^.
-`xpt^ says hello.
 
 
 XPT ut " st_test(fn, name)
