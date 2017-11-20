@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# for debuginfo-install
+yum install -y yum-utils
+
 debuginfo-install python-2.7.5-39.el7_2.x86_64
 
 gdb python 5940
