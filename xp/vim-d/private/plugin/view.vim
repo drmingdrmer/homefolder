@@ -58,7 +58,8 @@ set updatetime=200
 if v:version >=703
     " high light 3 columns after textwidth
     " see hi-ColorColumn
-    set colorcolumn=-3,-2,-1,-0,+40
+    " " disable annoying bar
+    " set colorcolumn=-3,-2,-1,-0,+40
 endif
 
 nmap <Leader><Leader>wm  <Plug>view:width_max
