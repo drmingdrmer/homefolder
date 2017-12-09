@@ -35,6 +35,9 @@ let g:menuly_menu = {
       \ 't': ['tabline', {
       \         'l': ['showtabline', 0, 2],
       \ }],
+      \ 'v': ['view', {
+      \         'c': ['colorcolumn', '', '-3,-2,-1,-0,+40'],
+      \ }],
       \ 'w': 'wrap',
       \ }
 
