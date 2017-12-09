@@ -28,7 +28,7 @@ hi Comment      cterm=none                     ctermfg=darkblue
 hi Conditional  cterm=none                     ctermfg=green
 hi CursorColumn cterm=none ctermbg=darkmagenta ctermfg=none
 hi CursorLine   cterm=none ctermbg=none        ctermfg=none
-hi Folded       cterm=none ctermbg=none        ctermfg=grey
+hi Folded       cterm=none ctermbg=black       ctermfg=darkgrey
 hi VertSplit    cterm=none                     ctermfg=darkgrey
 hi Function     cterm=none                     ctermfg=blue
 hi Identifier   cterm=none                     ctermfg=cyan

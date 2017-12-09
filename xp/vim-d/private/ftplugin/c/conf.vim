@@ -1,7 +1,6 @@
 let b:strConnector = ""
-let b:EnhCommentifyUseSyntax="no"
 setlocal foldmethod=syntax
-setlocal foldlevel=1
+setlocal foldlevel=10
 set keywordprg=man\ -S\ 2,3
 
 set cinoptions=>s,e0,n0,f0,{0,}0,^0,:s,=s,l0,b0,gs,hs,ps,ts,is,+s,c3,C0,/0,(2s,us,w0,W0,m0,j0,)20,*30,#0

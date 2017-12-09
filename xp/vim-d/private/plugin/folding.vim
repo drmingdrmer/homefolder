@@ -5,7 +5,7 @@ runtime plugin/util.vim
 function! FoldText() "   {{{
     let tb     = &tabstop
     let tbstr  = repeat(" ", tb)
-    let width  = winwidth(0) - 6
+    let width  = winwidth(0) - 10
 
     " folding text
     let txt = getline(v:foldstart)
