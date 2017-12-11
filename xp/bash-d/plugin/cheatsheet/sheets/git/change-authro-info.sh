@@ -21,3 +21,7 @@ exit
 
 # then:
 git push --force --tags origin 'refs/heads/*'
+
+# config name and email
+git config --local --replace-all user.name  张炎泼
+git config --local --replace-all user.email xp@baishancloud.com
