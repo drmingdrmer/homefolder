@@ -16,8 +16,9 @@ let g:menuly_menu = {
       \                                'h': ':Gvdiff HEAD',
       \                                'H': ':Gvdiff HEAD~',
       \                     }],
-      \                     'a': ':GV --all -n1024',
-      \                     'v': ':GV       -n1024',
+      \                     'a': ':GV --all                          -n1024',
+      \                     's': ':GV --all --simplify-by-decoration -n1024',
+      \                     'v': ':GV                                -n1024',
       \          }],
       \ }],
       \ 'c': ['cursor', {
