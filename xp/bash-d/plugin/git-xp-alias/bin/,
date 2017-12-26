@@ -4,8 +4,12 @@
 
 git_option_no_edit="--no-edit"
 
-one_changed='"$(git rev-parse --show-toplevel)/$(git diff --name-only HEAD | head -n1)"'
-commit_message_one_file='"$(git status --porcelain | head -n1)"'
+# fns_added='git diff --name-only --cached'
+# fns_changed='git diff --name-only'
+
+# get one changed file: choose added first. then changed but not added
+one_changed='"$(git rev-parse --show-toplevel)/$({ git diff --name-only --cached; git diff --name-only; } | head -n1)"'
+commit_message_one_file='"$(git status --porcelain '"$one_changed"')"'
 
 commands="\
 a.   ,          add .
