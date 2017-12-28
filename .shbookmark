@@ -2,11 +2,13 @@
 ~/sec/baishan
 ~/sec/passwdgen/acc
 ~/vcs/bscbit/data
+~/vcs/bschub/baishancloud/ansiblekit
 ~/vcs/bschub/baishancloud/lrc-erasure-code
 ~/vcs/bschub/baishancloud/lua-acid
 ~/vcs/bschub/baishancloud/lua-consistent-hash
 ~/vcs/bschub/baishancloud/lua-sharedtable
 ~/vcs/bschub/baishancloud/luajit2
+~/vcs/bschub/baishancloud/mysql-devops
 ~/vcs/bschub/baishancloud/pykit
 ~/vcs/bschub/baishancloud/shlib
 ~/vcs/coding/baishancloud/mysql-devops
