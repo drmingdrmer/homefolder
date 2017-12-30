@@ -48,3 +48,45 @@ Read ahead sectors     auto
 - currently set to     8192
 Block device           253:0
 ```
+
+# remove logic volume
+
+lvremove /dev/myvg/homevol
+
+
+# resize
+
+### resize partition
+
+fdisk /dev/sda
+
+fdisk -cu /dev/xvdf
+
+Create new partition = n.
+Choose primary partition = p.
+Choose which number of partition to be selected to create the primary partition.
+Press 2 
+Change the type = t.
+Type 8e to change the partition type to Linux LVM.
+Type p to print the create partition 
+Type w to save changes
+
+
+### resize lvm vg
+
+vgchange
+
+### resize physical volume
+
+to largest size
+pvresize  /dev/sda2
+
+
+### resize logical volume
+
+lvextend -L+20G /dev/centos/root
+
+# Other
+
+pvdisplay
+lvdisplay
