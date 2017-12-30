@@ -1,1 +1,2 @@
-vagrant plugin install vagrant-disksize
+# need proxy to speed up installation
+vagrant plugin install vagrant-disksize --verbose
