@@ -1,2 +1,12 @@
+# https://github.com/sprotheroe/vagrant-disksize
+
 # need proxy to speed up installation
 vagrant plugin install vagrant-disksize --verbose
+
+
+# then:
+
+Vagrant.configure('2') do |config|
+  config.vm.box = 'ubuntu/xenial64'
+  config.disksize.size = '50GB'
+end
