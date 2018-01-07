@@ -58,9 +58,13 @@ lvremove /dev/myvg/homevol
 
 ### resize partition
 
+> By deleting and creating a parition
+
 fdisk /dev/sda
 
 fdisk -cu /dev/xvdf
+
+Delete old partition = d
 
 Create new partition = n.
 Choose primary partition = p.
@@ -72,21 +76,31 @@ Type p to print the create partition
 Type w to save changes
 
 
-### resize lvm vg
-
-vgchange
-
 ### resize physical volume
 
-to largest size
+> to largest size
 pvresize  /dev/sda2
+
+
+### resize lvm vg
+
+> do not need this step..
+
+vgchange
 
 
 ### resize logical volume
 
 lvextend -L+20G /dev/centos/root
 
+
+### resize fs
+
+xfs_growfs /mount/point
+xfs_growfs /mount/point -D size
+
 # Other
 
 pvdisplay
 lvdisplay
+
