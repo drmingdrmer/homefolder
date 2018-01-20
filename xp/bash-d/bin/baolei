@@ -6,6 +6,11 @@ server="$2"
 # change it
 username=xp
 
+if [ "$server" = "" ]; then
+    server=$location
+    location=bj
+fi
+
 case $location in
     xm|xiamen)  location=172.18.12.60 ;;
     ga|guian)   location=172.18.28.60 ;;
