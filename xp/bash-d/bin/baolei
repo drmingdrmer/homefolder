@@ -1,0 +1,32 @@
+#!/bin/bash
+
+location="$1"
+server="$2"
+
+# change it
+username=xp
+
+case $location in
+    xm|xiamen)  location=172.18.12.60 ;;
+    ga|guian)   location=172.18.28.60 ;;
+    bj|beijing) location=172.18.1.95  ;;
+esac
+
+
+case $server in
+    d|docker)  server=115.238.170.248 ;;
+    3|3copy)   server=115.238.170.166 ;;
+    2|2copy)   server=115.231.180.165 ;;
+    e|edge)    server=115.238.170.173 ;;
+    l|log)     server=115.238.170.172 ;;
+    s|seattle) server=63.237.232.165  ;;
+esac
+
+echo "login location:  $location"
+echo "login to server: $server"
+
+cmd="ssh $username@$location\ns $server\n1"
+echo "login command is $cmd"
+
+echo -e "$cmd" | pbcopy
+echo "press cmd-v to login （づ￣3￣）づ╭❤～"
