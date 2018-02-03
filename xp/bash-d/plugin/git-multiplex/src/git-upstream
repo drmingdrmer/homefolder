@@ -1,0 +1,22 @@
+#!/bin/sh
+
+source shlib.sh
+
+main()
+{
+    local root=$(git_working_root)
+    [ "x$root" = "x" ] && die 'looking for git repo root'
+    cd "$root"
+
+    local conf_fn=./.gitupstream
+
+    while read name url; do
+
+        git remote add "$name" "$url"
+        git remote set-url "$name" "$url"
+        git fetch -p "$name"
+
+    done<"$conf_fn"
+}
+
+main
