@@ -393,6 +393,7 @@ class Controller
 		# ---- print the options
 		com="echo '\n"+getStyleString+@oc["MiscOptions"]
 		com=com+"set multiplot;\n" if doMultiPlot
+                com=com+"set terminal dumb;\n"
 	        com=com+"plot "+@oc["Range"]+comString+"\n'| gnuplot -persist"
 		printAndRun(com)		
 		# ---- convert to PDF
