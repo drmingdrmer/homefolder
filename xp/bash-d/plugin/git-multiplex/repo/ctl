@@ -49,4 +49,5 @@ while read name gist_id; do
     fi
 done <<-END
 git-subrepo
+git-upstream
 END
