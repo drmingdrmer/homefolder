@@ -12,7 +12,7 @@ git-imerge.mhagger/bin             mhagger/git-imerge             master
 php-markdown.michelf               michelf/php-markdown           master
 grc/bin                            garabik/grc                    master
 git-multiplex/src/shlib.sh         baishancloud/shlib             master   dist/shlib.sh
-eplot/bin                          chriswolfvision/eplot          master
+eplot/bin                          drmingdrmer/eplot              master
 
 [ base: xp/vim-d/plg-git ]
 
