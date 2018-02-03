@@ -420,26 +420,44 @@ main()
 {
     local cmd="${1-update}"
 
-    case "$cmd" in
-        -h|--help)
-            usage
-            exit 0
-        ;;
-    esac
-
     local root=$(git_working_root)
     [ "x$root" = "x" ] && die 'looking for git repo root'
     cd "$root"
 
     local conf_fn=./.gitupstream
 
-    while read name url; do
+    case "$cmd" in
+        -h|--help)
+            usage
+            exit 0
+            ;;
+        init)
+            init
+            exit $?
+            ;;
+    esac
+
+
+    git show git-upstream-config-branch:.gitupstream \
+    | while read name url; do
 
         git remote add "$name" "$url"
         git remote set-url "$name" "$url"
         git fetch -p "$name"
 
-    done<"$conf_fn"
+    done
+}
+
+init()
+{
+    local conf_fn=./.gitupstream
+
+    git checkout --orphan git-upstream-config-branch || die 'can not create branch'
+    git rm --cache -r -f .
+    git rm -r -f .
+    vim "$conf_fn"
+    git add "$conf_fn"
+    git commit -m 'init git-upstream-config-branch'
 }
 
 usage()
@@ -448,10 +466,18 @@ usage()
 usage: git upstream
 
     Manage upstream git repos.
-    It depends on a configure file ".gitupstream" at git repo root dir.
+
+    It creates a standalone branch "git-upstream-config-branch" to store config file
+    thus the extra config file does not mess up other files.
 
     Install:
-    Copy this script to a dir in PATH.
+
+        -   Copy this script to a dir in PATH.
+        -   Run following command to create a branch to store config:
+                git upstream init
+
+            Edit the configure file.
+            Save and checkout to master.
 
     Configure file ".gitupstream" syntax:
 
