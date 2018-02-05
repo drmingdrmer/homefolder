@@ -1,14 +1,23 @@
+# eplot:
+# Output file format options:
+#  -P --png        Output to the PNG file foo.png
+#  -p --postscript Output to the postscript file foo.ps
+#  -a --pdf        Output to the pdf file foo.pdf
+#  -e --emf        Output to the emf file foo.emf
+#  -o <fname>      Specify the output filename
+#  -d --dumb       Output to dumb terminal (ascii art)
+
 # # two column:
 # x1 y1
 # x2 y2
 # ...
-cat a.txt | eplot
+cat a.txt | eplot -d
 
 # # single column:
 # y1
 # y2
 # ...
-cat a.txt | eplot
+cat a.txt | eplot -d
 
 #   7 +--------------------------------------------------------------------+
 #     |         +         +         +        +         +         +         |
