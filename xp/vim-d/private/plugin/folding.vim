@@ -95,7 +95,7 @@ endfunction
 nmap ,f :call <SID>Adjustments(1)<cr>
 
 " open all folding of current block
-nnoremap <silent> z<Space> :call SaveWinPosition()<CR>zMzO:call RestoreWinPosition()<CR>
+nnoremap <silent> z<Space> :call view#win#SaveCursorPosition()<CR>zMzO:call view#win#RestoreCursorPosition()<CR>
 nnoremap <Leader>z zczO
 noremap z9 zMzv
 nnoremap <silent> <M-*> zA

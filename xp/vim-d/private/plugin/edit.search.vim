@@ -91,7 +91,7 @@ fun! RelaceCurrentWordInFunc()
 endfunction
 
 fun! RelaceCurrentWord()
-    call SaveWinPosition()
+    call view#win#SaveCursorPosition()
     " let ln = line(".")
     " let cur = col(".")
 
@@ -102,7 +102,7 @@ fun! RelaceCurrentWord()
     call s:replace_in_range(ptn, rep, rng)
 
     " call cursor(ln, cur)
-    call RestoreWinPosition()
+    call view#win#RestoreCursorPosition()
     let @/ = '\<' . rep . '\>'
 endfunction
 

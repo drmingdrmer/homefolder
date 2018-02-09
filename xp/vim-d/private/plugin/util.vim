@@ -48,21 +48,21 @@ vmap <Leader><Leader>rs :call RunSelect()<cr>
 nmap <Leader><Leader>rs V:call RunSelect()<cr>
 
 
-fun! SaveWinPosition() "{{{
-    let s:winln = winline()
-    let s:line = line( "." )
-    let s:col = col( "." )
-endfunction "}}}
+" fun! SaveWinPosition() "{{{
+"     let s:winln = winline()
+"     let s:line = line( "." )
+"     let s:col = col( "." )
+" endfunction "}}}
 
-fun! RestoreWinPosition() "{{{
+" fun! RestoreWinPosition() "{{{
 
-  call cursor( s:line, s:col )
+"   call cursor( s:line, s:col )
 
-  let winln2 = winline()
-  if winln2 > s:winln
-    exe "normal! " . (winln2-s:winln) . "\<C-e>"
-  elseif winln2 < s:winln
-    exe "normal! " . (s:winln-winln2) . "\<C-y>"
-  endif
+"   let winln2 = winline()
+"   if winln2 > s:winln
+"     exe "normal! " . (winln2-s:winln) . "\<C-e>"
+"   elseif winln2 < s:winln
+"     exe "normal! " . (s:winln-winln2) . "\<C-y>"
+"   endif
 
-endfunction "}}}
+" endfunction "}}}

@@ -201,20 +201,20 @@ endfunction
 
 fun! s:remove_trailing_blank() "{{{
     let search = @/
-    call SaveWinPosition()
+    call view#win#SaveCursorPosition()
 
     %s/\s*$//g
 
-    call RestoreWinPosition()
+    call view#win#RestoreCursorPosition()
     let @/ = search
 endfunction "}}}
 
 fun! s:remove_blank_lines() "{{{
-    call SaveWinPosition()
+    call view#win#SaveCursorPosition()
 
     %g/^\s*$/normal dd
 
-    call RestoreWinPosition()
+    call view#win#RestoreCursorPosition()
 endfunction "}}}
 
 

@@ -5,14 +5,19 @@ fun! s:format_astyle() "{{{
         return
     endif
 
+    let msg = ''
+
     " load .astylerc from cwd
     let rcfn = ".astylerc"
     if filereadable(rcfn)
+        let msg = ' from ./astylerc'
         let lines = readfile(rcfn)
     elseif filereadable($HOME . '/.astylerc')
+        let msg = ' from ~/astylerc'
         " let astyle to find a rc file
         let lines = []
     else
+        let msg = ' from default setting'
         let lines = [
               \ "--mode=c",
               \ "--style=attach",
@@ -41,9 +46,11 @@ fun! s:format_astyle() "{{{
 
     let arg = join(ls, " ")
 
-    call SaveWinPosition()
-    exe '%!astyle 2>/dev/null' arg
-    call RestoreWinPosition()
+    call view#win#SaveCursorPosition()
+    exe 'silent %!astyle 2>/dev/null' arg
+    call view#win#RestoreCursorPosition()
+
+    echom 'astyle codes with setting' . msg
 endfunction "}}}
 
-nnoremap <buffer> <Plug>format:format_file :call <SID>format_astyle()<CR>
+nnoremap <buffer> <silent> <Plug>format:format_file :call <SID>format_astyle()<CR>
