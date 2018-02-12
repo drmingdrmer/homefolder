@@ -39,6 +39,10 @@ rm tt.gif
 let text_top=400-box_height/2-fontsize/2
 let text_shadow_top=text_top+shadow_offset
 
+output_path="${path%.*}"
+output_path="${output_path// /-}"
+output_path="$text-${output_path}.gif"
+
 convert tmp.gif \
     -weight 700 \
     -font $base/arukai.ttf \
@@ -47,7 +51,7 @@ convert tmp.gif \
     -draw "gravity north fill black  text $shadow_offset,$(expr $text_top + $shadow_offset) '$text'" \
     -draw "gravity north fill black  text $(expr $shadow_offset + $shadow_offset),$(expr $text_top + $shadow_offset + $shadow_offset) '$text'" \
     -draw "gravity north fill $color text 0,$text_top '$text'" \
-    "$path.logo.gif"
+    "${output_path}"
 
 # with background
 # convert tmp.gif \
