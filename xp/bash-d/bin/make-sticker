@@ -47,6 +47,10 @@ output_path="${path%.*}"
 output_path="${output_path// /-}"
 output_path="$text-${output_path}.gif"
 
+if [ -L "./make-sticker-output" ]; then
+    output_path="./make-sticker-output/$output_path"
+fi
+
 convert tmp.gif \
     -weight 700 \
     -font $base/arukai.ttf \
