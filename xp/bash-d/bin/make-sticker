@@ -12,7 +12,11 @@ color=${3-white}
 
 base=${0%/*}
 
-convert -define jpeg:size=200x200 "$path"  -thumbnail 400x400^ -gravity center -extent 400x400 tmp.gif
+convert -define jpeg:size=200x200 "$path" \
+    -thumbnail 400x400^ \
+    -gravity center \
+    -extent 400x400 tmp.gif
+
 
 box_height=150
 let box_top=400-box_height
