@@ -499,6 +499,8 @@ cat $conffn | while read folder src dst x; do
         && git fetch -p \
         && { { git remote | grep -q "^b$"; } || git remote add b $dst; } \
         && info push to "b($dst)" \
-        && git push b --all --prune -f
+        && git push b --all --prune -f \
+        && git push b --tags --prune -f \
+        && info done: "$folder"
     )
 done
