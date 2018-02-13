@@ -428,7 +428,7 @@ dst_remote=
 
 cat $conffn | while read folder src dst x; do
 
-    if [ "x$folder" = "x" ]; then
+    if [ "x$folder" = "x" ] || [ "${folder:0:1}" = "#" ]; then
         continue
     fi
 
@@ -480,7 +480,13 @@ cat $conffn | while read folder src dst x; do
     mkdir -p "$(dirname "$folder")" || die mkdir "$(dirname "$folder")"
 
     if [ -d $folder ]; then
-        :
+
+        (
+        cd $folder
+        info setup "$folder" origin to "$src"
+        git remote remove origin
+        git remote add origin "$src"
+        )
     else
         info clone $src to $folder
         git clone --bare $src $folder
@@ -489,6 +495,7 @@ cat $conffn | while read folder src dst x; do
     (
     cd $folder \
         && git config remote.origin.fetch '+refs/heads/*:refs/heads/*' \
+        && info fetching "$src" \
         && git fetch -p \
         && { { git remote | grep -q "^b$"; } || git remote add b $dst; } \
         && info push to "b($dst)" \
