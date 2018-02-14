@@ -117,26 +117,8 @@ main()
             git rm -r "$prefix" >/dev/null || die rm "$prefix"
         fi
 
-        local sub_tree
-        if [ -z "$dir" ]; then
-            sub_tree=$(git_tree_hash $tag_hash)
-        else
-            sub_tree=$(git ls-tree $tag_hash $dir| awk '{print $3}') || die "get tree-ish of $tag_hash $dir"
-        fi
-        dd "sub_tree:   $sub_tree"
-        dd "prefix:     $prefix"
-
-        if [ "$(git cat-file -t $sub_tree)" = "blob" ]; then
-            # the object imported is a file, not a dir
-
-            dd "make dir: $(dirname $prefix)"
-            mkdir -p "$(dirname $prefix)"
-            git cat-file -p $sub_tree > "$prefix"
-            git add "$prefix"
-        else
-            # load files into index at $prefix
-            git read-tree --prefix="$prefix" "$sub_tree" || die "read-tree $prefix $sub_tree"
-        fi
+        dd "add to ($prefix): from ($dir)"
+        git_object_add_by_commit_path "$prefix" "$tag_hash" "$dir" || die git_object_add_by_commit_path
 
         # remove not in index files
         git checkout -- "$prefix" || die "checkout $prefix"
