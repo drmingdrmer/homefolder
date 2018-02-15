@@ -1,0 +1,8 @@
+#!/bin/sh
+
+default="*.rmvb *.avi *.mp4 *.mkv *.srt *.torrent *.sub *.ass */ .*.rmvb .*.avi .*.mp4 .*.mkv .*.srt *.torrent *.sub *.ass"
+fns="${1-$default}"
+
+ptns='s/[ .]/-/g;'
+
+rename "$ptns" $fns
