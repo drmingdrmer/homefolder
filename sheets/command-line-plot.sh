@@ -60,3 +60,55 @@ seq 30 | awk '{print 2*$1, $1*$1}'  | feedgnuplot --terminal 'dumb 30,15' --exit
 #  2 |-+..+.+.+..+.+.+.A+-|
 #  0 +--------------------+
 #    0 1  2 3 4  5 6 7  8 9
+
+
+
+# ascii flow chart
+#
+# brew install cpanminus
+# cpan Graph::Easy
+# http://cpansearch.perl.org/src/TELS/Graph-Easy-0.64/README
+
+echo "[ Bonn ] - car -> [ Berlin ]" | /usr/local/Cellar/perl/5.24.1/bin/graph-easy   --as boxart
+# ┌──────┐  car   ┌────────┐
+# │ Bonn │ ─────> │ Berlin │
+# └──────┘        └────────┘
+
+# use .dot as input
+cat test.dot | /usr/local/Cellar/perl/5.24.1/bin/graph-easy  --from graphviz
+# graph {
+#     a -> b;
+#     b -> c;
+#     a -> c;
+#     d -> c;
+#     e -> c;
+#     e -> a;
+# }
+
+#    ┌───┐
+#    │ d │
+#    └───┘
+#      │
+#      │
+#      ▼
+#    ┌────────┐
+# ┌▶ │   c    │
+# │  └────────┘
+# │    ▲    ▲
+# │    │    │
+# │    │    │
+# │  ┌───┐  │
+# │  │ e │  │
+# │  └───┘  │
+# │    │    │
+# │    │    │
+# │    ▼    │
+# │  ┌───┐  │
+# └─ │ a │  │
+#    └───┘  │
+#      │    │
+#      │    │
+#      ▼    │
+#    ┌───┐  │
+#    │ b │ ─┘
+#    └───┘
