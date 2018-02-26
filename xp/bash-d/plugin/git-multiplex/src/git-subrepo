@@ -166,10 +166,6 @@ main()
 
         git merge --ff-only --no-edit --commit $commit
 
-        # git subtree merge --squash \
-        #     --message="Merge squashed $url $ref" \
-        #     --prefix "$prefix" "$localtag" || die merge
-
     done<".gitsubrepo_refs"
 
     while read a b c localtag dir; do
