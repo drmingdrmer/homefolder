@@ -69,13 +69,13 @@ seq 30 | awk '{print 2*$1, $1*$1}'  | feedgnuplot --terminal 'dumb 30,15' --exit
 # cpan Graph::Easy
 # http://cpansearch.perl.org/src/TELS/Graph-Easy-0.64/README
 
-echo "[ Bonn ] - car -> [ Berlin ]" | /usr/local/Cellar/perl/5.24.1/bin/graph-easy   --as boxart
+echo "[ Bonn ] - car -> [ Berlin ]" | graph-easy   --as boxart
 # ┌──────┐  car   ┌────────┐
 # │ Bonn │ ─────> │ Berlin │
 # └──────┘        └────────┘
 
 # use .dot as input
-cat test.dot | /usr/local/Cellar/perl/5.24.1/bin/graph-easy  --from graphviz
+cat test.dot | graph-easy  --from graphviz
 # graph {
 #     a -> b;
 #     b -> c;
