@@ -3,12 +3,15 @@ let s:special_char = {
       \ " ": '\V\s\ze\S',
       \ }
 
+let s:needEscape = '^\]-'
+
 fun! s:AlignChar(mode) range "{{{
     let chr = input#GetChar('type char> ')
     if has_key(s:special_char, chr)
         let reg = s:special_char[chr]
     else
-        let reg = '\V\s\{-}' . chr
+        let chr = escape(chr, s:needEscape)
+        let reg = '\V\s\{-}\[' . chr . ']'
     endif
     if a:mode == 'normal'
         return edit#align#VerticalAlign(reg, edit#align#FindParagraph(), virtcol('.'))
