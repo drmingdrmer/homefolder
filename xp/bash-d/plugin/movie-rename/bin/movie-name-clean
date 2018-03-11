@@ -20,7 +20,7 @@ s/bluray//ig;
 s/\\b(chs|chi|eng)\\b//ig;
 s/pristine//ig;
 s/ristine//ig;
-s/xvid-(nedivx|tlf|hq)//ig;
+s/xvid-(bmdru|nedivx|tlf|hq)//ig;
 s/飘花电影|影视帝国|电影天堂//ig;
 s/数字35//ig;
 s/香木鱼//ig;
