@@ -58,7 +58,7 @@ s/国粤日//ig;
 s/国日音轨//ig;
 s/bd国粤双语//ig;
 s/双语字幕//ig;
-s/中英双字//ig;
+s/中英双字(幕)?//ig;
 s/国英双语//ig;
 s/原创翻译中英//ig;
 s/dvd国语//ig;
@@ -95,4 +95,10 @@ $season_to_right;
 $move_num_right;
 "
 
-rename "$ptns" *.rmvb *.avi *.mp4 *.mkv *.srt *.torrent *.sub *.ass */ .*.rmvb .*.avi .*.mp4 .*.mkv .*.srt *.torrent *.sub *.ass
+fns="${1}"
+
+if [ "x$fns" = "x" ]; then
+    rename "$ptns" *.rmvb *.avi *.mp4 *.mkv *.srt *.torrent *.sub *.ass */ .*.rmvb .*.avi .*.mp4 .*.mkv .*.srt *.torrent *.sub *.ass
+else
+    rename "$ptns" "$@"
+fi
