@@ -12,6 +12,6 @@ let g:tagbar_type_markdown = {
 let g:tagbar_zoomwidth = 0
 
 " open preview window when navigate.
-let g:tagbar_autopreview = 1
-let g:tagbar_previewwin_pos = 'leftabove vertical'
+let g:tagbar_autopreview = 0
+let g:tagbar_previewwin_pos = 'rightbelow vertical'
 nmap <M-8> :TagbarToggle<CR>
