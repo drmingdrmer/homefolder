@@ -378,6 +378,8 @@ git_object_add_by_tree_name()
     dd treeish content:
     git ls-tree $treeish
 
+    git rm "$target_path" -r --cached || die removing target "$target_path"
+
     if [ "$target_path" = "./" ]; then
         git read-tree "$treeish" \
             || die "read-tree $target_path $treeish"
