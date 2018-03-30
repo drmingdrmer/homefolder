@@ -1,0 +1,119 @@
+The following table lists the precedence and associativity of C operators.
+Operators are listed top to bottom, in descending precedence.
+
+Precedence  Operator                  Description                 Associativity
+-------------------------------------------------------------------------------
+           ++ --      Suffix/postfix increment and decrement
+           ()         Function call
+           []         Array subscripting
+    1      .          Structure and union member access           Left-to-right
+           ->         Structure and union member access through
+                      pointer
+           (type){    Compound literal(C99)
+           list}
+-------------------------------------------------------------------------------
+           ++ --      Prefix increment and decrement
+           + -        Unary plus and minus
+           ! ~        Logical NOT and bitwise NOT
+    2      (type)     Type cast                                   Right-to-left
+           *          Indirection (dereference)
+           &          Address-of
+           sizeof     Size-of^[note 1]
+           _Alignof   Alignment requirement(C11)
+-------------------------------------------------------------------------------
+    3      * / %      Multiplication, division, and remainder
+-------------------------------------------------------------------------------
+    4      + -        Addition and subtraction
+-------------------------------------------------------------------------------
+    5      << >>      Bitwise left shift and right shift
+-------------------------------------------------------------------------------
+           < <=       For relational operators < and ≤
+    6                 respectively
+           > >=       For relational operators > and ≥
+                      respectively                                Left-to-right
+-------------------------------------------------------------------------------
+    7      == !=      For relational = and ≠ respectively
+-------------------------------------------------------------------------------
+    8      &          Bitwise AND
+-------------------------------------------------------------------------------
+    9      ^          Bitwise XOR (exclusive or)
+-------------------------------------------------------------------------------
+    10     |          Bitwise OR (inclusive or)
+-------------------------------------------------------------------------------
+    11     &&         Logical AND
+-------------------------------------------------------------------------------
+    12     ||         Logical OR
+-------------------------------------------------------------------------------
+    13     ?:         Ternary conditional^[note 3]
+-------------------------------------------------------------------------------
+           =          Simple assignment
+           += -=      Assignment by sum and difference
+           *= /= %=   Assignment by product, quotient, and        Right-to-Left
+    14                remainder
+           <<= >>=    Assignment by bitwise left shift and right
+                      shift
+           &= ^= |=   Assignment by bitwise AND, XOR, and OR
+-------------------------------------------------------------------------------
+    15     ,          Comma                                       Left-to-right
+-------------------------------------------------------------------------------
+ 1. ↑ The operand of sizeof can't be a type cast: the expression sizeof (int) *
+    p is unambiguously interpreted as (sizeof(int)) * p, but not sizeof((int)
+    *p).
+ 2. ↑ Fictional precedence level, see Notes below
+ 3. ↑ The expression in the middle of the conditional operator (between ? and :
+    ) is parsed as if parenthesized: its precedence relative to ?: is ignored.
+When parsing an expression, an operator which is listed on some row will be
+bound tighter (as if by parentheses) to its arguments than any operator that is
+listed on a row further below it. For example, the expression *p++ is parsed as
+*(p++), and not as (*p)++.
+Operators that are in the same cell (there may be several rows of operators
+listed in a cell) are evaluated with the same precedence, in the given
+direction. For example, the expression a=b=c is parsed as a=(b=c), and not as (
+a=b)=c because of right-to-left associativity.
+[edit] Notes
+Precedence and associativity are independent from order of evaluation.
+The C language standard doesn't specify operator precedence. It specifies the
+language grammar, and the precedence table is derived from it to simplify
+understanding. There is a part of the grammar that cannot be represented by a
+precedence table: an assignment-expression is not allowed as the right hand
+operand of a conditional operator, so e = a < d ? a++ : a = d is an expression
+that cannot be parsed, and therefore relative precedence of conditional and
+assignment operators cannot be described easily.
+However, many C compilers use non-standard expression grammar where ?: is
+designated higher precedence than =, which parses that expression as e = ( ((a 
+< d) ? (a++) : a) = d ), which then fails to compile due to semantic
+constraints: ?: is never lvalue and = requires a modifiable lvalue on the left.
+This is the table presented on this page.
+Note that this is different in C++, where the conditional operator has the same
+precedence as assignment.
+Associativity specification is redundant for unary operators and is only shown
+for completeness: unary prefix operators always associate right-to-left (sizeof
+++*p is sizeof(++(*p))) and unary postfix operators always associate
+left-to-right (a[1][2]++ is ((a[1])[2])++). Note that the associativity is
+meaningful for member access operators, even though they are grouped with unary
+postfix operators: a.b++ is parsed (a.b)++ and not a.(b++).
+[edit] References
+  • C11 standard (ISO/IEC 9899:2011):
+      □ A.2.1 Expressions
+  • C99 standard (ISO/IEC 9899:1999):
+      □ A.2.1 Expressions
+  • C89/C90 standard (ISO/IEC 9899:1990):
+      □ A.1.2.1 Expressions
+[edit] See Also
+Order of evaluation of operator arguments at run time.
+                               Common operators
+assignment increment arithmetic logical comparison member other
+           decrement                               access
+                     +a
+a = b                -a
+a += b               a + b
+a -= b               a - b              a == b            a(...)
+a *= b     ++a       a * b              a != b     a[b]   a, b
+a /= b     --a       a / b      !a      a < b      *a     (type) a
+a %= b     a++       a % b      a && b  a > b      &a     ? :
+a &= b     a--       ~a         a || b  a <= b     a->b   sizeof
+a |= b               a & b              a >= b     a.b    _Alignof (since C11)
+a ^= b               a | b
+a <<= b              a ^ b
+a >>= b              a << b
+                     a >> b
