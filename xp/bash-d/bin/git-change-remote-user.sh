@@ -6,8 +6,6 @@ to=$2
 if [ -z "$frm" ] || [ -z "$to" ]; then
     cmd='git-change-remote-user.sh'
     {
-
-    
     cat <<-END
 Usage:
     $cmd <from-user> <to-user>
@@ -28,7 +26,7 @@ After $cmd drdrxp bsc
     origin  git@github.com:bsc/homefolder.git (fetch)
     origin  git@github.com:bsc/homefolder.git (push)
 END
-    } | grep --color "bsc\|drdrxp\|from-user\|to-user\|^$"
+    } | grep --color "bsc\|drdrxp\|from-user\|to-user\|$"
 
      exit 0
 fi
