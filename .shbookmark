@@ -13,7 +13,7 @@
 ~/vcs/gh/baishancloud/pykit
 ~/vcs/gh/baishancloud/shlib
 ~/vcs/gh/bsc-s2/docker-edge
-~/vcs/gh/bsc-s2/ec/doc
+~/vcs/gh/bsc-s2/ec
 ~/vcs/gh/bsc-s2/mysql-devops
 ~/vcs/gh/bsc-s2/s2-doc-internal/src/client-project
 ~/vcs/gh/bsc-s2/s2-doc-pub
@@ -27,9 +27,11 @@
 ~/vcs/xp/drmingdrmer/journal
 ~/vcs/xp/drmingdrmer/sinastorage
 ~/vcs/xp/drmingdrmer/vcs-manifest
+~/vcs/xp/drmingdrmer/vim-tabbar
 ~/vcs/xp/drmingdrmer/xptemplate
 ~/wiki
 ~/wiki/baishan
+~/wiki/baishan/weekreport
 ~/wiki/snippet
 ~/xp/Dropbox/Sync
 ~/xp/Dropbox/Sync/sticker/origin
