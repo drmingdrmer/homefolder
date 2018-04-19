@@ -10,6 +10,8 @@ _git_discard() { _git_log; }
 _git_extract() { _git_log; }
 _git_split() { _git_log; }
 
+_git_wt() { _git_branch; }
+
 _git_ff() { __git_complete_remote_or_refspec; }
 _git_cmv() { _git_log; }
 # _git_file_branch() { _git_checkout "$@"; }

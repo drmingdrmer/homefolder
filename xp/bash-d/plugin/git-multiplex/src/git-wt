@@ -1,0 +1,35 @@
+#!/bin/sh
+
+source shlib.sh
+
+usage()
+{
+    cat <<-END
+Add worktree
+$0 xxx
+END
+}
+
+main()
+{
+    local rbranch="$1"
+
+    local remote="${rbranch%%/*}"
+    local branch="${rbranch#*/}"
+
+    local root="$(git_working_root)"
+
+    if [ -z "$root" ]; then
+        die git dir not found
+    fi
+
+    (
+    cd $root;
+
+    if [ ! -d ".wt/$branch" ]; then
+        git worktree add ".wt/$branch" -b "$branch" "$rbranch"
+    fi
+    )
+}
+
+main "$@"
