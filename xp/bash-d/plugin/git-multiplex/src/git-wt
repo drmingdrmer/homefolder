@@ -27,7 +27,7 @@ main()
     cd $root;
 
     if [ ! -d ".wt/$branch" ]; then
-        if git_hash $branch; then
+        if git_rev_exist $branch; then
             git worktree add ".wt/$branch" "$branch"
         else
             git worktree add ".wt/$branch" -b "$branch" "$rbranch"
