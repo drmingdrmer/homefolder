@@ -1,29 +1,32 @@
 #!/bin/sh
 
-# for msgfmt
-which -s apt-get \
-    && apt-get install gettext
-
-
-yum install -y              \
-    curl-devel              \
-    expat-devel             \
-    gcc                     \
-    gettext-devel           \
-    libcurl-devel           \
-    openssl-devel           \
-    perl-ExtUtils-MakeMaker \
-    zlib-devel              \
+g=git-2.16.3
+package=$g.tar.xz
 
 cd ~
+mkdir tmpgit
+cd tmpgit
+wget http://kernel.org/pub/software/scm/git/$package -O $package
+tar -xzf $package
+cd git-*
 
-g=git-2.11.0
-package=$g.tar.xz
-wget http://kernel.org/pub/software/scm/git/$package
+if [ -f /etc/centos-release ]; then
 
-tar -xf $package
+    yum -y groupinstall "Development Tools"
+    yum -y install    \
+        gettext-devel \
+        openssl-devel \
+        perl-CPAN     \
+        perl-devel    \
+        zlib-devel    \
 
-cd $g
-make prefix=$HOME/local NO_TCLTK=YesPlease install
+    make configure
+    ./configure --prefix=$HOME
+    make install
 
-# ./configure --prefix=$HOME && make install
+else
+    # for msgfmt
+    apt-get install gettext
+
+    make prefix=$HOME/local NO_TCLTK=YesPlease install
+fi
