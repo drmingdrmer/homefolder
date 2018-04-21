@@ -9,3 +9,6 @@ source venv/bin/activate
 
 # quit
 deactivate
+
+# python3:
+python3 -m venv venv
