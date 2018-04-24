@@ -7,7 +7,7 @@ cd ~
 mkdir tmpgit
 cd tmpgit
 wget http://kernel.org/pub/software/scm/git/$package -O $package
-tar -xzf $package
+tar -xf $package
 cd git-*
 
 if [ -f /etc/centos-release ]; then
