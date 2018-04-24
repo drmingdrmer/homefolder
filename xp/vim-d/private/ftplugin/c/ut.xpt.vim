@@ -27,10 +27,12 @@ st_test(`ModName()^, `func^) {
     };
 
     for (int i = 0; i < st_nelts(cases); i++) {
-        st_typeof(cases[0])   c = cases[i];
-        st_typeof(c.expected) rst = `func^(c.inp, c.upto);
+        st_autotype c   = cases[i];
+        st_autotype rst = `func^(c.inp, c.upto);
 
-        ddx(rst);
+        utddx(c.inp);
+        utddx(c.expected);
+        utddx(rst);
 
         st_ut_eq(c.expected, rst, "");
     }
