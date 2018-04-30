@@ -587,7 +587,7 @@ fn_match()
 autopep8_options='--max-line-length 120'
 
 cmd_reverse=tac
-which -s $cmd_reverse || cmd_reverse="tail -r"
+which $cmd_reverse >/dev/null 2>/dev/null || cmd_reverse="tail -r"
 
 {
     if [ "$#" -gt 0 ]; then
@@ -601,7 +601,7 @@ which -s $cmd_reverse || cmd_reverse="tail -r"
         # get changed fn
         git diff --name-only --relative HEAD
     fi
-} | while read fn; do
+} | grep "\.py$" | while read fn; do
 
     # reverse order, autopep8 may add or remove lines
 
