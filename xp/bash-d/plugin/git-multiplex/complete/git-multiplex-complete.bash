@@ -19,3 +19,5 @@ _git_remerge()       { _git_checkout; }
 _git_split()         { _git_log; }
 _git_squash()        { _git_checkout; }
 _git_wt()            { words[1]=checkout; _git_checkout; }
+
+__git_complete gwt  _git_wt

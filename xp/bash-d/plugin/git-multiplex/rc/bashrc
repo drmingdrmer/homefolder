@@ -1,0 +1,4 @@
+#!/bin/bash
+
+alias gwt='. git-wt'
+

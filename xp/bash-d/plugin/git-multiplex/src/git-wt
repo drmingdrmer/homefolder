@@ -2,6 +2,10 @@
 
 source shlib.sh
 
+# This is a script for alias, because it need to cd to other dir
+# Such as:
+#     alias gwt='git-wt'
+
 usage()
 {
     cat <<-END
@@ -13,27 +17,38 @@ END
 main()
 {
     local rbranch="$1"
-
-    local remote="${rbranch%%/*}"
-    local branch="${rbranch#*/}"
-
-    local root="$(git_working_root)"
+    local branch
+    local remote
+    local root=$(git worktree list | head -n 1 | { read dir x; echo "$dir"; })
 
     if [ -z "$root" ]; then
         die git dir not found
     fi
 
-    (
-    cd $root;
+    cd "$root";
 
-    if [ ! -d ".wt/$branch" ]; then
-        if git_rev_exist $branch; then
-            git worktree add ".wt/$branch" "$branch"
+    if [ "$rbranch" = "" ]; then
+        return
+    fi
+
+    if git_branch_exist "$rbranch"; then
+        branch="$rbranch"
+    else
+        remote="${rbranch%%/*}"
+        branch="${rbranch#*/}"
+    fi
+
+    local wtdir=".wt/$branch/${root##*/}"
+
+    if [ ! -d "$wtdir" ]; then
+        if git_branch_exist $branch; then
+            git worktree add "$wtdir" "$branch"
         else
-            git worktree add ".wt/$branch" -b "$branch" "$rbranch"
+            git worktree add "$wtdir" -b "$branch" "$rbranch"
         fi
     fi
-    )
+
+    cd "$wtdir"
 }
 
 main "$@"
