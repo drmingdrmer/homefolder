@@ -594,7 +594,6 @@ main()
         return
     fi
 
-
     if git_branch_exist "$rbranch"; then
         branch="$rbranch"
     else
