@@ -573,7 +573,9 @@ usage()
 {
     cat <<-END
 Add worktree
-$0 xxx
+    $0 <branch>|<remote>/<branch>|<new_branch>
+Delete worktree
+    $0 <branch>
 END
 }
 
@@ -590,15 +592,34 @@ main()
 
     cd "$root";
 
+    if [ "$rbranch" = "-d" ]; then
+        # delete
+        branch="$2"
+        cd .wt
+        rm -rf "$branch"
+        cd "$root"
+        git worktree prune
+        git branch -d "$branch"
+        return
+    fi
+
     if [ "$rbranch" = "" ]; then
         return
     fi
 
     if git_branch_exist "$rbranch"; then
+        info craete worktree on local "$rbranch"
         branch="$rbranch"
-    else
+
+    elif git_rev_exist "$rbranch"; then
+        info craete worktree on remote "$rbranch"
+
         remote="${rbranch%%/*}"
         branch="${rbranch#*/}"
+    else
+        info craete worktree on new branch "$rbranch"
+        git branch "$rbranch"
+        branch="$rbranch"
     fi
 
     local wtdir=".wt/$branch/${root##*/}"
