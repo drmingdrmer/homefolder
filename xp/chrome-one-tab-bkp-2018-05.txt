@@ -1,0 +1,163 @@
+http://wiki.osdev.org/Main_Page | Expanded Main Page - OSDev Wiki
+https://www.quora.com/I-am-14-and-I-want-to-start-a-web-design-business-I-already-have-a-website-How-can-I-attract-more-customers | (1) I am 14 and I want to start a web design business. I already have a website. How can I attract more customers? - Quora
+https://www.quora.com/ | (1) Home - Quora
+https://www.percona.com/doc/percona-xtrabackup/2.3/installation.html#installing-percona-xtrabackup-from-repositories | Installing Percona XtraBackup 2.3
+https://www.percona.com/doc/percona-xtrabackup/2.3/installation/yum_repo.html | Installing Percona XtraBackup on Red Hat Enterprise Linux and CentOS
+https://www.percona.com/doc/percona-xtrabackup/2.3/installation/apt_repo.html | Installing Percona XtraBackup on Debian and Ubuntu
+https://www.instapaper.com/u | Instapaper
+https://www.google.com.sg/search?newwindow=1&safe=strict&q=kaggle&gws_rd=cr&ei=kyBEV4G2LYz3vgTXqKT4DA | kaggle - Google Search
+https://www.kaggle.com/ | Kaggle: Your Home for Data Science
+https://github.com/golang/playground | golang/playground: [mirror] The Go Playground
+http://www.antirez.com/news/106 | Redis Loadable Modules System - <antirez>
+http://www.51nod.com/notice.html#!type=System&page=1 | 通知 - 51Nod
+https://www.51nod.com/404.htm#url=https%3A//www.51nod.com/management/problemCode.html%23%21problemId%3D1766 | 404 Error
+https://www.51nod.com/404.htm#url=https%3A//www.51nod.com/management/problemCode.html%23%21problemId%3D1518 | 404 Error
+
+https://www.google.com.sg/search?newwindow=1&safe=strict&q=kaggle&gws_rd=cr&ei=kyBEV4G2LYz3vgTXqKT4DA | kaggle - Google Search
+https://www.kaggle.com/ | Kaggle: Your Home for Data Science
+
+http://developer.baidu.com/map/jsdemo.htm#c1_3 | 地图API示例
+http://deis.heheapp.com/ | 502 Bad Gateway
+https://www.51nod.com/404.htm#url=https%3A//www.51nod.com/management/problemCode.html%23%21problemId%3D1766 | 404 Error
+https://www.51nod.com/404.htm#url=https%3A//www.51nod.com/management/problemCode.html%23%21problemId%3D1685 | 404 Error
+https://www.51nod.com/focus.html | 最新动态 - 51Nod
+
+http://docs.ansible.com/ansible/shell_module.html | shell - Execute commands in nodes. — Ansible Documentation
+https://www.safaribooksonline.com/library/view/ansible-up-and/9781491915318/ch04.html | 4. Variables and Facts - Ansible: Up and Running [Book]
+http://unicornclouds.telegr.am/blog_posts/etcd_ansible_integration | Post: etcd + ansible = crazy delicious
+http://hintjens.com/blog:115 | A Protocol for Dying - Hintjens.com
+https://www.google.com.sg/search?newwindow=1&safe=strict&q=ansible+hosts.deny&gws_rd=cr&ei=XS1DV_SfJ4yGvQSu0oCIBg | ansible hosts.deny - Google Search
+http://www.51nod.com/contest/pointRank.html#!page=3&contestId=21&randomCode=D2C4F488B2DDD9E7 | BSG白山极客挑战赛 排行榜 - 51Nod
+http://www.51nod.com/contest/problem.html#!problemId=1518 | 稳定多米诺覆盖 问题 - 51Nod
+http://www.51nod.com/contest/judgeList.html#!contestId=21&randomCode=D2C4F488B2DDD9E7&userId=13234 | BSG白山极客挑战赛 提交记录 - 51Nod
+http://www.51nod.com/contest/submitDetail.html#!judgeId=22937 | JOHNKRAM 关于问题 稳定多米诺覆盖 的提交 - 51Nod
+http://www.51nod.com/contest/submitDetail.html#!judgeId=20822 | JOHNKRAM 关于问题 第K大区间2 的提交 - 51Nod
+http://www.51nod.com/contest/submitDetail.html#!judgeId=20750 | JOHNKRAM 关于问题 第K大区间2 的提交 - 51Nod
+http://www.51nod.com/contest/submitDetail.html#!judgeId=20297 | JOHNKRAM 关于问题 B君的圆锥 的提交 - 51Nod
+http://www.51nod.com/contest/submitDetail.html#!judgeId=19464 | JOHNKRAM 关于问题 树上的最远点对 的提交 - 51Nod
+http://www.51nod.com/contest/submitDetail.html#!judgeId=19384 | JOHNKRAM 关于问题 AVL树的种类 的提交 - 51Nod
+http://www.51nod.com/contest/submitDetail.html#!judgeId=18874 | JOHNKRAM 关于问题 数数字 的提交 - 51Nod
+http://www.51nod.com/contest/submitDetail.html#!judgeId=22937 | JOHNKRAM 关于问题 稳定多米诺覆盖 的提交 - 51Nod
+https://www.google.com.sg/search?newwindow=1&safe=strict&q=lca+algorithm&oq=lca+algorithm&gs_l=serp.3..0l4j0i22i30l6.39085.41016.0.41313.10.8.0.0.0.0.491.1255.3-1j2.3.0....0...1c.1.64.serp..7.3.1255.Rk55S1RFVhM | lca algorithm - Google Search
+https://en.wikipedia.org/wiki/Lowest_common_ancestor | Lowest common ancestor - Wikipedia, the free encyclopedia
+http://www.codeforces.com/ratings | Rating - Codeforces
+https://www.google.com.sg/search?newwindow=1&safe=strict&q=%E7%A8%B3%E5%AE%9A%E5%A4%9A%E7%B1%B3%E8%AF%BA%E8%A6%86%E7%9B%96&gws_rd=cr&ei=Uf9DV5vNHYnxvgSB_b2IDQ | 稳定多米诺覆盖 - Google Search
+http://www.matrix67.com/blog/archives/5550 | 趣题：免分割线的多米诺骨牌覆盖方案 | Matrix67: The Aha Moments
+http://www.51nod.com/contest/submitDetail.html#!judgeId=23974 | TAZ 关于问题 稳定多米诺覆盖 的提交 - 51Nod
+https://www.google.com.sg/search?newwindow=1&safe=strict&q=interpolated+dynamic+programming&oq=interpolated+dynamic+programming&gs_l=serp.3...18272.18272.0.18370.1.1.0.0.0.0.0.0..0.0....0...1c.2.64.serp..1.0.0.-t8dh9rKx-Y | interpolated dynamic programming - Google Search
+http://planning.cs.uiuc.edu/node406.html | 8.5.2 Dynamic Programming with Interpolation
+http://planning.cs.uiuc.edu/node407.html | 8.5.2.1 Using interpolation for continuous state spaces
+https://mp.weixin.qq.com/s?__biz=MzA4MDIxMDI4Ng==&mid=222022925&idx=1&sn=eecaaaa9763e6fa8821524eaf2f44741&scene=1&srcid=0910NawN1I6A497ZedyIgDYe&key=f5c31ae61525f82e38925902b6720228295a93eef740a2f35b19d9d2d8df5d36b91c837f1883beeecfec61e84625f13c&ascene=0&uin=Nzc0MDI2NzAw&devicetype=iMac+MacBookPro11%2C5+OSX+OSX+10.11.4+build(15E65)&version=11020201&pass_ticket=xDkx1jdUs2c9mLsrt%2FFdfkDJGEOzgMK%2BsQPqWbK9iFMtBQLL6H6WJuee75nsgZUE | 给CPU直接开挂！从OpenPOWER的CAPI+FPGA看第二代异构计算
+http://www.51nod.com/focus.html | 最新动态 - 51Nod
+file://localhost/Users/drdrxp/xp/Dropbox/Sync/l3-year/r/Archived-2012-05/Yahoo_PNUTS%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0_kayaklee%E7%9A%84%E4%B8%93%E6%A0%8F_%E5%8D%9A%E5%AE%A2%E9%A2%91%E9%81%93_CSDN.NET.133429.html | Yahoo PNUTS阅读笔记 - kayaklee的专栏 - 博客频道 - CSDN.NET
+https://www.zhihu.com/question/following | 我关注的问题 - 知乎
+https://www.zhihu.com/question/31168109 | 如果被困到同一天里，如何跳出时间循环？ - 知乎
+https://www.google.com/search?newwindow=1&safe=strict&q=pe+ps+%E4%BC%B0%E5%80%BC&oq=pe+ps+%E4%BC%B0%E5%80%BC&gs_l=serp.3..0i13i30j0i8i30.10522.15281.0.15859.13.6.6.0.0.0.218.771.0j4j1.5.0....0...1c.1j4.64.serp..2.8.418...0j0i22i30.ja2888qyivI | pe ps 估值 - Google Search
+http://baike.baidu.com/subview/7556/6104519.htm | PS（股价计算法则）_百度百科
+https://zh.wikipedia.org/wiki/%E8%B5%84%E4%BA%A7%E4%BC%B0%E5%80%BC | 资产估值 - 维基百科，自由的百科全书
+https://www.google.com/search?newwindow=1&safe=strict&q=%E5%B8%82%E7%9B%88%E7%8E%87 | 市盈率 - Google Search
+https://zh.wikipedia.org/wiki/%E5%B8%82%E7%9B%88%E7%8E%87 | 市盈率 - 维基百科，自由的百科全书
+https://zh.wikipedia.org/wiki/%E5%84%AA%E5%85%88%E8%82%A1 | 優先股 - 维基百科，自由的百科全书
+https://zh.wikipedia.org/wiki/%E8%82%A1%E6%81%AF | 股息 - 维基百科，自由的百科全书
+
+https://m.reddit.com/r/redis/comments/4p17lx/redistdigest_an_accurate_quantiles_estimator/?utm_source=mweb_redirect&compact=true&from=singlemessage&isappinstalled=1 | redis-tdigest: an accurate quantiles estimator Redis Module
+https://code.facebook.com/posts/1653074404941839/under-the-hood-broadcasting-live-video-to-millions | Under the hood: Broadcasting live video to millions | Engineering Blog | Facebook Code
+https://www.google.com/search?newwindow=1&safe=strict&q=nginx-rtmp+facebook&oq=nginx-rtmp+facebook&gs_l=serp.3...12024.13581.0.13930.9.9.0.0.0.0.97.747.9.9.0....0...1c.1j4.64.serp..0.2.168...0j0i30j0i22i30.9KMHdjckaqE | nginx-rtmp facebook - Google Search
+https://www.google.com/search?newwindow=1&safe=strict&q=nginx+rtmp+reload | nginx rtmp reload - Google Search
+https://github.com/arut/nginx-rtmp-module/issues/580 | Refusing new connections after reload the nginx · Issue #580 · arut/nginx-rtmp-module
+https://github.com/openresty/lua-resty-core/blob/master/lib/ngx/semaphore.lua | lua-resty-core/semaphore.lua at master · openresty/lua-resty-core
+http://www.jb51.net/article/83617.htm | Python环境下搭建属于自己的pip源的教程_python_脚本之家
+https://dev.mysql.com/doc/refman/5.5/en/partitioning-overview.html | MySQL :: MySQL 5.5 Reference Manual :: 19.1 Overview of Partitioning in MySQL
+http://blog.poolye.com/Article/0e936b33-2f5e-488f-b759-9893a5787095.html?from=singlemessage&isappinstalled=1 | Springboot使用Redis来存储Session的两种途径-扑耶博客
+https://github.com/open-falcon/mymon/blob/master/metric.go | mymon/metric.go at master · open-falcon/mymon
+https://www.google.com/search?newwindow=1&safe=strict&biw=1436&bih=806&q=Google+Python+%E9%A3%8E%E6%A0%BC&oq=Google+Python+%E9%A3%8E%E6%A0%BC&gs_l=serp.3...22521.22521.0.22662.1.1.0.0.0.0.0.0..0.0....0...1c.2.64.serp..1.0.0.2_8himvvgSk | Google Python 风格 - Google Search
+https://google.github.io/styleguide/pyguide.html#Lint | Google Python Style Guide
+http://zh-google-styleguide.readthedocs.io/en/latest/google-python-styleguide/python_style_rules/ | Python风格规范 — Google 开源项目风格指南
+http://mp.weixin.qq.com/s?__biz=MjM5MzM3NjM4MA==&mid=2654676750&idx=1&sn=f20c877e48567ee88dfae2066c3aaca3&scene=0#wechat_redirect | 一位编程老手13年来处理棘手bug的18个心得
+http://mp.weixin.qq.com/s?__biz=MzA3MzYwNjQ3NA==&mid=2651296738&idx=1&sn=1ab918e343222ef2d06953cfc73ba2bd&scene=1&srcid=0623jbuIB5ZWAPoxlvQT6yLK&from=groupmessage&isappinstalled=0#wechat_redirect | 对nginx事件框架和openssl协议栈进行深度改造
+https://zh.wikipedia.org/zh-cn/%E6%9D%8E%E4%BB%A3%E6%95%B8 | 李代数 - 维基百科，自由的百科全书
+https://neovim.io/ | Home - Neovim
+http://www.cndv.org/post-5.html | lua luajit 使用 64位整型(int64 uint64)技巧
+http://www.cndv.org/post-62.html | luajit内存限制问题终于在2.1版本里面解决了
+https://ourway.ir/Why_And_How_I_Switched_From_Python_To_Erlang.html?utm_source=wanqu.co&utm_campaign=Wanqu+Daily&utm_medium=social | https://ourway.ir/Why_And_How_I_Switched_From_Python_To_Erlang.html?utm_source=wanqu.co&utm_campaign=Wanqu+Daily&utm_medium=social is not available
+http://mp.weixin.qq.com/s?__biz=MjM5ODIzNDQ3Mw==&mid=2649965623&idx=1&sn=50f8a68265afa0d912d2e720d5248be0&scene=0#wechat_redirect | 分布式集群中大数据的中位数
+https://en.wikipedia.org/wiki/Field_extension | Field extension - Wikipedia, the free encyclopedia
+https://en.wikipedia.org/wiki/Field_(mathematics)#Definition_and_illustration | Field (mathematics) - Wikipedia, the free encyclopedia
+https://zh.wikipedia.org/zh-cn/%E5%9F%9F_(%E6%95%B8%E5%AD%B8) | 域 (数学) - 维基百科，自由的百科全书
+https://zh.wikipedia.org/zh-cn/%E9%99%A4%E7%8E%AF | 除环 - 维基百科，自由的百科全书
+https://zh.wikipedia.org/zh-cn/%E7%8E%AF_(%E4%BB%A3%E6%95%B0) | 环 (代数) - 维基百科，自由的百科全书
+https://www.zybuluo.com/mdeditor#355617 | 群 group - 作业部落 Cmd Markdown 编辑阅读器
+https://zhuanlan.zhihu.com/p/21558496?utm_campaign=rss&utm_medium=rss&utm_source=zaker&utm_content=title | Facebook前产品总监: 我不招聘只想当CEO的产品经理 - 苹果姐姐在美国 - 知乎专栏
+https://zachholman.com/talk/firing-people?utm_source=wanqu.co&utm_campaign=Wanqu+Daily&utm_medium=social | Firing People
+https://coding.net/u/piepiper/p/s2-statistics/git | piepiper - s2-statistics - Coding.net
+http://docs.python-guide.org/en/latest/writing/style/ | Code Style — The Hitchhiker's Guide to Python
+https://google.github.io/styleguide/pyguide.html#Naming | Google Python Style Guide
+https://www.python.org/dev/peps/pep-0008/#a-foolish-consistency-is-the-hobgoblin-of-little-minds | PEP 8 -- Style Guide for Python Code | Python.org
+https://www.zhihu.com/question/48652145 | 如何解答这道关于数论的题目？ - 知乎
+https://www.google.com/search?newwindow=1&safe=strict&q=lvs+ospf | lvs ospf - Google Search
+http://noops.me/?p=974 | LVS-ospf集群 | NoOps
+https://clickhouse.yandex/ | ClickHouse — open-source distributed column-oriented DBMS
+https://github.com/yandex/ClickHouse | yandex/ClickHouse: ClickHouse is a free analytic DBMS for big data.
+https://www.google.com/search?newwindow=1&safe=strict&q=libpoco&oq=libpoco&gs_l=serp.3...0.0.1.149.0.0.0.0.0.0.0.0..0.0....0...1c..64.serp..0.0.0.-uCecy4dKeA | libpoco - Google Search
+https://github.com/pocoproject/poco | pocoproject/poco: POCO C++ Libraries - Cross-platform C++ libraries with a network/internet focus.
+http://www.slideshare.net/drmingdrmer/paxos-buildingreliablesystem | Paxos building-reliable-system
+https://wanqu.co/a/1824/2015-08-31-the-upside-of-a-downturn-in-silicon-valley.html?s=social | The Upside of a Downturn in Silicon Valley | 湾区日报
+https://news.ycombinator.com/item?id=12255089 | Feature Request: Manual Refresh of external calendar feeds | Hacker News
+https://news.ycombinator.com/item?id=12256270 | Building fast.com | Hacker News
+http://www.lianjia.com/zhuanti/miandarao?utm_source=weixin&utm_medium=fuwuhao&utm_term=&utm_content=&utm_campaign=7.22 | 免打扰
+https://news.ycombinator.com/item?id=12256473 | ZeroDB (YC S16) Provides Security for Enterprise Big Data in the Cloud | Hacker News
+http://themacro.com/articles/2016/08/zerodb/ | ZeroDB Provides Security for Enterprise Big Data in the Cloud · The Macro
+https://morepypy.blogspot.com/2016/08/pypy-gets-funding-from-mozilla-for.html | PyPy Status Blog: PyPy gets funding from Mozilla for Python 3.5 support
+http://warpspire.com/ | Warpspire: Design & Code by Kyle Neath
+https://georgestocker.com/ | George Stocker | Solving Life with Code
+https://georgestocker.com/2016/02/16/quiz-do-you-have-a-remote-work-culture/ | Quiz: Do you have a Remote Work Culture? | George Stocker
+https://georgestocker.com/2014/04/15/how-to-destroy-programmer-productivity/ | How to destroy Programmer Productivity | George Stocker
+https://news.ycombinator.com/ | Hacker News
+https://www.quora.com/profile/Yanpo-Zhang/topics | Yanpo Zhang - Topics - Quora
+https://www.quora.com/topic/Computer-Science | Computer Science - Quora
+https://www.google.com/search?newwindow=1&safe=strict&q=quora+topics | quora topics - Google Search
+https://www.quora.com/Where-is-the-list-of-all-the-topics-on-Quora | Where is the list of all the topics on Quora? - Quora
+https://www.quora.com/sitemap | Sitemap - Quora
+https://www.quora.com/topic/Software-Engineering | Software Engineering - Quora
+https://www.quora.com/How-big-companies-ensure-code-quality-tools-routines-and-methodologies | How big companies ensure code quality (tools, routines and methodologies)? - Quora
+https://www.quora.com/Code-Quality-How-do-big-software-companies-avoid-bad-programmers-making-existing-code-worse | Code Quality: How do big software companies avoid bad programmers making existing code worse? - Quora
+http://www.artima.com/weblogs/viewpost.jsp?thread=228097 | Hiring the Rowing-Forward 30%
+https://www.quora.com/Is-software-development-really-a-dead-end-job-after-35-40 | Is software development really a dead-end job after 35-40? - Quora
+http://weibo.com/drdrxp/home?wvr=5 | 我的首页 微博-随时随地发现新鲜事
+https://www.zhihu.com/question/49249958 | 数学中有哪些巧合让人眼前一亮？ - 知乎
+
+http://www.ibiu.com.cn/user/index | 爱布网-个人中心
+https://www.google.com/search?newwindow=1&safe=strict&q=%E5%82%85%E7%AB%8B%E5%8F%B6%E5%BA%8F%E5%88%97&spell=1&sa=X&ved=0ahUKEwj3gIiuk7jOAhVHzGMKHVrLDfQQBQgbKAA&biw=1436&bih=770 | 傅立叶序列 - Google Search
+https://zh.wikipedia.org/wiki/%E5%82%85%E9%87%8C%E5%8F%B6%E5%8F%98%E6%8D%A2 | 傅里叶变换 - 维基百科，自由的百科全书
+https://www.google.com/search?newwindow=1&safe=strict&q=%E5%82%85%E9%87%8C%E5%8F%B6%E5%8F%98%E6%8D%A2+%E8%AF%81%E6%98%8E&oq=%E5%82%85%E9%87%8C%E5%8F%B6%E5%8F%98%E6%8D%A2+%E8%AF%81%E6%98%8E&gs_l=serp.3..30i10k1.616210.622627.0.622826.11.11.0.0.0.0.256.977.2j4j1.7.0....0...1c.1j4.64.serp..5.6.807...0j0i12k1j0i4i30k1j0i30k1j0i10i30k1.CO_fG6rI-7M | 傅里叶变换 证明 - Google Search
+https://zh.wikipedia.org/wiki/%E5%82%85%E7%AB%8B%E5%8F%B6%E5%8F%98%E6%8D%A2%E5%AE%B6%E6%97%8F%E4%B8%AD%E7%9A%84%E5%85%B3%E7%B3%BB | 傅立叶变换家族中的关系 - 维基百科，自由的百科全书
+http://wenku.baidu.com/view/52e1d775f46527d3240ce00b.html | 傅立叶变换的推导_百度文库
+https://www.google.com/search?newwindow=1&safe=strict&q=%E4%B8%89%E8%A7%92%E5%87%BD%E6%95%B0%E6%AD%A3%E4%BA%A4%E6%80%A7 | 三角函数正交性 - Google Search
+http://wenku.baidu.com/view/67a0cccdda38376baf1faec4.html | 三角函数之正交性_图文_百度文库
+http://wenku.baidu.com/view/e85b837c1711cc7931b71657.html | 三角函数之正交性 证明_百度文库
+https://zh.wikipedia.org/wiki/%E4%B8%89%E8%A7%92%E6%81%92%E7%AD%89%E5%BC%8F#.E4.B8.89.E8.A7.92.E5.87.BD.E6.95.B8.E8.88.87.E9.9B.99.E6.9B.B2.E5.87.BD.E6.95.B8.E7.9A.84.E6.81.86.E7.AD.89.E5.BC.8F | 三角恒等式 - 维基百科，自由的百科全书
+http://smo.nu/how-to-have-healthy-relationships-as-a-developer/?utm_source=wanqu.co&utm_campaign=Wanqu+Daily&utm_medium=social | How to Have Healthy Relationships as a Developer
+https://dc.aliyun.com/tcparse/dns.htm?init=false&dtoken=VZII17IIscM51HK | 域名控制台-解析设置
+http://www.gielie.com/
+https://mp.weixin.qq.com/s?__biz=MjM5MDE0Mjc4MA==&mid=2650993723&idx=1&sn=8f264c36c6897e70993e9d0710603dad&scene=1&srcid=0812GaCYMdmxquPDFZFlnjC3&key=305bc10ec50ec19b9f9153c7c286dfd4cf163d7b52e7ef8c3f23bb53dff29a4c137892ea58e65b6b58437b02b8bc244e&ascene=0&uin=Nzc0MDI2NzAw&devicetype=iMac+MacBookPro11%2C5+OSX+OSX+10.11.5+build(15F34)&version=11020201&pass_ticket=0k6%2BGFo%2Bnv6OKrH7rw1JvV9y9LMbkjmP9bjVeojbsKNH3ca4VLnvmxxCTQn3NWGC | 阿里CTO行癫西雅图首次披露阿里技术布局！
+
+https://www.google.com/search?newwindow=1&safe=strict&q=presto | presto - Google Search
+https://prestodb.io/ | Presto | Distributed SQL Query Engine for Big Data
+https://www.google.com/search?newwindow=1&safe=strict&q=apache+drill&oq=apache+drill&gs_l=serp.3..0i20j0i67l3j0j0i67l2j0j0i67j0.4113.6964.0.7396.13.11.0.1.1.0.291.1349.2j3j3.8.0....0...1c.1j4.64.serp..5.7.1096.0.gUbvbGKOmIo | apache drill - Google Search
+https://www.quora.com/How-does-Apache-Drill-compare-to-Facebooks-Presto | How does Apache Drill compare to Facebook's Presto? - Quora
+https://drill.apache.org/ | Apache Drill - Schema-free SQL for Hadoop, NoSQL and Cloud Storage
+https://www.zhihu.com/ | 首页 - 知乎
+https://www.zhihu.com/question/46518324 | 设A,B为n阶方阵,且AB-BA=A,证明|A|=0 ？ - 知乎
+https://www.zhihu.com/question/21874816 | 如何理解矩阵特征值？ - 知乎
+https://www.zhihu.com/question/39142368/answer/80007662?group_id=745611156349018112#comment-156723372 | 事务性(Transactional)存储需要硬件参与吗？ - drdr xp 的回答 - 知乎
+https://www.google.com/search?newwindow=1&safe=strict&q=clickhouse | clickhouse - Google Search
+https://clickhouse.yandex/reference_en.html#Distinctive features of ClickHouse | ClickHouse Guide
+https://clickhouse.yandex/benchmark.html#["100000000",["ClickHouse","Hive","MySQL"],["0","1"]] | Performance comparison of analytical DBMS
+https://github.com/yandex/ClickHouse | yandex/ClickHouse: ClickHouse is a free analytic DBMS for big data.
+https://clickhouse.yandex/reference_en.html#Distributed | ClickHouse Guide
+https://www.quora.com/What-lessons-can-Silicon-Valley-tech-executives-learn-from-what-went-wrong-at-Yahoo/answer/Xavier-Amatriain?utm_source=wanqu.co&utm_campaign=Wanqu+Daily&utm_medium=social | Xavier Amatriain's answer to What lessons can Silicon Valley tech executives learn from what went wrong at Yahoo? - Quora
+https://www.quora.com/answer?__filter__&__nsrc__=2&__snid3__=283165952 | Write Answers - Quora
+https://github.com/acdlite/react-fiber-architecture/blob/master/README.md | react-fiber-architecture/README.md at master · acdlite/react-fiber-architecture
+http://www.ibiu.com.cn/user/index | 爱布网-个人中心
+http://www.ibiu.com.cn/index.php/?controller=work&action=site_edit&site_id=357#page_id=2883 | 编辑页面【home】
+http://www.ibiu.com.cn/site/login_user_center#cart | Myee的个人中心
