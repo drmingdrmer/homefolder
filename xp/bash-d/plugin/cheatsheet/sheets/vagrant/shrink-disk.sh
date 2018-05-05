@@ -16,3 +16,6 @@ VboxManage clonehd old.vdi new.vdi
 # vmware:
 vmware-vdiskmanager -d /path/to/main.vmdk
 vmware-vdiskmanager -k /path/to/main.vmdk
+
+
+# http://andrewdeponte.com/2013/10/29/shrinking-vagrant-linux-boxes.html
