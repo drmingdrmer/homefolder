@@ -94,7 +94,7 @@ _sleep()
 
 sync_once()
 {
-    local conffn="${GITBOX_CONF_FN-$HOME/.gitbox.conf}"
+    local conffn="$1"
 
     if [ ! -f $conffn ]
     then
@@ -189,6 +189,9 @@ sync_once()
 
 main() {
 
+    local conffn="${1:-$GITBOX_CONF_FN}"
+    conffn="${conffn:-$HOME/.gitbox.conf}"
+
     running=1
 
     trap 'running=0; echo killing mypid: $$, subprocess: $sync_pid, $kill_pid; kill $sync_pid $kill_pid' SIGINT SIGTERM EXIT
@@ -197,7 +200,7 @@ main() {
 
         {
             info box-sync-start...
-            sync_once
+            sync_once "$conffn"
             info sync-done
         } &
         sync_pid="$!"
@@ -220,4 +223,4 @@ main() {
     done
 }
 
-main
+main "$@"
