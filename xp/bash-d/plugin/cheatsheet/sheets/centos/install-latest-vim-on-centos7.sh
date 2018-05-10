@@ -1,0 +1,1 @@
+../vim/install-latest-vim-on-centos7.sh
