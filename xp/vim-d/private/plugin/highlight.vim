@@ -217,12 +217,11 @@ fun! s:ToggleHighlight() "{{{
 endfunction "}}}
 
 
-nnoremap <Plug>view:highlight_current_word :call <SID>ToggleHighlight()<cr>
-nmap <Leader><Leader>th <Plug>view:highlight_current_word
+nnoremap <Plug>view:highlight_focus_toggle :call <SID>ToggleHighlight()<CR>
+nnoremap <Plug>view:highlight_focus_prev :call <SID>SearchIntimeMark('b')<CR>
+nnoremap <Plug>view:highlight_focus_next :call <SID>SearchIntimeMark('')<CR>
 
-
-nnoremap <M-H> :call <SID>SearchIntimeMark('b')<cr>
-nnoremap <M-L> :call <SID>SearchIntimeMark('')<cr>
+hi def link XPhighLightedItem VisualNOS
 
 
 " high light word in WORD

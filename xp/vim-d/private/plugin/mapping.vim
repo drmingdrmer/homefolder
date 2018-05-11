@@ -111,6 +111,10 @@ fun! s:DoMap() "{{{
           \ [ 'xmap', "<M-c>",                "<Plug>edit:copy_to_tmp" ],
           \ [ 'xmap', "c",                    "<Plug>edit:x_copy" ],
           \ [ 'xmap', "DW",                   ":call edit#align#VerticalDeleteToWordStart()<CR>" ],
+          \
+          \ [ 'nmap', "<Leader><Leader>th",   "<Plug>view:highlight_focus_toggle" ],
+          \ [ 'nmap', "<M-K>",                "<Plug>view:highlight_focus_prev" ],
+          \ [ 'nmap', "<M-J>",                "<Plug>view:highlight_focus_next" ],
           \ ]
     for [ cmd, key, cont ] in mapping
         exe cmd "<unique>" key cont
