@@ -73,5 +73,5 @@ fun! s:MoveFunc( direction )
 endfunction
 
 
-nnoremap <buffer> <M-J> :call <SID>MoveFunc( 'down' )<CR>
-nnoremap <buffer> <M-K> :call <SID>MoveFunc( 'up' )<CR>
+" nnoremap <buffer> <M-J> :call <SID>MoveFunc( 'down' )<CR>
+" nnoremap <buffer> <M-K> :call <SID>MoveFunc( 'up' )<CR>
