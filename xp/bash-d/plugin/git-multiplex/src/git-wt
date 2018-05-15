@@ -29,14 +29,17 @@ main()
 
     cd "$root";
 
-    if [ "$rbranch" = "-d" ]; then
+    if [ "$rbranch" = "-d" ] || [ "$rbranch" = "-D" ]; then
+
+        local flg="$rbranch"
+
         # delete
         branch="$2"
         cd .wt
         rm -rf "$branch"
         cd "$root"
         git worktree prune
-        git branch -d "$branch"
+        git branch $flg "$branch"
         return
     fi
 
