@@ -173,3 +173,8 @@ zk
 dict
 acl
 CAS
+tx
+zktx
+txid
+ZKTransaction
+TXError
