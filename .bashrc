@@ -36,7 +36,7 @@ init_prompt()
     d end color
 
     # PROMPT_COMMAND='echo -ne "\033]0;${mainip}\007"'
-    export PROMPT_COMMAND='screen -X title "$(basename "$(git rev-parse --show-toplevel >/dev/null 2>/dev/null)"):$(git symbolic-ref --short HEAD 2>/dev/null)" >/dev/null'
+    export PROMPT_COMMAND='screen -X title "$(basename "$(git rev-parse --show-toplevel 2>/dev/null)"):$(git symbolic-ref --short HEAD 2>/dev/null)" >/dev/null'
 
     local ps="$Green\u \h$NC"
     ps=$ps"$Yellow${eth0_ip}$NC"
