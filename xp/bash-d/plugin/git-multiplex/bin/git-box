@@ -709,9 +709,12 @@ sync_once()
                     arg=" --prune "
                 fi
 
-                git fetch --all --quiet $arg \
-                    && ok  "fetch" \
-                    || err "fetch"
+                while read remote; do
+                    git fetch $remote --quiet $arg \
+                        && ok  "fetch" "$remote" \
+                        || err "fetch" "$remote"
+                done<<<"$(git remote)"
+
             fi
 
             if _has_act $actions rebase; then
