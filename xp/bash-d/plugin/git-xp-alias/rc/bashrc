@@ -14,6 +14,7 @@ ld  format=diff
 lf  format=fuller
 lm  format=medium
 lo  format=oneline
+lr  format=pullrequest
 n   name-only
 p   patch
 r   relative

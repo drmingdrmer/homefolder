@@ -213,8 +213,15 @@ if [ -n "$opt_patch" ]; then
     fi
 fi
 
+# user defined format
+
 if [ "$opt_format" = " --format=diff " ]; then
     opt_format=" --format=$git_comma_format_for_diff "
+fi
+
+if [ "$opt_format" = " --format=pullrequest " ]; then
+    opt_format=" --format='### %s%+b%n' "
+    opt_graph=""
 fi
 
 if [ "$cmd" = "conf" ]; then
