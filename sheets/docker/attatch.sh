@@ -1,1 +1,1 @@
-docker exec -i bb2 /bin/sh
+docker exec -it bb2 /bin/bash
