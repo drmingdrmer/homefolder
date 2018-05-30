@@ -37,6 +37,7 @@ init_prompt()
 
     # PROMPT_COMMAND='echo -ne "\033]0;${mainip}\007"'
     export PROMPT_COMMAND='screen -X title "$(basename "$(git rev-parse --show-toplevel 2>/dev/null)"):$(git symbolic-ref --short HEAD 2>/dev/null)" >/dev/null'
+    # export PROMPT_COMMAND=''
 
     local ps="$Green\u \h$NC"
     ps=$ps"$Yellow${eth0_ip}$NC"
@@ -117,6 +118,7 @@ export HISTSIZE=50000
 export HISTCONTROL=ignoreboth
 export HISTTIMEFORMAT="%Y/%m/%d %H:%M:%S "
 [ -d /usr/local/go/bin ] && { export PATH=$PATH:/usr/local/go/bin; export GOROOT=/usr/local/go; }
+[ -d $HOME/go/bin ] && { export PATH=$PATH:$HOME/go/bin; export GOROOT=$HOME/go; }
 [ -d $HOME/xp/gopath ] && { export GOPATH=$HOME/xp/gopath; export PATH=$PATH:$GOPATH/bin; }
 [ -d '/usr/local/opt/opencv3/bin' ] && export PATH="/usr/local/opt/opencv3/bin:$PATH"
 
