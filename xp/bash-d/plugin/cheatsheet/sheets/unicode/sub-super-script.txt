@@ -1,0 +1,108 @@
+
+Display                         Characters                             Font
+½       U+00BD ½ VULGAR FRACTION ONE HALF
+¹/₂     U+00B9 ¹ Superscript one, U+002F / Solidus, U+2082 ₂
+        Subscript two                                              Default
+¹⁄₂     U+00B9 ¹ Superscript one, U+2044 ⁄ Fraction slash, U+2082
+        ₂ Subscript two
+1⁄2
+1⁄2                                                                Arial
+1⁄2     U+0031 1 Digit one, U+2044 ⁄ Fraction slash, U+0032 2      Cambria
+1⁄2     Digit two                                                  Consolas
+1⁄2                                                                Times New
+                                                                   Roman
+
+
+
+
+
+                  Unicode characters
+       0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
+U+00Bx       x² x³                x¹
+U+207x x⁰ xⁱ       x⁴ x⁵ x⁶ x⁷ x⁸ x⁹ x⁺ x⁻ x⁼ x⁽ x⁾ xⁿ
+U+208x x₀ x₁ x₂ x₃ x₄ x₅ x₆ x₇ x₈ x₉ x₊ x₋ x₌ x₍ x₎
+U+209x xₐ xₑ xₒ xₓ xₔ xₕ xₖ xₗ xₘ xₙ xₚ xₛ xₜ
+
+
+
+
+  Reserved for future use.
+  Other characters from Latin-1 not related to super- or sub-scripts.
+
+Other superscript and subscript characters[edit]
+
+Unicode version 11.0 also includes subscript and superscript characters that
+are intended for semantic usage, in the following blocks:^[1]^[6]
+
+  • The Latin-1 Supplement block contains the feminine and masculine ordinal
+    indicators ª and º.
+  • The Latin Extended-C block contains one additional superscript, ⱽ, and one
+    additional subscript ⱼ.
+  • The Latin Extended-D block contains three superscripts: ꝰ ꟸ ꟹ.
+  • The Latin Extended-E block contains four superscripts: ꭜ ꭝ ꭞ ꭟ.
+  • The Combining Diacritical Marks block contains medieval superscript letter
+    diacritics. These letters are written directly above other letters
+    appearing in medieval Germanic manuscripts, and so these glyphs do not
+    include spacing, for example uͤ. They are shown here over the dotted circle
+    placeholder ◌: ◌ͣ ◌ͤ ◌ͥ ◌ͦ ◌ͧ ◌ͨ ◌ͩ ◌ͪ ◌ͫ ◌ͬ ◌ͭ ◌ͮ ◌ͯ.
+  • The Combining Diacritical Marks Supplement block contains additional
+    medieval superscript letter diacritics, enough to complete the basic
+    lowercase Latin alphabet except for j, q and y, a few small capitals and
+    ligatures (ae, ao, av), and additional letters: ◌ᷓ ◌ᷔ ◌ᷕ ◌ᷖ ◌ᷗ ◌ᷘ ◌ᷙ ◌ᷚ ◌ᷛ
+    ◌ᷜ ◌ᷝ ◌ᷞ ◌ᷟ ◌ᷠ ◌ᷡ ◌ᷢ ◌ᷣ ◌ᷤ ◌ᷥ ◌ᷦ ◌ᷧ ◌ᷨ ◌ᷩ ◌ᷪ ◌ᷫ ◌ᷬ ◌ᷭ ◌ᷮ ◌ᷯ ◌ᷰ ◌ᷱ ◌ᷲ ◌ᷳ ◌ᷴ.
+    There is also a combining subscript: ◌᷊.
+  • The Spacing Modifier Letters block has superscripted letters and symbols
+    used for phonetic transcription: ʰ ʱ ʲ ʳ ʴ ʵ ʶ ʷ ʸ ˀ ˁ ˠ ˡ ˢ ˣ ˤ.
+  • The Phonetic Extensions block has several sub- and super-scripted letters
+    and symbols: Latin/IPA ᴬ ᴭ ᴮ ᴯ ᴰ ᴱ ᴲ ᴳ ᴴ ᴵ ᴶ ᴷ ᴸ ᴹ ᴺ ᴻ ᴼ ᴽ ᴾ ᴿ ᵀ ᵁ ᵂ ᵃ ᵄ ᵅ
+    ᵆ ᵇ ᵈ ᵉ ᵊ ᵋ ᵌ ᵍ ᵏ ᵐ ᵑ ᵒ ᵓ ᵖ ᵗ ᵘ ᵚ ᵛ ᵢ ᵣ ᵤ ᵥ, Greek ᵝ ᵞ ᵟ ᵠ ᵡ ᵦ ᵧ ᵨ ᵩ ᵪ,
+    Cyrillic ᵸ, other ᵎ ᵔ ᵕ ᵙ ᵜ. These are intended to indicate secondary
+    articulation.
+  • The Phonetic Extensions Supplement block has several more: Latin/IPA ᶛ ᶜ ᶝ
+    ᶞ ᶟ ᶠ ᶡ ᶢ ᶣ ᶤ ᶥ ᶦ ᶧ ᶨ ᶩ ᶪ ᶫ ᶬ ᶭ ᶮ ᶯ ᶰ ᶱ ᶲ ᶳ ᶴ ᶵ ᶶ ᶷ ᶸ ᶹ ᶺ ᶻ ᶼ ᶽ ᶾ, Greek ᶿ.
+  • The Cyrillic Extended-B block contains two Cyrillic superscripts: ꚜ ꚝ.
+  • The Cyrillic Extended-A and -B blocks contains multiple medieval
+    superscript letter diacritics, enough to complete the basic lowercase
+    Cyrillic alphabet used in Church Slavonic texts, also includes an
+    additional ligature (ст): ◌ⷠ ◌ⷡ ◌ⷢ ◌ⷣ ◌ⷤ ◌ⷥ ◌ⷦ ◌ⷧ ◌ⷨ ◌ⷩ ◌ⷪ ◌ⷫ ◌ⷬ ◌ⷭ ◌ⷮ ◌ⷯ
+    ◌ⷰ ◌ⷱ ◌ⷲ ◌ⷳ ◌ⷴ ◌ⷵ ◌ⷶ ◌ⷷ ◌ⷸ ◌ⷹ ◌ⷺ ◌ⷻ ◌ⷼ ◌ⷽ ◌ⷾ ◌ⷿ ◌ꙴ ◌ꙵ ◌ꙶ ◌ꙷ ◌ꙸ ◌ꙹ ◌ꙺ ◌ꙻ ◌ꚞ
+    ◌ꚟ.
+  • The Georgian block contains one superscripted Mkhedruli letter: ჼ.
+  • The Kanbun block has superscripted annotation characters used in Japanese
+    copies of Classical Chinese texts: ㆒㆓㆔㆕㆖㆗㆘㆙㆚㆛㆜㆝㆞㆟.
+  • The Tifinagh block has one superscript letter : ⵯ.
+
+
+                  Latin superscript and subscript letters
+                      A B C D E F G H  I  J K L M N O P Q R S T U V W X Y Z
+Superscript capital   ᴬ ᴮ   ᴰ ᴱ   ᴳ ᴴ ᴵ   ᴶ ᴷ ᴸ ᴹ ᴺ ᴼ ᴾ   ᴿ   ᵀ ᵁ ⱽ ᵂ
+Superscript small cap                 ᶦ       ᶫ   ᶰ             ᶸ
+Superscript minuscule ᵃ ᵇ ᶜ ᵈ ᵉ ᶠ ᵍ ʰ ⁱ   ʲ ᵏ ˡ ᵐ ⁿ ᵒ ᵖ   ʳ ˢ ᵗ ᵘ ᵛ ʷ ˣ ʸ ᶻ
+Subscript minuscule   ₐ       ₑ     ₕ ᵢ   ⱼ ₖ ₗ ₘ ₙ ₒ ₚ   ᵣ ₛ ₜ ᵤ ᵥ   ₓ
+
+                Greek superscript and subscript letters
+                      Α Β Γ Δ Ε Ζ Η Θ  Ι  Κ Λ Μ Ν Ξ Ο Π Ρ Σ Τ Υ Φ Χ Ψ Ω
+Superscript minuscule ᵅ ᵝ ᵞ ᵟ       ᶿ ᶥ                         ᵠ ᵡ
+Subscript minuscule     ᵦ ᵧ                             ᵨ       ᵩ ᵪ
+
+Composite characters[edit]
+
+Primarily for compatibility with earlier character sets, Unicode contains a
+number of characters that compose super- and subscripts with other symbols.^[1]
+In most fonts these render much better than attempts to construct these symbols
+from the above characters or by using markup.
+
+  • The Latin-1 Supplement block contains the precomposed fractions ½, ¼, and
+    ¾. The copyright © and registered trademark signs ® are also in this block.
+  • The General Punctuation block contains the permille sign ‰ and the
+    per-ten-thousand sign ‱.
+  • The Number Forms block contains several precomposed fractions: ⅐ ⅑ ⅒ ⅓ ⅔ ⅕
+    ⅖ ⅗ ⅘ ⅙ ⅚ ⅛ ⅜ ⅝ ⅞ ⅟ ↉.
+  • The Letterlike Symbols block contains a few symbols composed of subscript
+    and superscript characters: ℀ ℁ ℅ ℆ № ℠ ™ ⅍.
+  • The Enclosed Alphanumeric Supplement block contains two superscript
+    abbreviations: 🅪 🅫 (MC for marque de commerce and MD for marque déposée,
+    both used in Canada)
+  • The Miscellaneous Technical block has one additional subscript, a subscript
+    10 (⏨), for the purpose of scientific notation.
+
