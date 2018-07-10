@@ -65,7 +65,7 @@ Then put cursor at `1` and type `,a|`, it becomes:
 -   `,a` with non-space char will align text and add a space before the
     user-typed char.
 
--   It align text with the same indent:
+-   It only aligns text with the same indent in normal mode:
 
     ```python
     def foo(a, b=2):
