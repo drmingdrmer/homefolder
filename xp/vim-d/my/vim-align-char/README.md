@@ -45,7 +45,22 @@ Then put cursor at `1` and type `,a|`, it becomes:
 
 -   `,a` then type any char to align.
 
--   `,a<space>` is dealt specially: it aligns the first non-space char.
+-   `,a<space>` is dealt specially: it aligns the first non-space char after a
+    space(the first found `\s\S`).
+
+    With:
+
+    ```
+    x = 3
+    yz = 4
+    ```
+
+    Type `,a<space>` at `y` it becomes:
+
+    ```
+    x  = 3
+    yz = 4
+    ```
 
 -   `,a` with non-space char will align text and add a space before the
     user-typed char.
