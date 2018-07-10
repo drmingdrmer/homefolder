@@ -2,6 +2,12 @@
 
 cd $(git rev-parse --show-toplevel)
 
-git subtree split -P xp/bash-d/plugin/cheatsheet --branch cheatsheet --rejoin
+while read path branch remote; do
 
-git push git@github.com:drmingdrmer/cheatsheet.git cheatsheet:master
+    git subtree split -P "$path" --branch "$branch" --rejoin
+    git push "$remote" git@github.com:drmingdrmer/cheatsheet.git $branch:master
+
+done <<-END
+xp/bash-d/plugin/cheatsheet         cheatsheet         git@github.com:drmingdrmer/cheatsheet.git
+xp/vim-d/my/vim-align-char          vim-align-char     git@github.com:drmingdrmer/vim-align-char.git
+END
