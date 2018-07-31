@@ -1,2 +1,2 @@
 #!/bin/sh
-_tunnel $1 ln-jp-2.veryweb.me
+_tunnel $1 root@172.105.224.60
