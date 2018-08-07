@@ -1,7 +1,16 @@
 #!/bin/sh
 
+# one line start interactive shell
+docker run \
+    -v /root/.ssh:$HOME/.ssh \
+    -v /root/pykit:/root/pykit \
+    --name tt \
+    -ti \
+    python:2.7.15 \
+    /bin/bash
+
 # run it
-docker run -tid python:2.7.15 -name tt
+docker run -name tt -tid python:2.7.15
 
 # attach
 docker exec -ti 2f734eaa4662 /bin/bash

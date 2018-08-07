@@ -5,7 +5,7 @@
 # http://pypi.sdutlinux.org/  山东理工大学
 # http://pypi.mirrors.ustc.edu.cn/  中国科学技术大学
 
-pip install web.py -i http://pypi.douban.com/simple
+pip install web.py -i http://pypi.douban.com/simple --trusted-host=pypi.douban.com
 
 
 # ~/.pip/pip.conf
