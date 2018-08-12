@@ -18,6 +18,10 @@ done
 
 ) || exit 1
 
+if [ "$1" == "build" ]; then
+    exit 0
+fi
+
 (
 cd repo \
     && ./ctl commit \
