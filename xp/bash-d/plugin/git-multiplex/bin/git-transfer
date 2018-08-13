@@ -147,7 +147,7 @@ log()
         title="${color}${title}${NC}"
         level="${color}${level}${NC}"
     fi
-    eval "echo \"$SHLIB_LOG_FORMAT\""
+    eval "echo \"$SHLIB_LOG_FORMAT\"" >&2
 }
 dd()
 {
