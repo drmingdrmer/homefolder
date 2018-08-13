@@ -61,6 +61,8 @@ convert tmp.gif \
     -draw "gravity north fill $color text 0,$text_top '$text'" \
     "${output_path}"
 
+rm tmp.gif
+
 # with background
 # convert tmp.gif \
 #     -weight 700 \
