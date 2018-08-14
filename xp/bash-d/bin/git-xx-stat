@@ -1,0 +1,48 @@
+#!/bin/sh
+
+sta()
+{
+    local tm1="$1"
+    local tm2="$2"
+    shift
+    shift
+    # local ptn="$@"
+
+    commit_1=$(git log -n1 --format="%H" --before="$tm1")
+    commit_2=$(git log -n1 --format="%H" --before="$tm2")
+
+    echo time 1: $tm1 >&2
+    echo time 2: $tm2 >&2
+    echo commit 1: $commit_1 >&2
+    echo commit 2: $commit_2 >&2
+
+    {
+
+    git checkout --quiet $commit_2
+    git ls-files --full-name "$@" | while read fn; do
+    git show "$commit_2:$fn"
+done \
+    | wc -l
+
+    git diff $commit_1 $commit_2 --stat -- "$@" | tail -n1 \
+        | awk '{ad=$4-$6; chg= $6; print ad " " chg}'
+
+    } | {
+    read total
+    read added changed
+    let total_1=total-added
+    let non_changed=total_1-changed
+    let perc=changed*100/total_1
+
+    echo "$tm1 ago" "$tm2 ago" $total_1 $total $added $changed $non_changed "$perc%"
+    }
+}
+
+echo "from to total_1 total_2 added changed non_changed changed%"
+
+# sta "1 year" "0 year" 'src/*.py'
+# sta "2 year" "1 year" 'src/*.py'
+# sta "3 year" "2 year" 'src/*.py'
+# sta "4 year" "3 year" 'src/*.py'
+# sta "5 year" "4 year" 'src/*.py'
+sta "1 year" "0 year"
