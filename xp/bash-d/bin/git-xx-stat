@@ -33,16 +33,25 @@ done \
     let total_1=total-added
     let non_changed=total_1-changed
     let perc=changed*100/total_1
+    let inc_perc=added*100/total_1
 
-    echo "$tm1 ago" "$tm2 ago" $total_1 $total $added $changed $non_changed "$perc%"
+    echo "$tm1 ago" "$tm2 ago" $total_1 $total $added "$inc_perc%" $changed $non_changed "$perc%"
     }
 }
 
-echo "from to total_1 total_2 added changed non_changed changed%"
+echo "from to total_1 total_2 added inc% changed non_changed changed%"
 
+sta "1 year" "0 year" 'src/*.py'
+sta "2 year" "1 year" 'src/*.py'
+sta "3 year" "2 year" 'src/*.py'
+sta "4 year" "3 year" 'src/*.py'
+sta "5 year" "4 year" 'src/*.py'
+sta "6 year" "5 year" 'src/*.py'
+sta "7 year" "6 year" 'src/*.py'
+sta "8 year" "7 year" 'src/*.py'
+#
+# sta "1 year" "0 year" 'src/ngx.conf/lua/*.lua'
 # sta "1 year" "0 year" 'src/*.py'
-# sta "2 year" "1 year" 'src/*.py'
-# sta "3 year" "2 year" 'src/*.py'
-# sta "4 year" "3 year" 'src/*.py'
-# sta "5 year" "4 year" 'src/*.py'
-sta "1 year" "0 year"
+# sta "8 year" "7 year" 'src'
+# sta "8 year" "0 year" 'src'
+# sta "1 year" "0 year"
