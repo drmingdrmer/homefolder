@@ -11,6 +11,8 @@ parse_git_branch()
 }
 ps_pwd()
 {
+    [ -t 1 ] || return 0
+
     local LightBlue="$(tput bold ; tput setaf 4)"
     local NC="$(tput sgr0)" # No Color
     local height=$(tput lines)
@@ -26,6 +28,8 @@ $LightBlue$cwd$NC" \
 }
 init_prompt()
 {
+    [ -t 1 ] || return 0
+
     Red="$(tput setaf 1)"
     Green="$(tput setaf 2)"
     LightGreen="$(tput bold ; tput setaf 2)"
