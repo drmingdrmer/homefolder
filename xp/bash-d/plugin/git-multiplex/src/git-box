@@ -155,9 +155,12 @@ sync_once()
             fi
 
             if _has_act $actions rebase; then
-                git rebase origin/$upstream --quiet \
-                    && ok  "rebase onto origin/$upstream" \
-                    || err "rebase onto origin/$upstream"
+
+                local _remote=$(git_branch_default_remote $branch)
+
+                git rebase $_remote/$upstream --quiet \
+                    && ok  "rebase onto $_remote/$upstream" \
+                    || err "rebase onto $_remote/$upstream"
             fi
 
             if _has_act $actions merge-ff; then
