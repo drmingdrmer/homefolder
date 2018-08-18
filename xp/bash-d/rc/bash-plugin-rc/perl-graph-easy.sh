@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if which -s greadlink; thne
+if which -s greadlink; then
     _readlink=greadlink
 else
     _readlink=readlink
