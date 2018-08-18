@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# do not init if it is not a ternimal
+[ -t 1 ] || return 0
+
 # make "," a ", "
 bind '",":", "'
 
