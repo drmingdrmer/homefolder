@@ -1,0 +1,2 @@
+#!/bin/sh
+_tunnel $1 ali-hk-test.veryweb.me
