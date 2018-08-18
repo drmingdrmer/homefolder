@@ -19,7 +19,7 @@ if [ "$BASH" ]; then
 fi
 
 
-mesg y
+[ -t 1 ] && mesg y
 
 # vim: ft=sh
 
