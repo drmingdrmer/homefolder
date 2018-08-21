@@ -73,7 +73,7 @@ fun! s:try_map_clipboard() "{{{
         if @+ == text
 
             xnoremap <Plug>edit:x_copy            ygv"+y
-            inoremap <Plug>edit:x_paste           <C-r>+
+            inoremap <Plug>edit:x_paste           <C-o>:let @"=@+<CR><C-o>p
             let @+ = saved
 
             return
