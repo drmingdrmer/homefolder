@@ -41,12 +41,13 @@ done \
 
 echo "from to total_1 total_2 added inc% changed non_changed changed%"
 
-sta "1 year" "0 year" 'src/*.py'
-sta "2 year" "1 year" 'src/*.py'
-sta "3 year" "2 year" 'src/*.py'
-sta "4 year" "3 year" 'src/*.py'
-sta "5 year" "4 year" 'src/*.py'
-sta "6 year" "5 year" 'src/*.py'
+# sta "1 year" "0 year"
+# sta "1 year" "0 year" 'src/*.py'
+# sta "2 year" "1 year" 'src/*.py'
+# sta "3 year" "2 year" 'src/*.py'
+# sta "4 year" "3 year" 'src/*.py'
+# sta "5 year" "4 year" 'src/*.py'
+# sta "6 year" "5 year" 'src/*.py'
 sta "7 year" "6 year" 'src/*.py'
 sta "8 year" "7 year" 'src/*.py'
 #
