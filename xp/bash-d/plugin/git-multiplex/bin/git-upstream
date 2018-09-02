@@ -586,6 +586,11 @@ main()
             ;;
     esac
 
+    if git_branch_exist git-upstream-config-branch; then
+        :
+    else
+        die no branch git-upstream-config-branch
+    fi
 
     git show git-upstream-config-branch:.gitupstream \
     | while read name url; do
