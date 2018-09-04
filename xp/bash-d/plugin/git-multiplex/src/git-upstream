@@ -57,12 +57,9 @@ init()
     fi
 
     git checkout $br || die checkout $br
-    local saved="$(git_workdir_save)"
 
     vim "$conf_fn"
     git commit $conf_fn -m 'update git-upstream-config-branch'
-
-    git_workdir_load $saved
 }
 
 usage()
