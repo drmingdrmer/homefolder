@@ -34,6 +34,16 @@ bindkey -t "\033L" exec sh -c 'screen -X msgwait 0; n=$(screen -Q number | grep 
 # bind uses c-a, bindkey does not
 bind "^r" source ~/.screenrc
 
+bind "^_" split
+bind "^\" split -v
+
+# disable annoying lockscreen
+bind "x"  echo locking is disabled
+bind "^x" echo locking is disabled
+
+# # TODO remap to close split
+# bind "x"  echo locking is disabled
+
 # bindkey -t "\033L" exec screen -X number 10
 # bindkey -t "^a" next
 # bindkey -t "^b" prev
