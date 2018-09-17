@@ -19,12 +19,14 @@ esac
 
 
 case $server in
-    d|docker)  server=115.238.170.248 ;;
-    3|3copy)   server=115.238.170.166 ;;
-    2|2copy)   server=115.231.180.165 ;;
-    e|edge)    server=115.238.170.173 ;;
-    l|log)     server=115.238.170.172 ;;
-    s|seattle) server=63.237.232.165  ;;
+    d|docker)                 server=115.238.170.248 ;;
+    3|3copy)                  server=115.238.170.166 ;;
+    3s|3copy-shijiazhuang)    server=124.236.110.75  ;;
+    3s2|3copy-shijiazhuang-2) server=124.236.110.88  ;;
+    2|2copy)                  server=115.231.180.165 ;;
+    e|edge)                   server=115.238.170.173 ;;
+    l|log)                    server=115.238.170.172 ;;
+    s|seattle)                server=63.237.232.165  ;;
 esac
 
 echo "login location:  $location"
