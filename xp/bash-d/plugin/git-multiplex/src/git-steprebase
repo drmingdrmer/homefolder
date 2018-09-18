@@ -1,0 +1,40 @@
+#!/bin/sh
+
+main()
+{
+    local onto="${1}"
+    local base="$(git merge-base HEAD $onto)" || die "find merge-base"
+
+    for commit in $(git log --reverse $base..$onto --format="%H"); do
+        git rebase $commit || { git rebase --abort; die "failed to rebase onto $commit"; }
+        git                           \
+            --no-pager                \
+            log                       \
+            --color                   \
+            --decorate                \
+            --abbrev-commit           \
+            --find-renames            \
+            --graph                   \
+            --format=oneline          \
+            $commit^.. HEAD $onto
+    done
+
+}
+
+usage()
+{
+    cat <<-END
+${0##*/} <onto-commit>
+
+    Rebase onto <onto-commit> one by one.
+END
+}
+
+source shlib.sh
+
+if [ "${1}" = "-h" ] || [ "${1}" == "--help" ]; then
+    usage
+    exit 0
+fi
+
+main "$@"
