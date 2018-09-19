@@ -29,6 +29,7 @@ case $server in
     3s|3copy-shijiazhuang)    server=124.236.110.75  ;;
     3s2|3copy-shijiazhuang-2) server=124.236.110.88  ;;
     2|2copy)                  server=115.231.180.165 ;;
+    2s|2copy)                 server=124.236.110.74 ;;
     e|edge)                   server=115.238.170.173 ;;
     l|log)                    server=115.238.170.172 ;;
     s|seattle)                server=63.237.232.165  ;;
