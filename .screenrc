@@ -37,9 +37,13 @@ bind "^r" source ~/.screenrc
 bind "^_" split
 bind "^\" split -v
 
+# resize split
+bind "^l" resize +5
+bind "^h" resize -5
+
 # disable annoying lockscreen
-bind "x"  echo locking is disabled
-bind "^x" echo locking is disabled
+bind "x"  echo "locking is disabled"
+bind "^x" echo "locking is disabled"
 
 # # TODO remap to close split
 # bind "x"  echo locking is disabled
