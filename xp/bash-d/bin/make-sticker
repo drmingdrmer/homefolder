@@ -29,7 +29,9 @@ else
     let fontsize=720/l
 fi
 
-convert -pointsize $fontsize -font $base/arukai.ttf \
+font=$base/SimHei.ttf
+
+convert -pointsize $fontsize -font "$font" \
     "label:$text"   tt.gif
 
 width=$(identify -ping -format '%w' tt.gif)
@@ -38,7 +40,7 @@ if [ "$width" -gt 380 ]; then
 fi
 let shadow_offset=fontsize/30
 
-rm tt.gif
+# rm tt.gif
 
 let text_top=400-box_height/2-fontsize/2
 let text_shadow_top=text_top+shadow_offset
@@ -53,7 +55,7 @@ fi
 
 convert tmp.gif \
     -weight 700 \
-    -font $base/arukai.ttf \
+    -font "$font" \
     -pointsize $fontsize  \
     -weight 1600 \
     -draw "gravity north fill black  text $shadow_offset,$(expr $text_top + $shadow_offset) '$text'" \
