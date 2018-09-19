@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # usage:
 # > make-coding-log.sh x.png title
@@ -38,9 +38,9 @@ width=$(identify -ping -format '%w' tt.gif)
 if [ "$width" -gt 380 ]; then
     let fontsize=fontsize*380/width
 fi
-let shadow_offset=fontsize/30
+let shadow_offset=3
 
-# rm tt.gif
+rm tt.gif
 
 let text_top=400-box_height/2-fontsize/2
 let text_shadow_top=text_top+shadow_offset
@@ -53,14 +53,24 @@ if [ -L "./make-sticker-output" ]; then
     output_path="./make-sticker-output/$output_path"
 fi
 
+so=$shadow_offset
+t=$text_top
+
 convert tmp.gif \
     -weight 700 \
     -font "$font" \
     -pointsize $fontsize  \
     -weight 1600 \
-    -draw "gravity north fill black  text $shadow_offset,$(expr $text_top + $shadow_offset) '$text'" \
-    -draw "gravity north fill black  text $(expr $shadow_offset + $shadow_offset),$(expr $text_top + $shadow_offset + $shadow_offset) '$text'" \
-    -draw "gravity north fill $color text 0,$text_top '$text'" \
+    -draw "gravity north fill black  text $((so*0)),$((t+so*0)) '$text'" \
+    -draw "gravity north fill black  text $((so*1)),$((t+so*0)) '$text'" \
+    -draw "gravity north fill black  text $((so*2)),$((t+so*0)) '$text'" \
+    -draw "gravity north fill black  text $((so*0)),$((t+so*1)) '$text'" \
+    -draw "gravity north fill black  text $((so*2)),$((t+so*1)) '$text'" \
+    -draw "gravity north fill black  text $((so*2)),$((t+so*2)) '$text'" \
+    -draw "gravity north fill black  text $((so*0)),$((t+so*2)) '$text'" \
+    -draw "gravity north fill black  text $((so*1)),$((t+so*2)) '$text'" \
+    -draw "gravity north fill black  text $((so*2)),$((t+so*2)) '$text'" \
+    -draw "gravity north fill $color text $((so*1)),$((t+so*1)) '$text'" \
     "${output_path}"
 
 rm tmp.gif
