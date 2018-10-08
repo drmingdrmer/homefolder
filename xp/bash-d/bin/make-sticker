@@ -6,20 +6,38 @@
 # dependency:
 # > brew install imagemagick
 
+fullheight=0
+
+if [ "$1" = '-h' ]; then
+    # keep full height
+    shift
+    fullheight=1
+fi
+
 path=$1
 text=$2
 color=${3-white}
 
 base=${0%/*}
 
-convert -define jpeg:size=200x200 "$path" \
-    -thumbnail 400x400^ \
-    -gravity center \
-    -extent 400x400 tmp.gif
+if [ "$fullheight" = '1' ]; then
+
+    convert -define jpeg:size=200 "$path" \
+        -thumbnail 400 \
+        -gravity center \
+        -extent 400 tmp.gif
+else
+    convert -define jpeg:size=200x200 "$path" \
+        -thumbnail 400x400^ \
+        -gravity center \
+        -extent 400x400 tmp.gif
+fi
+
+height=$(identify -ping -format '%h' tmp.gif)
 
 
 box_height=150
-let box_top=400-box_height
+let box_top=height-box_height
 max_width=720
 
 l=${#text}
@@ -42,7 +60,7 @@ let shadow_offset=3
 
 rm tt.gif
 
-let text_top=400-box_height/2-fontsize/2
+let text_top=height-box_height/2-fontsize/2
 let text_shadow_top=text_top+shadow_offset
 
 output_path="${path%.*}"
