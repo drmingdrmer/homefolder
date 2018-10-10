@@ -693,6 +693,7 @@ _sleep()
 sync_once()
 {
     local conffn="$1"
+    local _out
 
     if [ ! -f $conffn ]
     then
@@ -756,9 +757,9 @@ sync_once()
 
                 local _remote=$(git_branch_default_remote $branch)
 
-                git rebase $_remote/$upstream --quiet \
-                    && ok  "rebase onto $_remote/$upstream" \
-                    || err "rebase onto $_remote/$upstream"
+                _out="$(git rebase $upstream 2>&1)" \
+                    && ok  "rebase onto $upstream" \
+                    || err "rebase onto $upstream; output:$_out"
             fi
 
             if _has_act $actions merge-ff; then
