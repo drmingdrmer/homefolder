@@ -7,12 +7,32 @@
 # > brew install imagemagick
 
 fullheight=0
+# 0: top
+# 0.5: mid
+# 1: bottom
+text_pos=100
 
-if [ "$1" = '-h' ]; then
-    # keep full height
-    shift
-    fullheight=1
-fi
+while ``; do
+    case $1 in
+        -f)
+            shift
+            fullheight=1
+            ;;
+        -m)
+            shift
+            text_pos=50
+            ;;
+        -p)
+            shift
+            text_pos=$1
+            shift
+            ;;
+        *)
+            break
+            ;;
+    esac
+done
+
 
 path=$1
 text=$2
@@ -37,7 +57,6 @@ height=$(identify -ping -format '%h' tmp.gif)
 
 
 box_height=150
-let box_top=height-box_height
 max_width=720
 
 l=${#text}
@@ -61,6 +80,7 @@ let shadow_offset=3
 rm tt.gif
 
 let text_top=height-box_height/2-fontsize/2
+let text_top=text_top*text_pos/100
 let text_shadow_top=text_top+shadow_offset
 
 output_path="${path%.*}"
@@ -92,13 +112,3 @@ convert tmp.gif \
     "${output_path}"
 
 rm tmp.gif
-
-# with background
-# convert tmp.gif \
-#     -weight 700 \
-#     -pointsize $fontsize  \
-#     -fill black \
-#     -draw "rectangle 0,$box_top 400,400" \
-#     -draw "gravity north fill $color text 0,$text_top '$text'" \
-#     "$path.logo.gif"
-
