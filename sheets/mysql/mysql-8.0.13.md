@@ -20,3 +20,5 @@ removed:
 download rpm
 
 https://dev.mysql.com/downloads/repo/yum/
+
+yum install mysql-shell
