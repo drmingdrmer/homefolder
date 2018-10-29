@@ -3,7 +3,7 @@
 cmd=${1:-clone}
 
 while read name gist_id; do
-    echo === $name ===
+    echo === repo: $name cmd: $cmd ===
     if [ -d "$name" ]; then
         case $cmd in
             push)
