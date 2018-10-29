@@ -332,6 +332,10 @@ git_object_add_by_tree_name()
         treeish="$src_treeish"
     else
         treeish=$(git ls-tree "$src_treeish" "$src_name" | awk '{print $3}')
+
+        if [ -z "$treeish" ]; then
+            die "source treeish not found: in tree: ($src_treeish) name: ($src_name)"
+        fi
     fi
 
     dd "hash of object to add is: $treeish"
@@ -447,6 +451,11 @@ git_workdir_load()
     #
     # git-read-index to index and git-reset does not work because deleted file in
     # index does not apply to working tree.
+    #
+    # But there is an issue with this:
+    #   git checkout --orphan br
+    #   git_workdir_load
+    # would fails, because ORIG_HEAD is not a commit.
 
     local working_commit=$(echo "x" | git commit-tree $working_hash) || die get working commit
     git reset --hard $working_commit || die reset to tmp commit
