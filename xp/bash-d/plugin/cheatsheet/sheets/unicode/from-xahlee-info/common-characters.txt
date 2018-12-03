@@ -1,0 +1,199 @@
+Unicode
+[INS::INS]
+[INS::INS]
+
+Common Unicode Characters ✓ © § ❦
+
+By Xah Lee. Date: 2004-05-05. Last updated: 2017-07-09.
+
+Common Unicode characters.
+
+Currency Symbols, Printer's Symbols
+
+cent sign ¢, euro sign €, pound sign £, yen sign ¥, copyright sign ©,
+registered sign ®, trade mark sign ™
+
+section sign §, pilgrow sign ¶, dagger †, double dagger ‡, bullet •, triangular
+bullet ‣, horizontal ellipsis …, floral heart ❦, check mark ✓, black circle/
+square/diamond ● ■ ◆ feet, minutes ′, inches, seconds ″
+
+[see Unicode Punctuations † ¶ © ® ™ ☙]
+
+Arrows
+
+arrow ← → ↑ ↓ , left right arrow ↔ , double arrow ⇒ , black left/up/down/
+right-pointing triangle ◀ ▶ ▲ ▼ , white left/up/down/right-pointing triangle ◁
+▷ △ ▽ , arrow to bar ⇤ ⇥ , arrow with double stroke ⇞ ⇟ , anticlockwise/
+clockwise open circle arrow ↺ ↻ , anticlockwise/clockwise top semicircle arrow
+↶ ↷
+
+[see Unicode Arrows → ⇒ ⇄ ↻]
+
+Brackets, Quotation Marks
+
+single quotation mark ‘ ’, double quotation mark “ ”, single left/
+right-pointing angle quotation ‹ ›, left/right-pointing double angle quotation
+« », black lenticular bracket 【】, white lenticular bracket 〖〗, corner
+bracket 「」, white corner bracket 『』, angle bracket 〈〉, double angle
+bracket 《》,
+
+[see Unicode: Brackets, Quotes «»「」【】《》]
+
+Math
+
+empty set ∅, element of ∈, not an element of ∉, subset of ⊂, superset of ⊃,
+subset of or equal to ⊆, superset of or equal to ⊇, not a subset of ⊄, n-ary
+intersection ⋂, n-ary union ⋃ not equal to ≠, less-than or equal to ≤,
+greater-than or equal to ≥, almost equal to ≈, identical to ≡ double-struck
+capital n ℕ, double-struck capital z ℤ, double-struck capital c ℚ,
+double-struck capital r ℝ, double-struck capital c ℂ ceiling ⌈ ⌉, floor ⌊ ⌋,
+n-ary summation ∑, integral ∫, multiplication sign ×, circled times ⊗, circled
+plus ⊕, circled dot operator ⊙, multiplication sign ×, partial differential ∂,
+square root √, colon equals ≔, plus-minus sign ±, superscript two ², alef
+symbol ℵ, infinity ∞ end of proof ∎, prime ′, degree sign °, script small l ℓ,
+measured angle ∡, for all ∀, not sign ¬, logical and ∧, logical or ∨, there
+exists ∃, because ∵, therefore ∴,
+
+[see Unicode Math Symbols ∑ ∫ π² ∞]
+
+circled numbers ① ② ③ ④ ⑤ ⑥ ⑦ ⑧ ⑨ ⑩
+
+[see Unicode Circled Numbers ① ② ③]
+
+Dingbats
+
+black/white star ★ ☆, black spade/club/heart/diamond suite ♠ ♣ ♥ ♦,
+
+yin yang symbol ☯, swastica 卐, swastica 卍, latin cross ✝, heavy greek cross
+✚, star of david ✡, helm symbol ⎈, hammer and sickle ☭, star and crescent ☪
+
+female sign ♀, male sign ♂, peace symbol ☮, white smiling/frowning face ☺ ☹,
+
+skull and crossbones ☠, radioactive sign ☢, biohazard sign ☣, caduceus ☤,
+universal recycling symbol ♲,
+
+white sun with rays ☼, last quarter moon ☾,
+
+quarter/eighth note ♩ ♪, beamed eighth/sixteenth notes ♫ ♬,
+
+For more, see:
+
+  • Unicode Stars ★
+  • Unicode Cross ✚
+  • Unicode Dingbats ☭
+  • Unicode Box Lines ┌ Blocks ▓
+  • Unicode Geometric Shapes ■
+  • Music Symbols 🎶
+
+Computing
+
+command ⌘, option ⌥, delete ⌫ ⌦, eject ⏏, RETURN SYMBOL ⏎,
+
+[see Unicode Keyboard Symbols ⌘ ⏎ ⌫]
+
+Phonetic Symbols
+
+latin small letter turned ae ᴂ, latin small letter turned open e ᴈ latin small
+letter reversed open e with hook ɝ latin small letter upsilon ʊ greek letter
+small capital lamda ᴧ
+
+[see English Phonetics: IPA vs American Heritage Dictionary vs Merriam-Webster]
+
+Unicode Symbols
+
+ 1. Common Characters ✓ © § ❦
+ 2. Punctuations † ¶ © ® ™ ☙
+ 3. Currency $ € ¥ £ ¢
+ 4. Circled Numbers/Letters ① ② ③
+ 5. Keyboard keys ⌘ ⏎ ⌫
+ 6. ASCII ␀ ␣ ¶
+ 7. Arrows → ⇒ ⇄ ↻
+ 8. Brackets, Quotes «»「」【】《》
+ 9. Math ∑ ∫ π² ∞
+10. Math Font ℤ ℚ ℝ ℂ
+11. Greek Alphabet α β γ
+12. APL
+
+Unicode Search [                              ]
+
+Try “heart face” (without quotes), or 9829, or U+1f60d, or paste emoji 😂. (If
+nothing happens, try Unicode Search for old browser)
+
+[INS::INS]
+
+If you have a question, put $5 at patreon and message me.
+
+ 1. Emoji 😂
+ 2. Hand 👍
+ 3. Food 🍎
+ 4. Love 💋
+ 5. Clothing 👠
+ 6. Animal 🐰
+ 7. Insect 🐞
+ 8. Plant 🌵
+ 9. Sport ⚽
+10. Astrology 🌛
+11. Weather 🌧
+12. Place 🎪
+13. Signs ⛔
+14. Vehicle 🚀
+15. Things 🔪
+16. Tech 🎧
+17. Office 📌
+18. UI 🗑
+19. Clock ⏰
+20. Music 🎶
+21. Flags 🏁
+22. Sex ⚤
+23. Stars ★
+24. Cross ✚
+25. Games ♞
+26. Shapes ■
+27. Box ▓
+28. Dingbats ☭
+29. Keyboard ⌘
+30. Common ©
+31. Punctuation ❣
+32. Currency €
+33. Circled ❽
+34. Arrow →
+35. Bracket «»
+36. Math ∑
+37. Math ℝ
+38. Greek α
+39. APL ⍝
+40. ASCII ␀
+41. Hieroglyph 𓂀
+42. Unit ㎜
+43. full-width 全
+
+How To
+
+ 1. How to Input Unicode
+ 2. Download Font
+
+Versions
+
+ 1. Unicode 11
+ 2. Unicode 10
+ 3. Unicode 9
+ 4. Unicode 8
+ 5. Unicode 7
+
+Unicode Art
+
+ 1. Japan Unicode Art
+ 2. Unicode Art
+ 3. Unicode Art Font Emulation
+ 4. Emoji Tale: Good Night Gone Bad
+ 5. Unicode Smilies (¬_¬)
+
+Misc
+
+ 1. Emoji Frequency
+ 2. emoji vs emoticon
+ 3. Unicode Equivalence
+ 4. Symbol Become Emoji
+
+∑XAH
+© 1995, …, 2018 Xah Lee.

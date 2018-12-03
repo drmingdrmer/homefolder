@@ -1,0 +1,183 @@
+Unicode
+[INS::INS]
+[INS::INS]
+
+Unicode: Greek Alphabet α β γ
+
+By Xah Lee. Date: 2016-08-25. Last updated: 2017-01-05.
+
+Here's a complete list of Unicode Greek alphabet characters.
+
+They are styled characters, for example, For example, this 𝜶 is MATHEMATICAL
+BOLD ITALIC SMALL ALPHA (U+1D736). It is not a specific font.
+
+They are designed to be used together with several styled English letters used
+in math, such as ℝ ℜ ℑ ⅇ ⅈ ⅉ
+
+[see Math Font ℤ ℚ ℝ ℂ]
+
+                          sans- sans-                            sans- sans-
+normal bold italic  bold  serif serif  normal bold italic  bold  serif serif
+                   italic bold   bold                     italic bold   bold
+                                italic                                 italic
+α      𝛂    𝛼      𝜶      𝝰     𝞪      Α      𝚨    𝛢      𝜜      𝝖     𝞐
+β      𝛃    𝛽      𝜷      𝝱     𝞫      Β      𝚩    𝛣      𝜝      𝝗     𝞑
+γ      𝛄    𝛾      𝜸      𝝲     𝞬      Γ      𝚪    𝛤      𝜞      𝝘     𝞒
+δ      𝛅    𝛿      𝜹      𝝳     𝞭      Δ      𝚫    𝛥      𝜟      𝝙     𝞓
+ε      𝛆    𝜀      𝜺      𝝴     𝞮      Ε      𝚬    𝛦      𝜠      𝝚     𝞔
+ζ      𝛇    𝜁      𝜻      𝝵     𝞯      Ζ      𝚭    𝛧      𝜡      𝝛     𝞕
+η      𝛈    𝜂      𝜼      𝝶     𝞰      Η      𝚮    𝛨      𝜢      𝝜     𝞖
+θ      𝛉    𝜃      𝜽      𝝷     𝞱      Θ      𝚯    𝛩      𝜣      𝝝     𝞗
+ι      𝛊    𝜄      𝜾      𝝸     𝞲      Ι      𝚰    𝛪      𝜤      𝝞     𝞘
+κ      𝛋    𝜅      𝜿      𝝹     𝞳      Κ      𝚱    𝛫      𝜥      𝝟     𝞙
+λ      𝛌    𝜆      𝝀      𝝺     𝞴      Λ      𝚲    𝛬      𝜦      𝝠     𝞚
+μ      𝛍    𝜇      𝝁      𝝻     𝞵      Μ      𝚳    𝛭      𝜧      𝝡     𝞛
+ν      𝛎    𝜈      𝝂      𝝼     𝞶      Ν      𝚴    𝛮      𝜨      𝝢     𝞜
+ξ      𝛏    𝜉      𝝃      𝝽     𝞷      Ξ      𝚵    𝛯      𝜩      𝝣     𝞝
+ο      𝛐    𝜊      𝝄      𝝾     𝞸      Ο      𝚶    𝛰      𝜪      𝝤     𝞞
+π      𝛑    𝜋      𝝅      𝝿     𝞹      Π      𝚷    𝛱      𝜫      𝝥     𝞟
+ρ      𝛒    𝜌      𝝆      𝞀     𝞺      Ρ      𝚸    𝛲      𝜬      𝝦     𝞠
+σ      𝛔    𝜎      𝝈      𝞂     𝞼      Σ      𝚺    𝛴      𝜮      𝝨     𝞢
+τ      𝛕    𝜏      𝝉      𝞃     𝞽      Τ      𝚻    𝛵      𝜯      𝝩     𝞣
+υ      𝛖    𝜐      𝝊      𝞄     𝞾      Υ      𝚼    𝛶      𝜰      𝝪     𝞤
+φ      𝛗    𝜑      𝝋      𝞅     𝞿      Φ      𝚽    𝛷      𝜱      𝝫     𝞥
+χ      𝛘    𝜒      𝝌      𝞆     𝟀      Χ      𝚾    𝛸      𝜲      𝝬     𝞦
+ψ      𝛙    𝜓      𝝍      𝞇     𝟁      Ψ      𝚿    𝛹      𝜳      𝝭     𝞧
+ω      𝛚    𝜔      𝝎      𝞈     𝟂      Ω      𝛀    𝛺      𝜴      𝝮     𝞨
+
+Variants
+
+                          sans- sans-
+normal bold italic  bold  serif serif
+                   italic bold   bold
+                                italic
+ς      𝛓    𝜍      𝝇      𝞁     𝞻
+
+ς FINAL SIGMA is the form of the Greek letter sigma σ but used as the last
+letter of a word. Final sigma is not used in modern Greek.
+
+digamma Ϝ 𝟊 ϝ 𝟋. Digamma is an archaic letter of the Greek alphabet.
+
+Math Variants
+
+MICRO SIGN µ (math variant of Greek letter μ)
+
+Following are character whose Unicode name ends in “symbol”, as opposed to
+having “letter” in the name. They are Greek letter variants designed to be used
+in Math.
+
+                          sans- sans-
+normal bold italic  bold  serif serif
+                   italic bold   bold
+                                italic
+ϵ      𝛜    𝜖      𝝐      𝞊     𝟄
+ϰ      𝛞    𝜘      𝝒      𝞌     𝟆
+ϕ      𝛟    𝜙      𝝓      𝞍     𝟇
+ϱ      𝛠    𝜚      𝝔      𝞎     𝟈
+ϖ      𝛡    𝜛      𝝕      𝞏     𝟉
+
+                          sans- sans-                            sans- sans-
+normal bold italic  bold  serif serif  normal bold italic  bold  serif serif
+                   italic bold   bold                     italic bold   bold
+                                italic                                 italic
+∂      𝛛    𝜕      𝝏      𝞉     𝟃      ∇      𝛁    𝛻      𝜵      𝝯     𝞩
+ϑ      𝛝    𝜗      𝝑      𝞋     𝟅      ϴ      𝚹    𝛳      𝜭      𝝧     𝞡
+
+Unicode Symbols
+
+ 1. Common Characters ✓ © § ❦
+ 2. Punctuations † ¶ © ® ™ ☙
+ 3. Currency $ € ¥ £ ¢
+ 4. Circled Numbers/Letters ① ② ③
+ 5. Keyboard keys ⌘ ⏎ ⌫
+ 6. ASCII ␀ ␣ ¶
+ 7. Arrows → ⇒ ⇄ ↻
+ 8. Brackets, Quotes «»「」【】《》
+ 9. Math ∑ ∫ π² ∞
+10. Math Font ℤ ℚ ℝ ℂ
+11. Greek Alphabet α β γ
+12. APL
+
+Unicode Search [                              ]
+
+Try “heart face” (without quotes), or 9829, or U+1f60d, or paste emoji 😂. (If
+nothing happens, try Unicode Search for old browser)
+
+[INS::INS]
+
+If you have a question, put $5 at patreon and message me.
+
+ 1. Emoji 😂
+ 2. Hand 👍
+ 3. Food 🍎
+ 4. Love 💋
+ 5. Clothing 👠
+ 6. Animal 🐰
+ 7. Insect 🐞
+ 8. Plant 🌵
+ 9. Sport ⚽
+10. Astrology 🌛
+11. Weather 🌧
+12. Place 🎪
+13. Signs ⛔
+14. Vehicle 🚀
+15. Things 🔪
+16. Tech 🎧
+17. Office 📌
+18. UI 🗑
+19. Clock ⏰
+20. Music 🎶
+21. Flags 🏁
+22. Sex ⚤
+23. Stars ★
+24. Cross ✚
+25. Games ♞
+26. Shapes ■
+27. Box ▓
+28. Dingbats ☭
+29. Keyboard ⌘
+30. Common ©
+31. Punctuation ❣
+32. Currency €
+33. Circled ❽
+34. Arrow →
+35. Bracket «»
+36. Math ∑
+37. Math ℝ
+38. Greek α
+39. APL ⍝
+40. ASCII ␀
+41. Hieroglyph 𓂀
+42. Unit ㎜
+43. full-width 全
+
+How To
+
+ 1. How to Input Unicode
+ 2. Download Font
+
+Versions
+
+ 1. Unicode 11
+ 2. Unicode 10
+ 3. Unicode 9
+ 4. Unicode 8
+ 5. Unicode 7
+
+Unicode Art
+
+ 1. Japan Unicode Art
+ 2. Unicode Art
+ 3. Unicode Art Font Emulation
+ 4. Emoji Tale: Good Night Gone Bad
+ 5. Unicode Smilies (¬_¬)
+
+Misc
+
+ 1. Emoji Frequency
+ 2. emoji vs emoticon
+ 3. Unicode Equivalence
+ 4. Symbol Become Emoji
+
+∑XAH
+© 1995, …, 2018 Xah Lee.

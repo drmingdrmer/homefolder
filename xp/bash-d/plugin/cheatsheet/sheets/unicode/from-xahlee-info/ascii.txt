@@ -1,0 +1,302 @@
+Unicode
+[INS::INS]
+[INS::INS]
+
+ASCII Characters ␀ ␣ ¶
+
+By Xah Lee. Date: 2010-09-03. Last updated: 2018-11-24.
+
+ASCII characters are those with Unicode codepoint from 0 to 127, inclusive.
+They are mostly the symbols you see on computer keyboard.
+
+Codepoint 0 to 31, and 127, are control characters or non-printables
+characters. (including space, tab, newline characters). Also, codepoint 127 is
+DEL, usually the signal sent by the ⌫ Backspace key or ⌦ Delete on keyboard.
+
+ASCII Character Representation
+
+Unicode has glyphs to represent ASCII non-printables characters.
+
+␀ ␁ ␂ ␃ ␄ ␅ ␆ ␇ ␈ ␉ ␊ ␋ ␌ ␍ ␎ ␏ ␐ ␑ ␒ ␓ ␔ ␕ ␖ ␗ ␘ ␙ ␚ ␛ ␜ ␝ ␞ ␟ ␡
+
+Representation of Unprintable Characters
+
+Unprintable Characters can be represented in multiple ways. By decimal,
+hexadecimal, by standardized abbrev, or Unicode glyph, or caret notation, and
+in programing languages some have C escape syntax in string.
+
+Stack Overflow offline screenshot Stack Overflow Offline Page
+(2011-08-06T13:49:05-07:00) showing unprintable ascii character, by caret
+notation. Note that the ^M represents the ASCII 13, carriage return. Any ^
+followed by a letter represents a ASCII non-printable char. The ^@ is ASCII 0,
+the Null character.
+
+Here's ASCII table of the first 32 codepoints, and their representation.
+
+                              ASCII Table
+Decimal Hex Abbr Unicode  Caret   C Escape         Description
+                 Symbol  Notation  Syntax
+0       00  NUL  ␀       ^@       \0       Null character
+1       01  SOH  ␁       ^A                Start of Header
+2       02  STX  ␂       ^B                Start of Text
+3       03  ETX  ␃       ^C                End of Text
+4       04  EOT  ␄       ^D                End of Transmission
+5       05  ENQ  ␅       ^E                Enquiry
+6       06  ACK  ␆       ^F                Acknowledgment
+7       07  BEL  ␇       ^G       \a       Bell
+8       08  BS   ␈       ^H       \b       Backspace
+9       09  HT   ␉       ^I       \t       Horizontal Tab
+10      0A  LF   ␊       ^J       \n       Line feed
+11      0B  VT   ␋       ^K       \v       Vertical Tab
+12      0C  FF   ␌       ^L       \f       Form feed
+13      0D  CR   ␍       ^M       \r       Carriage return
+14      0E  SO   ␎       ^N                Shift Out
+15      0F  SI   ␏       ^O                Shift In
+16      10  DLE  ␐       ^P                Data Link Escape
+17      11  DC1  ␑       ^Q                Device Control 1 (oft. XON)
+18      12  DC2  ␒       ^R                Device Control 2
+19      13  DC3  ␓       ^S                Device Control 3 (oft. XOFF)
+20      14  DC4  ␔       ^T                Device Control 4
+21      15  NAK  ␕       ^U                Negative Acknowledgment
+22      16  SYN  ␖       ^V                Synchronous Idle
+23      17  ETB  ␗       ^W                End of Trans. Block
+24      18  CAN  ␘       ^X                Cancel
+25      19  EM   ␙       ^Y                End of Medium
+26      1A  SUB  ␚       ^Z                Substitute
+27      1B  ESC  ␛       ^[       \e       Escape
+28      1C  FS   ␜       ^\                File Separator
+29      1D  GS   ␝       ^]                Group Separator
+30      1E  RS   ␞       ^^                Record Separator
+31      1F  US   ␟       ^_                Unit Separator
+32      040 20                             space
+Decimal Hex Abbr Unicode  Caret   C Escape         Description
+                 Symbol  Notation  Syntax
+33      041 21   !
+34      042 22   "
+35      043 23   #
+36      044 24   $
+37      045 25   %
+38      046 26   &
+39      047 27   ´
+40      050 28   (
+41      051 29   )
+42      052 2A   *
+43      053 2B   +
+44      054 2C   ,
+45      055 2D   -
+46      056 2E   .
+47      057 2F   /
+Decimal Hex Abbr Unicode  Caret   C Escape         Description
+                 Symbol  Notation   Code
+48      060 30   0
+49      061 31   1
+50      062 32   2
+51      063 33   3
+52      064 34   4
+53      065 35   5
+54      066 36   6
+55      067 37   7
+56      070 38   8
+57      071 39   9
+58      072 3A   :
+59      073 3B   ;
+60      074 3C   <
+61      075 3D   =
+62      076 3E   >
+63      077 3F   ?
+64      100 40   @
+Decimal Hex Abbr Unicode  Caret   C Escape         Description
+                 Symbol  Notation   Code
+65      101 41   A
+66      102 42   B
+67      103 43   C
+68      104 44   D
+69      105 45   E
+70      106 46   F
+71      107 47   G
+72      110 48   H
+73      111 49   I
+74      112 4A   J
+75      113 4B   K
+76      114 4C   L
+77      115 4D   M
+78      116 4E   N
+79      117 4F   O
+80      120 50   P
+81      121 51   Q
+82      122 52   R
+83      123 53   S
+84      124 54   T
+85      125 55   U
+86      126 56   V
+87      127 57   W
+88      130 58   X
+89      131 59   Y
+90      132 5A   Z
+91      133 5B   [
+92      134 5C   \                \\
+93      135 5D   ]
+94      136 5E   ^
+95      137 5F   _
+96      140 60   `
+Decimal Hex Abbr Unicode  Caret   C Escape         Description
+                 Symbol  Notation   Code
+97      141 61   a
+98      142 62   b
+99      143 63   c
+100     144 64   d
+101     145 65   e
+102     146 66   f
+103     147 67   g
+104     150 68   h
+105     151 69   i
+106     152 6A   j
+107     153 6B   k
+108     154 6C   l
+109     155 6D   m
+110     156 6E   n
+111     157 6F   o
+112     160 70   p
+113     161 71   q
+114     162 72   r
+115     163 73   s
+116     164 74   t
+117     165 75   u
+118     166 76   v
+119     167 77   w
+120     170 78   x
+121     171 79   y
+122     172 7A   z
+Decimal Hex Abbr Unicode  Caret   C Escape         Description
+                 Symbol  Notation   Code
+123     173 7B   {
+124     174 7C   |
+125     175 7D   }
+126     176 7E   ~
+127     7F  DEL  ␡       ^?                Delete
+
+Caret notation is heavily used in emacs. [see Emacs: Newline Representation ^M
+^J ^L]
+
+Non-printable ASCII is heavily used in unix terminal. See: Linux: Terminal
+Control Sequence Keys
+
+Whitespace Character Representation
+
+Here are other character representation symbols. They are often used in text
+editor or word processor to indicate whitespace.
+
+Tab ↹ ⇄ ⇤ ⇥ ↤ ↦ ◁ ▷
+
+space · ␣ ˽ ␠ ␢
+
+paragraph, section, newline. ¶ § ␤ ↵ ↩ ⏎
+
+Sample usage: Emacs's whitespace-mode
+
+Unicode Keyboard Symbols ⌘ ⏎ ⌫
+
+Unicode Keyboard Symbols ⌘ ⏎ ⌫
+
+misc character, editing
+
+For much more, see Unicode Punctuations † ¶ © ® ™ ☙
+
+Unicode Symbols
+
+ 1. Common Characters ✓ © § ❦
+ 2. Punctuations † ¶ © ® ™ ☙
+ 3. Currency $ € ¥ £ ¢
+ 4. Circled Numbers/Letters ① ② ③
+ 5. Keyboard keys ⌘ ⏎ ⌫
+ 6. ASCII ␀ ␣ ¶
+ 7. Arrows → ⇒ ⇄ ↻
+ 8. Brackets, Quotes «»「」【】《》
+ 9. Math ∑ ∫ π² ∞
+10. Math Font ℤ ℚ ℝ ℂ
+11. Greek Alphabet α β γ
+12. APL
+
+Unicode Search [                              ]
+
+Try “heart face” (without quotes), or 9829, or U+1f60d, or paste emoji 😂. (If
+nothing happens, try Unicode Search for old browser)
+
+[INS::INS]
+
+If you have a question, put $5 at patreon and message me.
+
+ 1. Emoji 😂
+ 2. Hand 👍
+ 3. Food 🍎
+ 4. Love 💋
+ 5. Clothing 👠
+ 6. Animal 🐰
+ 7. Insect 🐞
+ 8. Plant 🌵
+ 9. Sport ⚽
+10. Astrology 🌛
+11. Weather 🌧
+12. Place 🎪
+13. Signs ⛔
+14. Vehicle 🚀
+15. Things 🔪
+16. Tech 🎧
+17. Office 📌
+18. UI 🗑
+19. Clock ⏰
+20. Music 🎶
+21. Flags 🏁
+22. Sex ⚤
+23. Stars ★
+24. Cross ✚
+25. Games ♞
+26. Shapes ■
+27. Box ▓
+28. Dingbats ☭
+29. Keyboard ⌘
+30. Common ©
+31. Punctuation ❣
+32. Currency €
+33. Circled ❽
+34. Arrow →
+35. Bracket «»
+36. Math ∑
+37. Math ℝ
+38. Greek α
+39. APL ⍝
+40. ASCII ␀
+41. Hieroglyph 𓂀
+42. Unit ㎜
+43. full-width 全
+
+How To
+
+ 1. How to Input Unicode
+ 2. Download Font
+
+Versions
+
+ 1. Unicode 11
+ 2. Unicode 10
+ 3. Unicode 9
+ 4. Unicode 8
+ 5. Unicode 7
+
+Unicode Art
+
+ 1. Japan Unicode Art
+ 2. Unicode Art
+ 3. Unicode Art Font Emulation
+ 4. Emoji Tale: Good Night Gone Bad
+ 5. Unicode Smilies (¬_¬)
+
+Misc
+
+ 1. Emoji Frequency
+ 2. emoji vs emoticon
+ 3. Unicode Equivalence
+ 4. Symbol Become Emoji
+
+∑XAH
+© 1995, …, 2018 Xah Lee.
