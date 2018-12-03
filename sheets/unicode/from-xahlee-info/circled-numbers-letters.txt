@@ -1,0 +1,165 @@
+Unicode
+[INS::INS]
+[INS::INS]
+
+Unicode Circled Numbers ① ② ③
+
+By Xah Lee. Date: 2010-09-03. Last updated: 2018-03-08.
+
+White Circled Number
+
+⓪ ① ② ③ ④ ⑤ ⑥ ⑦ ⑧ ⑨ ⑩ ⑪ ⑫ ⑬ ⑭ ⑮ ⑯ ⑰ ⑱ ⑲ ⑳ ㉑㉒㉓㉔㉕㉖㉗㉘㉙㉚㉛㉜㉝㉞㉟㊱㊲㊳
+㊴㊵㊶㊷㊸㊹㊺㊻㊼㊽㊾㊿
+
+These are specifically sans-serif:
+🄋 ➀ ➁ ➂ ➃ ➄ ➅ ➆ ➇ ➈ ➉
+
+🎱
+
+Black Circled Number
+
+⓿ ❶ ❷ ❸ ❹ ❺ ❻ ❼ ❽ ❾ ❿
+
+⓫ ⓬ ⓭ ⓮ ⓯ ⓰ ⓱ ⓲ ⓳ ⓴
+
+These are specifically sans-serif:
+🄌 ➊ ➋ ➌ ➍ ➎ ➏ ➐ ➑ ➒ ➓
+
+ON BLACK SQUARE
+㉈㉉㉊㉋㉌㉍㉎㉏
+
+Double-Circled Number
+
+⓵ ⓶ ⓷ ⓸ ⓹ ⓺ ⓻ ⓼ ⓽ ⓾
+
+Number with Period
+
+🄀 ⒈ ⒉ ⒊ ⒋ ⒌ ⒍ ⒎ ⒏ ⒐ ⒑ ⒒ ⒓ ⒔ ⒕ ⒖ ⒗ ⒘ ⒙ ⒚ ⒛
+
+Number with Parenthesis
+
+⑴ ⑵ ⑶ ⑷ ⑸ ⑹ ⑺ ⑻ ⑼ ⑽ ⑾ ⑿ ⒀ ⒁ ⒂ ⒃ ⒄ ⒅ ⒆ ⒇
+
+Chinese Circled Number
+
+㊀㊁㊂㊃㊄㊅㊆㊇㊈㊉
+
+Letter with Parenthesis
+
+🄐 🄑 🄒 🄓 🄔 🄕 🄖 🄗 🄘 🄙 🄚 🄛 🄜 🄝 🄞 🄟 🄠 🄡 🄢 🄣 🄤 🄥 🄦 🄧 🄨 🄩
+
+⒜ ⒝ ⒞ ⒟ ⒠ ⒡ ⒢ ⒣ ⒤ ⒥ ⒦ ⒧ ⒨ ⒩ ⒪ ⒫ ⒬ ⒭ ⒮ ⒯ ⒰ ⒱ ⒲ ⒳ ⒴ ⒵
+
+White Circled Letters
+
+Ⓐ Ⓑ Ⓒ Ⓓ Ⓔ Ⓕ Ⓖ Ⓗ Ⓘ Ⓙ Ⓚ Ⓛ Ⓜ Ⓝ Ⓞ Ⓟ Ⓠ Ⓡ Ⓢ Ⓣ Ⓤ Ⓥ Ⓦ Ⓧ Ⓨ Ⓩ
+
+ⓐ ⓑ ⓒ ⓓ ⓔ ⓕ ⓖ ⓗ ⓘ ⓙ ⓚ ⓛ ⓜ ⓝ ⓞ ⓟ ⓠ ⓡ ⓢ ⓣ ⓤ ⓥ ⓦ ⓧ ⓨ ⓩ
+
+Black Circled Letters
+
+🅐 🅑 🅒 🅓 🅔 🅕 🅖 🅗 🅘 🅙 🅚 🅛 🅜 🅝 🅞 🅟 🅠 🅡 🅢 🅣 🅤 🅥 🅦 🅧 🅨 🅩
+
+Squared Letters
+
+🄰 🄱 🄲 🄳 🄴 🄵 🄶 🄷 🄸 🄹 🄺 🄻 🄼 🄽 🄾 🄿 🅀 🅁 🅂 🅃 🅄 🅅 🅆 🅇 🅈 🅉
+🅰 🅱 🅲 🅳 🅴 🅵 🅶 🅷 🅸 🅹 🅺 🅻 🅼 🅽 🅾 🅿 🆀 🆁 🆂 🆃 🆄 🆅 🆆 🆇 🆈 🆉
+
+Unicode Symbols
+
+ 1. Common Characters ✓ © § ❦
+ 2. Punctuations † ¶ © ® ™ ☙
+ 3. Currency $ € ¥ £ ¢
+ 4. Circled Numbers/Letters ① ② ③
+ 5. Keyboard keys ⌘ ⏎ ⌫
+ 6. ASCII ␀ ␣ ¶
+ 7. Arrows → ⇒ ⇄ ↻
+ 8. Brackets, Quotes «»「」【】《》
+ 9. Math ∑ ∫ π² ∞
+10. Math Font ℤ ℚ ℝ ℂ
+11. Greek Alphabet α β γ
+12. APL
+
+Unicode Search [                              ]
+
+Try “heart face” (without quotes), or 9829, or U+1f60d, or paste emoji 😂. (If
+nothing happens, try Unicode Search for old browser)
+
+[INS::INS]
+
+If you have a question, put $5 at patreon and message me.
+
+ 1. Emoji 😂
+ 2. Hand 👍
+ 3. Food 🍎
+ 4. Love 💋
+ 5. Clothing 👠
+ 6. Animal 🐰
+ 7. Insect 🐞
+ 8. Plant 🌵
+ 9. Sport ⚽
+10. Astrology 🌛
+11. Weather 🌧
+12. Place 🎪
+13. Signs ⛔
+14. Vehicle 🚀
+15. Things 🔪
+16. Tech 🎧
+17. Office 📌
+18. UI 🗑
+19. Clock ⏰
+20. Music 🎶
+21. Flags 🏁
+22. Sex ⚤
+23. Stars ★
+24. Cross ✚
+25. Games ♞
+26. Shapes ■
+27. Box ▓
+28. Dingbats ☭
+29. Keyboard ⌘
+30. Common ©
+31. Punctuation ❣
+32. Currency €
+33. Circled ❽
+34. Arrow →
+35. Bracket «»
+36. Math ∑
+37. Math ℝ
+38. Greek α
+39. APL ⍝
+40. ASCII ␀
+41. Hieroglyph 𓂀
+42. Unit ㎜
+43. full-width 全
+
+How To
+
+ 1. How to Input Unicode
+ 2. Download Font
+
+Versions
+
+ 1. Unicode 11
+ 2. Unicode 10
+ 3. Unicode 9
+ 4. Unicode 8
+ 5. Unicode 7
+
+Unicode Art
+
+ 1. Japan Unicode Art
+ 2. Unicode Art
+ 3. Unicode Art Font Emulation
+ 4. Emoji Tale: Good Night Gone Bad
+ 5. Unicode Smilies (¬_¬)
+
+Misc
+
+ 1. Emoji Frequency
+ 2. emoji vs emoticon
+ 3. Unicode Equivalence
+ 4. Symbol Become Emoji
+
+∑XAH
+© 1995, …, 2018 Xah Lee.
