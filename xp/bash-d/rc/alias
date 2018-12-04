@@ -25,7 +25,8 @@ fi
 # to hard directory hierarchy, which means, discard all symbol links
 mk_alias .q "cd -P ."
 
-mk_alias cgrep "grep --color=always "
+mk_alias grep "grep --color=always "
+mk_alias igrep "grep --ignore-case "
 
 # some more ls aliases
 # use "/bin/ls" but not "ls" for compatibiliy with "ls" alias in git-sh
