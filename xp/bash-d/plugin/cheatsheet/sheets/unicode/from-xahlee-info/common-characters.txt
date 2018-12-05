@@ -41,18 +41,57 @@ bracket 《》,
 
 Math
 
-empty set ∅, element of ∈, not an element of ∉, subset of ⊂, superset of ⊃,
-subset of or equal to ⊆, superset of or equal to ⊇, not a subset of ⊄, n-ary
-intersection ⋂, n-ary union ⋃ not equal to ≠, less-than or equal to ≤,
-greater-than or equal to ≥, almost equal to ≈, identical to ≡ double-struck
-capital n ℕ, double-struck capital z ℤ, double-struck capital c ℚ,
-double-struck capital r ℝ, double-struck capital c ℂ ceiling ⌈ ⌉, floor ⌊ ⌋,
-n-ary summation ∑, integral ∫, multiplication sign ×, circled times ⊗, circled
-plus ⊕, circled dot operator ⊙, multiplication sign ×, partial differential ∂,
-square root √, colon equals ≔, plus-minus sign ±, superscript two ², alef
-symbol ℵ, infinity ∞ end of proof ∎, prime ′, degree sign °, script small l ℓ,
-measured angle ∡, for all ∀, not sign ¬, logical and ∧, logical or ∨, there
-exists ∃, because ∵, therefore ∴,
+empty set ∅
+element of ∈
+not an element of ∉
+subset of ⊂
+superset of ⊃
+subset of or equal to ⊆
+superset of or equal to ⊇
+not a subset of ⊄
+n-ary
+intersection ⋂
+n-ary union ⋃ not equal to ≠
+less-than or equal to ≤
+greater-than or equal to ≥
+almost equal to ≈
+identical to ≡ double-struck
+capital n ℕ
+double-struck capital z ℤ
+double-struck capital c ℚ
+double-struck capital r ℝ
+double-struck capital c ℂ ceiling ⌈ ⌉
+floor ⌊ ⌋
+n-ary summation ∑
+integral ∫
+multiplication sign ×
+circled times ⊗
+circled
+plus ⊕
+circled dot operator ⊙
+multiplication sign ×
+partial differential ∂
+square root √
+colon equals ≔
+plus-minus sign ±
+superscript two ²
+alef
+symbol ℵ
+infinity ∞
+end of proof ∎
+prime ′
+degree sign °
+script small l ℓ
+measured angle ∡
+for all ∀
+not sign ¬
+logical and ∧
+logical or ∨
+there
+exists ∃
+because ∵
+therefore ∴
+
 
 [see Unicode Math Symbols ∑ ∫ π² ∞]
 
