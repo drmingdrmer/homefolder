@@ -1,0 +1,24 @@
+digraph x
+{
+    // define space between ranks
+    graph [ranksep="0.05"];
+
+    // for all node/edge
+    node [label=x]
+    edge [label=x]
+
+    // white circle node
+    node [shape=circle, style=filled, fillcolor="white"]
+
+    // do not stretch circle if text is long
+    node [fixedsize=true]
+
+    // node size in inch; default is 1
+    node [width=0.2]
+
+    // \E generate default edge label
+    a -> b [ label="\E" ]
+
+    // edge font color
+    edge [label="a", fontcolor=red]
+}
