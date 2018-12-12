@@ -1,5 +1,13 @@
 digraph x
 {
+    // define image size as 100x200
+    // commandline: -Gsize=1,2 -Gdpi=10
+    size="1,2"
+    dpi=10
+
+    // `!` means expected size
+    size="1,2!"
+
     // define space between ranks
     graph [ranksep="0.05"];
 
