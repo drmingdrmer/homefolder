@@ -7,4 +7,7 @@ cropped="/tmp/x.pdf"
 
 pdflatex "$fn"
 pdfcrop "$pdf" "$cropped"
-pdftoppm "$cropped" | pnmtopng > "$png"
+
+convert -density 200 "$cropped" -quality 50 "$png"
+
+# pdftoppm "$cropped" | pnmtopng > "$png"
