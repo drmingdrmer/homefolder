@@ -1,0 +1,19 @@
+% Add \usepackage{amsmath}
+% If encoutnered error with "Environment align undefined"
+% "amsmath" is a math extension for latex
+
+\documentclass{article}
+\pagestyle{empty}
+
+\usepackage{amsmath}
+
+\begin{document}
+
+\begin{align}
+d_1 + d_2 + d_3     & = y_1 \\
+d_1 + 2 d_2 + 4 d_3 & = y_2
+\end{align}
+
+
+
+\end{document}
