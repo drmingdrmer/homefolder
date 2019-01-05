@@ -1,0 +1,9 @@
+\documentclass{article}
+\pagestyle{empty}
+% latex support < and > but in markdown / html "<" and ">" is not allowed.
+% thus to support lt/gt in markdown / html, a latex doc should define lt and gt 
+\newcommand{\lt}{<}
+\newcommand{\gt}{>}
+\begin{document}
+i \lt j
+\end{document}
