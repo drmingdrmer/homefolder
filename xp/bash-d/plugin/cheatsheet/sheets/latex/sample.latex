@@ -1,0 +1,18 @@
+\documentclass{article}
+\pagestyle{empty}
+\begin{document}
+
+This is an equation \[f(x) = 3x + 7\]
+
+This is an equation $$f(x)=x^{x^x}$$
+
+This is an inline equation  \(f(x) = 3x + 7\)
+
+This is an inline equation  $f(x)=x^{x^x}$
+
+a $$\sum_{i=1}^n a_i=0$$
+
+c $$f(x_1,x_x,\ldots,x_n) = x_1^2 + x_2^2 + \cdots + x_n^2 $$
+
+d \[a^{2}=\sqrt{b}+\sqrt[4]{y}\]
+\end{document}
