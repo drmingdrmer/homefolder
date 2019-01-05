@@ -1,0 +1,9 @@
+\documentclass{article}
+
+\usepackage[mathletters]{ucs}
+\usepackage[utf8x]{inputenc}
+
+\begin{document}
+⊖
+    The vorticity $ω$ is defined as $ω = ∇ × u$.
+\end{document}
