@@ -153,7 +153,7 @@ endfunction "}}}
 
 augroup Excutable
     au!
-    au BufNew,BufNewFile,BufRead,BufEnter * call s:TryToMakeExcutable()
+    au BufNew,BufNewFile,BufRead,BufEnter *.sh call s:TryToMakeExcutable()
 augroup END
 
 "map{{{
