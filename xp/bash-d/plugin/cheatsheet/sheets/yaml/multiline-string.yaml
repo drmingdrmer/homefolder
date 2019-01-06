@@ -1,4 +1,4 @@
-"a\nb\n": |2
+"a\nb\n": |
   a
   b
 "a\nb": |-
@@ -8,5 +8,10 @@
   a
   b
 "a b": >-
+  a
+  b
+
+# force indent to be 2
+"a b": >-2
   a
   b
