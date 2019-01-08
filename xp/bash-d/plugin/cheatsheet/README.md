@@ -16,6 +16,10 @@ seconds.
 
 A simple shell command `cheat c print` gives me everything I need.
 
+# Usage
+
+![](cheat.svg)
+
 # Install
 
 ```shell
