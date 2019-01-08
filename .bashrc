@@ -121,9 +121,7 @@ export HISTCONTROL=ignoreboth
 export HISTTIMEFORMAT="%Y/%m/%d %H:%M:%S "
 
 while read p; do
-    echo "$p"
     [ -d "$p" ] && { export PATH="$PATH:$p"; }
-
 done <<-END
 $HOME/Library/Python/3.7/bin
 /usr/local/opt/opencv3/bin
