@@ -18,7 +18,7 @@ A simple shell command `cheat c print` gives me everything I need.
 
 # Usage
 
-![](cheat.svg)
+![](https://drmingdrmer.github.io/post-res/cheatsheet/cheat.svg)
 
 # Install
 
