@@ -1,6 +1,8 @@
 #!/bin/sh
 
-cmd=${1:force_update}
+cmd=${1-force_update}
+
+echo "cmd: ($cmd)"
 
 (
 cd src
@@ -43,7 +45,7 @@ force_update()
     git add -u || exit 1
     tree=$(git write-tree) || exit 1
 
-    git checkout $branch origin/$branch -f || exit 1
+    git checkout $branch -f || exit 1
     git reset --hard origin/$branch || exit 1
 
     # use content in "$tree" to create a commit
@@ -58,37 +60,35 @@ force_update()
 
 while read name dir url; do
     echo === $dir : $cmd ===
-    if [ -d "$name" ]; then
-        case $cmd in
-            push)
-                ( cd $name && git push origin master; )
-                ;;
-            fetch)
-                ( cd $name && git fetch origin; )
-                ;;
-            pull)
-                ( cd $name && git pull --ff-only origin; )
-                ;;
-            status)
-                ( cd $name && git status; )
-                ;;
-            commit)
-                (
-                cd $name && git add -u || exit 1
-                { git diff-index --name-only HEAD -- | grep -qs .; } && git commit -m 'auto commit' || exit 0
-                    )
-                ;;
-            force_update)
-                (
-                force_update "$dir" "$url"
+    case $cmd in
+        push)
+            ( cd $dir && git push origin master; )
+            ;;
+        fetch)
+            ( cd $dir && git fetch origin; )
+            ;;
+        pull)
+            ( cd $dir && git pull --ff-only origin; )
+            ;;
+        status)
+            ( cd $dir && git status; )
+            ;;
+        commit)
+            (
+            cd $dir && git add -u || exit 1
+            { git diff-index --name-only HEAD -- | grep -qs .; } && git commit -m 'auto commit' || exit 0
                 )
-                ;;
-            *)
-                ( cd $name && git "$@"; )
-                ;;
+            ;;
+        force_update)
+            (
+            force_update "$dir" "$url"
+            )
+            ;;
+        *)
+            ( cd $dir && git "$@"; )
+            ;;
+    esac
 
-        esac
-    fi
 done <<-END
 git-box          gist/git-box           git@gist.github.com:07faee6c4f7c8e31da3c5210cfa04034.git
 git-gotofix      gist/git-gotofix       git@gist.github.com:241dd1b3655f04190b0c6d06aa1dd258.git
