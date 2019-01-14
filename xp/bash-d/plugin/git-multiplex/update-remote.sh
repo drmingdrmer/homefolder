@@ -29,7 +29,9 @@ fi
 
 dd()
 {
-    echo "$@"
+    Green="$(                   tput setaf 2)"
+    NC="$(                      tput sgr0)" # No Color
+    echo "$Green$@$NC"
 }
 
 die()
