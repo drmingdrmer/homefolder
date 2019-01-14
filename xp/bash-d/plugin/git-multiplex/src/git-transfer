@@ -83,7 +83,7 @@ cat $conffn | while read folder src dst x; do
         && git config remote.origin.fetch '+refs/heads/*:refs/heads/*' \
         && info fetching "$src" \
         && git fetch -p \
-        && { { git remote | grep -q "^b$"; } || git remote add b $dst; } \
+        && { git remote remove b; git remote add b $dst; } \
         && info push to "b($dst)" \
         && git push b --all --prune -f \
         && git push b --tags --prune -f \
