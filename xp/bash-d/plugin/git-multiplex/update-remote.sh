@@ -27,6 +27,17 @@ if [ "$cmd" == "build" ]; then
 fi
 
 
+dd()
+{
+    echo "$@"
+}
+
+die()
+{
+    echo "$@" >&2
+    exit 1
+}
+
 force_update()
 {
     local dir="$1"
@@ -34,25 +45,30 @@ force_update()
     local branch=master
 
     if [ ! -d "$dir" ]; then
-        echo "not found: $dir"
-        echo "clone $dir from $url"
+        dd "not found: $dir"
+        dd "clone $dir from $url"
         git clone "$url" "$dir"
     fi
 
     cd "$dir"
 
     # manually make a tree object
-    git add -u || exit 1
-    tree=$(git write-tree) || exit 1
+    git add -u || die add -u
+    tree=$(git write-tree) || die git-write-tree
 
-    git checkout $branch -f || exit 1
-    git reset --hard origin/$branch || exit 1
+    git checkout $branch -f || die checkout $branch
+    git reset --hard origin/$branch || die reset --hard to origin/$branch
 
     # use content in "$tree" to create a commit
-    git read-tree "$tree" || exit 1
-    git status --untracked-files=no
-    git commit -m 'auto commit' || exit 1
-    git log --color --decorate --abbrev-commit --find-renames --format=oneline -3 --stat
+    git read-tree "$tree" || die git-read-tree
+
+    if git diff-index --name-only HEAD -- | grep -qs .; then
+        git status --untracked-files=no
+        git commit -m 'auto commit' || die git-commit
+        git log --color --decorate --abbrev-commit --find-renames --format=oneline -3 --stat
+    else
+        dd nothing changed
+    fi
 
     git push origin $branch
 }
