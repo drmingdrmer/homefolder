@@ -63,8 +63,7 @@ force_update()
 
     # use content in "$tree" to create a commit
     git read-tree "$tree" || die git-read-tree
-
-    if git diff-index --name-only HEAD -- | grep -qs .; then
+    if git diff --name-only --relative HEAD -- | grep -qs .; then
         git status --untracked-files=no
         git commit -m 'auto commit' || die git-commit
         git log --color --decorate --abbrev-commit --find-renames --format=oneline -3 --stat
