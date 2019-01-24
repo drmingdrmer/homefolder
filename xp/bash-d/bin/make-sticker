@@ -131,11 +131,11 @@ perc=80
 
 while ``; do
     eval $(stat -s tmp.gif)
-    if [ "$st_size" -gt "900000" ]; then
+    if [ "$st_size" -gt "999000" ]; then
         info "file size is $st_size, resize to $perc%"
         convert -resize "$perc%" tmp.gif tmp2.gif
         mv tmp2.gif tmp.gif
-        let perc=perc-5
+        let perc=perc-3
     else
         break
     fi
