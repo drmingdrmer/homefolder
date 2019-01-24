@@ -53,7 +53,9 @@ else
         -extent 400x400 tmp.gif
 fi
 
-height=$(identify -ping -format '%h' tmp.gif)
+height=$(identify -ping -format '%h ' tmp.gif)
+# gif returns multiple height
+height=${height%% *}
 
 
 box_height=150
@@ -71,9 +73,16 @@ font=$base/SimHei.ttf
 convert -pointsize $fontsize -font "$font" \
     "label:$text"   tt.gif
 
-width=$(identify -ping -format '%w' tt.gif)
-if [ "$width" -gt 380 ]; then
-    let fontsize=fontsize*380/width
+let max_text_width=380
+let max_text_height=height/4
+text_width=$(identify -ping -format '%w' tt.gif)
+text_height=$(identify -ping -format '%h' tt.gif)
+if [ "$text_width" -gt "$max_text_width" ]; then
+    let fontsize=fontsize*max_text_width/text_width
+    let text_height=text_height*max_text_width/text_width
+fi
+if [ "$text_height" -gt "$max_text_height" ]; then
+    let fontsize=fontsize*max_text_height/text_height
 fi
 let shadow_offset=3
 
