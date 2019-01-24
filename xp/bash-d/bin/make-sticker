@@ -6,6 +6,11 @@
 # dependency:
 # > brew install imagemagick
 
+info()
+{
+    echo "$@"
+}
+
 fullheight=0
 # 0: top
 # 0.5: mid
@@ -118,6 +123,22 @@ convert tmp.gif \
     -draw "gravity north fill black  text $((so*1)),$((t+so*2)) '$text'" \
     -draw "gravity north fill black  text $((so*2)),$((t+so*2)) '$text'" \
     -draw "gravity north fill $color text $((so*1)),$((t+so*1)) '$text'" \
-    "${output_path}"
+    tmp2.gif
 
-rm tmp.gif
+mv tmp2.gif tmp.gif
+
+perc=80
+
+while ``; do
+    eval $(stat -s tmp.gif)
+    if [ "$st_size" -gt "900000" ]; then
+        info "file size is $st_size, resize to $perc%"
+        convert -resize "$perc%" tmp.gif tmp2.gif
+        mv tmp2.gif tmp.gif
+        let perc=perc-5
+    else
+        break
+    fi
+done
+
+mv tmp.gif "${output_path}"
