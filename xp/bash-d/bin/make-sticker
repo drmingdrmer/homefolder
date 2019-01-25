@@ -142,20 +142,34 @@ convert tmp.gif \
     -draw "gravity north fill $color text $((so*1)),$((t+so*1)) '$text'" \
     tmp2.gif
 
-mv tmp2.gif tmp.gif
+cp tmp2.gif tmp.gif
 
-perc=80
+# resize to less than 1M
+perc=100
+
+eval $(stat -s tmp2.gif)
+prev_size=$st_size
+prev_perc=100
 
 while ``; do
-    eval $(stat -s tmp.gif)
+    eval $(stat -s tmp2.gif)
     if [ "$st_size" -gt "999000" ]; then
+        let rate=st_size*100/1024000-100
+        let rate=rate/2+100
+        let x=perc*120/rate
+        if [ "$x" -ge "$perc" ]; then
+            let perc=perc-1
+        else
+            let perc=x
+        fi
+
         info "file size is $st_size, resize to $perc%"
         convert -resize "$perc%" tmp.gif tmp2.gif
-        mv tmp2.gif tmp.gif
-        let perc=perc-3
     else
         break
     fi
 done
 
-mv tmp.gif "${output_path}"
+# mv tmp2.gif tmp.gif
+
+mv tmp2.gif "${output_path}"
