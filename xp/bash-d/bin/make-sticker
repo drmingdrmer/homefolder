@@ -11,17 +11,19 @@ info()
     echo "$@"
 }
 
-fullheight=0
-# 0: top
-# 0.5: mid
-# 1: bottom
+# full_size: not to crop image
+full_size=0
+
+#   0: top
+#  50: mid
+# 100: bottom
 text_pos=100
 
 while ``; do
     case $1 in
         -f)
             shift
-            fullheight=1
+            full_size=1
             ;;
         -m)
             shift
@@ -45,7 +47,7 @@ color=${3-white}
 
 base=${0%/*}
 
-if [ "$fullheight" = '1' ]; then
+if [ "$full_size" = '1' ]; then
 
     convert -define jpeg:size=200 "$path" \
         -thumbnail 400 \
@@ -58,42 +60,49 @@ else
         -extent 400x400 tmp.gif
 fi
 
-height=$(identify -ping -format '%h ' tmp.gif)
-# gif returns multiple height
-height=${height%% *}
+# gif returns multiple img_h
+img_w=$(identify -ping -format '%w ' tmp.gif)
+img_w=${img_w%% *}
 
+img_h=$(identify -ping -format '%h ' tmp.gif)
+img_h=${img_h%% *}
 
 box_height=150
-max_width=720
 
-l=${#text}
-if [ $l -le 6 ]; then
-    fontsize=120
-else
-    let fontsize=720/l
-fi
+fontsize=120
 
 font=$base/SimHei.ttf
 
 convert -pointsize $fontsize -font "$font" \
     "label:$text"   tt.gif
 
-let max_text_width=380
-let max_text_height=height/4
-text_width=$(identify -ping -format '%w' tt.gif)
-text_height=$(identify -ping -format '%h' tt.gif)
-if [ "$text_width" -gt "$max_text_width" ]; then
-    let fontsize=fontsize*max_text_width/text_width
-    let text_height=text_height*max_text_width/text_width
+let max_text_width=img_w*9/10
+let max_text_height=img_h/5
+text_w=$(identify -ping -format '%w' tt.gif)
+text_h=$(identify -ping -format '%h' tt.gif)
+info text max w/h: $max_text_width $max_text_height
+info text initial w/h: $text_w $text_h
+info text initial fontsize: $fontsize
+if [ "$text_w" -gt "$max_text_width" ]; then
+    let text_h=text_h*max_text_width/text_w
+    let fontsize=fontsize*max_text_width/text_w
+    let text_w=max_text_width
 fi
-if [ "$text_height" -gt "$max_text_height" ]; then
-    let fontsize=fontsize*max_text_height/text_height
+if [ "$text_h" -gt "$max_text_height" ]; then
+    let text_w=text_w*max_text_height/text_h
+    let fontsize=fontsize*max_text_height/text_h
+    let text_h=max_text_height
 fi
 let shadow_offset=3
 
+info text adjusted w/h: $text_w $text_h
+info text adjusted fontsize: $fontsize
+
 rm tt.gif
 
-let text_top=height-box_height/2-fontsize/2
+# img_h - text_h/2 - fontsize/2 place text box right at bottom
+# another fontsize/4 + 5 is padding to bottom
+let text_top=img_h-text_h/2-fontsize*3/4-5
 let text_top=text_top*text_pos/100
 let text_shadow_top=text_top+shadow_offset
 
