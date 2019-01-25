@@ -19,6 +19,9 @@ full_size=0
 # 100: bottom
 text_pos=100
 
+# add text for every <per_frame> frame
+per_frame=0
+
 while ``; do
     case $1 in
         -f)
@@ -32,6 +35,11 @@ while ``; do
         -p)
             shift
             text_pos=$1
+            shift
+            ;;
+        -f)
+            shift
+            per_frame=$1
             shift
             ;;
         *)
