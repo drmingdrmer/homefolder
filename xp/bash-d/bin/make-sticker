@@ -144,32 +144,53 @@ convert tmp.gif \
 
 cp tmp2.gif tmp.gif
 
+size_max=1024000
+size_min=900000
+
 # resize to less than 1M
-perc=100
+perc_r=100
+perc_l=100
 
 eval $(stat -s tmp2.gif)
-prev_size=$st_size
-prev_perc=100
+size_r=$st_size
+perc_r=100
 
-while ``; do
-    eval $(stat -s tmp2.gif)
-    if [ "$st_size" -gt "999000" ]; then
-        let rate=st_size*100/1024000-100
-        let rate=rate/2+100
-        let x=perc*120/rate
-        if [ "$x" -ge "$perc" ]; then
-            let perc=perc-1
+if [ "$st_size" -gt "$size_max" ]; then
+    info size too large: $st_size gt $size_max, try to find lower bound...
+
+    while ``; do
+        eval $(stat -s tmp2.gif)
+
+        if [ "$st_size" -gt "$size_max" ]; then
+
+            let perc_r=perc_l
+            let perc_l=perc_l/2
+            convert -resize "$perc_l%" tmp.gif tmp2.gif
+            info "adjust to $perc_l% ~ $perc_r%"
         else
-            let perc=x
+            break
         fi
+    done
 
-        info "file size is $st_size, resize to $perc%"
-        convert -resize "$perc%" tmp.gif tmp2.gif
-    else
-        break
-    fi
-done
+    info "try to find in $perc_l% ~ $perc_r%"
 
-# mv tmp2.gif tmp.gif
+    while ``; do
+
+        let mid=perc_l+perc_r
+        let mid=mid/2
+        convert -resize "$mid%" tmp.gif tmp2.gif
+        eval $(stat -s tmp2.gif)
+
+        if [ "$st_size" -gt "$size_max" ]; then
+            let perc_r=mid
+        elif [ "$st_size" -lt "$size_min" ]; then
+            let perc_l=mid
+        else
+            info finally resize to $mid%, size: $st_size
+            break
+        fi
+        info "file size is $st_size, resize to $perc_l% ~ $perc_r%"
+    done
+fi
 
 mv tmp2.gif "${output_path}"
