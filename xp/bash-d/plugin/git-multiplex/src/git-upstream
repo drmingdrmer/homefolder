@@ -43,6 +43,14 @@ init()
 {
     local conf_fn=./.gitupstream
     local br=git-upstream-config-branch
+    local curr_br=$(git_head_branch)
+    local curr_remote=$(git_branch_default_remote $curr_br)
+
+    if git_workdir_is_clean; then
+        :
+    else
+        die git workdir is not clean
+    fi
 
     if git_branch_exist $br; then
         :
@@ -51,7 +59,13 @@ init()
 
         git reset .
 
-        echo "# remote url" > $conf_fn
+        (
+        git remote -v  | grep  '[(]fetch[)]' | while read name url foo; do
+            if [ "$name" != "$curr_remote" ]; then
+                echo "$name $url"
+            fi
+        done
+        ) > $conf_fn
         git add $conf_fn
         git commit $conf_fn -m 'init git-upstream-config-branch'
     fi
