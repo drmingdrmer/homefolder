@@ -182,7 +182,7 @@ debug()
 {
     if [ ".$SHLIB_LOG_VERBOSE" = ".1" ]; then
         local LightCyan="$(tput bold ; tput setaf 6)"
-        _LOG_LEVEL=DEBUG log "$LightCyan" "$@"
+        _LOG_LEVEL=DEBUG log "$LightCyan" "$@" >&2
     fi
 }
 info()
@@ -662,6 +662,8 @@ options:
                                 it changes history.
 
     -m                          merge back new branch.
+
+    -s <prefix>                 strip prefix from paths
 END
 
 }
@@ -669,7 +671,9 @@ END
 new_branch=tmpbranch
 merge=0
 remove=0
-while getopts "b:mrh" opname; do
+to_strip=0
+
+while getopts "b:p:s:mrh" opname; do
     case $opname in
         b)
             new_branch=$OPTARG
@@ -679,6 +683,9 @@ while getopts "b:mrh" opname; do
             ;;
         r)
             remove=1
+            ;;
+        s)
+            to_strip="$OPTARG"
             ;;
         h)
             usage
@@ -731,18 +738,18 @@ extract()
 
     for c in $(git log --reverse $base..$tip_hash --format="%H" -- $fns); do
 
-        mes "== to pick $fns from:"
+        info "== to pick $fns from:"
         git --no-pager log --color --stat --decorate --pretty=oneline --abbrev-commit -M -n1 $c
-        mes "== END =="
+        info "== END =="
 
         # mes=$(git log -n1 --format="%B" $c)
 
         # force prefix when diff, since .gitconfig could hide prefix
-        git diff --src-prefix=a/ --dst-prefix=b/ --binary $c~ $c -- $fns | git apply --index
+        git diff --src-prefix="" --dst-prefix="" --binary $c~ $c -- $fns | git apply -p $to_strip --index
 
-        mes "== after patch $c =="
+        info "== after patch $c =="
         git status --short
-        mes "== END =="
+        info "== END =="
 
         # manually commit index
 
@@ -771,8 +778,8 @@ build_new_branch()
         && git reset --hard \
         && git commit --allow-empty -m "init-root" \
         && git clean -dxf \
-        && mes "== build new branch ==" \
-        && mes "HEAD hash: $(git_hash HEAD)" \
+        && info "== build new branch ==" \
+        && info "HEAD hash: $(git_hash HEAD)" \
         && extract $(git_hash HEAD) \
         && new_hash=$(git_hash HEAD) \
         && \
@@ -782,7 +789,7 @@ build_new_branch()
         else
             :
         fi \
-        && mes "== new branch $new_branch hash is $new_hash == "
+        && info "== new branch $new_branch hash is $new_hash == "
 }
 
 discard_changes()
@@ -795,20 +802,20 @@ discard_changes()
     local script='for f in '"$fns"'; do echo "== $f =="; git rm -r -f $f; git status -- $f >&2; git checkout '"$base"' -- $f; git status -- $f >&2; done'
 
     git checkout --detach $tip_hash \
-        && mes "== discard from $tip ==" \
+        && info "== discard from $tip ==" \
         && git filter-branch -f --prune-empty --tree-filter "$script" $base..HEAD \
         && [ $(git log $base..HEAD -- "$fns" | wc -l | awk '{print $1}') = 0 ] \
-        && mes "== confirmed that no changes through $base..HEAD"
+        && info "== confirmed that no changes through $base..HEAD"
     git status --short
-    mes "== END =="
-    mes "== history =="
+    info "== END =="
+    info "== history =="
     git --no-pager log --color --stat --decorate --pretty=oneline --abbrev-commit -M $base..HEAD
-    mes "== END =="
+    info "== END =="
 }
 
 merge_them()
 {
-    mes "== merge splitted branch back to $tip ==" \
+    info "== merge splitted branch back to $tip ==" \
         && \
         if [ ".$new_branch" = "tmpbranch" ]; then
             git merge --commit --no-edit --no-ff $new_hash
@@ -816,12 +823,12 @@ merge_them()
             git merge --commit --no-edit --no-ff $new_branch
         fi \
         && merged_hash=$(git_hash) \
-        && mes "merged hash: $merged_hash"
+        && info "merged hash: $merged_hash"
 }
 
 is_same_as_original()
 {
-    mes "== diff with original $tip ==" \
+    info "== diff with original $tip ==" \
         && git diff $tip
 }
 
@@ -833,17 +840,17 @@ update_tip_ref()
 
     if [ ".$tip" = ".HEAD" ]; then
         git update-ref $tip $merged_hash \
-            && mes "== $tip set to $merged_hash"
+            && info "== $tip set to $merged_hash"
     fi
 
     if git rev-parse refs/heads/$tip >/dev/null 2>/dev/null;  then
         git update-ref refs/heads/$tip $merged_hash \
-            && mes "== $tip set to $merged_hash"
+            && info "== $tip set to $merged_hash"
     fi
 
 }
 
-mes "split $fns from $range" \
+info "split $fns from $range" \
     && build_new_branch \
     && { [ "$remove" = "0" ] && exit 0 || ``; } \
     && discard_changes \
@@ -852,4 +859,4 @@ mes "split $fns from $range" \
     && is_same_as_original \
     && update_tip_ref \
     && git checkout $tip >/dev/null 2>/dev/null \
-    && mes "== Done =="
+    && info "== Done =="

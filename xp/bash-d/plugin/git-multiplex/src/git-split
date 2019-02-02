@@ -46,6 +46,8 @@ options:
                                 it changes history.
 
     -m                          merge back new branch.
+
+    -s <prefix>                 strip prefix from paths
 END
 
 }
@@ -53,7 +55,9 @@ END
 new_branch=tmpbranch
 merge=0
 remove=0
-while getopts "b:mrh" opname; do
+to_strip=0
+
+while getopts "b:p:s:mrh" opname; do
     case $opname in
         b)
             new_branch=$OPTARG
@@ -63,6 +67,9 @@ while getopts "b:mrh" opname; do
             ;;
         r)
             remove=1
+            ;;
+        s)
+            to_strip="$OPTARG"
             ;;
         h)
             usage
@@ -122,7 +129,7 @@ extract()
         # mes=$(git log -n1 --format="%B" $c)
 
         # force prefix when diff, since .gitconfig could hide prefix
-        git diff --src-prefix=a/ --dst-prefix=b/ --binary $c~ $c -- $fns | git apply --index
+        git diff --src-prefix="" --dst-prefix="" --binary $c~ $c -- $fns | git apply -p $to_strip --index
 
         info "== after patch $c =="
         git status --short
