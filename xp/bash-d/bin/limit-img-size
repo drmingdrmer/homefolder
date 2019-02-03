@@ -1,0 +1,61 @@
+#!/bin/sh
+
+usage()
+{
+    cat <<-END
+Resize image to be lower than specified size.
+
+Usage:
+    limit-img-size src-fn resized-fn [max-size]
+
+max-size            is 1M by default
+END
+}
+
+info()
+{
+    echo "$@"
+}
+
+limit_img_size()
+{
+    local fn="$1"
+    local dstfn="$2"
+    local tmpfn="/tmp/limit_img_size_tmp"
+    local size_max=${3-1024000}
+    local size_min
+
+    let size_min=size_max*90/100
+
+    local perc_r=100
+    local perc_l=10
+
+    cp "$fn" "$tmpfn"
+    info "expected size: $size_min ~ $size_max"
+    info "try to bisearch in $perc_l% ~ $perc_r%"
+
+    eval $(stat -s $fn)
+    if [ "$st_size" -gt "$size_max" ]; then
+        for i in $(seq 1 10); do
+
+            let mid=perc_l+perc_r
+            let mid=mid/2
+            convert -resize "$mid%" $fn $tmpfn
+            eval $(stat -s $tmpfn)
+
+            if [ "$st_size" -gt "$size_max" ]; then
+                let perc_r=mid
+            elif [ "$st_size" -lt "$size_min" ]; then
+                let perc_l=mid
+            else
+                info finally resize to $mid%, size: $st_size
+                break
+            fi
+            info "file size on $mid is $st_size, resize to $perc_l% ~ $perc_r%"
+        done
+    fi
+
+    mv "$tmpfn" "$dstfn"
+}
+
+limit_img_size "$@"
