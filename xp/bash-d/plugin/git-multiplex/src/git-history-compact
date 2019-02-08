@@ -6,7 +6,7 @@ source shlib.sh
 usage()
 {
     cat <<-END
-usage: git-history-compact <date>
+Usage: git-history-compact <date>
 
     Remove commits before <date>;
     Do not support history with more than one parent.
