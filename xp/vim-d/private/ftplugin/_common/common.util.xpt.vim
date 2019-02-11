@@ -6,149 +6,125 @@ XPTvar $TIME_FMT     '%H:%M:%S'
 
 call XPTdefineSnippet("Now", {}, "`time()^")
 
-" [u]nicode [m]ath _ for subscript
+let s:math_abbr = [
+      \ [ "suba",            "ₐ"  ],
+      \ [ "sube",            "ₑ"  ],
+      \ [ "subo",            "ₒ"  ],
+      \ [ "subx",            "ₓ"  ],
+      \ [ "subinve",         "ₔ"  ],
+      \ [ "sub0",            "₀"  ],
+      \ [ "sub1",            "₁"  ],
+      \ [ "sub2",            "₂"  ],
+      \ [ "sub3",            "₃"  ],
+      \ [ "sub4",            "₄"  ],
+      \ [ "sub5",            "₅"  ],
+      \ [ "sub6",            "₆"  ],
+      \ [ "sub7",            "₇"  ],
+      \ [ "sub8",            "₈"  ],
+      \ [ "sub9",            "₉"  ],
+      \ [ "subadd",          "₊"  ],
+      \ [ "subsub",          "₋"  ],
+      \ [ "subeq",           "₌"  ],
+      \ [ "sublparentheses", "₍"  ],
+      \ [ "subrparentheses", "₎"  ],
+      \]
 
-call XPTdefineSnippet("um_a", {}, "ₐ")
-call XPTdefineSnippet("um_e", {}, "ₑ")
-call XPTdefineSnippet("um_o", {}, "ₒ")
-call XPTdefineSnippet("um_x", {}, "ₓ")
+let s:math_abbr += [
+      \ [ "sup0",            "⁰"  ],
+      \ [ "sup1",            "¹"  ],
+      \ [ "sup2",            "²"  ],
+      \ [ "sup3",            "³"  ],
+      \ [ "sup4",            "⁴"  ],
+      \ [ "sup5",            "⁵"  ],
+      \ [ "sup6",            "⁶"  ],
+      \ [ "sup7",            "⁷"  ],
+      \ [ "sup8",            "⁸"  ],
+      \ [ "sup9",            "⁹"  ],
+      \ [ "supi",            "ⁱ"  ],
+      \ [ "supn",            "ⁿ"  ],
+      \ [ "supadd",          "⁺"  ],
+      \ [ "supsub",          "⁻"  ],
+      \ [ "supeq",           "⁼"  ],
+      \ [ "suplparentheses", "⁽"  ],
+      \ [ "suprparentheses", "⁾"  ],
+      \]
+let s:math_abbr += [
+      \ [ "all",             "∀"  ],
+      \ [ "exist",           "∃"  ],
+      \ [ "empty",           "∅"  ],
+      \ [ "prefix",          "⊏"  ],
+      \ [ "prefixeq",        "⊑"  ],
+      \ [ "subset",          "⊂"  ],
+      \ [ "subseteq",        "⊆"  ],
+      \ [ "nosubset",        "⊄"  ],
+      \ [ "noeq",            "≠"  ],
+      \ [ "le",              "≤"  ],
+      \ [ "ge",              "≥"  ],
+      \ [ "almosteq",        "≈"  ],
+      \ [ "identical",       "≡"  ],
+      \ [ "struckN",         "ℕ"  ],
+      \ [ "struckZ",         "ℤ"  ],
+      \ [ "struckC",         "ℚ"  ],
+      \ [ "struckR",         "ℝ"  ],
+      \ [ "struckC",         "ℂ"  ],
+      \ [ "ceiling",         "⌈`^⌉"  ],
+      \ [ "floor",           "⌊`^⌋"  ],
+      \ [ "sum",             "∑"  ],
+      \ [ "cirx",            "⊗"  ],
+      \ [ "cirplus",         "⊕"  ],
+      \ [ "cirdot",          "⊙"  ],
+      \ [ "partialdiff",     "∂"  ],
+      \ [ "root",            "√"  ],
+      \ [ "coloneq",         "≔"  ],
+      \ [ "plusminus",       "±"  ],
+      \ [ "symbol",          "ℵ"  ],
+      \ [ "inf",             "∞"  ],
+      \ [ "prime",           "′"  ],
+      \ [ "degree",          "°"  ],
+      \ [ "scriptl",         "ℓ"  ],
+      \ [ "not",             "¬"  ],
+      \ [ "and",             "∧"  ],
+      \ [ "or",              "∨"  ],
+      \ [ "because",         "∵"  ],
+      \ [ "therefore",       "∴"  ],
+      \ ]
 
-call XPTdefineSnippet("um_inve", {}, "ₔ")
+let s:math_abbr += [
+      \ [ "greekalpha",      "α"  ],
+      \ [ "greekbeta",       "β"  ],
+      \ [ "greekgamma",      "γ"  ],
+      \ [ "greekdelta",      "δ"  ],
+      \ [ "greekepsilon",    "ε"  ],
+      \ [ "greekzeta",       "ζ"  ],
+      \ [ "greeketa",        "η"  ],
+      \ [ "greektheta",      "θ"  ],
+      \ [ "greekiota",       "ι"  ],
+      \ [ "greekkappa",      "κ"  ],
+      \ [ "greeklambda",     "λ"  ],
+      \ [ "greekmu",         "μ"  ],
+      \ [ "greeknu",         "ν"  ],
+      \ [ "greekxi",         "ξ"  ],
+      \ [ "greekomicron",    "ο"  ],
+      \ [ "greekpi",         "π"  ],
+      \ [ "greekrho",        "ρ"  ],
+      \ [ "greeksigma",      "σ"  ],
+      \ [ "greektau",        "τ"  ],
+      \ [ "greekupsilon",    "υ"  ],
+      \ [ "greekphi",        "φ"  ],
+      \ [ "greekchi",        "χ"  ],
+      \ [ "greekpsi",        "ψ"  ],
+      \ [ "greekomega",      "ω"  ],
+      \ ]
 
-call XPTdefineSnippet("um_0", {}, "₀")
-call XPTdefineSnippet("um_1", {}, "₁")
-call XPTdefineSnippet("um_2", {}, "₂")
-call XPTdefineSnippet("um_3", {}, "₃")
-call XPTdefineSnippet("um_4", {}, "₄")
-call XPTdefineSnippet("um_5", {}, "₅")
-call XPTdefineSnippet("um_6", {}, "₆")
-call XPTdefineSnippet("um_7", {}, "₇")
-call XPTdefineSnippet("um_8", {}, "₈")
-call XPTdefineSnippet("um_9", {}, "₉")
+let s:pref = 'um'
+for [a, to] in s:math_abbr
+    call XPTdefineSnippet(s:pref . a, {}, to)
+    if a =~ '\v^greek'
+        let upper = toupper(to)
+        call XPTdefineSnippet(s:pref . a . '_u', {}, upper)
+    endif
+endfor
 
-call XPTdefineSnippet("um_add",          {}, "₊")
-call XPTdefineSnippet("um_sub",          {}, "₋")
-call XPTdefineSnippet("um_eq",           {}, "₌")
-call XPTdefineSnippet("um_lparentheses", {}, "₍")
-call XPTdefineSnippet("um_rparentheses", {}, "₎")
-
-" [u]nicode [m]ath [sup]script
-
-call XPTdefineSnippet("umsup0", {}, "⁰")
-call XPTdefineSnippet("umsup1", {}, "¹")
-call XPTdefineSnippet("umsup2", {}, "²")
-call XPTdefineSnippet("umsup3", {}, "³")
-call XPTdefineSnippet("umsup4", {}, "⁴")
-call XPTdefineSnippet("umsup5", {}, "⁵")
-call XPTdefineSnippet("umsup6", {}, "⁶")
-call XPTdefineSnippet("umsup7", {}, "⁷")
-call XPTdefineSnippet("umsup8", {}, "⁸")
-call XPTdefineSnippet("umsup9", {}, "⁹")
-call XPTdefineSnippet("umsupi", {}, "ⁱ")
-call XPTdefineSnippet("umsupn", {}, "ⁿ")
-
-call XPTdefineSnippet("umsupadd",          {}, "⁺")
-call XPTdefineSnippet("umsupsub",          {}, "⁻")
-call XPTdefineSnippet("umsupeq",           {}, "⁼")
-call XPTdefineSnippet("umsuplparentheses", {}, "⁽")
-call XPTdefineSnippet("umsuprparentheses", {}, "⁾")
-
-call XPTdefineSnippet("umall",   {}, "∀")
-call XPTdefineSnippet("umexist", {}, "∃")
-call XPTdefineSnippet("umelt", {}, "∈")
-
-
-call XPTdefineSnippet("umempty",       {}, "∅")
-call XPTdefineSnippet("umnoelt",       {}, "∉")
-call XPTdefineSnippet("umsubset",      {}, "⊂")
-call XPTdefineSnippet("umsubseteq",    {}, "⊆")
-call XPTdefineSnippet("umsuperset",    {}, "⊃")
-call XPTdefineSnippet("umsuperseteq",  {}, "⊇")
-call XPTdefineSnippet("umnosubset",    {}, "⊄")
-call XPTdefineSnippet("umintersect",   {}, "⋂")
-call XPTdefineSnippet("umunion",       {}, "⋃")
-call XPTdefineSnippet("umnoeq",        {}, "≠")
-call XPTdefineSnippet("umle",          {}, "≤")
-call XPTdefineSnippet("umge",          {}, "≥")
-call XPTdefineSnippet("umalmosteq",    {}, "≈")
-call XPTdefineSnippet("umidentical",   {}, "≡")
-call XPTdefineSnippet("umstruckN",     {}, "ℕ")
-call XPTdefineSnippet("umstruckZ",     {}, "ℤ")
-call XPTdefineSnippet("umstruckC",     {}, "ℚ")
-call XPTdefineSnippet("umstruckR",     {}, "ℝ")
-call XPTdefineSnippet("umstruckC",     {}, "ℂ")
-call XPTdefineSnippet("umceiling",     {}, "⌈`^⌉")
-call XPTdefineSnippet("umfloor",       {}, "⌊`^⌋")
-call XPTdefineSnippet("umsum",         {}, "∑")
-call XPTdefineSnippet("umintegral",    {}, "∫")
-call XPTdefineSnippet("umcirx",        {}, "⊗")
-call XPTdefineSnippet("umcirplus",     {}, "⊕")
-call XPTdefineSnippet("umcirdot",      {}, "⊙")
-call XPTdefineSnippet("umpartialdiff", {}, "∂")
-call XPTdefineSnippet("umroot",        {}, "√")
-call XPTdefineSnippet("umcoloneq",     {}, "≔")
-call XPTdefineSnippet("umplusminus",   {}, "±")
-call XPTdefineSnippet("umsymbol",      {}, "ℵ")
-call XPTdefineSnippet("uminf",         {}, "∞")
-call XPTdefineSnippet("umprime",       {}, "′")
-call XPTdefineSnippet("umdegree",      {}, "°")
-call XPTdefineSnippet("umscriptl",     {}, "ℓ")
-call XPTdefineSnippet("umnot",         {}, "¬")
-call XPTdefineSnippet("umand",         {}, "∧")
-call XPTdefineSnippet("umor",          {}, "∨")
-call XPTdefineSnippet("umbecause",     {}, "∵")
-call XPTdefineSnippet("umtherefore",   {}, "∴")
-
-" [u]nicode [m]ath Greek alphabet
-
-call XPTdefineSnippet("umAlpha",   {}, "Α")
-call XPTdefineSnippet("umBeta",    {}, "Β")
-call XPTdefineSnippet("umGamma",   {}, "Γ")
-call XPTdefineSnippet("umDelta",   {}, "Δ")
-call XPTdefineSnippet("umEpsilon", {}, "Ε")
-call XPTdefineSnippet("umZeta",    {}, "Ζ")
-call XPTdefineSnippet("umEta",     {}, "Η")
-call XPTdefineSnippet("umTheta",   {}, "Θ")
-call XPTdefineSnippet("umIota",    {}, "Ι")
-call XPTdefineSnippet("umKappa",   {}, "Κ")
-call XPTdefineSnippet("umLambda",  {}, "Λ")
-call XPTdefineSnippet("umMu",      {}, "Μ")
-call XPTdefineSnippet("umNu",      {}, "Ν")
-call XPTdefineSnippet("umXi",      {}, "Ξ")
-call XPTdefineSnippet("umOmicron", {}, "Ο")
-call XPTdefineSnippet("umPi",      {}, "Π")
-call XPTdefineSnippet("umRho",     {}, "Ρ")
-call XPTdefineSnippet("umSigma",   {}, "Σ")
-call XPTdefineSnippet("umTau",     {}, "Τ")
-call XPTdefineSnippet("umUpsilon", {}, "Υ")
-call XPTdefineSnippet("umPhi",     {}, "Φ")
-call XPTdefineSnippet("umChi",     {}, "Χ")
-call XPTdefineSnippet("umPsi",     {}, "Ψ")
-call XPTdefineSnippet("umOmega",   {}, "Ω")
-call XPTdefineSnippet("umalpha",   {}, "α")
-call XPTdefineSnippet("umbeta",    {}, "β")
-call XPTdefineSnippet("umgamma",   {}, "γ")
-call XPTdefineSnippet("umdelta",   {}, "δ")
-call XPTdefineSnippet("umepsilon", {}, "ε")
-call XPTdefineSnippet("umzeta",    {}, "ζ")
-call XPTdefineSnippet("umeta",     {}, "η")
-call XPTdefineSnippet("umtheta",   {}, "θ")
-call XPTdefineSnippet("umiota",    {}, "ι")
-call XPTdefineSnippet("umkappa",   {}, "κ")
-call XPTdefineSnippet("umlambda",  {}, "λ")
-call XPTdefineSnippet("ummu",      {}, "μ")
-call XPTdefineSnippet("umnu",      {}, "ν")
-call XPTdefineSnippet("umxi",      {}, "ξ")
-call XPTdefineSnippet("umomicron", {}, "ο")
-call XPTdefineSnippet("umpi",      {}, "π")
-call XPTdefineSnippet("umrho",     {}, "ρ")
-call XPTdefineSnippet("umsigma",   {}, "σ")
-call XPTdefineSnippet("umtau",     {}, "τ")
-call XPTdefineSnippet("umupsilon", {}, "υ")
-call XPTdefineSnippet("umphi",     {}, "φ")
-call XPTdefineSnippet("umchi",     {}, "χ")
-call XPTdefineSnippet("umpsi",     {}, "ψ")
-call XPTdefineSnippet("umomega",   {}, "ω")
 
 " Ϊ     Greek Capital Letter Iota with diaeresis
 " Ϋ     Greek Capital Letter Upsilon with diaeresis
@@ -166,5 +142,58 @@ call XPTdefineSnippet("umomega",   {}, "ω")
 " ύ     Greek Small Letter Upsilon with acute accent
 " ώ     Greek Small Letter Omega with acute accent
 
-XPT abcc
-ω
+" like u
+XPT umsetopu " ⋃
+XSET x=Choose(split('⋃⊌⊍⊎⨃⨄⨆', '\zs'))
+`x^
+
+" like n
+XPT umsetopn " ⋂
+XSET x=Choose(split('⋂⨅', '\zs'))
+`x^
+
+XPT umsetrell " ⊂
+XSET x=Choose(split('⊂⊆⊈⊊⊄⫅⫋⫃⫇⫉⟃⫏⫑⫓⫕⫗⋐⟈', '\zs'))
+`x^
+
+XPT umsetrelr " ⊃
+XSET x=Choose(split('⊃⊇⊉⊋⊅⫆⫌⫄⫈⫊⟄⫐⫒⫔⫖⫘⋑⟉', '\zs'))
+`x^
+
+
+XPT umsetrelsql " ⊏
+XSET x=Choose(split('⊏⊑⋢⋤', '\zs'))
+`x^
+
+XPT umsetrelsqr " ⊐
+XSET x=Choose(split('⊐⊒⋣⋥', '\zs'))
+`x^
+
+XPT umorderl " ≺
+XSET x=Choose(split('≺≼≾⊀⋞⋠⋨⪯⪱⪳⪵⪷⪹⪻', '\zs'))
+`x^
+
+XPT umorderr " ≻
+XSET x=Choose(split('≻≽≿⊁⋟⋡⋩⪰⪲⪴⪶⪸⪺⪼', '\zs'))
+`x^
+
+XPT umcmpl " <
+XSET x=Choose(split('≮≤≰⪇≦≨', '\zs'))
+`x^
+
+XPT umcmpr " <
+XSET x=Choose(split('≯≥≱⪈≧≩', '\zs'))
+`x^
+
+XPT umeltl " ∈
+XSET x=Choose(split('∈∉⋶⋲⋳', '\zs'))
+`x^
+
+XPT umeltr " ∋
+XSET x=Choose(split('∋∌⋽⋺⋻', '\zs'))
+`x^
+
+XPT umintegral " ∫
+XSET x=Choose(split('∫∬∭∮∯∰∱∲∳⨋⨌⨍⨎⨏⨐⨑⨒⨓⨔⨕⨖⨗⨘⨙⨚⨛⨜', '\zs'))
+`x^
+
