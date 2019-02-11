@@ -49,9 +49,9 @@ superset of ⊃
 subset of or equal to ⊆
 superset of or equal to ⊇
 not a subset of ⊄
-n-ary
 intersection ⋂
-n-ary union ⋃ not equal to ≠
+union ⋃
+not equal to ≠
 less-than or equal to ≤
 greater-than or equal to ≥
 almost equal to ≈
@@ -60,14 +60,14 @@ capital n ℕ
 double-struck capital z ℤ
 double-struck capital c ℚ
 double-struck capital r ℝ
-double-struck capital c ℂ ceiling ⌈ ⌉
+double-struck capital c ℂ
+ceiling ⌈ ⌉
 floor ⌊ ⌋
 n-ary summation ∑
 integral ∫
 multiplication sign ×
 circled times ⊗
-circled
-plus ⊕
+circled plus ⊕
 circled dot operator ⊙
 multiplication sign ×
 partial differential ∂
