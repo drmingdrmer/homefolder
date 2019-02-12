@@ -11,7 +11,7 @@ fns=$(ls git-* p8ln)
 echo build files: $fns
 
 for f in $fns; do
-    cat $f | awk -f preproc.awk > ../bin/$f && chmod +x ../bin/$f
+    cat $f | awk -v excludeline="^#" -f preproc.awk > ../bin/$f && chmod +x ../bin/$f
 done
 
 for f in $fns; do
@@ -52,6 +52,7 @@ force_update()
         git clone "$url" "$dir"
     fi
 
+    dd "force_update $dir $url"
     cd "$dir"
 
     # manually make a tree object
@@ -63,7 +64,7 @@ force_update()
 
     # use content in "$tree" to create a commit
     git read-tree "$tree" || die git-read-tree
-    if git diff --name-only --relative HEAD -- | grep -qs .; then
+    if git diff --cached --name-only --relative HEAD -- | grep -qs .; then
         git status --untracked-files=no
         git commit -m 'auto commit' || die git-commit
         git log --color --decorate --abbrev-commit --find-renames --format=oneline -3 --stat
@@ -72,6 +73,7 @@ force_update()
     fi
 
     git push origin $branch
+    git reset --hard
 }
 
 
@@ -109,6 +111,7 @@ while read name dir url; do
 done <<-END
 git-box          gist/git-box           git@gist.github.com:07faee6c4f7c8e31da3c5210cfa04034.git
 git-gotofix      gist/git-gotofix       git@gist.github.com:241dd1b3655f04190b0c6d06aa1dd258.git
+git-split        gist/git-split         git@gist.github.com:aadec82ccc43c25b9a1a40fcaa96f7e9.git
 git-subrepo      gist/git-subrepo       git@gist.github.com:ff72ee00df7b7a359263fc3b15d093b0.git
 p8ln             gist/p8ln              git@gist.github.com:8dd50b66aca51595e71dc247dcb559c1.git
 git-subrepo      repo/git-subrepo       git@github.com:baishancloud/git-subrepo.git

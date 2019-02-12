@@ -1,69 +1,105 @@
 #!/bin/bash
 
-# * 358aee4 (HEAD) fix css
-# |  css/site.css | 13 ++---
-# |
-# * f869f40 init site
-# |  html/index.html    | 12 ++--
-# |  html/header.html   | 34 +-----
-# |  css/site.css       | 61 +++++++------
-# |
-# * 82554be fix doc of Build
-#
-#
-# # to split folder html into a separate branch:
-# > git-split 82554be..HEAD -- html/
-#
-#
-# *   948149a Merge commit 'aa76f4de5be5ddbb2908ba145fea5697c7baf728' into HEAD
-# |\
-# | * aa76f4d init site
-# | |  html/index.html  | 12 ++--
-# | |  html/header.html | 34 +-----
-# | |
-# * | 088e903 fix css
-# | |  css/site.css | 13 ++---
-# | |
-# * | 0b606c2 init site
-# | |  css/site.css | 61 +++++++------
-# |/
-# * 82554be fix doc of Build
-
-source shlib.sh
-
 usage()
 {
     cat <<-END
-usage: git-split [ -b <to-new-branch> ] [-r] [-m] <from>..[<to>] -- <fns>
+Split one git history into two.
 
-split files out of commits to build a new branch.
+One of them only contains changes of specified files.
+The other contains other changes(or optionally contains full history).
 
-options:
+Usage:
+    git-split [ -b <to-new-branch> ] [-r] [-m] [-s <prefix> ] <from>..[<to>] -- <fns>
 
-    -b <new-branch>             create a new branch.
+Synoposis:
 
-    -r                          remove <fns> from original history.
-                                it changes history.
+    Initial:
 
-    -m                          merge back new branch.
+        * 358aee4 (HEAD) fix css
+        |  css/site.css | 13 ++---
+        |
+        * f869f40 init site
+        |  html/index.html    | 12 ++--
+        |  html/header.html   | 34 +-----
+        |  css/site.css       | 61 +++++++------
+        |
+        * 82554be fix doc of Build
 
-    -s <prefix>                 strip prefix from paths
+
+    To split folder html into a separate branch:
+
+        git-split -m 82554be..HEAD -- html/
+
+    Results in:
+
+        *   948149a Merge commit 'aa76f4de5be5ddbb2908ba145fea5697c7baf728' into HEAD
+        |\\
+        | * aa76f4d init site
+        | |  html/index.html  | 12 ++--
+        | |  html/header.html | 34 +-----
+        | |
+        * | 088e903 fix css
+        | |  css/site.css | 13 ++---
+        | |
+        * | 0b606c2 init site
+        | |  css/site.css | 61 +++++++------
+        |/
+        * 82554be fix doc of Build
+
+
+Arguments:
+
+    <from> and <to> specifies history range to split.
+    E.g. to split the latest 3 commit:
+
+        git-split master~3..master
+
+    "--" must present as a separator.
+
+    <fns> are several file patterns.
+    E.g.:
+
+        git-split master~3..master -- src/foo.* deps/config.yaml
+
+Options:
+
+    -b <new-branch>             Create a new branch.
+                                When absent, create a temporary branch "tmpbranch".
+
+    -o                          Create an orphan branch instead of one based on <from>.
+
+    -r                          Remove <fns> from original history.
+                                Without -r, the original history will not be modified.
+
+    -m                          Merge back the new branch to commmit "<to>".
+                                -m works only when -r is specified.
+
+    -s <prefix>                 Strip <prefix> dir segments from paths that are splitted out.
+                                E.g.:
+                                    git-split -s 3 base..master -- my/foo/dir/bar.txt
+
+                                    removes "my/foo/dir".
 END
-
 }
+
+source shlib.sh
 
 new_branch=tmpbranch
 merge=0
 remove=0
+orphan=0
 to_strip=0
 
-while getopts "b:p:s:mrh" opname; do
+while getopts "b:p:s:morh" opname; do
     case $opname in
         b)
             new_branch=$OPTARG
             ;;
         m)
             merge=1
+            ;;
+        o)
+            orphan=1
             ;;
         r)
             remove=1
@@ -157,14 +193,23 @@ extract()
 
 build_new_branch()
 {
-    # git checkout --detach $base \
-    git checkout --orphan $new_branch \
-        && git reset --hard \
-        && git commit --allow-empty -m "init-root" \
-        && git clean -dxf \
-        && info "== build new branch ==" \
-        && info "HEAD hash: $(git_hash HEAD)" \
-        && extract $(git_hash HEAD) \
+    info "== build_new_branch =="
+
+    git checkout --orphan $new_branch || die checkout --orpahn $new_branch
+
+    if [ "$orphan" = "1" ]; then
+        git reset --hard
+        git commit --allow-empty -m "init-root" || die commit init-root
+    else
+        info reset $new_branch to $base
+        git reset --hard $base
+    fi
+
+    git clean -dxf || die clean -dxf
+
+    info "HEAD hash: $(git_hash HEAD)"
+
+    extract $(git_hash HEAD) \
         && new_hash=$(git_hash HEAD) \
         && \
         if [ "$new_branch" = "tmpbranch" ]; then
@@ -178,6 +223,8 @@ build_new_branch()
 
 discard_changes()
 {
+    info "== discard_changes =="
+
     # git checkout would fail if one of the files does not exists.
     # thus newly added file impedes the whole process.
     # git checkout ab12345 -- nonexistent

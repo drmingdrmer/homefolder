@@ -1,7 +1,5 @@
 #!/bin/sh
 
-#include 'shlib.sh' begin
-#!/bin/sh
 
 
 shlib_init_colors()
@@ -530,24 +528,7 @@ git_diff_ln_new()
 }'
 }
 
-# test:
 
-# # file to root
-# git reset --hard HEAD
-# git_object_add_by_commit_path a HEAD dist/shlib.sh
-# git status
-# # dir to root
-# git reset --hard HEAD
-# git_object_add_by_commit_path a HEAD dist
-# git status
-# # file to folder
-# git reset --hard HEAD
-# git_object_add_by_commit_path a/b/c HEAD dist/shlib.sh
-# git status
-# # dir to folder
-# git reset --hard HEAD
-# git_object_add_by_commit_path a/b/c HEAD dist
-# git status
 
 
 os_detect()
@@ -616,7 +597,6 @@ fn_match()
     esac
     return 1
 }
-#include 'shlib.sh' end
 
 onto=
 
