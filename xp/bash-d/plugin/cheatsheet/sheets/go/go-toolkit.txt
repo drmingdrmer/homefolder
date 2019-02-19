@@ -1,0 +1,26 @@
+go get honnef.co/go/tools/cmd/staticcheck
+staticcheck -checks all github.com/openacid/slim/array
+
+
+go get github.com/client9/misspell/cmd/misspell
+misspell \
+	-locale GB \
+	-error \
+	*.md *.go
+
+go get github.com/mdempsky/unconvert
+unconvert -v github.com/openacid/slim/array
+
+# ineffective assignment
+go get github.com/gordonklaus/ineffassign
+find $(SRCDIRS) -name '*.go' | xargs ineffassign
+
+# unused function param
+go get mvdan.cc/unparam
+unparam ./...
+
+go get github.com/kisielk/errcheck
+errcheck github.com/openacid/slim/array
+
+gofmt
+@test -z "$(shell gofmt -s -l -d -e $(SRCDIRS) | tee /dev/stderr)"
