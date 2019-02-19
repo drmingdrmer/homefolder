@@ -2,6 +2,13 @@
 ~/foo
 ~/sec/baishan
 ~/sec/passwdgen/acc
+~/xp/Dropbox/Sync
+~/xp/Dropbox/Sync/sticker/origin
+~/xp/bash-d/plugin/cheatsheet/sheets
+~/xp/bash-d/plugin/git-multiplex
+~/xp/bash-d/plugin/git-xp-alias/bin
+~/xp/va
+~/xp/va/ibiu
 ~/xp/vcs/bscbit/data
 ~/xp/vcs/bscbit/data/devops
 ~/xp/vcs/bscbit/plut/predictor
@@ -22,6 +29,7 @@
 ~/xp/vcs/gh/bsc-s2/slimtrie
 ~/xp/vcs/gh/drmingdrmer/pykit
 ~/xp/vcs/gh/openacid/openacid.github.io
+~/xp/vcs/go/src/github.com/openacid/errors
 ~/xp/vcs/xp/JakSprats/datanet
 ~/xp/vcs/xp/drmingdrmer/drmingdrmer.github.io
 ~/xp/vcs/xp/drmingdrmer/ibiu
@@ -33,13 +41,6 @@
 ~/xp/vcs/xp/drmingdrmer/wiki/snippet
 ~/xp/vcs/xp/drmingdrmer/xptemplate
 ~/xp/vcs/xp/python-zk/kazoo
-~/xp/Dropbox/Sync
-~/xp/Dropbox/Sync/sticker/origin
-~/xp/bash-d/plugin/cheatsheet/sheets
-~/xp/bash-d/plugin/git-multiplex
-~/xp/bash-d/plugin/git-xp-alias/bin
-~/xp/va
-~/xp/va/ibiu
 ~/xp/vim-d/plg-git
 ~/xp/vim-d/plg-git/vim-fugitive
 ~/xp/vim-d/private
