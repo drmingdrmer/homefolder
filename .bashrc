@@ -129,7 +129,9 @@ END
 
 [ -d /usr/local/go/bin ] && { export PATH=$PATH:/usr/local/go/bin; export GOROOT=/usr/local/go; }
 [ -d $HOME/go/bin ] && { export PATH=$PATH:$HOME/go/bin; export GOROOT=$HOME/go; }
-[ -d $HOME/xp/gopath ] && { export GOPATH=$HOME/xp/gopath; export PATH=$PATH:$GOPATH/bin; }
+
+export GOPATH=$HOME/xp/vcs/go
+export PATH=$PATH:$GOPATH/bin
 
 export HISTIGNORE="l:la:ll:ls:gl"
 export GREP_COLORS="ms=01;33:mc=01;31:sl=0;33:cx=:fn=35:ln=32:bn=32:se=36"
