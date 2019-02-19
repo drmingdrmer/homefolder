@@ -14,6 +14,8 @@ endfunction
 XPT ##
 /* `cursor^ */
 
+" XPT example
+" `this^ changes as ``this^ is changed
 
 
 XPT ut " st_test(fn, name)
