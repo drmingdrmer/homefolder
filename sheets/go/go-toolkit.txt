@@ -1,3 +1,7 @@
+# suspicious check
+go vet github.com/openacid/slim/array
+
+
 go get honnef.co/go/tools/cmd/staticcheck
 staticcheck -checks all github.com/openacid/slim/array
 
