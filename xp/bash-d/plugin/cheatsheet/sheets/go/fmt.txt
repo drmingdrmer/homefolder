@@ -1,0 +1,12 @@
+%v      the value in a default format
+        when printing structs, the plus flag (%+v) adds field names
+
+%v      {1 [{2 []} {3 []}]}
+
+%+v     {val:1 foo:[{val:2 foo:[]} {val:3 foo:[]}]}
+
+%#v     a Go-syntax representation of the value
+
+        main.X{val:1, foo:[]main.X{main.X{val:2, foo:[]main.X(nil)}, main.X{val:3, foo:[]main.X(nil)}}}
+
+%T      a Go-syntax representation of the type of the value
