@@ -17,7 +17,6 @@ let g:go_fmt_autosave = 0
 " gosec - Inspects source code for security problems by scanning the Go AST.
 let g:go_metalinter_enabled = [
       \ 'deadcode',
-      \ 'dupl',
       \ 'errcheck',
       \ 'goconst',
       \ 'golint',
