@@ -22,7 +22,8 @@ let g:menuly_menu = {
       \          }],
       \          'o': ['vim-go', {
       \                     'i': ':GoImports',
-      \                     'l': ':GoMetaLinter',
+      \                     'l': ':GoLint',
+      \                     'm': ':GoMetaLinter',
       \                     'r': ':GoRename',
       \          }],
       \ }],
