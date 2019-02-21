@@ -20,7 +20,6 @@ let g:go_metalinter_enabled = [
       \ 'dupl',
       \ 'errcheck',
       \ 'goconst',
-      \ 'gocyclo',
       \ 'golint',
       \ 'gosec',
       \ 'gotype',
