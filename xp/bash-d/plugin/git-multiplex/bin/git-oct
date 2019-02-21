@@ -1,0 +1,99 @@
+#!/usr/bin/env python2
+# coding: utf-8
+
+import os
+import git
+import argparse
+
+null_binsha = '\0' * 20
+msg_pref = 'xp-auto-commit: '
+
+
+def _add_blob(repo, blob_tree, blob, parent_commits=()):
+
+    # TODO refactor me:
+    # If there is a previous commit, it might be a 'Modify'
+    force = len(parent_commits) > 0
+
+    blob_tree.cache.add(blob.binsha, blob.mode, blob.name, force=force)
+    blob_tree.cache.set_done()
+
+    commit = git.Commit.create_from_tree(
+            repo, blob_tree,
+            msg_pref + 'blob-commit: ' + blob.name, 
+            parent_commits=list(parent_commits))
+
+    return commit
+
+def new_blob_commit(repo, blob):
+
+    assert blob.type == 'blob'
+
+    blob_tree = git.Tree(repo, null_binsha)
+    return _add_blob(repo, blob_tree, blob)
+
+
+def mod_blob_commit(repo, curr_commit, blob):
+
+    assert blob.type == 'blob'
+
+    blob_tree = curr_commit.tree
+    return _add_blob(repo, blob_tree, blob, [curr_commit])
+
+
+def add_obj(repo, commit, obj):
+
+    # commit is a 
+
+    curr_obj = tree[obj.path]
+
+    assert curr_obj.type == obj.type
+
+    # TODO support submodule
+    assert obj.type in ('tree', 'blob')
+
+    if obj.type == 'blob':
+        tree.cache.add(obj.hexsha, obj.mode, obj.name)
+        tree.cache.set_done()
+
+    elif obj.type == 'tree':
+
+
+
+    elts = os.path.split(path)
+
+def foo(repo):
+
+    head_tree = repo.head.commit.tree()
+    index_tree = repo.index.write_tree()
+
+    # find adds
+    for obj in index_tree:
+        path = obj.path
+        if path not in head_tree:
+            add_obj(repo, head_tree, obj)
+
+    for df in diffs:
+        if df.change_type in ('A', 'M', 'T'):
+            add_obj(repo, repo.tree, )
+
+
+if __name__ == "__main__":
+    
+    parser = argparse.ArgumentParser(description='markdown TOC maker')
+
+    parser.add_argument('cmds', type=str, nargs='+', help='file names')
+    parser.add_argument('-i', action="store_true", dest="inplace", help="in-place")
+
+    args = parser.parse_args()
+
+    path = args.cmds[0]
+    if args.inplace:
+        dst = path
+    else:
+        dst = args.cmds[1]
+
+    cont = add_md_toc(path)
+
+    with open(dst, 'w') as f:
+        f.write(cont.encode('utf-8'))
