@@ -16,7 +16,6 @@ let g:go_fmt_autosave = 0
 " goconst - Finds repeated strings that could be replaced by a constant.
 " gosec - Inspects source code for security problems by scanning the Go AST.
 let g:go_metalinter_enabled = [
-      \ 'deadcode',
       \ 'errcheck',
       \ 'goconst',
       \ 'golint',
