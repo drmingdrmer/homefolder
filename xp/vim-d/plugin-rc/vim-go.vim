@@ -12,7 +12,6 @@ let g:go_fmt_autosave = 0
 " staticcheck - Statically detect bugs, both obvious and subtle ones.
 " dupl - Reports potentially duplicated code.
 " ineffassign - Detect when assignments to existing variables are not used.
-" interfacer - Suggest narrower interfaces that can be used.
 " unconvert - Detect redundant type conversions.
 " goconst - Finds repeated strings that could be replaced by a constant.
 " gosec - Inspects source code for security problems by scanning the Go AST.
@@ -26,7 +25,6 @@ let g:go_metalinter_enabled = [
       \ 'gosec',
       \ 'gotype',
       \ 'ineffassign',
-      \ 'interfacer',
       \ 'maligned',
       \ 'staticcheck',
       \ 'structcheck',
