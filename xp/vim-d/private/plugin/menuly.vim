@@ -20,6 +20,11 @@ let g:menuly_menu = {
       \                     's': ':GV --all --simplify-by-decoration -n1024',
       \                     'v': ':GV                                -n1024',
       \          }],
+      \          'o': ['vim-go', {
+      \                     'i': ':GoImports',
+      \                     'l': ':GoMetaLinter',
+      \                     'r': ':GoRename',
+      \          }],
       \ }],
       \ 'c': ['cursor', {
       \          'l': 'cursorline',
