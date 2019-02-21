@@ -1,3 +1,13 @@
+go get honnef.co/go/tools/cmd/staticcheck
+go get github.com/client9/misspell/cmd/misspell
+go get github.com/mdempsky/unconvert
+go get github.com/gordonklaus/ineffassign
+go get mvdan.cc/unparam
+go get github.com/kisielk/errcheck
+
+
+
+
 # suspicious check
 go vet github.com/openacid/slim/array
 
