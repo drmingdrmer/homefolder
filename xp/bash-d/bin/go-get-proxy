@@ -1,0 +1,8 @@
+#!/bin/sh
+
+# shadowsocks
+sock5="socks5://127.0.0.1:1085"
+
+git config --global http.proxy 
+http_proxy=$sock5 go get "$@"
+git config --global --unset http.proxy
