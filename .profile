@@ -28,6 +28,6 @@ fi
 ##
 
 # MacPorts Installer addition on 2012-09-23_at_22:32:56: adding an appropriate PATH variable for use with MacPorts.
-export PATH=/opt/local/bin:/opt/local/sbin:$PATH
+export PATH=/usr/local/opt/ipython@5/bin:/opt/local/bin:/opt/local/sbin:$PATH
 # Finished adapting your PATH environment variable for use with MacPorts.
 
