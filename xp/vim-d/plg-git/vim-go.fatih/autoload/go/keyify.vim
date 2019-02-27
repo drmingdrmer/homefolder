@@ -1,23 +1,24 @@
-function! go#keyify#Keyify()
-  let old_gopath = $GOPATH
-  let $GOPATH = go#path#Detect()
-  let bin_path = go#path#CheckBinPath("keyify")
-  let fname = fnamemodify(expand("%"), ':p:gs?\\?/?')
+" don't spam the user when Vim is started in Vi compatibility mode
+let s:cpo_save = &cpo
+set cpo&vim
 
-  if empty(bin_path) || !exists('*json_decode')
-    let $GOPATH = old_gopath
+function! go#keyify#Keyify()
+  " Needs: https://github.com/dominikh/go-tools/pull/272
+  "\ '-tags', go#config#BuildTags(),
+  let l:cmd = ['keyify',
+      \ '-json',
+      \ printf('%s:#%s', fnamemodify(expand('%'), ':p:gs?\\?/?'), go#util#OffsetCursor())]
+
+  let [l:out, l:err] = go#util#Exec(l:cmd)
+  if l:err
+    call go#util#EchoError("non-zero exit code: " . l:out)
     return
   endif
-
-  " Get result of command as json, that contains `start`, `end` and `replacement`
-  let command = printf("%s -json %s:#%s", bin_path, fname, go#util#OffsetCursor())
-  let output = go#util#System(command)
-  silent! let result = json_decode(output)
+  silent! let result = json_decode(l:out)
 
   " We want to output the error message in case the result isn't a JSON
   if type(result) != type({})
-    call go#util#EchoError(s:chomp(output))
-    let $GOPATH = old_gopath
+    call go#util#EchoError(s:chomp(l:out))
     return
   endif
 
@@ -50,9 +51,14 @@ function! go#keyify#Keyify()
 
   call setpos("'<", vis_start)
   call setpos("'>", vis_end)
-  let $GOPATH = old_gopath
 endfunction
 
 function! s:chomp(string)
     return substitute(a:string, '\n\+$', '', '')
 endfunction
+
+" restore Vi compatibility settings
+let &cpo = s:cpo_save
+unlet s:cpo_save
+
+" vim: sw=2 ts=2 et
