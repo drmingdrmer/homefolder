@@ -79,6 +79,7 @@ fun! s:DoMap() "{{{
           \ [ 'nmap', "<C-k>",                "<Plug>edit:move_up" ],
           \ [ 'nmap', "<Leader><Leader>idn",  "<Plug>format:json_format" ],
           \ [ 'nmap', "<Leader><Leader>ff",   "<Plug>format:format_file" ],
+          \ [ 'nmap', "<Leader><Leader>rr",   "<Plug>refactor:rename" ],
           \ [ 'nmap', "<Leader><Leader>sd",   "<Plug>search:word_in_cwd" ],
           \ [ 'nmap', "<Leader><Leader>sf",   "<Plug>search:word_in_cfile" ],
           \ [ 'nmap', "<Leader><Leader>sp",   "<Plug>edit:switch_paste_mode" ],
