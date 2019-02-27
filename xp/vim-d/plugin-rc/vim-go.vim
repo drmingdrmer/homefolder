@@ -2,7 +2,10 @@ nnoremap <buffer> <Plug>format:format_file :GoFmt<CR>
 let g:go_fmt_autosave = 0
 
 " -s: auto simplify
-let g:go_fmt_options = "-s"
+let g:go_fmt_options = {
+      \ "gofmt": "-s",
+      \ "goimports": "",
+      \ }
 
 " gotype - Syntactic and semantic analysis similar to the Go compiler.
 " deadcode - Finds unused code.
