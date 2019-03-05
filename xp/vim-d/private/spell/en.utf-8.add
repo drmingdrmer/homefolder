@@ -178,3 +178,4 @@ zktx
 txid
 ZKTransaction
 TXError
+SlimTrie
