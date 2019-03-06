@@ -1,9 +1,26 @@
 #!/bin/bash
 
+usage()
+{
+    cat <<-END
+Fast-forward merge all branches.
+
+    git ff-all [-i] [-f] [-v]
+
+Options:
+
+    -i          interactive: ask before merge
+
+    -f          force: merge any found local branch
+
+    -v          verbose
+END
+}
+
 mode=dry_run
 verbose=""
 
-while getopts "ifv" opname; do
+while getopts "fhiv" opname; do
     case $opname in
         i)
             mode=interactive
@@ -14,7 +31,11 @@ while getopts "ifv" opname; do
         v)
             verbose=1
             ;;
-        [?])
+        h)
+            usage
+            exit 0
+            ;;
+        *)
             echo invalid
             exit
             ;;
