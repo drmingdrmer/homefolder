@@ -22,3 +22,8 @@ U+25F4  ◴       e2 97 b4        white circle with upper left quadrant
 U+25F5  ◵       e2 97 b5        white circle with lower left quadrant
 U+25F6  ◶       e2 97 b6        white circle with lower right quadrant
 U+25F7  ◷       e2 97 b7        white circle with upper right quadrant
+
+
+⣿⣤⠛
+
+
