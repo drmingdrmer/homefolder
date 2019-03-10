@@ -1,0 +1,256 @@
+∀               2200            &forall;        for all
+∁               2201                            complement
+∂               2202            &part;          partial differential
+∃               2203            &exist;         there exists
+∄               2204                            there does not exist
+∅               2205            &empty;         empty set
+∆               2206                            increment
+∇               2207            &nabla;         nabla
+∈               2208            &isin;          element of
+∉               2209            &notin;         not an element of
+∊               220A                            small element of
+∋               220B            &ni;            contains as member
+∌               220C                            does not contain as member
+∍               220D                            small contains as member
+∎               220E                            end of proof
+∏               220F            &prod;          n-ary product
+∐               2210                            n-ary coproduct
+∑               2211            &sum;           n-ary summation
+−               2212            &minus;         minus sign
+∓               2213                            minus-or-plus sign
+∔               2214                            dot plus
+∕               2215                            division slash
+∖               2216                            set minus
+∗               2217            &lowast;        asterisk operator
+∘               2218                            ring operator
+∙               2219                            bullet operator
+√               221A            &radic;         square root
+∛               221B                            cube root
+∜               221C                            fourth root
+∝               221D            &prop;          proportional to
+∞               221E            &infin;         infinity
+∟               221F                            right angle
+∠               2220            &ang;           angle
+∡               2221                            measured angle
+∢               2222                            spherical angle
+∣               2223                            divides
+∤               2224                            does not divide
+∥               2225                            parallel to
+∦               2226                            not parallel to
+∧               2227            &and;           logical and
+∨               2228            &or;            logical or
+∩               2229            &cap;           intersection
+∪               222A            &cup;           union
+∫               222B            &int;           integral
+∬               222C                            double integral
+∭               222D                            triple integral
+∮               222E                            contour integral
+∯               222F                            surface integral
+∰               2230                            volume integral
+∱               2231                            clockwise integral
+∲               2232                            clockwise contour integral
+∳               2233                            anticlockwise contour integral
+∴               2234            &there4;        therefore
+∵               2235                            because
+∶               2236                            ratio
+∷               2237                            proportion
+∸               2238                            dot minus
+∹               2239                            excess
+∺               223A                            geometric proportion
+∻               223B                            homothetic
+∼               223C            &sim;           tilde operator
+∽               223D                            reversed tilde
+∾               223E                            inverted lazy s
+∿               223F                            sine wave
+≀               2240                            wreath product
+≁               2241                            not tilde
+≂               2242                            minus tilde
+≃               2243                            asymptotically equal to
+≄               2244                            not asymptotically equal to
+≅               2245            &cong;          approximately equal to
+≆               2246                            approximately but not actually equal to
+≇               2247                            neither approximately nor actually equal to
+≈               2248            &asymp;         almost equal to
+≉               2249                            not almost equal to
+≊               224A                            almost equal or equal to
+≋               224B                            triple tilde
+≌               224C                            all equal to
+≍               224D                            equivalent to
+≎               224E                            geometrically equivalent to
+≏               224F                            difference between
+≐               2250                            approaches the limit
+≑               2251                            geometrically equal to
+≒               2252                            approximately equal to or the image of
+≓               2253                            image of or approximately equal to
+≔               2254                            colon equals
+≕               2255                            equals colon
+≖               2256                            ring in equal to
+≗               2257                            ring equal to
+≘               2258                            corresponds to
+≙               2259                            estimates
+≚               225A                            equiangular to
+≛               225B                            star equals
+≜               225C                            delta equal to
+≝               225D                            equal to by definition
+≞               225E                            measured by
+≟               225F                            questioned equal to
+≠               2260            &ne;            not equal to
+≡               2261            &equiv;         identical to
+≢               2262                            not identical to
+≣               2263                            strictly equivalent to
+≤               2264            &le;            less-than or equal to
+≥               2265            &ge;            greater-than or equal to
+≦               2266                            less-than over equal to
+≧               2267                            greater-than over equal to
+≨               2268                            less-than but not equal to
+≩               2269                            greater-than but not equal to
+≪               226A                            much less-than
+≫               226B                            much greater-than
+≬               226C                            between
+≭               226D                            not equivalent to
+≮               226E                            not less-than
+≯               226F                            not greater-than
+≰               2270                            neither less-than nor equal to
+≱               2271                            neither greater-than nor equal to
+≲               2272                            less-than or equivalent to
+≳               2273                            greater-than or equivalent to
+≴               2274                            neither less-than nor equivalent to
+≵               2275                            neither greater-than nor equivalent to
+≶               2276                            less-than or greater-than
+≷               2277                            greater-than or less-than
+≸               2278                            neither less-than nor greater-than
+≹               2279                            neither greater-than nor less-than
+≺               227A                            precedes
+≻               227B                            succeeds
+≼               227C                            precedes or equal to
+≽               227D                            succeeds or equal to
+≾               227E                            precedes or equivalent to
+≿               227F                            succeeds or equivalent to
+⊀               2280                            does not precede
+⊁               2281                            does not succeed
+⊂               2282            &sub;           subset of
+⊃               2283            &sup;           superset of
+⊄               2284            &nsub;          not a subset of
+⊅               2285                            not a superset of
+⊆               2286            &sube;          subset of or equal to
+⊇               2287            &supe;          superset of or equal to
+⊈               2288                            neither a subset of nor equal to
+⊉               2289                            neither a superset of nor equal to
+⊊               228A                            subset of with not equal to
+⊋               228B                            superset of with not equal to
+⊌               228C                            multiset
+⊍               228D                            multiset multiplication
+⊎               228E                            multiset union
+⊏               228F                            square image of
+⊐               2290                            square original of
+⊑               2291                            square image of or equal to
+⊒               2292                            square original of or equal to
+⊓               2293                            square cap
+⊔               2294                            square cup
+⊕               2295            &oplus;         circled plus
+⊖               2296                            circled minus
+⊗               2297            &otimes;        circled times
+⊘               2298                            circled division slash
+⊙               2299                            circled dot operator
+⊚               229A                            circled ring operator
+⊛               229B                            circled asterisk operator
+⊜               229C                            circled equals
+⊝               229D                            circled dash
+⊞               229E                            squared plus
+⊟               229F                            squared minus
+⊠               22A0                            squared times
+⊡               22A1                            squared dot operator
+⊢               22A2                            right tack
+⊣               22A3                            left tack
+⊤               22A4                            down tack
+⊥               22A5            &perp;          up tack
+⊦               22A6                            assertion
+⊧               22A7                            models
+⊨               22A8                            true
+⊩               22A9                            forces
+⊪               22AA                            triple vertical bar right turnstile
+⊫               22AB                            double vertical bar double right turnstile
+⊬               22AC                            does not prove
+⊭               22AD                            not true
+⊮               22AE                            does not force
+⊯               22AF                            negated double vertical bar double right turnstile
+⊰               22B0                            precedes under relation
+⊱               22B1                            succeeds under relation
+⊲               22B2                            normal subgroup of
+⊳               22B3                            contains as normal subgroup
+⊴               22B4                            normal subgroup of or equal to
+⊵               22B5                            contains as normal subgroup or equal to
+⊶               22B6                            original of
+⊷               22B7                            image of
+⊸               22B8                            multimap
+⊹               22B9                            hermitian conjugate matrix
+⊺               22BA                            intercalate
+⊻               22BB                            xor
+⊼               22BC                            nand
+⊽               22BD                            nor
+⊾               22BE                            right angle with arc
+⊿               22BF                            right triangle
+⋀               22C0                            n-ary logical and
+⋁               22C1                            n-ary logical or
+⋂               22C2                            n-ary intersection
+⋃               22C3                            n-ary union
+⋄               22C4                            diamond operator
+⋅               22C5            &sdot;          dot operator
+⋆               22C6                            star operator
+⋇               22C7                            division times
+⋈               22C8                            bowtie
+⋉               22C9                            left normal factor semidirect product
+⋊               22CA                            right normal factor semidirect product
+⋋               22CB                            left semidirect product
+⋌               22CC                            right semidirect product
+⋍               22CD                            reversed tilde equals
+⋎               22CE                            curly logical or
+⋏               22CF                            curly logical and
+⋐               22D0                            double subset
+⋑               22D1                            double superset
+⋒               22D2                            double intersection
+⋓               22D3                            double union
+⋔               22D4                            pitchfork
+⋕               22D5                            equal and parallel to
+⋖               22D6                            less-than with dot
+⋗               22D7                            greater-than with dot
+⋘               22D8                            very much less-than
+⋙               22D9                            very much greater-than
+⋚               22DA                            less-than equal to or greater-than
+⋛               22DB                            greater-than equal to or less-than
+⋜               22DC                            equal to or less-than
+⋝               22DD                            equal to or greater-than
+⋞               22DE                            equal to or precedes
+⋟               22DF                            equal to or succeeds
+⋠               22E0                            does not precede or equal
+⋡               22E1                            does not succeed or equal
+⋢               22E2                            not square image of or equal to
+⋣               22E3                            not square original of or equal to
+⋤               22E4                            square image of or not equal to
+⋥               22E5                            square original of or not equal to
+⋦               22E6                            less-than but not equivalent to
+⋧               22E7                            greater-than but not equivalent to
+⋨               22E8                            precedes but not equivalent to
+⋩               22E9                            succeeds but not equivalent to
+⋪               22EA                            not normal subgroup of
+⋫               22EB                            does not contain as normal subgroup
+⋬               22EC                            not normal subgroup of or equal to
+⋭               22ED                            does not contain as normal subgroup or equal
+⋮               22EE                            vertical ellipsis
+⋯               22EF                            midline horizontal ellipsis
+⋰               22F0                            up right diagonal ellipsis
+⋱               22F1                            down right diagonal ellipsis
+⋲               22F2                            element of with long horizontal stroke
+⋳               22F3                            element of with vertical bar at end of horizontal stroke
+⋴               22F4                            small element of with vertical bar at end of horizontal stroke
+⋵               22F5                            element of with dot above
+⋶               22F6                            element of with overbar
+⋷               22F7                            small element of with overbar
+⋸               22F8                            element of with underbar
+⋹               22F9                            element of with two horizontal strokes
+⋺               22FA                            contains with long horizontal stroke
+⋻               22FB                            contains with vertical bar at end of horizontal stroke
+⋼               22FC                            small contains with vertical bar at end of horizontal stroke
+⋽               22FD                            contains with overbar
+⋾               22FE                            small contains with overbar
+⋿               22FF                            z notation bag membership
