@@ -179,3 +179,8 @@ txid
 ZKTransaction
 TXError
 SlimTrie
+SlimIndex
+openacid
+github
+bool
+int64
