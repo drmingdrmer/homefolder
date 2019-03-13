@@ -12,7 +12,7 @@ if __name__ == "__main__":
 
     datauri = "data:{};base64,{}".format('image/png',
                                          base64.b64encode(cont))
-    img = '<img src="{datauri}"/>'.format(
+    img = '<img width="100%" src="{datauri}"/>'.format(
         datauri=datauri,
     )
 
