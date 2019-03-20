@@ -81,10 +81,7 @@ fun! s:GetVimCmdOutput(cmd)
   return output
 endfun
 
-" ---------------------------------------------------------------------
-"  Vm_place_sign:
-fun! s:Vm_place_sign()
-"  call Dfunc("Vm_place_sign()")
+fun! Vm_place_sign()
 
   if !exists("b:Vm_sign_number")
     let b:Vm_sign_number = 1
@@ -98,15 +95,10 @@ fun! s:Vm_place_sign()
   let vsn              = b:Vm_sign_number
   let b:Vm_sign_number = b:Vm_sign_number + 1
 
-"  call Dret("Vm_place_sign : sign#".vsn." line#".ln." buf#".winbufnr(0))
 endfun
 
-" ---------------------------------------------------------------------
-" Vm_remove_sign:
-fun! s:Vm_remove_sign(sign_id)
-"  call Dfunc("Vm_remove_sign(sign_id=".a:sign_id.")")
+fun! Vm_remove_sign(sign_id)
   silent! exe 'sign unplace ' . a:sign_id . ' buffer=' . winbufnr(0)
-"  call Dret("Vm_remove_sign")
 endfun
 
 " ---------------------------------------------------------------------
@@ -161,9 +153,9 @@ fun! Vm_toggle_sign()
   endif
 
   if (is_on != 0)
-    call s:Vm_remove_sign(sign_id)
+    call Vm_remove_sign(sign_id)
   else
-    call s:Vm_place_sign()
+    call Vm_place_sign()
   endif
 
 "  call Dret("Vm_toggle_sign")

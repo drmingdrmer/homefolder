@@ -206,8 +206,8 @@ fun! s:Disable()
   nunmap n
   nunmap N
 endfunction
-nmap <Leader><Leader>scn :call <SID>Enable()<cr>
-nmap <Leader><Leader>scu :call <SID>Disable()<cr>
+" nmap <Leader><Leader>scn :call <SID>Enable()<cr>
+" nmap <Leader><Leader>scu :call <SID>Disable()<cr>
 
 
 

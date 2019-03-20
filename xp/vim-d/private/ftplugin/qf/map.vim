@@ -1,41 +1,32 @@
+" When use j/k in quickfix window it move main buffer to where the line indicates.
+
 hi CurrentQFPosition cterm=none ctermbg=green 
 
-let s:id=1
 sign define curPos text=>> linehl=MarkWord1
 
-fun! s:Jump()
-  call StoreWinNr()
-  if strpart(getline(line(".")), 0, 2) == "||"
-    return
+
+fun! QuickFixPlaceSign()
+
+  if !exists("b:quickfixSignID")
+    let b:quickfixSignID = 1
   endif
-  " exe 'syn match CurrentQFPosition /\%'.line('.').'l.*/'
 
-  " echo line(".")
+  " remove previous
+  call QuickFixRemoveSign()
 
-  let fn = expand("<cfile>")
-  " echo fn
+  let b:quickfixSignID = 3 - b:quickfixSignID
 
-  let line=getline(line("."))
-  let ln = matchstr(line, '|\@<=\d\+|\@=')
-  " echo ln
-  exe "sign place ".(3-s:id)." line=".ln." name=curPos file=".fn
-  " exe "sign jump ".(3-s:id)." file=".fn
-  exe "normal! \<cr>zR"
-  exe "sign unplace ".s:id
-  let s:id=3-s:id
-  call BackToLast()
-endfunction
+  let ln = line(".")
+  exe 'sign place ' . b:quickfixSignID . ' line=' . ln . ' name=curPos buffer=' . winbufnr(0)
+endfun
 
-fun! s:Unplace() "{{{
-  exe "sign unplace ".s:id
-endfunction "}}}
+fun! QuickFixRemoveSign()
+  if !exists("b:quickfixSignID")
+    let b:quickfixSignID = 1
+  endif
+  silent! exe 'sign unplace ' . b:quickfixSignID . ' buffer=' . winbufnr(0)
+endfun
 
-nnoremap <buffer> j j:call <SID>Jump()<cr>
-nnoremap <buffer> k k:call <SID>Jump()<cr>
-" nnoremap <buffer> <cr> <cr>:syn clear CurrentQFPosition<cr>
-nnoremap <buffer> <cr> <cr>:call <SID>Unplace()<cr>
-
-
-
-
-setlocal nobuflisted
+nnoremap <buffer> j j<CR>zR:call QuickFixPlaceSign()<CR><C-w><C-p>
+nnoremap <buffer> k k<CR>zR:call QuickFixPlaceSign()<CR><C-w><C-p>
+nnoremap <buffer> <CR> <CR>:call QuickFixRemoveSign()<CR>

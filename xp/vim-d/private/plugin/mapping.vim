@@ -83,6 +83,8 @@ fun! s:DoMap() "{{{
           \ [ 'nmap', "<Leader><Leader>rr",   "<Plug>refactor:rename" ],
           \ [ 'nmap', "<Leader><Leader>sd",   "<Plug>search:word_in_cwd" ],
           \ [ 'nmap', "<Leader><Leader>sf",   "<Plug>search:word_in_cfile" ],
+          \ [ 'nmap', "<Leader><Leader>sr",   "<Plug>search:word_ref" ],
+          \ [ 'nmap', "<Leader><Leader>sc",   "<Plug>search:word_callstack" ],
           \ [ 'nmap', "<Leader><Leader>sp",   "<Plug>edit:switch_paste_mode" ],
           \ [ 'nmap', "<Leader><Leader>tt",   "<Plug>buffer:createTags" ],
           \ [ 'nmap', "<Leader>bw",           "<Plug>buffer:rm_buf_only" ],
