@@ -11,13 +11,15 @@ fun! QuickFixPlaceSign()
     let b:quickfixSignID = 1
   endif
 
+  let nxt = 3 - b:quickfixSignID
+
+  let ln = line(".")
+  exe 'sign place ' . nxt . ' line=' . ln . ' name=curPos buffer=' . winbufnr(0)
+
   " remove previous
   call QuickFixRemoveSign()
 
-  let b:quickfixSignID = 3 - b:quickfixSignID
-
-  let ln = line(".")
-  exe 'sign place ' . b:quickfixSignID . ' line=' . ln . ' name=curPos buffer=' . winbufnr(0)
+  let b:quickfixSignID = nxt
 endfun
 
 fun! QuickFixRemoveSign()
@@ -30,3 +32,5 @@ endfun
 nnoremap <buffer> j j<CR>zR:call QuickFixPlaceSign()<CR><C-w><C-p>
 nnoremap <buffer> k k<CR>zR:call QuickFixPlaceSign()<CR><C-w><C-p>
 nnoremap <buffer> <CR> <CR>:call QuickFixRemoveSign()<CR>
+
+setlocal nobuflisted
