@@ -127,11 +127,13 @@ $HOME/Library/Python/3.7/bin
 /usr/local/opt/opencv3/bin
 END
 
-[ -d /usr/local/go/bin ] && { export PATH=$PATH:/usr/local/go/bin; export GOROOT=/usr/local/go; }
-[ -d $HOME/go/bin ] && { export PATH=$PATH:$HOME/go/bin; export GOROOT=$HOME/go; }
+[ -d /usr/local/go/bin ] && { export PATH=/usr/local/go/bin:$PATH; export GOROOT=/usr/local/go; }
+[ -d $HOME/go/bin ]      && { export PATH=$HOME/go/bin:$PATH;      export GOROOT=$HOME/go; }
+[ -d $HOME/xp/go/bin ]   && { export PATH=$HOME/xp/go/bin:$PATH;   export GOROOT=$HOME/xp/go; }
+
 
 export GOPATH=$HOME/xp/vcs/go
-export PATH=$PATH:$GOPATH/bin
+export PATH=$GOPATH/bin:$PATH
 
 export HISTIGNORE="l:la:ll:ls:gl"
 export GREP_COLORS="ms=01;33:mc=01;31:sl=0;33:cx=:fn=35:ln=32:bn=32:se=36"
