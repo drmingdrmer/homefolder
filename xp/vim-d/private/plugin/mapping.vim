@@ -95,7 +95,9 @@ nmap <unique> <M-i>               	 <Plug>nav:tab_next
 nmap <unique> <M-u>               	 <Plug>nav:tab_prev
 nmap <unique> <Leader>pc          	 <Plug>path:to_cur_file
 nmap <unique> <Leader><Leader>rr  	 <Plug>refactor:rename
-nmap <unique> <Leader><Leader>ut  	 <Plug>run:test
+nmap <unique> <Leader><Leader>ut  	 <Plug>run:test:current_dir
+nmap <unique> <Leader><Leader>uf  	 <Plug>run:test:func
+nmap <unique> <Leader><Leader>uc  	 <Plug>run:coverage:toggle
 nmap <unique> <Leader><Leader>sc  	 <Plug>search:word_callstack
 nmap <unique> <Leader><Leader>sf  	 <Plug>search:word_in_cfile
 nmap <unique> <Leader><Leader>sd  	 <Plug>search:word_in_cwd
