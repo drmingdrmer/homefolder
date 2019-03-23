@@ -80,6 +80,7 @@ fun! s:DoMap() "{{{
           \ [ 'nmap', "<Leader><Leader>sr",   "<Plug>search:word_ref" ],
           \ [ 'nmap', "<Leader><Leader>sc",   "<Plug>search:word_callstack" ],
           \ [ 'nmap', "<Leader><Leader>sp",   "<Plug>edit:switch_paste_mode" ],
+          \ [ 'nmap', "<Leader><Leader>ut",   "<Plug>run:test" ],
           \ [ 'nmap', "<Leader><Leader>tt",   "<Plug>buffer:createTags" ],
           \ [ 'nmap', "<Leader>bw",           "<Plug>buffer:rm_buf_only" ],
           \ [ 'nmap', "<Leader>ccm",          "V<Plug>case:camelize" ],
