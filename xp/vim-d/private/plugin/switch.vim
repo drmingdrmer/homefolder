@@ -126,5 +126,5 @@ endfunction "}}}
 call s:CreateMap()
 
 " nnoremap <silent> <Plug>eidt:switch_word :silent! call <SID>Swtich()<CR>
-nnoremap <silent> <Plug>eidt:switch_word :call <SID>Swtich()<CR>
+nnoremap <silent> <Plug>edit:switch_word :call <SID>Swtich()<CR>
 

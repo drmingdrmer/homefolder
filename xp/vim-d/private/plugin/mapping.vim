@@ -36,93 +36,79 @@ nmap <unique> <Leader>s <Plug>view:switchSetting
 " user complete
 inoremap <unique> <M-i> <C-x><C-u>
 
-fun! s:DoMap() "{{{
-    let mapping = [
-          \ [ 'nmap', "[[",                   "<Plug>func_start" ],
-          \ [ 'nmap', "][",                   "<Plug>func_end" ],
-          \
-          \ [ 'imap', "<C-a><C-v>",           "<Plug>edit:x_paste" ],
-          \ [ 'imap', "<M-f>",                "<Plug>insert:comment" ],
-          \ [ 'imap', "<C-c>",                "<Plug>edit:insert:toNormal" ],
-          \ [ 'imap', "<C-space>",            "<Plug>complete:omni" ],
-          \ [ 'imap', "<C-u>",                "<Plug>edit:del" ],
-          \ [ 'imap', "<M-v>",                "<Plug>edit:paste_from_tmp" ],
-          \ [ 'nmap', ",0",                   "<Plug>buffer:to0" ],
-          \ [ 'nmap', ",1",                   "<Plug>buffer:to1" ],
-          \ [ 'nmap', ",9",                   "<Plug>buffer:to9" ],
-          \ [ 'nmap', ",<Plug>F4",            "<Plug>buffer:rm_buf_win" ],
-          \ [ 'nmap', ",me",                  "<Plug>buffer:make_executable" ],
-          \
-          \ [ 'nmap', "<C-w><C-]>",           "<Plug>buffer:tag_in_preview_right" ],
-          \ [ 'nmap', "<C-w>]",               "<Plug>buffer:tag_in_preview_top" ],
-          \
-          \ [ 'nmap', "<Leader><Leader>ds",  "<Plug>diff:diff_with_saved" ],
-          \
-          \ [ 'nmap', "<C-g><C-]>",           "<Plug>edit:gtags:goto-definition" ],
-          \ [ 'nmap', "<C-g><C-r>",           "<Plug>edit:gtags:goto-reference" ],
-          \ [ 'nmap', "<C-g><C-n>",           ":cnext<CR>" ],
-          \ [ 'nmap', "<C-g><C-p>",           ":cprevious<CR>" ],
-          \ [ 'nmap', "<C-g><C-l>",           ":clist<CR>" ],
-          \ [ 'nmap', "<M-3>",                "<Plug>window:quickfix:toggle" ],
-          \ [ 'nmap', ",3",                   "<Plug>window:location:toggle" ],
-          \
-          \ [ 'nmap', "<C-w><C-l>",           ":call edit#preview#Open()<CR>" ],
-          \ [ 'nmap', ",p",                   "<Plug>edit:paste_and_format" ],
-          \ [ 'nmap', ",x",                   "<Plug>eidt:switch_word" ],
-          \ [ 'nmap', "<C-j>",                "<Plug>edit:move_down" ],
-          \ [ 'nmap', "<C-k>",                "<Plug>edit:move_up" ],
-          \ [ 'nmap', "<Leader><Leader>idn",  "<Plug>format:json_format" ],
-          \ [ 'nmap', "<Leader><Leader>ff",   "<Plug>format:format_file" ],
-          \ [ 'nmap', "<Leader><Leader>fi",   "<Plug>format:import" ],
-          \ [ 'nmap', "<Leader><Leader>rr",   "<Plug>refactor:rename" ],
-          \ [ 'nmap', "<Leader><Leader>sd",   "<Plug>search:word_in_cwd" ],
-          \ [ 'nmap', "<Leader><Leader>sf",   "<Plug>search:word_in_cfile" ],
-          \ [ 'nmap', "<Leader><Leader>sr",   "<Plug>search:word_ref" ],
-          \ [ 'nmap', "<Leader><Leader>sc",   "<Plug>search:word_callstack" ],
-          \ [ 'nmap', "<Leader><Leader>sp",   "<Plug>edit:switch_paste_mode" ],
-          \ [ 'nmap', "<Leader><Leader>ut",   "<Plug>run:test" ],
-          \ [ 'nmap', "<Leader><Leader>tt",   "<Plug>buffer:createTags" ],
-          \ [ 'nmap', "<Leader>bw",           "<Plug>buffer:rm_buf_only" ],
-          \ [ 'nmap', "<Leader>ccm",          "V<Plug>case:camelize" ],
-          \ [ 'nmap', "<Leader>pc",           "<Plug>path:to_cur_file" ],
-          \ [ 'nmap', "<Leader>e",            "<Plug>edit:error_next" ],
-          \ [ 'nmap', "<Leader>E",            "<Plug>edit:error_prev" ],
-          \ [ 'nmap', "<M-I>",                "<Plug>nav:tab_move_forward" ],
-          \ [ 'nmap', "<M-U>",                "<Plug>nav:tab_move_backword" ],
-          \ [ 'nmap', "<M-c>",                "<Plug>buffer:rm_buf_win" ],
-          \ [ 'nmap', "<M-W>",                "<Plug>buffer:rm_buf_win" ],
-          \ [ 'nmap', "<M-i>",                "<Plug>nav:tab_next" ],
-          \ [ 'nmap', "<M-o>",                "<Plug>buffer:prev" ],
-          \ [ 'nmap', "<M-p>",                "<Plug>buffer:next" ],
-          \ [ 'nmap', "<M-u>",                "<Plug>nav:tab_prev" ],
-          \ [ 'nmap', "<Plug>F4",             "<Plug>buffer:rm_buf_only" ],
-          \ [ 'nmap', "<M-w>",                "<Plug>buffer:rm_buf_close" ],
-          \ [ 'nmap', "ga",                   "<Plug>edit:select_all" ],
-          \ [ 'nmap', "yp",                   "<Plug>edit:dupli_line" ],
-          \ [ 'nmap', "yw",                   "<Plug>edit:copy_cur_word" ],
-          \ [ 'xmap', ",b",                   "<Plug>format:c:func_split_80" ],
-          \ [ 'xmap', ",c",                   "<Plug>format:c:func_with_blank" ],
-          \ [ 'xmap', "<C-h>",                "<Plug>edit:move_left" ],
-          \ [ 'xmap', "<C-j>",                "<Plug>edit:move_down" ],
-          \ [ 'xmap', "<C-k>",                "<Plug>edit:move_up" ],
-          \ [ 'xmap', "<C-l>",                "<Plug>edit:move_right" ],
-          \ [ 'xmap', "<Leader>ccm",          "<Plug>case:camelize" ],
-          \ [ 'xmap', "<M-c>",                "<Plug>edit:copy_to_tmp" ],
-          \ [ 'xmap', "c",                    "<Plug>edit:x_copy" ],
-          \ [ 'xmap', "DW",                   ":call edit#align#VerticalDeleteToWordStart()<CR>" ],
-          \
-          \ [ 'nmap', "<Leader><Leader>th",   "<Plug>view:highlight_focus_toggle" ],
-          \ [ 'nmap', "<M-K>",                "<Plug>view:highlight_focus_prev" ],
-          \ [ 'nmap', "<M-J>",                "<Plug>view:highlight_focus_next" ],
-          \ ]
-    for [ cmd, key, cont ] in mapping
-        exe cmd "<unique>" key cont
-    endfor
+xmap <unique> DW                  	 :call edit#align#VerticalDeleteToWordStart()<CR>
+nmap <unique> <C-w><C-l>          	 :call edit#preview#Open()<CR>
+nmap <unique> <C-g><C-l>          	 :clist<CR>
+nmap <unique> <C-g><C-n>          	 :cnext<CR>
+nmap <unique> <C-g><C-p>          	 :cprevious<CR>
+nmap <unique> <Leader><Leader>tt  	 <Plug>buffer:createTags
+nmap <unique> ,me                 	 <Plug>buffer:make_executable
+nmap <unique> <M-p>               	 <Plug>buffer:next
+nmap <unique> <M-o>               	 <Plug>buffer:prev
+nmap <unique> <M-w>               	 <Plug>buffer:rm_buf_close
+nmap <unique> <Leader>bw          	 <Plug>buffer:rm_buf_only
+nmap <unique> <Plug>F4            	 <Plug>buffer:rm_buf_only
+nmap <unique> ,<Plug>F4           	 <Plug>buffer:rm_buf_win
+nmap <unique> <M-c>               	 <Plug>buffer:rm_buf_win
+nmap <unique> <M-W>               	 <Plug>buffer:rm_buf_win
+nmap <unique> <C-w><C-]>          	 <Plug>buffer:tag_in_preview_right
+nmap <unique> <C-w>]              	 <Plug>buffer:tag_in_preview_top
+nmap <unique> ,0                  	 <Plug>buffer:to0
+nmap <unique> ,1                  	 <Plug>buffer:to1
+nmap <unique> ,9                  	 <Plug>buffer:to9
+xmap <unique> <Leader>ccm         	 <Plug>case:camelize
+imap <unique> <C-space>           	 <Plug>complete:omni
+nmap <unique> <Leader><Leader>ds  	 <Plug>diff:diff_with_saved
+nmap <unique> yw                  	 <Plug>edit:copy_cur_word
+xmap <unique> <M-c>               	 <Plug>edit:copy_to_tmp
+imap <unique> <C-u>               	 <Plug>edit:del
+nmap <unique> yp                  	 <Plug>edit:dupli_line
+nmap <unique> <Leader>e           	 <Plug>edit:error_next
+nmap <unique> <Leader>E           	 <Plug>edit:error_prev
+nmap <unique> <C-g><C-]>          	 <Plug>edit:gtags:goto-definition
+nmap <unique> <C-g><C-r>          	 <Plug>edit:gtags:goto-reference
+imap <unique> <C-c>               	 <Plug>edit:insert:toNormal
+nmap <unique> <C-j>               	 <Plug>edit:move_down
+xmap <unique> <C-j>               	 <Plug>edit:move_down
+xmap <unique> <C-h>               	 <Plug>edit:move_left
+xmap <unique> <C-l>               	 <Plug>edit:move_right
+nmap <unique> <C-k>               	 <Plug>edit:move_up
+xmap <unique> <C-k>               	 <Plug>edit:move_up
+nmap <unique> ,p                  	 <Plug>edit:paste_and_format
+imap <unique> <M-v>               	 <Plug>edit:paste_from_tmp
+nmap <unique> ga                  	 <Plug>edit:select_all
+nmap <unique> <Leader><Leader>sp  	 <Plug>edit:switch_paste_mode
+xmap <unique> c                   	 <Plug>edit:x_copy
+imap <unique> <C-a><C-v>          	 <Plug>edit:x_paste
+nmap <unique> ,x                  	 <Plug>edit:switch_word
+xmap <unique> ,b                  	 <Plug>format:c:func_split_80
+xmap <unique> ,c                  	 <Plug>format:c:func_with_blank
+nmap <unique> <Leader><Leader>ff  	 <Plug>format:format_file
+nmap <unique> <Leader><Leader>fi  	 <Plug>format:import
+nmap <unique> <Leader><Leader>idn 	 <Plug>format:json_format
+nmap <unique> ][                  	 <Plug>func_end
+nmap <unique> [[                  	 <Plug>func_start
+imap <unique> <M-f>               	 <Plug>insert:comment
+nmap <unique> <M-U>               	 <Plug>nav:tab_move_backword
+nmap <unique> <M-I>               	 <Plug>nav:tab_move_forward
+nmap <unique> <M-i>               	 <Plug>nav:tab_next
+nmap <unique> <M-u>               	 <Plug>nav:tab_prev
+nmap <unique> <Leader>pc          	 <Plug>path:to_cur_file
+nmap <unique> <Leader><Leader>rr  	 <Plug>refactor:rename
+nmap <unique> <Leader><Leader>ut  	 <Plug>run:test
+nmap <unique> <Leader><Leader>sc  	 <Plug>search:word_callstack
+nmap <unique> <Leader><Leader>sf  	 <Plug>search:word_in_cfile
+nmap <unique> <Leader><Leader>sd  	 <Plug>search:word_in_cwd
+nmap <unique> <Leader><Leader>sr  	 <Plug>search:word_ref
+nmap <unique> <M-J>               	 <Plug>view:highlight_focus_next
+nmap <unique> <M-K>               	 <Plug>view:highlight_focus_prev
+nmap <unique> <Leader><Leader>th  	 <Plug>view:highlight_focus_toggle
+nmap <unique> ,3                  	 <Plug>window:location:toggle
+nmap <unique> <M-3>               	 <Plug>window:quickfix:toggle
+nmap <unique> <Leader>ccm         	 V<Plug>case:camelize
 
-    " xmap <unique> ,a                  <Plug>format:c:1_func_1_line
-    " nmap <unique> <M-w>               <Plug>buffer:rm_buf_only
-endfunction "}}}
-call s:DoMap()
+" xmap <unique> ,a                  <Plug>format:c:1_func_1_line
+" nmap <unique> <M-w>               <Plug>buffer:rm_buf_only
 
 " if !has('win32')
 "     smap <unique> <C-c>               <C-o><Plug>edit:x_copy
