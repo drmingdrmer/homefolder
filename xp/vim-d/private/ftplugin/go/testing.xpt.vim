@@ -33,5 +33,5 @@ func Test`f^(t *testing.T) {
 
 XPT noerr " if err != nil { t.Fatalf... }
 if `err^ != nil {
-    t.Fatalf("`i^EchoIfNoChange("%d-th: ")^^expected no error but: %#v", ``i`+1, ^`err^)
+    t.Fatalf("`i^EchoIfNoChange("%d-th: ")^^expected no error but: %+v", ``i`+1, ^`err^)
 }
