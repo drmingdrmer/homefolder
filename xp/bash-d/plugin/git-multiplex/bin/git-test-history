@@ -9,43 +9,11 @@ One of them only contains changes of specified files.
 The other contains other changes(or optionally contains full history).
 
 Usage:
-    git-split [ -b <to-new-branch> ] [-r] [-m] [-s <prefix> ] <from>..[<to>] -- <fns>
+    git-split <from>..[<to>] <script>
 
 Synoposis:
 
-    Initial:
-
-        * 358aee4 (HEAD) fix css
-        |  css/site.css | 13 ++---
-        |
-        * f869f40 init site
-        |  html/index.html    | 12 ++--
-        |  html/header.html   | 34 +-----
-        |  css/site.css       | 61 +++++++------
-        |
-        * 82554be fix doc of Build
-
-
-    To split folder html into a separate branch:
-
-        git-split -m 82554be..HEAD -- html/
-
-    Results in:
-
-        *   948149a Merge commit 'aa76f4de5be5ddbb2908ba145fea5697c7baf728' into HEAD
-        |\\
-        | * aa76f4d init site
-        | |  html/index.html  | 12 ++--
-        | |  html/header.html | 34 +-----
-        | |
-        * | 088e903 fix css
-        | |  css/site.css | 13 ++---
-        | |
-        * | 0b606c2 init site
-        | |  css/site.css | 61 +++++++------
-        |/
-        * 82554be fix doc of Build
-
+    git-split master..HEAD make test
 
 Arguments:
 
@@ -54,31 +22,8 @@ Arguments:
 
         git-split master~3..master
 
-    "--" must present as a separator.
+    <script>: command to test
 
-    <fns> are several file patterns.
-    E.g.:
-
-        git-split master~3..master -- src/foo.* deps/config.yaml
-
-Options:
-
-    -b <new-branch>             Create a new branch.
-                                When absent, create a temporary branch "tmpbranch".
-
-    -o                          Create an orphan branch instead of one based on <from>.
-
-    -r                          Remove <fns> from original history.
-                                Without -r, the original history will not be modified.
-
-    -m                          Merge back the new branch to commmit "<to>".
-                                -m works only when -r is specified.
-
-    -s <prefix>                 Strip <prefix> dir segments from paths that are splitted out.
-                                E.g.:
-                                    git-split -s 3 base..master -- my/foo/dir/bar.txt
-
-                                    removes "my/foo/dir".
 END
 }
 
@@ -711,29 +656,13 @@ fn_match()
     return 1
 }
 
-new_branch=tmpbranch
 merge=0
 remove=0
 orphan=0
 to_strip=0
 
-while getopts "b:p:s:morh" opname; do
+while getopts "h" opname; do
     case $opname in
-        b)
-            new_branch=$OPTARG
-            ;;
-        m)
-            merge=1
-            ;;
-        o)
-            orphan=1
-            ;;
-        r)
-            remove=1
-            ;;
-        s)
-            to_strip="$OPTARG"
-            ;;
         h)
             usage
             exit 0
@@ -744,17 +673,10 @@ while getopts "b:p:s:morh" opname; do
             ;;
     esac
 done
-shift $(($OPTIND - 1))
-
-if [ ".$2" != ".--" ]; then
-    usage
-    exit 1
-fi
 
 range=$1
 shift
-shift
-fns="$@"
+script="$@"
 
 base=${range%..*}
 if [ ".$base" = ".$range" ]; then
@@ -767,154 +689,51 @@ if [ ".$tip" = "." ]; then
     tip=HEAD
 fi
 
-head=$(git symbolic-ref --short HEAD 2>/dev/null)
-if [ ".$head" = "." ]; then
-    head=$(git rev-parse HEAD)
-fi
-
 tip_hash=$(git_hash $tip)
-new_hash=
-merged_hash=
+head=$(git_head_branch)
 
 
-extract()
+test_history()
 {
-    local parent=$1
-    local tree=
-    local commit=
+    local logfn=his.log
+    local ok=ok
 
-    for c in $(git log --reverse $base..$tip_hash --format="%H" -- $fns); do
+    >$logfn
 
-        info "== to pick $fns from:"
-        git --no-pager log --color --stat --decorate --pretty=oneline --abbrev-commit -M -n1 $c
-        info "== END =="
+    for c in $(git log --reverse $base..$tip_hash --format="%H"); do
 
-        # mes=$(git log -n1 --format="%B" $c)
+        git checkout $c >/dev/null 2>&1 || die git checkout $c
 
-        # force prefix when diff, since .gitconfig could hide prefix
-        git diff --src-prefix="" --dst-prefix="" --binary $c~ $c -- $fns | git apply -p $to_strip --index
+        commit_hash="$(git log -n1 --format="%h" $c)"
+        commit_subject="$(git log -n1 --format="%s" $c)"
+        commit_time="$(git log -n1 --format="%ci" $c)"
 
-        info "== after patch $c =="
-        git status --short
-        info "== END =="
+        info $commit_hash $(clr green $commit_subject)
+        info $commit_hash $(clr light cyan "$commit_time")
+        info "> $script"
 
-        # manually commit index
+        output="$($script 2>&1)" || ok=fail
 
-        tree=$(git write-tree)
-
-        dd "tree to commit: $tree"
-        git ls-tree -r $tree
-        dd "end of tree"
-
-        dd parent: $parent
-
-        commit=$(git_copy_commit "$c" "$tree" "-p $parent")
-        dd "new commit:" $commit
-
-        git reset --hard $commit
-
-        parent=$commit
+        if [ $ok == "ok" ]; then
+            {
+                echo "== $commit_subject"
+                echo "OK     $script"
+            } >> $logfn
+            ok "> $script"
+        else
+            {
+                echo "== $commit_subject"
+                echo "FAIL   $script"
+                echo "$output"
+            } >> $logfn
+            echo ""
+            echo "$output"
+            die "FAIL" $commit_subject
+        fi
     done
-    return 0
+    info OK log is in $logfn
 }
 
-build_new_branch()
-{
-    info "== build_new_branch =="
-
-    git checkout --orphan $new_branch || die checkout --orpahn $new_branch
-
-    if [ "$orphan" = "1" ]; then
-        git reset --hard
-        git commit --allow-empty -m "init-root" || die commit init-root
-    else
-        info reset $new_branch to $base
-        git reset --hard $base
-    fi
-
-    git clean -dxf || die clean -dxf
-
-    info "HEAD hash: $(git_hash HEAD)"
-
-    extract $(git_hash HEAD) \
-        && new_hash=$(git_hash HEAD) \
-        && \
-        if [ "$new_branch" = "tmpbranch" ]; then
-            git checkout --detach HEAD \
-                && git branch -d tmpbranch
-        else
-            :
-        fi \
-        && info "== new branch $new_branch hash is $new_hash == "
-}
-
-discard_changes()
-{
-    info "== discard_changes =="
-
-    # git checkout would fail if one of the files does not exists.
-    # thus newly added file impedes the whole process.
-    # git checkout ab12345 -- nonexistent
-
-    # local script='for f in '"$fns"'; do git rm -r -f $f; git checkout '"$base"' -- $f; done'
-    local script='for f in '"$fns"'; do echo "== $f =="; git rm -r -f $f; git status -- $f >&2; git checkout '"$base"' -- $f; git status -- $f >&2; done'
-
-    git checkout --detach $tip_hash \
-        && info "== discard from $tip ==" \
-        && git filter-branch -f --prune-empty --tree-filter "$script" $base..HEAD \
-        && [ $(git log $base..HEAD -- "$fns" | wc -l | awk '{print $1}') = 0 ] \
-        && info "== confirmed that no changes through $base..HEAD"
-    git status --short
-    info "== END =="
-    info "== history =="
-    git --no-pager log --color --stat --decorate --pretty=oneline --abbrev-commit -M $base..HEAD
-    info "== END =="
-}
-
-merge_them()
-{
-    info "== merge splitted branch back to $tip ==" \
-        && \
-        if [ ".$new_branch" = "tmpbranch" ]; then
-            git merge --commit --no-edit --no-ff $new_hash
-        else
-            git merge --commit --no-edit --no-ff $new_branch
-        fi \
-        && merged_hash=$(git_hash) \
-        && info "merged hash: $merged_hash"
-}
-
-is_same_as_original()
-{
-    info "== diff with original $tip ==" \
-        && git diff $tip
-}
-
-update_tip_ref()
-{
-    git update-ref -d refs/original/HEAD
-
-    # if it is a reference(branch, tag), not hash or HEAD
-
-    if [ ".$tip" = ".HEAD" ]; then
-        git update-ref $tip $merged_hash \
-            && info "== $tip set to $merged_hash"
-    fi
-
-    if git rev-parse refs/heads/$tip >/dev/null 2>/dev/null;  then
-        git update-ref refs/heads/$tip $merged_hash \
-            && info "== $tip set to $merged_hash"
-    fi
-
-}
-
-info "split $fns from $range" \
-    && build_new_branch \
-    && { [ "$remove" = "0" ] && exit 0 || ``; } \
-    && discard_changes \
-    && { [ "$merge" = "0" ] && exit 0 || ``; } \
-    && merge_them \
-    && is_same_as_original \
-    && update_tip_ref \
-    && git checkout $tip >/dev/null 2>/dev/null \
-    && info "== Done =="
+info "test history: $range"
+test_history
+git checkout $head
