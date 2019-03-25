@@ -35,3 +35,6 @@ XPT noerr " if err != nil { t.Fatalf... }
 if `err^ != nil {
     t.Fatalf("`i^EchoIfNoChange("%d-th: ")^^expected no error but: %+v", ``i`+1, ^`err^)
 }
+
+XPT fatal " t.Fatalf...
+t.Fatalf("``msg` ^expect: %v; but: %v", `expect^, `actual^)
