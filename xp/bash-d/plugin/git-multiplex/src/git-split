@@ -184,7 +184,7 @@ extract()
         commit=$(git_copy_commit "$c" "$tree" "-p $parent")
         dd "new commit:" $commit
 
-        git reset --hard $commit
+        git reset --hard $commit --
 
         parent=$commit
     done
@@ -202,7 +202,7 @@ build_new_branch()
         git commit --allow-empty -m "init-root" || die commit init-root
     else
         info reset $new_branch to $base
-        git reset --hard $base
+        git reset --hard $base --
     fi
 
     git clean -dxf || die clean -dxf
