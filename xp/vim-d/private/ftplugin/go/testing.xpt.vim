@@ -30,6 +30,13 @@ func Test`f^(t *testing.T) {
 	}
 }
 
+XPT ben " func BenchmarkXXX
+func Benchmark`f^(b *testing.B) {
+    for i = 0; i < b.N; i++ {
+        `f^()
+    }
+}
+
 
 XPT noerr " if err != nil { t.Fatalf... }
 if `err^ != nil {
