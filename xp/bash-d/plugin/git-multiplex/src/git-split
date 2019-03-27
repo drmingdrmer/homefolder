@@ -71,8 +71,11 @@ Options:
     -r                          Remove <fns> from original history.
                                 Without -r, the original history will not be modified.
 
-    -m                          Merge back the new branch to commmit "<to>".
-                                -m works only when -r is specified.
+    -m                          Merge back action:
+                                "" for doing nothing;
+                                "merge": merge the new branch to commmit "<to>";
+                                "rebase": rebase "<to>" onto the new branch.
+                                non empty -m implies -r.
 
     -s <prefix>                 Strip <prefix> dir segments from paths that are splitted out.
                                 E.g.:
@@ -85,18 +88,19 @@ END
 source shlib.sh
 
 new_branch=tmpbranch
-merge=0
+merge=""
 remove=0
 orphan=0
 to_strip=0
 
-while getopts "b:p:s:morh" opname; do
+while getopts "b:m:p:s:orh" opname; do
     case $opname in
         b)
             new_branch=$OPTARG
             ;;
         m)
-            merge=1
+            merge=$OPTARG
+            remove=1
             ;;
         o)
             orphan=1
@@ -244,50 +248,83 @@ discard_changes()
     info "== END =="
 }
 
-merge_them()
+merge_or_rebase()
 {
-    info "== merge splitted branch back to $tip ==" \
-        && \
-        if [ ".$new_branch" = "tmpbranch" ]; then
-            git merge --commit --no-edit --no-ff $new_hash
-        else
-            git merge --commit --no-edit --no-ff $new_branch
-        fi \
-        && merged_hash=$(git_hash) \
-        && info "merged hash: $merged_hash"
+    local action=$1
+
+    if [ "$action" == "merge" ]; then
+        info "== merge splitted branch back to $tip ==" \
+            && \
+            if [ ".$new_branch" = "tmpbranch" ]; then
+                git merge --commit --no-edit --no-ff $new_hash
+            else
+                git merge --commit --no-edit --no-ff $new_branch
+            fi \
+                && merged_hash=$(git_hash HEAD) \
+                && info "merged hash: $merged_hash"
+
+    elif [ "$action" == "rebase" ]; then
+
+        info "== rebase $tip onto $new_branch ($new_hash) =="
+
+        git rebase $new_hash || return 1
+        merged_hash=$(git_hash HEAD)
+
+        info "rebased hash: $merged_hash"
+    else
+        die "invalid action: ($action)"
+    fi
 }
 
 is_same_as_original()
 {
-    info "== diff with original $tip ==" \
-        && git diff $tip
+    info "== diff with original $tip =="
+    git diff $tip || return 1
+    ok "Current HEAD is same as $tip"
 }
 
 update_tip_ref()
 {
+    info "remove tmp branch: refs/original/HEAD"
     git update-ref -d refs/original/HEAD
 
     # if it is a reference(branch, tag), not hash or HEAD
 
     if [ ".$tip" = ".HEAD" ]; then
+        info "git update-ref $tip $merged_hash"
         git update-ref $tip $merged_hash \
             && info "== $tip set to $merged_hash"
     fi
 
     if git rev-parse refs/heads/$tip >/dev/null 2>/dev/null;  then
+        info "git update-ref refs/heads/$tip $merged_hash"
         git update-ref refs/heads/$tip $merged_hash \
             && info "== $tip set to $merged_hash"
     fi
 
 }
 
-info "split $fns from $range" \
-    && build_new_branch \
-    && { [ "$remove" = "0" ] && exit 0 || ``; } \
-    && discard_changes \
-    && { [ "$merge" = "0" ] && exit 0 || ``; } \
-    && merge_them \
-    && is_same_as_original \
-    && update_tip_ref \
-    && git checkout $tip >/dev/null 2>/dev/null \
-    && info "== Done =="
+
+info "split $fns from $range"
+
+build_new_branch ||  die build_new_branch
+
+if [ "$remove" = "0" ]; then
+    exit 0;
+fi
+
+discard_changes || die discard_changes
+
+if [ "$merge" = "" ]; then
+    exit 0
+fi
+
+merge_or_rebase "$merge" || die merge_or_rebase
+
+is_same_as_original || die is_same_as_original
+
+update_tip_ref || die update_tip_ref
+
+git checkout $tip >/dev/null 2>/dev/null || die git checkout $tip
+
+info "== Done =="
