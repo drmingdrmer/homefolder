@@ -29,6 +29,7 @@ let g:go_metalinter_enabled = [
       \ 'gotype',
       \ 'ineffassign',
       \ 'maligned',
+      \ 'misspell',
       \ 'staticcheck',
       \ 'structcheck',
       \ 'unconvert',
