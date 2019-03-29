@@ -46,5 +46,6 @@
 ~/xp/vim-d/plg-git
 ~/xp/vim-d/plg-git/vim-fugitive
 ~/xp/vim-d/private
+~/xp/vim-d/private/ftplugin/go
 ~/xpkit/info
 ~/xpkit/install
