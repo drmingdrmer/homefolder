@@ -34,4 +34,9 @@ go list -m rsc.io/q...
 
 go mod tidy
 
+
+### add dependency to `./vendor`
+
+go mod vendor
+
 https://blog.golang.org/using-go-modules
