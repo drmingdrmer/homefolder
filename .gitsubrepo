@@ -13,6 +13,7 @@ php-markdown.michelf               michelf/php-markdown           master
 grc/bin                            garabik/grc                    master
 git-multiplex/src/shlib.sh         baishancloud/shlib             master   dist/shlib.sh
 eplot/bin                          chriswolfvision/eplot          master
+flamegraph/bin                     brendangregg/FlameGraph        master
 
 [ base: xp/vim-d/plg-git ]
 
