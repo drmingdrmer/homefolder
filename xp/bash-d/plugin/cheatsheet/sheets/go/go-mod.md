@@ -29,4 +29,9 @@ go get rsc.io/sampler@v1.3.1
 
 go list -m rsc.io/q...
 
+
+### clean
+
+go mod tidy
+
 https://blog.golang.org/using-go-modules
