@@ -1,5 +1,6 @@
 nnoremap <buffer> <Plug>format:format_file :GoFmt<CR>
 let g:go_fmt_autosave = 0
+" let g:go_def_mode = 'godef'
 
 " -s: auto simplify
 let g:go_fmt_options = {
