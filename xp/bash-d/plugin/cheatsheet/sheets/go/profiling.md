@@ -17,6 +17,10 @@ go test ./array -cpuprofile prof.cpu -memprofile prof.mem -bench=BenchmarkU16Get
 - make svg
 
 ```
+# graph:
+go tool pprof  -svg cpu.prof
+
+# flame:
 go-torch -b prof.cpu -f prof.cpu.svg
 go-torch -b prof.mem -f prof.mem.svg
 ```
