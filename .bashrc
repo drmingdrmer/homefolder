@@ -164,3 +164,7 @@ d end brew
 # [ ".$GOROOT" = "." ] && { export GOROOT=/usr/local/go; export PATH=$PATH:$GOROOT/bin; }
 
 test -f $HOME/.xp-bashrc && source $HOME/.xp-bashrc
+
+if which gocomplete >/dev/null 2>/dev/null; then
+    complete -C gocomplete go
+fi
