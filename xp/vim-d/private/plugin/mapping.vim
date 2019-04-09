@@ -55,6 +55,8 @@ nmap <unique> <C-w><C-]>          	 <Plug>buffer:tag_in_preview_right
 nmap <unique> <C-w>]              	 <Plug>buffer:tag_in_preview_top
 nmap <unique> ,0                  	 <Plug>buffer:to0
 nmap <unique> ,1                  	 <Plug>buffer:to1
+nmap <unique> ,2                  	 <Plug>buffer:to2
+nmap <unique> ,3                  	 <Plug>buffer:to3
 nmap <unique> ,9                  	 <Plug>buffer:to9
 xmap <unique> <Leader>ccm         	 <Plug>case:camelize
 imap <unique> <C-space>           	 <Plug>complete:omni
