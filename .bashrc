@@ -144,7 +144,7 @@ if [ "$os" = "linux" ] ; then
 elif [ "$os" = "bsd" ]; then
     eth0_ip=`/sbin/ifconfig | grep "inet"|awk -F "." '{print $3"."$4}'| awk '{print $2}' | head -n 3`
 elif [ "$os" == "mac" ]; then
-    eth0_ip=`ifconfig  | grep '\binet\b' | grep -v '127.0.0.1' | awk '/inet /{i = i " <" substr($2, 1) ">"} END{print i}'`
+    eth0_ip=`ifconfig  | grep '\binet\b' | grep -v '127.0.0.1' | awk '/inet/{i = i " <" substr($2, 1) ">"} END{print i}'`
     mainip=`ifconfig  | grep '\binet\b' | grep -v '127.0.0.1' | grep -v ' 10\.\| 172.16' | head -n1 | awk '{print $2}'`
 else
     eth0_ip="unknown"
