@@ -9,18 +9,18 @@ One of them only contains changes of specified files.
 The other contains other changes(or optionally contains full history).
 
 Usage:
-    git-split <from>..[<to>] <script>
+    git-test-history <from>..[<to>] <script>
 
 Synoposis:
 
-    git-split master..HEAD make test
+    git-test-history master..HEAD make test
 
 Arguments:
 
-    <from> and <to> specifies history range to split.
-    E.g. to split the latest 3 commit:
+    <from> and <to> specifies history range to test-history.
+    E.g. to test-history the latest 3 commit:
 
-        git-split master~3..master
+        git-test-history master~3..master
 
     <script>: command to test
 
