@@ -4,5 +4,5 @@
 sock5="socks5://127.0.0.1:1086"
 
 git config --global http.proxy $sock5
-git config --global --unset http.proxy
 http_proxy=$sock5 go get -v "$@"
+git config --global --unset http.proxy
