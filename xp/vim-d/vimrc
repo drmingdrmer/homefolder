@@ -37,6 +37,8 @@ set nobackup
 set modeline
 set hlsearch
 set noswapfile
+" do not fsync to speedup, such as writefile()
+set nofsync
 
 colorscheme default
 
