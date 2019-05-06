@@ -13,3 +13,9 @@
 ♞ ♠ ♣ ♥ ♦ ♩ ♪ ♫ ♬ ♲ ⚤ ✓ ✚ ✝ ✡ ❣ ❦ ❽
 〈 〉 《 》 「 」 『 』 【 】 〖 〗
 ㎜ 卍 卐 𓂀
+
+
+U+00Bx       x² x³                x¹
+U+207x x⁰ xⁱ       x⁴ x⁵ x⁶ x⁷ x⁸ x⁹ x⁺ x⁻ x⁼ x⁽ x⁾ xⁿ
+U+208x x₀ x₁ x₂ x₃ x₄ x₅ x₆ x₇ x₈ x₉ x₊ x₋ x₌ x₍ x₎
+U+209x xₐ xₑ xₒ xₓ xₔ xₕ xₖ xₗ xₘ xₙ xₚ xₛ xₜ
