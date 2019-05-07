@@ -14,20 +14,20 @@ XPTinclude
 XPT ut " func TestXXX
 func Test`f^(t *testing.T) {
 
-	cases := []struct {
-		input int
-		want  int
-	}{
-		{1, 1},
-	}
+    ta := assert.New(t)
 
-	for i, c := range cases {
-		rst := `f^(c.input)
-		if rst != c.want {
-			t.Fatalf("%d-th: input: %#v; want: %#v; actual: %#v",
-			i+1, c.input, c.want, rst)
-		}
-	}
+    cases := []struct {
+        input int
+        want  int
+    }{
+    }
+
+    for i, c := range cases {
+        got := `f^(c.input)
+        ta.Equal(c.want, got,
+            "%d-th: input: %#v; want: %#v; got: %#v",
+            i+1, c.input, c.want, got)
+    }
 }
 
 XPT ben " func BenchmarkXXX
@@ -38,9 +38,16 @@ func Benchmark`f^(b *testing.B) {
 }
 
 XPT noerr " if err != nil { t.Fatalf... }
-if `err^ != nil {
-    t.Fatalf("`i^EchoIfNoChange("%d-th: ")^^expected no error but: %+v", ``i`+1, ^`err^)
-}
+ta.NotNil(err, "`i^EchoIfNoChange("%d-th: ")^^want no error but: %+v", ``i`+1, ^`err^)
+
+XPT fail " ta.Fail...
+ta.Fail("`i^EchoIfNoChange("%d-th: ")^^``msg` ^%+v", ``i`+1, ^`want^)
+
+XPT equal " ta.Equal...
+ta.Equal("`i^EchoIfNoChange("%d-th: ")^^``msg` ^input: %+v; want: %+v; but: %+v", ``i`+1, ^`inp^, `want^, `got^)
+
+XPT msg " msg := fmt.Sprintf...
+msg := fmt.Sprintf("`i^EchoIfNoChange("%d-th: ")^^``msg` ^input: %+v; want: %+v; but: %+v", ``i`+1, ^`inp^, `want^, `got^)
 
 XPT fatal " t.Fatalf...
-t.Fatalf("``msg` ^expect: %v; but: %v", `expect^, `actual^)
+t.Fatalf("``msg` ^want: %v; but: %v", `want^, `got^)
