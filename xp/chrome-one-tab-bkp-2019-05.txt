@@ -1,0 +1,67 @@
+https://madeintandem.com/blog/five-factor-testing/ | Five Factor Testing | Tandem
+https://www.codeproject.com/Articles/153898/Yet-another-implementation-of-a-lock-free-circular | Yet another implementation of a lock-free circular array queue - CodeProject
+http://www.secretmango.com/jimb/Whitepapers/ | Various Whitepapers
+https://en.wikipedia.org/wiki/Eigenvalues_and_eigenvectors | Eigenvalues and eigenvectors - Wikipedia
+https://zh.wikipedia.org/wiki/%E7%89%B9%E5%BE%81%E5%80%BC%E5%92%8C%E7%89%B9%E5%BE%81%E5%90%91%E9%87%8F | 特征值和特征向量 - Wikipedia
+https://link.springer.com/chapter/10.1007%2F978-3-540-89097-3_3 | Engineering Radix Sort for Strings | SpringerLink
+https://en.wikipedia.org/wiki/Deterministic_acyclic_finite_state_automaton | Deterministic acyclic finite state automaton - Wikipedia
+https://sdboyer.io/vgo/failure-modes/ | Failure Modes
+http://mikehadlow.blogspot.com/2014/06/heisenberg-developers.html?utm_source=wanqu.co&utm_campaign=Wanqu+Daily&utm_medium=social | Code rant: Heisenberg Developers
+http://blog.kdgregory.com/2016/03/layoffs.html?utm_source=wanqu.co&utm_campaign=Wanqu+Daily&utm_medium=social | blog.kdgregory.com: Layoffs
+https://www.google.com.hk/search?newwindow=1&safe=strict&q=Handling+message+semantics+with+generic+broadcast.+Distributed+Computing&gws_rd=cr | Handling message semantics with generic broadcast. Distributed Computing - Google Search
+https://juejin.im/post/5b0f4d9ff265da091b06cdce | 高效的序列化/反序列化数据方式 Protobuf - 掘金
+https://www.google.com/search?newwindow=1&safe=strict&q=succinct+trie | succinct trie - Google Search
+http://stevehanov.ca/blog/?id=120 | Succinct Data Structures: Cramming 80,000 words into a Javascript file.
+https://uwspace.uwaterloo.ca/handle/10012/64 | Compact PAT trees
+https://zhuanlan.zhihu.com/p/38385054 | SuRF: 一个优化的 Fast Succinct Tries - 知乎
+https://www.google.com/search?newwindow=1&safe=strict&q=terarkdb
+https://zhuanlan.zhihu.com/p/21493877 | TerarkDB - 我们发布了一款划时代的存储引擎 - 知乎
+https://www.google.com/search?newwindow=1&safe=strict&q=simon+gog
+https://scholar.google.com/citations?user=8S-_WoUAAAAJ&hl=de | Simon Gog - Google Scholar Citations
+https://www.google.com/search?newwindow=1&safe=strict&ei=g26KXOmEFciMr7wPy6OmsAY&q=SuRF+paper+data+structure&oq=SuRF+paper+data+structure&gs_l=psy-ab.3..0i71.120237.123355..123452...0.0..0.0.0.......0....1..gws-wiz.6l0_3HluSyI | SuRF paper data structure - Google Search
+https://mail.google.com/mail/u/0/#label/travis | "travis" (1) - drdr.xp@gmail.com - Gmail
+https://www.quora.com/?digest_story=133651818 | (5) Home - Quora
+https://www.quora.com/?digest_story=129106777 | (4) Home - Quora
+https://www.google.com/search?newwindow=1&safe=strict&q=Clifford+algebras | Clifford algebras - Google Search
+https://en.wikipedia.org/wiki/Clifford_algebra | Clifford algebra - Wikipedia
+https://en.wikipedia.org/wiki/Hypercomplex_number | Hypercomplex number - Wikipedia
+https://github.com/openacid/slim/issues/82 | marshaling support for SlimTrie · Issue #82 · openacid/slim
+https://github.com/openacid/slim/issues/86 | simplify Search() and neighborBranches() · Issue #86 · openacid/slim
+https://www.google.com/search?newwindow=1&safe=strict&ei=9w-3XJbVNsbrwQPcta7oCA&q=hackers+delight&oq=hackers+delight&gs_l=psy-ab.3..0l10.109944.114093..114295...0.0..0.231.1754.9j4j2......0....1..gws-wiz.......0i131j35i39j0i67j0i131i67j0i10j0i70i249.W_ZSBJVseCU | hackers delight - Google Search
+http://www.hackersdelight.org/indexEdition1.shtml | Hacker's Delight
+http://graphics.stanford.edu/~seander/bithacks.html#CopyIntegerSign | Bit Twiddling Hacks
+http://graphics.stanford.edu/~seander/bithacks.html#ConditionalSetOrClearBitsWithoutBranching | Bit Twiddling Hacks
+http://graphics.stanford.edu/~seander/bithacks.html#SelectPosFromMSBRank | Bit Twiddling Hacks
+https://medium.com/@jondot/shipping-rust-binaries-with-goreleaser-d5aa42a46be0 | Shipping Rust Binaries with GoReleaser – Dotan Nahum – Medium
+https://github.com/willf/bitset | willf/bitset: Go package implementing bitsets
+https://www.google.com/search?newwindow=1&safe=strict&ei=QpzNXILhHZuroAS2w7ewCQ&q=gonum+polynomial+fit&oq=gonum+polynomial+fit&gs_l=psy-ab.3...2980308.2987081..2987362...0.0..0.2704.9795.5-3j0j2j2j1......0....1..gws-wiz.vI_TNxkhJ3w | gonum polynomial fit - Google Search
+https://rosettacode.org/wiki/Polynomial_regression#Library_go.matrix | Polynomial regression - Rosetta Code
+http://localhost:4001/pkg/github.com/openacid/slim/array/#Dense | array - The Go Programming Language
+http://drmingdrmer.coding.me/xpkit/ | drmingdrmer.coding.me/xpkit/
+
+http://www.pdl.cmu.edu/ | Parallel Data Lab
+http://research.cs.wisc.edu/adsl/Publications/ | The ADvanced Systems Laboratory (ADSL): Publications
+http://www.ssrc.ucsc.edu/ | Storage Systems Research Center at UCSC
+http://ais.its.psu.edu/services/pass/ | Penn State Access Account Storage Space (PASS) | Administrative Information Services
+http://www.fsl.cs.sunysb.edu/all-pubs.html | FSL Publications
+https://users.cs.fiu.edu/~raju/WWW/publications/ | Raju Rangaswami- Publications
+http://cse.unl.edu/~jiang/ | Hong Jiang
+https://www.google.com/search?newwindow=1&safe=strict&q=google+consistent+hash | google consistent hash - Google Search
+https://blog.gslin.org/archives/2016/07/26/6688/google-%E6%8F%90%E5%87%BA%E7%9A%84-jump-consistent-hash/ | Google 提出的 Jump Consistent Hash | Gea-Suan Lin's BLOG
+https://arxiv.org/abs/1406.2294 | [1406.2294] A Fast, Minimal Memory, Consistent Hash Algorithm
+https://research.googleblog.com/2017/04/consistent-hashing-with-bounded-loads.html | Research Blog: Consistent Hashing with Bounded Loads
+https://arxiv.org/abs/1608.01350 | [1608.01350] Consistent Hashing with Bounded Loads
+https://www.google.com/search?newwindow=1&safe=strict&q=2862933555777941757&oq=2862933555777941757&gs_l=serp.3..35i39k1.5274.5605.0.5859.3.3.0.0.0.0.224.224.2-1.1.0....0...1c.1.64.serp..2.1.223.FLVdxaiVopY | 2862933555777941757 - Google Search
+https://www.google.com/search?newwindow=1&safe=strict&q=+fibonacci+hash+32bit&oq=+fibonacci+hash+32bit&gs_l=serp.3...5653.8662.0.8744.7.7.0.0.0.0.335.638.0j2j0j1.3.0....0...1c.1.64.serp..4.2.302...0j0i7i30k1j0i22i30k1.3Hyn17GC9mU | fibonacci hash 32bit - Google Search
+https://books.google.co.id/books?id=mU6fpT1sXCoC&pg=PT193&lpg=PT193&dq=fibonacci+hash+32bit&source=bl&ots=-veZUMjtl9&sig=zJtd9preupS7oYvp5U0Kwwzjbu4&hl=en&sa=X&redir_esc=y#v=onepage&q=fibonacci%20hash%2032bit&f=false | Hashing in Computer Science: Fifty Years of Slicing and Dicing - Alan G. Konheim - Google Books
+https://en.wikipedia.org/wiki/Search_engine_indexing | Search engine indexing - Wikipedia
+https://en.wikipedia.org/wiki/Suffix_tree | Suffix tree - Wikipedia
+https://www.google.com/search?newwindow=1&safe=strict&q=gcc+__atomic | gcc __atomic - Google Search
+https://gcc.gnu.org/onlinedocs/gcc/_005f_005fatomic-Builtins.html | Using the GNU Compiler Collection (GCC): __atomic Builtins
+
+https://www.google.com/search?newwindow=1&safe=strict&q=%E5%85%A8%E6%96%87%E6%90%9C%E7%B4%A2 | 全文搜索 - Google Search
+http://oceanbase.org.cn/?page_id=191 | 文章列表 | Oceanbase列传
+http://oceanbase.org.cn/?p=82 | [LockFree之美] 共享变量的并发读写 | Oceanbase列传
+https://github.com/kayaklee/libhalog | kayaklee/libhalog: Libhalog is an open-source high available redo-log library using multiple paxos.
+https://github.com/kayaklee/libhalog/tree/master/src/clib | libhalog/src/clib at master · kayaklee/libhalog
+http://oceanbase.org.cn/?p=183 | [LockFree之美] 使用Hazard Version实现的无锁Stack与Queue | Oceanbase列传
