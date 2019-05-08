@@ -38,7 +38,10 @@ func Benchmark`f^(b *testing.B) {
 }
 
 XPT noerr " if err != nil { t.Fatalf... }
-ta.NotNil(err, "`i^EchoIfNoChange("%d-th: ")^^want no error but: %+v", ``i`+1, ^`err^)
+ta.Nil(err, "`i^EchoIfNoChange("%d-th: ")^^want no error but: %+v", ``i`+1, ^`err^)
+
+XPT nonil " if err != nil { t.Fatalf... }
+ta.NotNil(`v^, "`i^EchoIfNoChange("%d-th: ")^^want not nil", ``i`+1^)
 
 XPT fail " ta.Fail...
 ta.Fail("`i^EchoIfNoChange("%d-th: ")^^``msg` ^%+v", ``i`+1, ^`want^)
