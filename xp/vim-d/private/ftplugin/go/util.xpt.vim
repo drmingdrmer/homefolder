@@ -11,4 +11,4 @@ XPTinclude
       \ _common/common
 
 XPT slclone " clone a slice
-`to^ = append(`from`[:0:0], `from`...)
+`to^ = append(`from^[:0:0], `from^...)
