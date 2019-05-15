@@ -21,4 +21,17 @@ func Example_forth()
 func Example_fifth()
 ```
 
+## Use unordered output expect:
 
+```go
+func ExamplePerm() {
+    for _, value := range Perm(4) {
+        fmt.Println(value)
+    }
+    // Unordered output:
+    // 2
+    // 1
+    // 3
+    // 0
+}
+```
