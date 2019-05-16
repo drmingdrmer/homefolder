@@ -4,6 +4,7 @@ nnoremap <buffer> <Plug>format:import         :GoImports<CR>
 nnoremap <buffer> <Plug>search:word_ref       :GoReferrers<CR>
 nnoremap <buffer> <Plug>search:word_callstack :GoCallstack<CR>
 nnoremap <buffer> <Plug>run:build             :GoBuild<CR>
+nnoremap <buffer> <Plug>run:run               :GoRun<CR>
 nnoremap <buffer> <Plug>run:test:current_dir  :GoTest<CR>
 nnoremap <buffer> <Plug>run:test:func         :GoTestFunc<CR>
 nnoremap <buffer> <Plug>run:coverage:run      :GoCoverage<CR>
