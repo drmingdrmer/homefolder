@@ -14,7 +14,7 @@ XPTinclude
 XPT ut " func TestXXX
 func Test`f^(t *testing.T) {
 
-    ta := assert.New(t)
+    ta := require.New(t)
 
     cases := []struct {
         input int
