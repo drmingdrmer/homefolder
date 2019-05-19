@@ -26,6 +26,7 @@
 !/.screenrc
 !/.shbookmark
 !/.tmux.conf
+!/.travis
 !/.vimrc
 
 !/.ssh
