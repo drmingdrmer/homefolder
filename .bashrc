@@ -174,3 +174,6 @@ test -f $HOME/.xp-bashrc && source $HOME/.xp-bashrc
 if which gocomplete >/dev/null 2>/dev/null; then
     complete -C gocomplete go
 fi
+
+# added by travis gem
+[ -f /Users/drdrxp/.travis/travis.sh ] && source /Users/drdrxp/.travis/travis.sh
