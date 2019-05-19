@@ -131,6 +131,15 @@ END
 [ -d $HOME/go/bin ]      && { export PATH=$HOME/go/bin:$PATH;      export GOROOT=$HOME/go; }
 [ -d $HOME/xp/go/bin ]   && { export PATH=$HOME/xp/go/bin:$PATH;   export GOROOT=$HOME/xp/go; }
 
+# on mac: use homebrew ruby:
+export PATH="/usr/local/opt/ruby/bin:$PATH"
+export LDFLAGS="-L/usr/local/opt/ruby/lib"
+export CPPFLAGS="-I/usr/local/opt/ruby/include"
+export PKG_CONFIG_PATH="/usr/local/opt/ruby/lib/pkgconfig"
+
+# ruby gem bin
+export PATH="/usr/local/lib/ruby/gems/2.6.0/bin:$PATH"
+
 
 export GOPATH=$HOME/xp/vcs/go
 export PATH=$GOPATH/bin:$PATH
@@ -159,9 +168,6 @@ if which brew >/dev/null 2>/dev/null && [ -f $(brew --prefix)/etc/bash_completio
     . $(brew --prefix)/etc/bash_completion
 fi
 d end brew
-
-# TODO when to fix GOROOT?
-# [ ".$GOROOT" = "." ] && { export GOROOT=/usr/local/go; export PATH=$PATH:$GOROOT/bin; }
 
 test -f $HOME/.xp-bashrc && source $HOME/.xp-bashrc
 
