@@ -25,6 +25,10 @@ fi
 # use ssh instead of https for github
 # $gconf 'url.ssh://git@github.com/.insteadOf' 'https://github.com/'
 
+# cache user password
+# https://help.github.com/en/articles/caching-your-github-password-in-git
+# git config --global credential.helper osxkeychain
+
 $gconf user.name                "drdr xp"
 $gconf user.email               drdr.xp@gmail.com
 $gconf push.default             current
