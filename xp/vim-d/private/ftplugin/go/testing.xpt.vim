@@ -23,7 +23,7 @@ func Test`f^(t *testing.T) {
     }
 
     for i, c := range cases {
-        got := `f^(c.input)
+        got := `f^SV("_",".","g")^^(c.input)
         ta.Equal(c.want, got,
             "%d-th: input: %#v; want: %#v; got: %#v",
             i+1, c.input, c.want, got)
