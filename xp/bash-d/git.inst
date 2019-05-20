@@ -22,6 +22,9 @@ if [ "$git_version_1" = "1" ] && [ "$git_version_2" -lt "8" ]; then
     git_arg_no_edit=""
 fi
 
+# use ssh instead of https for github
+# $gconf 'url.ssh://git@github.com/.insteadOf' 'https://github.com/'
+
 $gconf user.name                "drdr xp"
 $gconf user.email               drdr.xp@gmail.com
 $gconf push.default             current
