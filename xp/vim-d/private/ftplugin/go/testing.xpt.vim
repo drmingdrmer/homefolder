@@ -24,7 +24,7 @@ func Test`f^(t *testing.T) {
 
     for i, c := range cases {
         got := `f^SV("_",".","g")^^(c.input)
-        ta.Equal(c.want, got, "%d-th: case: %#v", i+1, c)
+        ta.Equal(c.want, got, "%d-th: case: %+v", i+1, c)
     }
 }
 
