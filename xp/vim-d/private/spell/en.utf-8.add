@@ -187,3 +187,5 @@ int64
 benchmem
 cpuprofile
 flamegraph
+float64
+uint64
