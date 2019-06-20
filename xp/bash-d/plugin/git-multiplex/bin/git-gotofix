@@ -660,6 +660,9 @@ fn_match()
 
 obj=$1
 is_obj_file=0
+linenr=0
+ori_linenr=0
+
 
 if [ -z "$obj" ] || [ "$obj" = "-h" ] || [ "$obj" = "--help" ]; then
     usage
@@ -671,13 +674,23 @@ if [ "$(git_object_type $obj)" = "commit" ]; then
 else
     # it is a file path
     # find the latest commit touched this file
-    commit=$(git log -n1 --format="%h" "$obj")
     is_obj_file=1
+    if [ ".$2" != "." ]; then
+        # gotofix <fn> <linenr>
+        # get the commit last time edited this line
+        commit=$(git blame "$obj" -L "$2",+1 -p | head -n1 | { read sha other; echo $sha; })
+        ori_linenr=$(git blame "$obj" -L "$2",+1 -p | head -n1 | { read sha ori_linenr other; echo $ori_linenr; })
+        info "going to commit: $commit $ori_linenr"
+    else
+        # find the last commit that changed any line of this file
+        commit=$(git log -n1 --format="%h" "$obj")
+    fi
 fi
 
 sed_remove_after_blank="'"'/^$/,$d'"'"
 
-sed_edit_commit="s/pick $commit/edit $commit/"
+# only replace the first line
+sed_edit_commit="1 s/pick /edit /"
 # add quote
 sed_edit_commit="'$sed_edit_commit'"
 
@@ -685,5 +698,7 @@ GIT_EDITOR='f(){ cat "$1" | sed '$sed_remove_after_blank' | sed '$sed_edit_commi
     git rebase --interactive $commit~
 
 if [ "$is_obj_file" = "1" ]; then
-    vim "$obj"
+    vim "$obj" +$ori_linenr -c "normal zR"
+    git rebase --continue
 fi
+
