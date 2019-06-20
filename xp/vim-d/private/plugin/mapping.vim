@@ -96,6 +96,7 @@ nmap <unique> <M-I>               	 <Plug>nav:tab_move_forward
 nmap <unique> <M-i>               	 <Plug>nav:tab_next
 nmap <unique> <M-u>               	 <Plug>nav:tab_prev
 nmap <unique> <Leader>pc          	 <Plug>path:to_cur_file
+nmap <unique> <Leader><Leader>gf  	 <Plug>git:gotofix
 nmap <unique> <Leader><Leader>rr  	 <Plug>refactor:rename
 nmap <unique> <Leader><Leader>ub  	 <Plug>run:build
 nmap <unique> <Leader><Leader>ur  	 <Plug>run:run
