@@ -660,11 +660,32 @@ merge=0
 remove=0
 orphan=0
 to_strip=0
+rebasemode=0
+tocontinue=0
+script_fn="./.git-test-history-script"
 
-while getopts "h" opname; do
+cleanup()
+{
+    rm "$script_fn"
+}
+
+while getopts "chrs" opname; do
     case $opname in
         h)
             usage
+            exit 0
+            ;;
+        r)
+            rebasemode=1
+            shift
+            ;;
+        c)
+            tocontinue=1
+            shift
+            ;;
+        s)
+            cleanup
+            git rebase --abort
             exit 0
             ;;
         [?])
@@ -674,28 +695,36 @@ while getopts "h" opname; do
     esac
 done
 
-range=$1
-shift
-script="$@"
+if [ "$tocontinue" == "0" ]; then
+    range=$1
+    shift
+    script="$@"
+    echo "$script" > "$script_fn"
 
-base=${range%..*}
-if [ ".$base" = ".$range" ]; then
-    usage
-    exit 1
+    base=${range%..*}
+    if [ "$rebasemode" == "0" ]; then
+        if [ ".$base" = ".$range" ]; then
+            usage
+            exit 1
+        fi
+    fi
+
+    tip=${range#*..}
+    if [ ".$tip" = "." ]; then
+        tip=HEAD
+    fi
+
+    tip_hash=$(git_hash $tip)
+    head=$(git_head_branch)
+else
+    script="$(cat "$script_fn")"
 fi
 
-tip=${range#*..}
-if [ ".$tip" = "." ]; then
-    tip=HEAD
-fi
 
-tip_hash=$(git_hash $tip)
-head=$(git_head_branch)
-
+logfn=his.log
 
 test_history()
 {
-    local logfn=his.log
     local ok=ok
 
     >$logfn
@@ -703,37 +732,86 @@ test_history()
     for c in $(git log --reverse $base..$tip_hash --format="%H"); do
 
         git checkout $c >/dev/null 2>&1 || die git checkout $c
+        test_commit $c || die testing $c
 
-        commit_hash="$(git log -n1 --format="%h" $c)"
-        commit_subject="$(git log -n1 --format="%s" $c)"
-        commit_time="$(git log -n1 --format="%ci" $c)"
-
-        info $commit_hash $(clr green $commit_subject)
-        info $commit_hash $(clr light cyan "$commit_time")
-        info "> $script"
-
-        output="$($script 2>&1)" || ok=fail
-
-        if [ $ok == "ok" ]; then
-            {
-                echo "== $commit_subject"
-                echo "OK     $script"
-            } >> $logfn
-            ok "> $script"
-        else
-            {
-                echo "== $commit_subject"
-                echo "FAIL   $script"
-                echo "$output"
-            } >> $logfn
-            echo ""
-            echo "$output"
-            die "FAIL" $commit_subject
-        fi
     done
     info OK log is in $logfn
 }
 
-info "test history: $range"
-test_history
-git checkout $head
+test_rebase()
+{
+    >$logfn
+
+
+    local sed_remove_after_blank="'"'/^$/,$d'"'"
+    local sed_edit_commit="'s/pick /edit /'"
+
+    GIT_EDITOR='f(){ cat "$1" | sed '$sed_remove_after_blank' | sed '$sed_edit_commit' >"$1-tmp"; mv "$1-tmp" $1; }; f' \
+        git rebase --interactive $base
+
+    wait_rebase_end
+    cleanup
+}
+
+wait_rebase_end()
+{
+    local ok=ok
+
+    # two path indicates if rebase is in progress
+    local path1=$(git rev-parse --git-path rebase-merge)
+    local path2=$(git rev-parse --git-path rebase-apply)
+    while test -d "$path1" -o -d "$path2"; do
+
+        test_commit HEAD || die
+
+        git rebase --continue
+    done
+}
+
+test_commit()
+{
+    local ok=ok
+    local c="$1"
+    local output
+
+    local commit_hash="$(git log -n1 --format="%h" $c)"
+    local commit_subject="$(git log -n1 --format="%s" $c)"
+    local commit_time="$(git log -n1 --format="%ci" $c)"
+
+    info $commit_hash $(clr green $commit_subject)
+    info $commit_hash $(clr light cyan "$commit_time")
+    info "> $script"
+
+    output="$($script 2>&1)" || ok=fail
+
+    if [ $ok == "ok" ]; then
+        {
+            echo "== $commit_subject"
+            echo "OK     $script"
+        } >> $logfn
+        ok "> $script"
+    else
+        {
+            echo "== $commit_subject"
+            echo "FAIL   $script"
+            echo "$output"
+        } >> $logfn
+        echo ""
+        echo "$output"
+        die "FAIL" $commit_subject
+    fi
+}
+
+if [ "$tocontinue" == "1" ]; then
+    wait_rebase_end
+    exit 0
+fi
+
+if [ "$rebasemode" == "1" ]; then
+    info "test history, rebase mode: $range"
+    test_rebase
+else
+    info "test history: $range"
+    test_history
+    git checkout $head
+fi
