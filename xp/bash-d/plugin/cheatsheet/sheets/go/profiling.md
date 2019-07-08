@@ -18,7 +18,7 @@ go test ./array -cpuprofile prof.cpu -memprofile prof.mem -bench=BenchmarkU16Get
 
 ```
 # graph:
-go tool pprof  -svg cpu.prof
+go tool pprof  -svg prof.cpu
 
 # flame:
 go-torch -b prof.cpu -f prof.cpu.svg
@@ -28,7 +28,7 @@ go-torch -b prof.mem -f prof.mem.svg
 - command line analysis
 
 ```
-go tool pprof cpu.prof
+go tool pprof prof.cpu
 
 
 (pprof) top4
