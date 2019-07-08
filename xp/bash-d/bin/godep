@@ -1,0 +1,12 @@
+#!/bin/sh
+
+pkg="$1"
+
+if [ "${pkg##*/}" = "..." ]; then
+    pkg="$(go list $pkg)"
+    shift
+fi
+
+ge=$(ls /usr/local/Cellar/perl/*/bin/graph-easy| head -n1)
+
+godepgraph -nostdlib $pkg "$@" |  $ge
