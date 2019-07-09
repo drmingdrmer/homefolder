@@ -1,0 +1,7 @@
+# https://golang.org/ref/spec#Operator_precedence
+Precedence    Operator
+    5             *  /  %  <<  >>  &  &^
+    4             +  -  |  ^
+    3             ==  !=  <  <=  >  >=
+    2             &&
+    1             ||
