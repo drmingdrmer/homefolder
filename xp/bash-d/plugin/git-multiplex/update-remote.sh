@@ -111,6 +111,7 @@ while read name dir url; do
 done <<-END
 git-box          gist/git-box           git@gist.github.com:07faee6c4f7c8e31da3c5210cfa04034.git
 git-gotofix      gist/git-gotofix       git@gist.github.com:241dd1b3655f04190b0c6d06aa1dd258.git
+git-history-msg  gist/git-history-msg   git@gist.github.com:7a59b2536e1de5bc6f8696a32a7b58e8.git
 git-split        gist/git-split         git@gist.github.com:aadec82ccc43c25b9a1a40fcaa96f7e9.git
 git-subrepo      gist/git-subrepo       git@gist.github.com:ff72ee00df7b7a359263fc3b15d093b0.git
 p8ln             gist/p8ln              git@gist.github.com:8dd50b66aca51595e71dc247dcb559c1.git

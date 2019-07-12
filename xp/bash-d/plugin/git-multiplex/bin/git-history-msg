@@ -1,0 +1,33 @@
+#!/bin/sh
+
+usage(){
+    cat <<-END
+git history-msg <from> <to> <spec>
+
+Replace word <from> to <to> in commit message.
+
+Install:
+    copy it into /usr/local/bin/ or somewhere PATH env can find.
+
+Usage:
+    To replace "typo" with "type" in all commit messages from origin/master to
+    branch mydev_branch:
+
+        git history-msg typo type origin/master..mydev_branch
+END
+
+exit 0
+}
+
+from="$1"
+to="$2"
+shift
+shift
+
+script="$(cat <<-END
+sed 's/$from/$to/g'
+END
+)"
+
+echo "script: ($script)"
+git filter-branch -f --msg-filter "$script" "$@"
