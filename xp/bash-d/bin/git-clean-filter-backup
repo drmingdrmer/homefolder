@@ -1,0 +1,6 @@
+#!/bin/sh
+
+git show-ref | awk '{print $2}'  | grep "^refs/original/" | while read r; do
+    git update-ref -d "$r"
+    echo removed: "$r"
+done
