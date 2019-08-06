@@ -1,0 +1,6 @@
+#!/bin/sh
+
+
+pkg=$1
+go build -x -o godumpxxx ./$pkg
+go tool objdump -S godumpxxx | less

@@ -1,0 +1,5 @@
+#!/bin/sh
+
+pkg=$1
+
+go build -gcflags='-m -m' ./$pkg 2>&1 | less

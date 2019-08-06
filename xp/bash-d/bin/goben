@@ -1,0 +1,5 @@
+#!/bin/sh
+
+pkg=$1
+ben="$2"
+go test ./$pkg -run none -bench "$ben" -cpuprofile prof.cpu -memprofile prof.mem
