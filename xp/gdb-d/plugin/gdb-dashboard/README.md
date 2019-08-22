@@ -1,25 +1,25 @@
-GDB dashboard
-=============
+# GDB dashboard
 
 Modular visual interface for GDB in Python.
 
-This comes as a standalone single-file [`.gdbinit`][raw] which, among the other
-things, enables a configurable dashboard showing the most relevant information
-during the program execution. Its main goal is to reduce the number of GDB
-commands issued to inspect the current program status allowing the programmer to
-focus on the control flow instead.
+This comes as a standalone single-file [`.gdbinit`][raw] which enables a
+configurable dashboard showing the most relevant information of the program
+being debugged. Its main goal is to reduce the number of GDB commands issued to
+inspect the current program status allowing the programmer to focus on the
+control flow instead.
 
 ![Screenshot](http://i.imgur.com/g8I3suo.png)
 
-Installation
-------------
+## Quickstart
 
-Just place [`.gdbinit`][raw] in your home directory, for example:
+Just place [`.gdbinit`][raw] in your home directory, for example with:
 
     wget -P ~ git.io/.gdbinit
 
-Features
---------
+Then use GDB as always, the dashboard can be reached via the `dashboard` command
+and `help dashboard` is a good starting point to learn about all the features.
+
+## Features
 
  * Single GDB init file.
 
@@ -44,8 +44,22 @@ Features
  * No GDB command has been redefined, instead all the
    features are available as subcommands of the main `dashboard` command.
 
-Default modules
----------------
+## Requirements
+
+GDB dashboard requires at least GDB 7.7 compiled with Python 2.7 in order to
+work properly. See [#1](https://github.com/cyrus-and/gdb-dashboard/issues/1) for
+more details/workarounds.
+
+Make sure that the system locale is configured to use UTF-8, in most cases it
+already is, otherwise (in case of `UnicodeEncodeError` errors) a simple solution
+is to export the following environment variable:
+
+    export LC_CTYPE=C.UTF-8
+
+On Windows the `windows-curses` Python package is needed in order to obtain the
+correct terminal size.
+
+## Default modules
 
 Follows the list of bundled default modules. Refer to the GDB help system for
 the full syntax.
@@ -69,8 +83,7 @@ the full syntax.
 
  * `expressions` watches user expressions.
 
-Dashboard output
-----------------
+## Dashboard output
 
 By default the dashboard is displayed in the GDB terminal but the `-output`
 command of both the dashboard and modules can change this behavior. When the
@@ -132,16 +145,23 @@ display the output of individual modules in one or more web browser instances.
 
  5. debug as usual.
 
-Commands
---------
+## Commands
 
 The GDB documentation is available at `help dashboard`. Just like any GDB
-command, abbreviations are possible. Moreover, the alias `db` resolves to
+command, abbreviations are possible, so `da`, `dash`, etc. all resolve to
 `dashboard`.
 
 ### dashboard
 
 This is the root command and it is used to manually redisplay the dashboard.
+
+### dashboard -configuration [`<file>`]
+
+Display and optionally write to `<file>` the current configuration (layout,
+styles, outputs). This command allows to configure the dashboard live then make
+the changes permanent, for example:
+
+    dashboard -configuration ~/.gdbinit.d/auto
 
 ### dashboard -output [`<file>`]
 
@@ -164,15 +184,13 @@ switches the currently selected frame with the `up` or `down` commands. It is
 possible to do so by setting up some GDB hooks in the [user-defined init
 file](#configuration), for example:
 
-```
-define hookpost-up
-dashboard
-end
+    define hookpost-up
+    dashboard
+    end
 
-define hookpost-down
-dashboard
-end
-```
+    define hookpost-down
+    dashboard
+    end
 
 ### dashboard -layout [`<directive>`...]
 
@@ -229,8 +247,7 @@ Similarly, the `dashboard <module> -output` mimics
 the [`dashboard -style`](#dashboard--output-file) command but allows a finer
 grain of operation.
 
-Configuration
--------------
+## Configuration
 
 Files in `~/.gdbinit.d/` are executed in alphabetical order, but the preference
 is given to Python files. If there are subdirectories, they are walked
@@ -255,8 +272,7 @@ in the file system add this line to the main configuration file:
 
     set auto-load safe-path /
 
-Stylable attributes
--------------------
+## Stylable attributes
 
 There is number of attributes that can be used to customize the aspect of the
 dashboard and of its modules. They are documented within the GDB help system.
@@ -287,8 +303,27 @@ Pygments [style][pygments-styles] to use.
 
 The list of all the available styles can be obtained with (from GDB itself):
 
-    python from pygments.styles import get_all_styles as styles
-    python for s in styles(): print(s)
+```python
+python
+from pygments.styles import get_all_styles as styles
+for s in styles():
+    print(s)
+end
+```
+
+To conveniently cycle through and try each available style (press `Return` to
+try the next style and `Ctrl-D` to exit):
+
+```python
+python
+from pygments.styles import get_all_styles as styles
+for s in styles():
+    c = 'dashboard -style syntax_highlighting {!r}'.format(s)
+    gdb.execute(c)
+    print(c)
+    input()
+end
+```
 
 ### Dividers
 
@@ -309,8 +344,7 @@ within the default modules.
  * `style_high`
  * `style_error`
 
-Custom modules
---------------
+## Custom modules
 
 The idea of custom modules is that they provide ways to access readonly
 information from the target program status; it is safe to assume that they will
@@ -440,17 +474,7 @@ available:
     dashboard notes clear
     dashboard notes -style
 
-Minimal requirements
---------------------
-
-GDB dashboard requires at least GDB 7.7 compiled with Python 2.7 in order to
-work properly.
-
-See [#1](https://github.com/cyrus-and/gdb-dashboard/issues/1) for more
-details/workarounds.
-
-Additional GDB front ends
--------------------------
+## Additional GDB front ends
 
 GDB dashboard is not meant to work seamlessly with additional front ends, e.g.,
 TUI, Nemiver, QtCreator, etc.
@@ -470,32 +494,9 @@ There are basically two options to work around this:
 
         source ~/.gdb-dashboard
 
-Resources
----------
+## Resources
 
 * [GDB Python API][api]
-
-License
--------
-
-Copyright (c) 2015-2017 Andrea Cardaci <cyrus.and@gmail.com>
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-the Software, and to permit persons to whom the Software is furnished to do so,
-subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 [raw]: https://raw.githubusercontent.com/cyrus-and/gdb-dashboard/master/.gdbinit
 [api]: https://sourceware.org/gdb/onlinedocs/gdb/Python-API.html

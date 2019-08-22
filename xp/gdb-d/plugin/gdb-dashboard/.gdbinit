@@ -5,12 +5,11 @@ python
 # https://github.com/cyrus-and/gdb-dashboard
 
 import ast
-import fcntl
 import os
 import re
 import struct
-import termios
 import traceback
+import math
 
 # Common attributes ------------------------------------------------------------
 
@@ -33,8 +32,23 @@ The list of all the available styles can be obtained with (from GDB itself):
     python from pygments.styles import get_all_styles as styles
     python for s in styles(): print(s)
 """,
-                'default': 'vim',
-                'type': str
+                'default': 'vim'
+            },
+            # values formatting
+            'compact_values': {
+                'doc': 'Display complex objects in a single line.',
+                'default': False,
+                'type': bool
+            },
+            'max_value_length': {
+                'doc': 'Maximum length for displayed values.',
+                'default': 0,
+                'type': int
+            },
+            'dereference': {
+                'doc': 'Annotate pointers with the pointed value.',
+                'default': True,
+                'type': bool
             },
             # prompt
             'prompt': {
@@ -171,7 +185,8 @@ def check_ge_zero(x):
 def to_unsigned(value, size=8):
     # values from GDB can be used transparently but are not suitable for
     # being printed as unsigned integers, so a conversion is needed
-    return int(value.cast(gdb.Value(0).type)) % (2 ** (size * 8))
+    mask = (2 ** (size * 8)) - 1
+    return int(value.cast(gdb.Value(mask).type)) & mask
 
 def to_string(value):
     # attempt to convert an inferior value to string; OK when (Python 3 ||
@@ -181,24 +196,59 @@ def to_string(value):
         value_string = str(value)
     except UnicodeEncodeError:
         value_string = unicode(value).encode('utf8')
+    except gdb.error as e:
+        value_string = ansi(e, R.style_error)
     return value_string
 
 def format_address(address):
     pointer_size = gdb.parse_and_eval('$pc').type.sizeof
     return ('0x{{:0{}x}}').format(pointer_size * 2).format(address)
 
-class Highlighter():
-    def __init__(self, filename):
+def format_value(value, compact=None):
+    # format references as referenced values
+    # (TYPE_CODE_RVALUE_REF is not supported by old GDB)
+    if value.type.code in (getattr(gdb, 'TYPE_CODE_REF', None),
+                           getattr(gdb, 'TYPE_CODE_RVALUE_REF', None)):
+        value = value.referenced_value()
+    # format the value
+    out = to_string(value)
+    # dereference up to the actual value if requested
+    if R.dereference and value.type.code == gdb.TYPE_CODE_PTR:
+        while value.type.code == gdb.TYPE_CODE_PTR:
+            try:
+                value = value.dereference()
+            except gdb.error as e:
+                break
+        else:
+            formatted = to_string(value)
+            out += '{} {}'.format(ansi(':', R.style_low), formatted)
+    # compact the value
+    if compact is not None and compact or R.compact_values:
+        out = re.sub(r'$\s*', '', out, flags=re.MULTILINE)
+    # truncate the value
+    if R.max_value_length > 0 and len(out) > R.max_value_length:
+        out = out[0:R.max_value_length] + ansi('[...]', R.style_error)
+    return out
+
+class Beautifier():
+    def __init__(self, hint, tab_size=4):
+        self.tab_spaces = ' ' * tab_size
         self.active = False
         if not R.ansi:
             return
         # attempt to set up Pygments
         try:
-            import pygments.lexers
-            import pygments.formatters
-            formatter_class = pygments.formatters.Terminal256Formatter
-            self.formatter = formatter_class(style=R.syntax_highlighting)
-            self.lexer = pygments.lexers.get_lexer_for_filename(filename)
+            import pygments
+            from pygments.lexers import GasLexer, NasmLexer
+            from pygments.formatters import Terminal256Formatter
+            if hint == 'att':
+                self.lexer = GasLexer()
+            elif hint == 'intel':
+                self.lexer = NasmLexer()
+            else:
+                from pygments.lexers import get_lexer_for_filename
+                self.lexer = get_lexer_for_filename(hint, stripnl=False)
+            self.formatter = Terminal256Formatter(style=R.syntax_highlighting)
             self.active = True
         except ImportError:
             # Pygments not available
@@ -208,6 +258,8 @@ class Highlighter():
             pass
 
     def process(self, source):
+        # convert tabs anyway
+        source = source.replace('\t', self.tab_spaces)
         if self.active:
             import pygments
             source = pygments.highlight(source, self.lexer, self.formatter)
@@ -223,14 +275,15 @@ class Dashboard(gdb.Command):
                              gdb.COMMAND_USER, gdb.COMPLETE_NONE, True)
         self.output = None  # main terminal
         # setup subcommands
+        Dashboard.ConfigurationCommand(self)
         Dashboard.OutputCommand(self)
         Dashboard.EnabledCommand(self)
         Dashboard.LayoutCommand(self)
         # setup style commands
         Dashboard.StyleCommand(self, 'dashboard', R, R.attributes())
-        # enable by default
+        # disabled by default
         self.enabled = None
-        self.enable()
+        self.disable()
 
     def on_continue(self, _):
         # try to contain the GDB messages in a specified area unless the
@@ -291,7 +344,7 @@ class Dashboard(gdb.Command):
 
     def redisplay(self, style_changed=False):
         # manually redisplay the dashboard
-        if self.is_running():
+        if self.is_running() and self.enabled:
             self.render(True, style_changed)
 
     def inferior_pid(self):
@@ -302,15 +355,20 @@ class Dashboard(gdb.Command):
 
     def render(self, clear_screen, style_changed=False):
         # fetch module content and info
+        all_disabled = True
         display_map = dict()
         for module in self.modules:
-            if not module.enabled:
-                continue
             # fall back to the global value
             output = module.output or self.output
-            display_map.setdefault(output, []).append(module.instance)
+            # add the instance or None if disabled
+            if module.enabled:
+                all_disabled = False
+                instance = module.instance
+            else:
+                instance = None
+            display_map.setdefault(output, []).append(instance)
         # notify the user if the output is empty, on the main terminal
-        if not display_map:
+        if all_disabled:
             # write the error message
             width = Dashboard.get_term_width()
             gdb.write(divider(width, 'Error', True))
@@ -324,7 +382,7 @@ class Dashboard(gdb.Command):
             gdb.write(divider(width, primary=True))
             gdb.write('\n')
             gdb.flush()
-            return
+            # continue to allow separate terminals to update
         # process each display info
         for output, instances in display_map.items():
             try:
@@ -337,7 +395,7 @@ class Dashboard(gdb.Command):
                     fs.write(Dashboard.hide_cursor())
                 else:
                     fs = gdb
-                    fd = 1
+                    fd = 1  # stdout
                 # get the terminal width (default main terminal if either
                 # the output is not a file)
                 try:
@@ -348,10 +406,23 @@ class Dashboard(gdb.Command):
                 # auxiliary terminals are always cleared
                 if fs is not gdb or clear_screen:
                     fs.write(Dashboard.clear_screen())
+                # show message in separate terminals if all the modules are
+                # disabled
+                if output != self.output and not any(instances):
+                    fs.write('--- NO MODULE TO DISPLAY ---\n')
+                    continue
                 # process all the modules for that output
                 for n, instance in enumerate(instances, 1):
-                    # ask the module to generate the content
-                    lines = instance.lines(width, style_changed)
+                    # skip disabled modules
+                    if not instance:
+                        continue
+                    try:
+                        # ask the module to generate the content
+                        lines = instance.lines(width, style_changed)
+                    except Exception as e:
+                        # allow to continue on exceptions in modules
+                        stacktrace = traceback.format_exc().strip()
+                        lines = [ansi(stacktrace, R.style_error)]
                     # create the divider accordingly
                     div = divider(width, instance.label(), True, lines)
                     # write the data
@@ -360,8 +431,9 @@ class Dashboard(gdb.Command):
                     if n != len(instances) or fs is gdb:
                         fs.write('\n')
                 # write the final newline and the terminator only if it is the
-                # main terminal to allow the prompt to display correctly
-                if fs is gdb:
+                # main terminal to allow the prompt to display correctly (unless
+                # there are no modules to display)
+                if fs is gdb and not all_disabled:
                     fs.write(divider(width, primary=True))
                     fs.write('\n')
                 fs.flush()
@@ -370,7 +442,7 @@ class Dashboard(gdb.Command):
                 Dashboard.err('Cannot write the dashboard\n{}'.format(cause))
             finally:
                 # don't close gdb stream
-                if fs is not gdb:
+                if fs and fs is not gdb:
                     fs.close()
 
 # Utility methods --------------------------------------------------------------
@@ -387,14 +459,28 @@ class Dashboard(gdb.Command):
         Dashboard.parse_inits(False)
         # GDB overrides
         run('set pagination off')
-        run('alias -a db = dashboard')
+        # enable and display if possible (program running)
+        dashboard.enable()
+        dashboard.redisplay()
 
     @staticmethod
     def get_term_width(fd=1):  # defaults to the main terminal
-        # first 2 shorts (4 byte) of struct winsize
-        raw = fcntl.ioctl(fd, termios.TIOCGWINSZ, ' ' * 4)
-        height, width = struct.unpack('hh', raw)
-        return int(width)
+        if sys.platform == 'win32':
+            try:
+                import curses
+                # XXX always neglects the fd parameter
+                _, width = curses.initscr().getmaxyx()
+                curses.endwin()
+                return int(width)
+            except ImportError:
+                return 80  # hardcoded fallback value
+        else:
+            import termios
+            import fcntl
+            # first 2 shorts (4 byte) of struct winsize
+            raw = fcntl.ioctl(fd, termios.TIOCGWINSZ, ' ' * 4)
+            _, width = struct.unpack('hh', raw)
+            return int(width)
 
     @staticmethod
     def set_custom_prompt(dashboard):
@@ -419,7 +505,7 @@ class Dashboard(gdb.Command):
                 path = os.path.join(root, init)
                 _, ext = os.path.splitext(path)
                 # either load Python files or GDB
-                if python ^ (ext != '.py'):
+                if python == (ext == '.py'):
                     gdb.execute('source ' + path)
 
     @staticmethod
@@ -543,13 +629,65 @@ class Dashboard(gdb.Command):
 
     def invoke(self, arg, from_tty):
         arg = Dashboard.parse_arg(arg)
-        if arg == '':
-            if self.is_running():
-                self.redisplay()
-            else:
-                Dashboard.err('Is the target program running?')
-        else:
+        # show messages for checks in redisplay
+        if arg != '':
             Dashboard.err('Wrong argument "{}"'.format(arg))
+        elif not self.is_running():
+            Dashboard.err('Is the target program running?')
+        else:
+            self.redisplay()
+
+    class ConfigurationCommand(gdb.Command):
+        """Dump the dashboard configuration (layout, styles, outputs).
+With an optional argument the configuration will be written to the specified
+file."""
+
+        def __init__(self, dashboard):
+            gdb.Command.__init__(self, 'dashboard -configuration',
+                                 gdb.COMMAND_USER, gdb.COMPLETE_FILENAME)
+            self.dashboard = dashboard
+
+        def invoke(self, arg, from_tty):
+            arg = Dashboard.parse_arg(arg)
+            if arg:
+                with open(os.path.expanduser(arg), 'w') as fs:
+                    fs.write('# auto generated by GDB dashboard\n\n')
+                    self.dump(fs)
+            self.dump(gdb)
+
+        def dump(self, fs):
+            # dump layout
+            self.dump_layout(fs)
+            # dump styles
+            self.dump_style(fs, R)
+            for module in self.dashboard.modules:
+                self.dump_style(fs, module.instance, module.prefix)
+            # dump outputs
+            self.dump_output(fs, self.dashboard)
+            for module in self.dashboard.modules:
+                self.dump_output(fs, module, module.prefix)
+
+        def dump_layout(self, fs):
+            layout = ['dashboard -layout']
+            for module in self.dashboard.modules:
+                mark = '' if module.enabled else '!'
+                layout.append('{}{}'.format(mark, module.name))
+            fs.write(' '.join(layout))
+            fs.write('\n')
+
+        def dump_style(self, fs, obj, prefix='dashboard'):
+            attributes = getattr(obj, 'attributes', lambda: dict())()
+            for name, attribute in attributes.items():
+                real_name = attribute.get('name', name)
+                default = attribute.get('default')
+                value = getattr(obj, real_name)
+                if value != default:
+                    fs.write('{} -style {} {!r}\n'.format(prefix, name, value))
+
+        def dump_output(self, fs, obj, prefix='dashboard'):
+            output = getattr(obj, 'output')
+            if output:
+                fs.write('{} -output {}\n'.format(prefix, output))
 
     class OutputCommand(gdb.Command):
         """Set the output file/TTY for both the dashboard and modules.
@@ -574,6 +712,18 @@ dashboard will be printed."""
 
         def invoke(self, arg, from_tty):
             arg = Dashboard.parse_arg(arg)
+            # display a message in a separate terminal if released (note that
+            # the check if this is the last module to use the output is not
+            # performed since if that's not the case the message will be
+            # overwritten)
+            if self.obj.output:
+                try:
+                    with open(self.obj.output, 'w') as fs:
+                        fs.write(Dashboard.clear_screen())
+                        fs.write('--- RELEASED ---\n')
+                except:
+                    # just do nothing if the file is not writable
+                    pass
             # set or open the output file
             if arg == '':
                 self.obj.output = None
@@ -665,7 +815,7 @@ files."""
                 name = directive[not enabled:]
                 try:
                     # it may actually start from last, but in this way repeated
-                    # modules can be handler transparently and without error
+                    # modules can be handled transparently and without error
                     todo = enumerate(modules[last:], start=last)
                     index = next(i for i, m in todo if name == m.name)
                     modules[index].enabled = enabled
@@ -676,7 +826,7 @@ files."""
                     def find_module(x):
                         return x.name == name
                     first_part = modules[:last]
-                    if len(filter(find_module, first_part)) == 0:
+                    if len(list(filter(find_module, first_part))) == 0:
                         Dashboard.err('Cannot find module "{}"'.format(name))
                     else:
                         Dashboard.err('Module "{}" already set'.format(name))
@@ -772,6 +922,9 @@ class Source(Dashboard.Module):
         return 'Source'
 
     def lines(self, term_width, style_changed):
+        # skip if the current thread is not stopped
+        if not gdb.selected_thread().is_stopped():
+            return []
         # try to fetch the current line (skip if no line information)
         sal = gdb.selected_frame().find_sal()
         current_line = sal.line
@@ -790,7 +943,7 @@ class Source(Dashboard.Module):
             self.file_name = file_name
             self.ts = ts
             try:
-                highlighter = Highlighter(self.file_name)
+                highlighter = Beautifier(self.file_name, self.tab_size)
                 self.highlighted = highlighter.active
                 with open(self.file_name) as source_file:
                     source = highlighter.process(source_file.read())
@@ -831,6 +984,13 @@ class Source(Dashboard.Module):
                 'default': 5,
                 'type': int,
                 'check': check_ge_zero
+            },
+            'tab-size': {
+                'doc': 'Number of spaces used to display the tab character.',
+                'default': 4,
+                'name': 'tab_size',
+                'type': int,
+                'check': check_gt_zero
             }
         }
 
@@ -842,15 +1002,16 @@ instructions constituting the current statement are marked, if available."""
         return 'Assembly'
 
     def lines(self, term_width, style_changed):
+        # skip if the current thread is not stopped
+        if not gdb.selected_thread().is_stopped():
+            return []
         line_info = None
         frame = gdb.selected_frame()  # PC is here
         disassemble = frame.architecture().disassemble
         try:
-            # try to fetch the function boundaries using the disassemble command
-            output = run('disassemble').split('\n')
-            start = int(re.split('[ :]', output[1][3:], 1)[0], 16)
-            end = int(re.split('[ :]', output[-3][3:], 1)[0], 16)
-            asm = disassemble(start, end_pc=end)
+            # disassemble the current block
+            block = gdb.block_for_pc(frame.pc())
+            asm = disassemble(block.start, end_pc=block.end - 1)
             # find the location of the PC
             pc_index = next(index for index, instr in enumerate(asm)
                             if instr['addr'] == frame.pc())
@@ -861,30 +1022,38 @@ instructions constituting the current statement are marked, if available."""
             # line_info is not None but line_info.last is None
             line_info = gdb.find_pc_line(frame.pc())
             line_info = line_info if line_info.last else None
-        except (gdb.error, StopIteration):
+        except (gdb.error, RuntimeError, StopIteration):
             # if it is not possible (stripped binary or the PC is not present in
             # the output of `disassemble` as per issue #31) start from PC and
             # end after twice the context
-            asm = disassemble(frame.pc(), count=2 * self.context + 1)
+            try:
+                asm = disassemble(frame.pc(), count=2 * self.context + 1)
+            except gdb.error as e:
+                msg = '{}'.format(e)
+                return [ansi(msg, R.style_error)]
         # fetch function start if available
         func_start = None
         if self.show_function and frame.name():
             try:
-                value = gdb.parse_and_eval(frame.name()).address
+                # it may happen that the frame name is the whole function
+                # declaration, instead of just the name, e.g., 'getkey()', so it
+                # would be treated as a function call by 'gdb.parse_and_eval',
+                # hence the trim, see #87 and #88
+                value = gdb.parse_and_eval(frame.name().split('(')[0]).address
                 func_start = to_unsigned(value)
             except gdb.error:
                 pass  # e.g., @plt
-        # fetch the assembly flavor and the extension used by Pygments
+        # fetch the assembly flavor anduse it as hint for Pygments
         try:
             flavor = gdb.parameter('disassembly-flavor')
         except:
-            flavor = None  # not always defined (see #36)
-        filename = {
-            'att': '.s',
-            'intel': '.asm'
-        }.get(flavor, '.s')
+            flavor = 'att'  # not always defined (see #36)
         # prepare the highlighter
-        highlighter = Highlighter(filename)
+        highlighter = Beautifier(flavor)
+        # compute the maximum offset size
+        if func_start:
+            max_offset = max(len(str(abs(asm[0]['addr'] - func_start))),
+                             len(str(abs(asm[-1]['addr'] - func_start))))
         # return the machine code
         max_length = max(instr['length'] for instr in asm)
         inferior = gdb.selected_inferior()
@@ -905,20 +1074,21 @@ instructions constituting the current statement are marked, if available."""
             # compute the offset if available
             if self.show_function:
                 if func_start:
-                    max_offset = len(str(asm[-1]['addr'] - func_start))
-                    offset = str(addr - func_start).ljust(max_offset)
-                    func_info = '{}+{} '.format(frame.name(), offset)
+                    offset = '{:+d}'.format(addr - func_start)
+                    offset = offset.ljust(max_offset + 1)  # sign
+                    func_info = '{}{}'.format(frame.name(), offset)
                 else:
-                    func_info = '? '
+                    func_info = '?'
             else:
                 func_info = ''
             format_string = '{}{}{}{}{}'
             indicator = ' '
-            text = highlighter.process(text)
+            text = ' ' + highlighter.process(text)
             if addr == frame.pc():
                 if not R.ansi:
                     indicator = '>'
                 addr_str = ansi(addr_str, R.style_selected_1)
+                indicator = ansi(indicator, R.style_selected_1)
                 opcodes = ansi(opcodes, R.style_selected_1)
                 func_info = ansi(func_info, R.style_selected_1)
                 if not highlighter.active:
@@ -927,6 +1097,7 @@ instructions constituting the current statement are marked, if available."""
                 if not R.ansi:
                     indicator = ':'
                 addr_str = ansi(addr_str, R.style_selected_2)
+                indicator = ansi(indicator, R.style_selected_2)
                 opcodes = ansi(opcodes, R.style_selected_2)
                 func_info = ansi(func_info, R.style_selected_2)
                 if not highlighter.active:
@@ -960,6 +1131,84 @@ instructions constituting the current statement are marked, if available."""
             }
         }
 
+class Variables(Dashboard.Module):
+    """Show arguments and locals of the selected frame."""
+
+    def label(self):
+        return 'Variables'
+
+    def lines(self, term_width, style_changed):
+        return Variables.format_variables(
+            gdb.selected_frame(),
+            self.show_arguments, self.show_locals, self.compact)
+
+    def attributes(self):
+        return {
+            'arguments': {
+                'doc': 'Frame arguments visibility flag.',
+                'default': True,
+                'name': 'show_arguments',
+                'type': bool
+            },
+            'locals': {
+                'doc': 'Frame locals visibility flag.',
+                'default': True,
+                'name': 'show_locals',
+                'type': bool
+            },
+            'compact': {
+                'doc': 'Single-line display flag.',
+                'default': False,
+                'type': bool
+            }
+        }
+
+    @staticmethod
+    def format_variables(frame, show_arguments, show_locals, compact):
+        out = []
+        # fetch frame arguments and locals
+        decorator = gdb.FrameDecorator.FrameDecorator(frame)
+        separator = ansi(', ', R.style_low)
+        if show_arguments:
+            def prefix(line):
+                return Stack.format_line('arg', line)
+            frame_args = decorator.frame_args()
+            args_lines = Variables.fetch(frame, frame_args, compact)
+            if args_lines:
+                if compact:
+                    args_line = separator.join(args_lines)
+                    single_line = prefix(args_line)
+                    out.append(single_line)
+                else:
+                    out.extend(map(prefix, args_lines))
+            else:
+                out.append(ansi('(no arguments)', R.style_low))
+        if show_locals:
+            def prefix(line):
+                return Stack.format_line('loc', line)
+            frame_locals = decorator.frame_locals()
+            locals_lines = Variables.fetch(frame, frame_locals, compact)
+            if locals_lines:
+                if compact:
+                    locals_line = separator.join(locals_lines)
+                    single_line = prefix(locals_line)
+                    out.append(single_line)
+                else:
+                    out.extend(map(prefix, locals_lines))
+            else:
+                out.append(ansi('(no locals)', R.style_low))
+        return out
+
+    @staticmethod
+    def fetch(frame, data, compact):
+        lines = []
+        for elem in data or []:
+            name = elem.sym
+            equal = ansi('=', R.style_low)
+            value = format_value(elem.sym.value(frame), compact)
+            lines.append('{} {} {}'.format(name, equal, value))
+        return lines
+
 class Stack(Dashboard.Module):
     """Show the current stack trace including the function name and the file
 location, if available. Optionally list the frame arguments and locals too."""
@@ -968,6 +1217,9 @@ location, if available. Optionally list the frame arguments and locals too."""
         return 'Stack'
 
     def lines(self, term_width, style_changed):
+        # skip if the current thread is not stopped
+        if not gdb.selected_thread().is_stopped():
+            return []
         # find the selected frame (i.e., the first to display)
         selected_index = 0
         frame = gdb.newest_frame()
@@ -989,37 +1241,9 @@ location, if available. Optionally list the frame arguments and locals too."""
             info = Stack.get_pc_line(frame, style)
             frame_lines = []
             frame_lines.append('[{}] {}'.format(frame_id, info))
-            # fetch frame arguments and locals
-            decorator = gdb.FrameDecorator.FrameDecorator(frame)
-            separator = ansi(', ', R.style_low)
-            if self.show_arguments:
-                def prefix(line):
-                    return Stack.format_line('arg', line)
-                frame_args = decorator.frame_args()
-                args_lines = Stack.fetch_frame_info(frame, frame_args)
-                if args_lines:
-                    if self.compact:
-                        args_line = separator.join(args_lines)
-                        single_line = prefix(args_line)
-                        frame_lines.append(single_line)
-                    else:
-                        frame_lines.extend(map(prefix, args_lines))
-                else:
-                    frame_lines.append(ansi('(no arguments)', R.style_low))
-            if self.show_locals:
-                def prefix(line):
-                    return Stack.format_line('loc', line)
-                frame_locals = decorator.frame_locals()
-                locals_lines = Stack.fetch_frame_info(frame, frame_locals)
-                if locals_lines:
-                    if self.compact:
-                        locals_line = separator.join(locals_lines)
-                        single_line = prefix(locals_line)
-                        frame_lines.append(single_line)
-                    else:
-                        frame_lines.extend(map(prefix, locals_lines))
-                else:
-                    frame_lines.append(ansi('(no locals)', R.style_low))
+            # add frame arguments and locals
+            frame_lines.extend(Variables.format_variables(
+                frame, self.show_arguments, self.show_locals, self.compact))
             # add frame
             frames.append(frame_lines)
             # next
@@ -1046,24 +1270,18 @@ location, if available. Optionally list the frame arguments and locals too."""
         return '{} {}'.format(prefix, line)
 
     @staticmethod
-    def fetch_frame_info(frame, data):
-        lines = []
-        for elem in data or []:
-            name = elem.sym
-            equal = ansi('=', R.style_low)
-            value = to_string(elem.sym.value(frame))
-            lines.append('{} {} {}'.format(name, equal, value))
-        return lines
-
-    @staticmethod
     def get_pc_line(frame, style):
         frame_pc = ansi(format_address(frame.pc()), style)
         info = 'from {}'.format(frame_pc)
         if frame.name():
             frame_name = ansi(frame.name(), style)
             try:
-                # try to compute the offset relative to the current function
-                value = gdb.parse_and_eval(frame.name()).address
+                # try to compute the offset relative to the current function (it
+                # may happen that the frame name is the whole function
+                # declaration, instead of just the name, e.g., 'getkey()', so it
+                # would be treated as a function call by 'gdb.parse_and_eval',
+                # hence the trim, see #87 and #88)
+                value = gdb.parse_and_eval(frame.name().split('(')[0]).address
                 # it can be None even if it is part of the "stack" (C++)
                 if value:
                     func_start = to_unsigned(value)
@@ -1083,13 +1301,13 @@ location, if available. Optionally list the frame arguments and locals too."""
         return {
             'limit': {
                 'doc': 'Maximum number of displayed frames (0 means no limit).',
-                'default': 2,
+                'default': 10,
                 'type': int,
                 'check': check_ge_zero
             },
             'arguments': {
                 'doc': 'Frame arguments visibility flag.',
-                'default': True,
+                'default': False,
                 'name': 'show_arguments',
                 'type': bool
             },
@@ -1117,7 +1335,7 @@ class History(Dashboard.Module):
         # fetch last entries
         for i in range(-self.limit + 1, 1):
             try:
-                value = to_string(gdb.history(i))
+                value = format_value(gdb.history(i))
                 value_id = ansi('$${}', R.style_low).format(abs(i))
                 line = '{} = {}'.format(value_id, value)
                 out.append(line)
@@ -1138,6 +1356,61 @@ class History(Dashboard.Module):
 class Memory(Dashboard.Module):
     """Allow to inspect memory regions."""
 
+    class Region():
+        def __init__(self, address, length, module):
+            self.address = address
+            self.length = length
+            self.module = module
+            self.original = None
+            self.latest = None
+
+        def format(self):
+            # fetch the memory content
+            try:
+                inferior = gdb.selected_inferior()
+                memory = inferior.read_memory(self.address, self.length)
+                # set the original memory snapshot if needed
+                if not self.original:
+                    self.original = memory
+            except gdb.error:
+                msg = 'Cannot access {} bytes starting at {}'
+                msg = msg.format(self.length, format_address(self.address))
+                return [ansi(msg, R.style_error)]
+
+            # format the memory content
+            out = []
+            for i in range(0, len(memory), self.module.row_length):
+                region = memory[i:i + self.module.row_length]
+                pad = self.module.row_length - len(region)
+                address = format_address(self.address + i)
+                # compute changes
+                hexa = []
+                text = []
+                for j in range(len(region)):
+                    rel = i + j
+                    byte = memory[rel]
+                    hexa_byte = '{:02x}'.format(ord(byte))
+                    text_byte = Memory.format_byte(byte)
+                    # differences against the latest have the highest priority
+                    if self.latest and memory[rel] != self.latest[rel]:
+                        hexa_byte = ansi(hexa_byte, R.style_selected_1)
+                        text_byte = ansi(text_byte, R.style_selected_1)
+                    # cumulative changes if enabled
+                    elif (self.module.cumulative and
+                          memory[rel] != self.original[rel]):
+                        hexa_byte = ansi(hexa_byte, R.style_selected_2)
+                        text_byte = ansi(text_byte, R.style_selected_2)
+                    hexa.append(hexa_byte)
+                    text.append(text_byte)
+                # output the formatted line
+                out.append('{} {}{} {}{}'.format(
+                    ansi(address, R.style_low),
+                    ' '.join(hexa), ansi(pad * ' --', R.style_low),
+                    ''.join(text), ansi(pad * '.', R.style_low)))
+            # update the latest memory snapshot
+            self.latest = memory
+            return out
+
     @staticmethod
     def format_byte(byte):
         # `type(byte) is bytes` in Python 3
@@ -1157,35 +1430,13 @@ class Memory(Dashboard.Module):
         self.row_length = 16
         self.table = {}
 
-    def format_memory(self, start, memory):
-        out = []
-        for i in range(0, len(memory), self.row_length):
-            region = memory[i:i + self.row_length]
-            pad = self.row_length - len(region)
-            address = format_address(start + i)
-            hexa = (' '.join('{:02x}'.format(ord(byte)) for byte in region))
-            text = (''.join(Memory.format_byte(byte) for byte in region))
-            out.append('{} {}{} {}{}'.format(ansi(address, R.style_low),
-                                             hexa,
-                                             ansi(pad * ' --', R.style_low),
-                                             ansi(text, R.style_high),
-                                             ansi(pad * '.', R.style_low)))
-        return out
-
     def label(self):
         return 'Memory'
 
     def lines(self, term_width, style_changed):
         out = []
-        inferior = gdb.selected_inferior()
-        for address, length in sorted(self.table.items()):
-            try:
-                memory = inferior.read_memory(address, length)
-                out.extend(self.format_memory(address, memory))
-            except gdb.error:
-                msg = 'Cannot access {} bytes starting at {}'
-                msg = msg.format(length, format_address(address))
-                out.append(ansi(msg, R.style_error))
+        for address, region in sorted(self.table.items()):
+            out.extend(region.format())
             out.append(divider(term_width))
         # drop last divider
         if out:
@@ -1200,7 +1451,7 @@ class Memory(Dashboard.Module):
                 length = Memory.parse_as_address(length)
             else:
                 length = self.row_length
-            self.table[address] = length
+            self.table[address] = Memory.Region(address, length, self)
         else:
             raise Exception('Specify an address')
 
@@ -1235,6 +1486,15 @@ class Memory(Dashboard.Module):
             }
         }
 
+    def attributes(self):
+        return {
+            'cumulative': {
+                'doc': 'Highlight changes cumulatively, watch again to reset.',
+                'default': False,
+                'type': bool
+            }
+        }
+
 class Registers(Dashboard.Module):
     """Show the CPU registers and their values."""
 
@@ -1245,11 +1505,21 @@ class Registers(Dashboard.Module):
         return 'Registers'
 
     def lines(self, term_width, style_changed):
+        # skip if the current thread is not stopped
+        if not gdb.selected_thread().is_stopped():
+            return []
+        # obtain the registers to display
+        if style_changed:
+            self.table = {}
+        if self.register_list:
+            register_list = self.register_list.split()
+        else:
+            register_list = list(map(lambda line: line.split(None, 1)[0],
+                                     run('info registers').strip().split('\n')))
+
         # fetch registers status
         registers = []
-        for reg_info in run('info registers').strip().split('\n'):
-            # fetch register and update the table
-            name = reg_info.split(None, 1)[0]
+        for name in register_list:
             # Exclude registers with a dot '.' or parse_and_eval() will fail
             if '.' in name:
                 continue
@@ -1264,15 +1534,10 @@ class Registers(Dashboard.Module):
         max_name = max(len(name) for name, _, _ in registers)
         max_value = max(len(value) for _, value, _ in registers)
         max_width = max_name + max_value + 2
-        per_line = int((term_width + 1) / max_width) or 1
+        per_line = min(int((term_width + 1) / max_width) or 1, len(registers))
         # redistribute extra space among columns
         extra = int((term_width + 1 - max_width * per_line) / per_line)
-        if per_line == 1:
-            # center when there is only one column
-            max_name += int(extra / 2)
-            max_value += int(extra / 2)
-        else:
-            max_value += extra
+        max_name += int(extra / 2)
         # format registers info
         partial = []
         for name, value, changed in registers:
@@ -1281,9 +1546,33 @@ class Registers(Dashboard.Module):
             styled_value = ansi(value.ljust(max_value), value_style)
             partial.append(styled_name + ' ' + styled_value)
         out = []
-        for i in range(0, len(partial), per_line):
-            out.append(' '.join(partial[i:i + per_line]).rstrip())
+        if self.column_major:
+            num_lines = int(math.ceil(float(len(partial)) / per_line))
+            for i in range(num_lines):
+                line = ' '.join(partial[i:len(partial):num_lines]).rstrip()
+                real_n_col = math.ceil(float(len(partial)) / num_lines)
+                line = ' ' * int((per_line - real_n_col) * max_width / 2) + line
+                out.append(line)
+        else:
+            for i in range(0, len(partial), per_line):
+                out.append(' '.join(partial[i:i + per_line]).rstrip())
         return out
+
+    def attributes(self):
+        return {
+            'column-major': {
+                'doc': 'Whether to show registers in columns instead of rows.',
+                'default': False,
+                'name': 'column_major',
+                'type': bool
+            },
+            'list': {
+                'doc': """String of space-separated register names to display.
+The empty list (default) causes to show all the available registers.""",
+                'default': '',
+                'name': 'register_list',
+            }
+        }
 
     @staticmethod
     def format_value(value):
@@ -1306,24 +1595,59 @@ class Threads(Dashboard.Module):
     def lines(self, term_width, style_changed):
         out = []
         selected_thread = gdb.selected_thread()
-        selected_frame = gdb.selected_frame()
-        for thread in gdb.Inferior.threads(gdb.selected_inferior()):
+        # do not restore the selected frame if the thread is not stopped
+        restore_frame = gdb.selected_thread().is_stopped()
+        if restore_frame:
+            selected_frame = gdb.selected_frame()
+        # fetch the thread list
+        threads = []
+        for inferior in gdb.inferiors():
+            if self.all_inferiors or inferior == gdb.selected_inferior():
+                threads += gdb.Inferior.threads(inferior)
+        for thread in threads:
+            # skip running threads if requested
+            if self.skip_running and thread.is_running():
+                continue
             is_selected = (thread.ptid == selected_thread.ptid)
             style = R.style_selected_1 if is_selected else R.style_selected_2
-            number = ansi(str(thread.num), style)
+            if self.all_inferiors:
+                number = '{}.{}'.format(thread.inferior.num, thread.num)
+            else:
+                number = str(thread.num)
+            number = ansi(number, style)
             tid = ansi(str(thread.ptid[1] or thread.ptid[2]), style)
             info = '[{}] id {}'.format(number, tid)
             if thread.name:
                 info += ' name {}'.format(ansi(thread.name, style))
-            # switch thread to fetch frame info
-            thread.switch()
-            frame = gdb.newest_frame()
-            info += ' ' + Stack.get_pc_line(frame, style)
+            # switch thread to fetch info (unless is running in non-stop mode)
+            try:
+                thread.switch()
+                frame = gdb.newest_frame()
+                info += ' ' + Stack.get_pc_line(frame, style)
+            except gdb.error:
+                info += ' (running)'
             out.append(info)
         # restore thread and frame
         selected_thread.switch()
-        selected_frame.select()
+        if restore_frame:
+            selected_frame.select()
         return out
+
+    def attributes(self):
+        return {
+            'skip-running': {
+                'doc': 'Skip running threads.',
+                'default': False,
+                'name': 'skip_running',
+                'type': bool
+            },
+            'all-inferiors': {
+                'doc': 'Show threads from all inferiors.',
+                'default': False,
+                'name': 'all_inferiors',
+                'type': bool
+            },
+        }
 
 class Expressions(Dashboard.Module):
     """Watch user expressions."""
@@ -1339,7 +1663,7 @@ class Expressions(Dashboard.Module):
         out = []
         for number, expression in sorted(self.table.items()):
             try:
-                value = to_string(gdb.parse_and_eval(expression))
+                value = format_value(gdb.parse_and_eval(expression))
             except gdb.error as e:
                 value = ansi(e, R.style_error)
             number = ansi(number, R.style_selected_2)
@@ -1390,7 +1714,6 @@ end
 # Better GDB defaults ----------------------------------------------------------
 
 set history save
-set confirm off
 set verbose off
 set print pretty on
 set print array off
@@ -1402,7 +1725,7 @@ set python print-stack full
 python Dashboard.start()
 
 # ------------------------------------------------------------------------------
-# Copyright (c) 2015-2017 Andrea Cardaci <cyrus.and@gmail.com>
+# Copyright (c) 2015-2019 Andrea Cardaci <cyrus.and@gmail.com>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
