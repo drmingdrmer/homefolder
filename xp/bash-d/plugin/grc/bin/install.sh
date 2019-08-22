@@ -21,7 +21,14 @@ cp -fv grc.1 $MANDIR/man1
 cp -fv grcat.1 $MANDIR/man1
 mkdir -p $CONFDIR
 cp -fv grc.conf $CONFDIR
+cp -fv grc.zsh $CONFDIR
+cp -fv grc.fish $CONFDIR
 mkdir -p $PROFILEDIR
 cp -fv grc.bashrc $PROFILEDIR
 
+# probably we should not install it into site-functions in a debian package...
+if [ "$PREFIX" = "/usr/local" ]; then
+  mkdir -p $PREFIX/zsh/site-functions
+  cp -fv _grc $PREFIX/zsh/site-functions
+fi
 

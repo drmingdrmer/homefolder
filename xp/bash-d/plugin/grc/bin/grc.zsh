@@ -1,6 +1,4 @@
 if [[ "$TERM" != dumb ]] && (( $+commands[grc] )) ; then
-  # Prevent grc aliases from overriding zsh completions.
-  setopt COMPLETE_ALIASES
 
   # Supported commands
   cmds=(
@@ -26,12 +24,14 @@ if [[ "$TERM" != dumb ]] && (( $+commands[grc] )) ; then
     traceroute \
     traceroute6 \
     wdiff \
+    whois \
+    iwconfig \
   );
 
   # Set alias for available commands.
   for cmd in $cmds ; do
     if (( $+commands[$cmd] )) ; then
-      alias $cmd="grc --colour=auto $cmd"
+      alias $cmd="grc --colour=auto $(whence $cmd)"
     fi
   done
 
