@@ -76,7 +76,7 @@ function! s:type(visual)
 
   let sha = gv#sha()
   if !empty(sha)
-    return ['commit', 'fugitive://'.b:git_dir.'//'.sha]
+    return ['commit', FugitiveFind(sha, b:git_dir)]
   endif
   return [0, 0]
 endfunction
@@ -218,7 +218,7 @@ function! s:git_dir()
 endfunction
 
 function! s:scratch()
-  setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile
+  setlocal buftype=nofile bufhidden=wipe noswapfile
 endfunction
 
 function! s:fill(cmd)
@@ -245,7 +245,7 @@ function! s:log_opts(fugitive_repo, bang, visual, line1, line2)
   if a:visual || a:bang
     let current = expand('%')
     call s:check_buffer(a:fugitive_repo, current)
-    return a:visual ? [printf('-L%d,%d:%s', a:line1, a:line2, current)] : ['--follow', current]
+    return a:visual ? [printf('-L%d,%d:%s', a:line1, a:line2, current)] : ['--follow', '--', current]
   endif
   return ['--graph']
 endfunction
@@ -254,6 +254,11 @@ function! s:list(fugitive_repo, log_opts)
   let default_opts = ['--color=never', '--date=short', '--format=%cd %h%d %s (%an)']
   let git_args = ['log'] + default_opts + a:log_opts
   let git_log_cmd = call(a:fugitive_repo.git_command, git_args, a:fugitive_repo)
+
+  let repo_short_name = fnamemodify(substitute(a:fugitive_repo.dir(), '[\\/]\.git[\\/]\?$', '', ''), ':t')
+  let bufname = repo_short_name.' '.join(a:log_opts)
+  silent exe (bufexists(bufname) ? 'buffer' : 'file') fnameescape(bufname)
+
   call s:fill(git_log_cmd)
   setlocal nowrap tabstop=8 cursorline iskeyword+=#
 
@@ -301,8 +306,8 @@ function! s:gl(buf, visual)
   nnoremap <buffer> o <cr><c-w><c-w>
   nnoremap <buffer> O :call <sid>gld()<cr>
   nnoremap <buffer> q :tabclose<cr>
-  call matchadd('Conceal', '^fugitive:///.\{-}\.git//')
-  call matchadd('Conceal', '^fugitive:///.\{-}\.git//\x\{7}\zs.\{-}||')
+  call matchadd('Conceal', '^fugitive://.\{-}\.git//')
+  call matchadd('Conceal', '^fugitive://.\{-}\.git//\x\{7}\zs.\{-}||')
   setlocal concealcursor=nv conceallevel=3 nowrap
   let w:quickfix_title = 'o: open / o (in visual): diff / O: open (tab) / q: quit'
 endfunction
@@ -355,4 +360,8 @@ function! s:gv(bang, visual, line1, line2, args) abort
   endtry
 endfunction
 
-command! -bang -nargs=* -range=0 GV call s:gv(<bang>0, <count>, <line1>, <line2>, <q-args>)
+function! s:gvcomplete(a, l, p) abort
+  return fugitive#repo().superglob(a:a)
+endfunction
+
+command! -bang -nargs=* -range=0 -complete=customlist,s:gvcomplete GV call s:gv(<bang>0, <count>, <line1>, <line2>, <q-args>)
