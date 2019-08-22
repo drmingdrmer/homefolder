@@ -79,7 +79,12 @@ endfunction
 " go#complete#GoInfo returns the description of the identifier under the
 " cursor.
 function! go#complete#GetInfo() abort
-  return s:sync_info(0)
+  let l:mode = go#config#InfoMode()
+  if l:mode == 'gopls' && go#util#has_job()
+    return go#lsp#GetInfo()
+  else
+    return s:sync_info(0)
+  endif
 endfunction
 
 function! go#complete#Info(showstatus) abort
@@ -93,22 +98,6 @@ endfunction
 function! s:async_info(echo, showstatus)
   let state = {'echo': a:echo}
 
-  function! s:complete(job, exit_status, messages) abort dict
-    if a:exit_status != 0
-      return
-    endif
-
-    if &encoding != 'utf-8'
-      let i = 0
-      while i < len(a:messages)
-        let a:messages[i] = iconv(a:messages[i], 'utf-8', &encoding)
-        let i += 1
-      endwhile
-    endif
-
-    let result = s:info_filter(self.echo, join(a:messages, "\n"))
-    call s:info_complete(self.echo, result)
-  endfunction
   " explicitly bind complete to state so that within it, self will
   " always refer to state. See :help Partial for more information.
   let state.complete = function('s:complete', [], state)
@@ -149,6 +138,23 @@ function! s:async_info(echo, showstatus)
         \ })
 
   call go#job#Start(cmd, opts)
+endfunction
+
+function! s:complete(job, exit_status, messages) abort dict
+  if a:exit_status != 0
+    return
+  endif
+
+  if &encoding != 'utf-8'
+    let i = 0
+    while i < len(a:messages)
+      let a:messages[i] = iconv(a:messages[i], 'utf-8', &encoding)
+      let i += 1
+    endwhile
+  endif
+
+  let result = s:info_filter(self.echo, join(a:messages, "\n"))
+  call s:info_complete(self.echo, result)
 endfunction
 
 function! s:gocodeFile()
@@ -215,6 +221,7 @@ function! s:info_complete(echo, result) abort
 endfunction
 
 function! s:trim_bracket(val) abort
+  echom a:val
   let a:val.word = substitute(a:val.word, '[(){}\[\]]\+$', '', '')
   return a:val
 endfunction
@@ -239,30 +246,33 @@ function! go#complete#GocodeComplete(findstart, base) abort
   else
     let s = getline(".")[col('.') - 1]
     if s =~ '[(){}\{\}]'
-      return map(copy(s:completions[1]), 's:trim_bracket(v:val)')
+      return map(copy(s:completions), 's:trim_bracket(v:val)')
     endif
-
-    return s:completions[1]
+    return s:completions
   endif
 endfunction
 
 function! go#complete#Complete(findstart, base) abort
-  let l:state = {'done': 0, 'matches': []}
+  let l:state = {'done': 0, 'matches': [], 'start': -1}
 
-  function! s:handler(state, matches) abort dict
+  function! s:handler(state, start, matches) abort dict
+    let a:state.start = a:start
     let a:state.matches = a:matches
     let a:state.done = 1
   endfunction
 
   "findstart = 1 when we need to get the start of the match
   if a:findstart == 1
-    call go#lsp#Completion(expand('%:p'), line('.'), col('.'), funcref('s:handler', [l:state]))
+    let [l:line, l:col] = getpos('.')[1:2]
+    let [l:line, l:col] = go#lsp#lsp#Position(l:line, l:col)
+    let l:completion = go#lsp#Completion(expand('%:p'), l:line, l:col, funcref('s:handler', [l:state]))
+    if l:completion
+      return -3
+    endif
 
     while !l:state.done
       sleep 10m
     endwhile
-
-    let s:completions = l:state.matches
 
     if len(l:state.matches) == 0
       " no matches. cancel and leave completion mode.
@@ -270,7 +280,10 @@ function! go#complete#Complete(findstart, base) abort
       return -3
     endif
 
-    return col('.')
+    let s:completions = l:state.matches
+
+    return go#lsp#lsp#PositionOf(getline(l:line+1), l:state.start-1)
+
   else "findstart = 0 when we need to return the list of completions
     return s:completions
   endif
