@@ -1,10 +1,11 @@
 # vim-autoformat
 
-Format code with one button press.
+Format code with one button press (or automatically on save).
 
-This plugin makes use of external formatting programs to achieve the best results.
+This plugin makes use of external formatting programs to achieve the most decent results.
 Check the list of formatprograms below to see which languages are supported by default.
-You can easily customize these or add your own formatprogram.
+Most formatprograms will obey vim settings, such as `textwidth` and `shiftwidth()`.
+You can easily customize existing formatprogram definitions or add your own formatprogram.
 When no formatprogram exists (or no formatprogram is installed) for a certain filetype,
 vim-autoformat falls back by default to indenting, (using vim's auto indent functionality), retabbing and removing trailing whitespace.
 
@@ -16,13 +17,14 @@ by running `vim --version` and check that `+python` or `+python3` is listed amon
 
 #### Vundle
 
-Put this in your .vimrc
+Put this in your `.vimrc`.
 
 ```vim
 Plugin 'Chiel92/vim-autoformat'
 ```
 
-Then restart vim and run `:PluginInstall`.
+Then restart vim and run `:PluginInstall`. Alternatively, you could run `:source $MYVIMRC`
+to reload your `.vimrc` without restarting vim.
 To update the plugin to the latest version, you can run `:PluginUpdate`.
 
 #### Pathogen
@@ -134,7 +136,9 @@ Here is a list of formatprograms that are supported by default, and thus will be
   And here the link to its page on the python website: http://pypi.python.org/pypi/autopep8/0.5.2.
 
 * `yapf` for __Python__ (supports formatting ranges).
-  It is readily available through PIP. Most users can install with the terminal command `sudo pip install yapf` or `pip  install --user yapf`.
+  Vim-autoformat checks whether there exists a `.style.yapf` or a `setup.cfg` file up in the current directory's ancestry.
+  Based on that it either uses that file or tries to match vim options as much as possible.
+  Most users can install with the terminal command `sudo pip install yapf` or `pip install --user yapf`.
   YAPF has one optional configuration variable to control the formatter style.
   For example:
 
@@ -145,6 +149,10 @@ Here is a list of formatprograms that are supported by default, and thus will be
   `pep8` is the default value, or you can choose: `google`, `facebook`, `chromium`.
 
   Here is the link to the repository: https://github.com/google/yapf
+
+* `black` for __Python__.
+  Most users can install with the terminal command `sudo pip install black` or `pip install --user black`.
+  Here is the link to the repository: https://github.com/ambv/black
 
 * `js-beautify` for __Javascript__ and __JSON__.
   It can be installed by running `npm install -g js-beautify`.
@@ -158,11 +166,11 @@ Here is a list of formatprograms that are supported by default, and thus will be
   It can be installed by running `npm install -g standard` (`nodejs` is required). No more configuration needed.
   More information about the style guide can be found here: http://standardjs.com/.
 
-* `ESlint (local)` for __Javascript__. http://eslint.org/
-  It can be installed by running `npm install eslint`. The linter is then installed locally at ```node_modules/.bin/eslint```
-  When running formatter vim will walk up from the current file to search for such local installation and a
-  ESLint configuration file (either .eslintrc or eslintrc.json). When both are found eslint is executed with the --fix argument.
-  Currently only working on *nix like OS (Linux, MacOS etc.) requires OS to provide sh like shell syntax
+* `ESlint` for __Javascript__. http://eslint.org/
+  It can be installed by running `npm install eslint` for a local project or by running `npm install -g eslint` for global use. The linter is then installed locally at `$YOUR_PROJECT/node_modules/.bin/eslint` or globally at `~/.npm-global/bin/eslint`.
+  When running the formatter, vim will walk up from the current file to search for such local installation and a ESLint configuration file (either `.eslintrc.js` or `eslintrc.json`). When the local version is missing it will fallback to the global version in your home directory. When both requirements are found eslint is executed with the `--fix` argument.
+  Note that the formatter's name is still `eslint_local` for legacy reasons even though it already supports global `eslint`.
+  Currently only working on \*nix like OS (Linux, MacOS etc.) as it requires the OS to provide sh like shell syntax.
 
 * `xo` for __Javascript__.
   It can be installed by running `npm install -g xo` (`nodejs` is required).
@@ -218,13 +226,30 @@ Here is a list of formatprograms that are supported by default, and thus will be
 * `stylish-haskell` for __Haskell__
   It can be installed using [`cabal`](https://www.haskell.org/cabal/) build tool. Installation instructions are available at https://github.com/jaspervdj/stylish-haskell#installation
 
+* `purty` for __Purescript__
+  It can be installed using `npm install purty`. Further instructions available at https://gitlab.com/joneshf/purty
+
 * `remark` for __Markdown__.
   A Javascript based markdown processor that can be installed with `npm install -g remark-cli`. More info is available at https://github.com/wooorm/remark.
 
 * `fprettify` for modern __Fortran__.
   Download from [official repository](https://github.com/pseewald/fprettify). Install with `./setup.py install` or `./setup.py install --user`.
 
-## It doesn't work!
+* `mix format` for __Elixir__.
+  `mix format` is included with Elixir 1.6+.
+
+* `fixjson` for JSON.
+  It is a JSON file fixer/formatter for humans using (relaxed) JSON5. It fixes various failures while humans writing JSON and formats JSON codes.
+  It can be installed with `npm install -g fixjson`. More info is available at https://github.com/rhysd/fixjson.
+
+* `shfmt` for __Shell__.
+  A shell formatter written in Go supporting POSIX Shell, Bash and mksh that can be installed with `go get -u mvdan.cc/sh/cmd/shfmt`. See https://github.com/mvdan/sh for more info.
+
+* `sqlformat` for __SQL__.
+  Install `sqlparse` with `pip`.
+
+
+## Help, the formatter doesn't work as expected!
 
 If you're struggling with getting a formatter to work, it may help to set vim-autoformat in
 verbose-mode. Vim-autoformat will then output errors on formatters that failed.
@@ -238,6 +263,13 @@ let verbose=1
 To read all messages in a vim session type `:messages`.  Since one cannot always easily copy
 the contents of messages (e.g. for posting it in an issue), vim-autoformats command `:PutMessages` may
 help. It puts the messages in the current buffer, allowing you to do whatever you want.
+
+#### Reporting bugs
+
+Please report bugs by creating an issue in this repository.
+When there are problems with getting a certain formatter to work, provide the output of verbose
+mode in the issue.
+
 ## How can I change the behaviour of formatters, or add one myself?
 
 If you need a formatter that is not among the defaults, or if you are not satisfied with the default formatting behaviour that is provided by vim-autoformat, you can define it yourself.
@@ -264,7 +296,7 @@ vim-autoformat that this is the only formatter that we want to use for C# files.
 This allows you to define the arguments dynamically:
 
 ```vim
-let g:formatdef_my_custom_cs = '"--mode=cs --style=ansi -pcHs".&shiftwidth'
+let g:formatdef_my_custom_cs = '"astyle --mode=cs --style=ansi -pcHs".&shiftwidth'
 let g:formatters_cs = ['my_custom_cs']
 ```
 
@@ -320,16 +352,14 @@ If you have any suggestions on this plugin or on this readme, if you have some n
 formatter definition that can be added to the defaults, or if you experience problems, please
 contact me by creating an issue in this repository.
 
-## Change log
+## Major Change Log
 
-### January 2017
-
-* Add `xo` formatter for JavaScript.
+### October 2018
+* We also take the returncode of the formatter process into account, not just the presence of output on stderr.
 
 ### March 2016
-* Don't use the option formatprg internally anymore, to always have the possible of using the default `gq`
-  command.
-* Add more fallback options.
+* We don't use the option formatprg internally anymore, to always have the possible of using the default `gq` command.
+* More fallback options have been added.
 
 ### June 2015
 
@@ -342,7 +372,7 @@ contact me by creating an issue in this repository.
 
 ### December 20 2013
 
-* `html-beautify` is now the default for HTML since it seems to be better maintained, and seems to handle inline javascript neatly.
+* `html-beautify` is now the new default for HTML since it seems to be better maintained, and seems to handle inline javascript neatly.
 * The `formatters/` folder is no longer supported anymore, because it is unnecessary.
 * `js-beautify` can no longer be installed as a bundle, since it only makes this plugin unnecessarily complex.
 
@@ -350,12 +380,8 @@ contact me by creating an issue in this repository.
 
 * The default behaviour of gq is enabled again by removing the fallback on auto-indenting.
   Instead, the fallback is only used when running the command `:Autoformat`.
-* For HTML,XML and XHTML, the option `textwidth` is taken into account when formatting.
-  This extends the way the formatting style will match your current vim settings.
 
 ### March 16 2013
-
-The `dynamic_indent_width` branch has been merged into the master branch.
 
 * The options `expandtab`, `shiftwidth`, `tabstop` and `softtabstop` are not overwritten anymore.
 * This obsoletes `g:autoformat_no_default_shiftwidth`
@@ -371,10 +397,6 @@ The `dynamic_indent_width` branch has been merged into the master branch.
 
 ### March 9 2013
 
-The `custom_config` branch has been merged into the master branch.
-
 * Customization of formatprograms can be done easily now, as explained in the readme.
 * I set the default tabwidth to 4 for all formatprograms as well as for vim itself.
-* The default parameters for astyle have been slightly modified: it will wrap spaces around operators.
 * phpCB has been removed from the defaults, due to code-breaking behaviour.
-* XHTML default definition added
