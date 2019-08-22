@@ -22,14 +22,14 @@ function! SyntaxCheckers_php_phpstan_IsAvailable() dict
     if !executable(self.getExec())
         return 0
     endif
-    return syntastic#util#versionIsAtLeast(self.getVersion(), [0, 7])
+    return syntastic#util#versionIsAtLeast(self.getVersion(), [0, 8, 5])
 endfunction
 
 function! SyntaxCheckers_php_phpstan_GetLocList() dict
     let makeprg = self.makeprgBuild({
         \ 'exe_after': 'analyse',
         \ 'args': '--level=5',
-        \ 'args_after': '--errorFormat raw' })
+        \ 'args_after': '--error-format raw' })
 
     let errorformat = '%f:%l:%m'
 
