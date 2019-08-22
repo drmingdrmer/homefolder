@@ -1,5 +1,7 @@
-if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'powershell') == -1
-  
+if exists('g:polyglot_disabled') && index(g:polyglot_disabled, 'powershell') != -1
+  finish
+endif
+
 " Vim filetype plugin file
 " Language:           Windows PowerShell
 " Maintainer:         Peter Provost <peter@provost.org>
@@ -19,8 +21,6 @@ setlocal formatoptions=tcqro
 " Enable autocompletion of hyphenated PowerShell commands,
 " e.g. Get-Content or Get-ADUser
 setlocal iskeyword+=-
-" MS applications (including PowerShell) require a Byte Order Mark (BOM) for UTF-8.
-setlocal bomb
 
 " Change the browse dialog on Win32 to show mainly PowerShell-related files
 if has("gui_win32")
@@ -36,5 +36,3 @@ endif
 let b:undo_ftplugin = "setlocal tw< cms< fo<" .
 			\ " | unlet! b:browsefilter"
 
-
-endif

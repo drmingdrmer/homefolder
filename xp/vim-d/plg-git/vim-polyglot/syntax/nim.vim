@@ -1,5 +1,7 @@
-if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'nim') == -1
-  
+if exists('g:polyglot_disabled') && index(g:polyglot_disabled, 'nim') != -1
+  finish
+endif
+
 " For version 5.x: Clear all syntax items
 " For version 6.x: Quit when a syntax file was already loaded
 if version < 600
@@ -40,19 +42,19 @@ syn keyword nimKeyword       bind block break
 syn keyword nimKeyword       case cast concept const continue converter
 syn keyword nimKeyword       defer discard distinct div do
 syn keyword nimKeyword       elif else end enum except export
-syn keyword nimKeyword       finally for from func
+syn keyword nimKeyword       finally for from
 syn keyword nimKeyword       generic
 syn keyword nimKeyword       if import in include interface is isnot iterator
 syn keyword nimKeyword       let
 syn keyword nimKeyword       mixin using mod
 syn keyword nimKeyword       nil not notin
 syn keyword nimKeyword       object of or out
-syn keyword nimKeyword       proc method macro template nextgroup=nimFunction skipwhite
+syn keyword nimKeyword       proc func method macro template nextgroup=nimFunction skipwhite
 syn keyword nimKeyword       ptr
 syn keyword nimKeyword       raise ref return
 syn keyword nimKeyword       shared shl shr static
 syn keyword nimKeyword       try tuple type
-syn keyword nimKeyword       var
+syn keyword nimKeyword       var vtref vtptr
 syn keyword nimKeyword       when while with without
 syn keyword nimKeyword       xor
 syn keyword nimKeyword       yield
@@ -84,40 +86,47 @@ syn match nimEscapeError "\\x\x\=\X" display contained
 
 if nim_highlight_numbers == 1
   " numbers (including longs and complex)
-  syn match   nimNumber	"\v<0x\x+(\'(i|I|f|F|u|U)(8|16|32|64))?>"
-  syn match   nimNumber	"\v<[0-9_]+(\'(i|I|f|F|u|U)(8|16|32|64))?>"
-  syn match   nimNumber	"\v[0-9]\.[0-9_]+([eE][+-]=[0-9_]+)=>"
-  syn match   nimNumber	"\v<[0-9_]+(\.[0-9_]+)?([eE][+-]?[0-9_]+)?(\'(f|F)(32|64))?>"
+  let s:dec_num = '\d%(_?\d)*'
+  let s:int_suf = '%(''%(%(i|I|u|U)%(8|16|32|64)|u|U))'
+  let s:float_suf = '%(''%(%(f|F)%(32|64|128)?|d|D))'
+  let s:exp = '%([eE][+-]?'.s:dec_num.')'
+  exe 'syn match nimNumber /\v<0[bB][01]%(_?[01])*%('.s:int_suf.'|'.s:float_suf.')?>/'
+  exe 'syn match nimNumber /\v<0[ocC]\o%(_?\o)*%('.s:int_suf.'|'.s:float_suf.')?>/'
+  exe 'syn match nimNumber /\v<0[xX]\x%(_?\x)*%('.s:int_suf.'|'.s:float_suf.')?>/'
+  exe 'syn match nimNumber /\v<'.s:dec_num.'%('.s:int_suf.'|'.s:exp.'?'.s:float_suf.'?)>/'
+  exe 'syn match nimNumber /\v<'.s:dec_num.'\.'.s:dec_num.s:exp.'?'.s:float_suf.'?>/'
+  unlet s:dec_num s:int_suf s:float_suf s:exp
 endif
 
 if nim_highlight_builtins == 1
   " builtin functions, types and objects, not really part of the syntax
-  syn keyword nimBuiltin int int8 int16 int32 int64 uint uint8 uint16 uint32 uint64 float float32 float64 bool
-  syn keyword nimBuiltin char string cstring pointer range array openarray seq
+  syn keyword nimBuiltin int int8 int16 int32 int64 uint uint8 uint16 uint32 uint64 float float32 float64
+  syn keyword nimBuiltin bool void chr char string cstring pointer range array openarray openArray seq varargs varArgs
   syn keyword nimBuiltin set Byte Natural Positive Conversion
   syn keyword nimBuiltin BiggestInt BiggestFloat cchar cschar cshort cint csize cuchar cushort
   syn keyword nimBuiltin clong clonglong cfloat cdouble clongdouble cuint culong culonglong cchar
-  syn keyword nimBuiltin CompileDate CompileTime nimVersion nimMajor
-  syn keyword nimBuiltin nimMinor nimPatch cpuEndian hostOS hostCPU inf
-  syn keyword nimBuiltin neginf nan QuitSuccess QuitFailure dbgLineHook stdin
+  syn keyword nimBuiltin CompileDate CompileTime nimversion nimVersion nimmajor nimMajor
+  syn keyword nimBuiltin nimminor nimMinor nimpatch nimPatch cpuendian cpuEndian hostos hostOS hostcpu hostCPU inf
+  syn keyword nimBuiltin neginf nan QuitSuccess QuitFailure dbglinehook dbgLineHook stdin
   syn keyword nimBuiltin stdout stderr defined new high low sizeof succ pred
-  syn keyword nimBuiltin inc dec newSeq len incl excl card ord chr ze ze64
-  syn keyword nimBuiltin toU8 toU16 toU32 abs min max add repr
+  syn keyword nimBuiltin inc dec newseq newSeq len incl excl card ord chr ze ze64
+  syn keyword nimBuiltin tou8 toU8 tou16 toU16 tou32 toU32 abs min max add repr
   syn match   nimBuiltin "\<contains\>"
-  syn keyword nimBuiltin toFloat toBiggestFloat toInt toBiggestInt addQuitProc
-  syn keyword nimBuiltin copy setLen newString zeroMem copyMem moveMem
-  syn keyword nimBuiltin equalMem alloc alloc0 realloc dealloc setLen assert
-  syn keyword nimBuiltin swap getRefcount getCurrentException Msg
-  syn keyword nimBuiltin getOccupiedMem getFreeMem getTotalMem isNil seqToPtr
+  syn keyword nimBuiltin tofloat toFloat tobiggestfloat toBiggestFloat toint toInt tobiggestint toBiggestInt
+  syn keyword nimBuiltin addquitproc addQuitProc
+  syn keyword nimBuiltin copy setlen setLen newstring newString zeromem zeroMem copymem copyMem movemem moveMem
+  syn keyword nimBuiltin equalmem equalMem alloc alloc0 realloc dealloc assert
+  syn keyword nimBuiltin echo swap getrefcount getRefcount getcurrentexception getCurrentException Msg
+  syn keyword nimBuiltin getoccupiedmem getOccupiedMem getfreemem getFreeMem gettotalmem getTotalMem isnil isNil seqtoptr seqToPtr
   syn keyword nimBuiltin find pop GC_disable GC_enable GC_fullCollect
   syn keyword nimBuiltin GC_setStrategy GC_enableMarkAndSweep GC_Strategy
   syn keyword nimBuiltin GC_disableMarkAnd Sweep GC_getStatistics GC_ref
   syn keyword nimBuiltin GC_ref GC_ref GC_unref GC_unref GC_unref quit
   syn keyword nimBuiltin OpenFile OpenFile CloseFile EndOfFile readChar
-  syn keyword nimBuiltin FlushFile readFile write readLine writeln writeln
-  syn keyword nimBuiltin getFileSize ReadBytes ReadChars readBuffer writeBytes
-  syn keyword nimBuiltin writeChars writeBuffer setFilePos getFilePos
-  syn keyword nimBuiltin fileHandle countdown countup items lines
+  syn keyword nimBuiltin FlushFile readfile readFile readline readLine write writeln writeLn writeline writeLine
+  syn keyword nimBuiltin getfilesize getFileSize ReadBytes ReadChars readbuffer readBuffer writebytes writeBytes
+  syn keyword nimBuiltin writechars writeChars writebuffer writeBuffer setfilepos setFilePos getfilepos getFilePos
+  syn keyword nimBuiltin filehandle fileHandle countdown countup items lines
   syn keyword nimBuiltin FileMode File RootObj FileHandle ByteAddress Endianness
 endif
 
@@ -197,5 +206,3 @@ endif
 
 let b:current_syntax = "nim"
 
-
-endif

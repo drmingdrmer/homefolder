@@ -1,5 +1,7 @@
-if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'vala') == -1
-  
+if exists('g:polyglot_disabled') && index(g:polyglot_disabled, 'vala') != -1
+  finish
+endif
+
 " Vim syntax file
 " Language:	Vala
 " Maintainers:	Emmanuele Bassi <ebassi@gnome.org>
@@ -58,7 +60,7 @@ syn match   valaOperator		display "\%(+\|-\|/\|*\|=\|\^\|&\||\|!\|>\|<\|%\|?\)=\
 " Delimiters
 syn match   valaDelimiter		display "(\|)\|\[\|\]\|,\|;\|:\|{\|}\|\k\@<!_\k\@!\|[[:punct:]]\@<!@[[:punct:]]\@!"
 " Enum Fields
-syn match   valaEnumField		"\.\([A-Z_]\)\+\([A-Z_]\)\+"hs=s+1 " ensure there are at least 2 CAPS
+syn match   valaEnumField		"\.\([A-Z_]\)\+\([A-Z_0-9]\)\+"hs=s+1 " ensure there are at least 2 CAPS or 1 CAP and 1 number
 
 " Comments
 syn cluster valaCommentGroup 		contains=valaTodo
@@ -160,7 +162,6 @@ endif
 exec "syn sync ccomment valaComment minlines=" . b:vala_minlines
 
 " code folding
-set foldmethod=syntax
 syn region valaBlock			start="{" end="}" transparent fold
 
 " The default highlighting.
@@ -227,5 +228,3 @@ let &cpo = s:vala_cpo_save
 unlet s:vala_cpo_save
 
 " vim: ts=8
-
-endif

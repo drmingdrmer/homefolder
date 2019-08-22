@@ -1,5 +1,7 @@
-if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'powershell') == -1
-  
+if exists('g:polyglot_disabled') && index(g:polyglot_disabled, 'powershell') != -1
+  finish
+endif
+
 " Vim indent file
 " Language:           Windows PowerShell
 " Maintainer:         Peter Provost <peter@provost.org>
@@ -16,9 +18,7 @@ let b:did_indent = 1
 " smartindent is good enough for powershell
 setlocal smartindent
 " disable the indent removal for # marks
-inoremap # X#
+inoremap <buffer> # X#
 
 let b:undo_indent = "setl si<"
 
-
-endif

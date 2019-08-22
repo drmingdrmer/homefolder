@@ -1,5 +1,7 @@
-if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'perl') == -1
-  
+if exists('g:polyglot_disabled') && index(g:polyglot_disabled, 'perl') != -1
+  finish
+endif
+
 " Vim syntax file
 " Language:     Mason (Perl embedded in HTML)
 " Maintainer:   vim-perl <vim-perl@googlegroups.com>
@@ -13,12 +15,8 @@ if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'perl') == -1
 "  - Fix <%text> blocks to show HTML tags but ignore Mason tags.
 "
 
-" Clear previous syntax settings unless this is v6 or above, in which case just
-" exit without doing anything.
-"
-if version < 600
-	syn clear
-elseif exists("b:current_syntax")
+" quit when a syntax file was already loaded
+if exists("b:current_syntax")
 	finish
 endif
 
@@ -30,26 +28,16 @@ endif
 
 " First pull in the HTML syntax.
 "
-if version < 600
-	so <sfile>:p:h/html.vim
-else
-	runtime! syntax/html.vim
-	unlet b:current_syntax
-endif
+runtime! syntax/html.vim
+unlet b:current_syntax
 
 syn cluster htmlPreproc add=@masonTop
 
 " Now pull in the Perl syntax.
 "
-if version < 600
-	syn include @perlTop <sfile>:p:h/perl.vim
-        unlet b:current_syntax
-	syn include @podTop <sfile>:p:h/pod.vim
-else
-	syn include @perlTop syntax/perl.vim
-        unlet b:current_syntax
-        syn include @podTop syntax/pod.vim
-endif
+syn include @perlTop syntax/perl.vim
+unlet b:current_syntax
+syn include @podTop syntax/pod.vim
 
 " It's hard to reduce down to the correct sub-set of Perl to highlight in some
 " of these cases so I've taken the safe option of just using perlTop in all of
@@ -88,26 +76,12 @@ syn cluster masonTop contains=masonLine,masonExpr,masonPerl,masonComp,masonArgs,
 
 " Set up default highlighting. Almost all of this is done in the included
 " syntax files.
-"
-if version >= 508 || !exists("did_mason_syn_inits")
-	if version < 508
-		let did_mason_syn_inits = 1
-		com -nargs=+ HiLink hi link <args>
-	else
-		com -nargs=+ HiLink hi def link <args>
-	endif
-
-	HiLink masonDoc Comment
-	HiLink masonPod Comment
-	HiLink masonPerlComment perlComment
-
-	delc HiLink
-endif
+hi def link masonDoc Comment
+hi def link masonPod Comment
+hi def link masonPerlComment perlComment
 
 let b:current_syntax = "mason"
 
 if main_syntax == 'mason'
 	unlet main_syntax
-endif
-
 endif

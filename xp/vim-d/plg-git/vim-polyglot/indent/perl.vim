@@ -1,5 +1,7 @@
-if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'perl') == -1
-  
+if exists('g:polyglot_disabled') && index(g:polyglot_disabled, 'perl') != -1
+  finish
+endif
+
 " Vim indent file
 " Language:      Perl 5
 " Maintainer:    vim-perl <vim-perl@googlegroups.com>
@@ -136,9 +138,9 @@ function! GetPerlIndent()
                         \ || synid =~ '^perl\(Sub\|Block\|Package\)Fold'
                 let brace = strpart(line, bracepos, 1)
                 if brace == '(' || brace == '{' || brace == '['
-                    let ind = ind + &sw
+                    let ind = ind + shiftwidth()
                 else
-                    let ind = ind - &sw
+                    let ind = ind - shiftwidth()
                 endif
             endif
             let bracepos = match(line, braceclass, bracepos + 1)
@@ -151,25 +153,25 @@ function! GetPerlIndent()
                         \ || synid == "perlBraces"
                         \ || synid == "perlStatementIndirObj"
                         \ || synid =~ '^perl\(Sub\|Block\|Package\)Fold'
-                let ind = ind - &sw
+                let ind = ind - shiftwidth()
             endif
         endif
     else
         if line =~ '[{[(]\s*\(#[^])}]*\)\=$'
-            let ind = ind + &sw
+            let ind = ind + shiftwidth()
         endif
         if cline =~ '^\s*[])}]'
-            let ind = ind - &sw
+            let ind = ind - shiftwidth()
         endif
     endif
 
     " Indent lines that begin with 'or' or 'and'
     if cline =~ '^\s*\(or\|and\)\>'
         if line !~ '^\s*\(or\|and\)\>'
-            let ind = ind + &sw
+            let ind = ind + shiftwidth()
         endif
     elseif line =~ '^\s*\(or\|and\)\>'
-        let ind = ind - &sw
+        let ind = ind - shiftwidth()
     endif
 
     return ind
@@ -180,5 +182,3 @@ let &cpo = s:cpo_save
 unlet s:cpo_save
 
 " vim:ts=8:sts=4:sw=4:expandtab:ft=vim
-
-endif

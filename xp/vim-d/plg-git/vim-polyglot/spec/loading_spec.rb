@@ -9,14 +9,20 @@ describe "My Vim plugin" do
 
   extensions = extensions.split(/[\n,]/)
 
-  extensions.each do |ext|
-    it "should parse #{ext} file" do
-      Timeout::timeout(5) do
-        write_file "#{ext}", ""
-        vim.edit "#{ext}"
-        vim.insert "sample"
-        vim.write
+  extensions.sort!.uniq!.each do |ext|
+    if ext.match?(/^[a-z\.]+$/i)
+      it "should parse #{ext} file" do
+        Timeout::timeout(20) do
+          write_file "#{ext}", ""
+          vim.edit "#{ext}"
+          vim.insert "sample"
+          vim.write
+        end
       end
     end
+  end
+
+  after(:all) do
+    vim.kill
   end
 end

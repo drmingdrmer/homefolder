@@ -1,5 +1,7 @@
-if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'ruby') == -1
-  
+if exists('g:polyglot_disabled') && index(g:polyglot_disabled, 'ruby') != -1
+  finish
+endif
+
 " Vim indent file
 " Language:		eRuby
 " Maintainer:		Tim Pope <vimNOSPAM@tpope.org>
@@ -14,7 +16,7 @@ runtime! indent/ruby.vim
 unlet! b:did_indent
 setlocal indentexpr=
 
-if exists("b:eruby_subtype")
+if exists("b:eruby_subtype") && b:eruby_subtype != '' && b:eruby_subtype !=# 'eruby'
   exe "runtime! indent/".b:eruby_subtype.".vim"
 else
   runtime! indent/html.vim
@@ -110,5 +112,3 @@ let &cpo = s:cpo_sav
 unlet! s:cpo_sav
 
 " vim:set sw=2 sts=2 ts=8 noet:
-
-endif

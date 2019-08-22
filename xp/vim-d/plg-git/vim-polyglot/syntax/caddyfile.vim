@@ -1,5 +1,7 @@
-if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'caddyfile') == -1
-  
+if exists('g:polyglot_disabled') && index(g:polyglot_disabled, 'caddyfile') != -1
+  finish
+endif
+
 " Language: Caddyfile
 " Author:   Josh Glendenning <josh@isobit.io>
 
@@ -7,7 +9,7 @@ if exists("b:current_syntax")
 	finish
 endif
 
-syn match caddyDirective "^\s*\([a-z]\+\)" nextgroup=caddyDirectiveArgs skipwhite
+syn match caddyDirective "^\s*\([a-zA-Z0-9_]\+\)" nextgroup=caddyDirectiveArgs skipwhite
 syn region caddyDirectiveArgs start="" end="\({\|#\|$\)"me=s-1 oneline contained contains=caddyPlaceholder,caddyString nextgroup=caddyDirectiveBlock skipwhite
 syn region caddyDirectiveBlock start="{" skip="\\}" end="}" contained contains=caddySubdirective,caddyComment
 
@@ -29,5 +31,3 @@ hi link caddyString String
 hi link caddyComment Comment
 
 let b:current_syntax = "caddyfile"
-
-endif

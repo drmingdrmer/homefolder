@@ -1,15 +1,18 @@
-if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'kotlin') == -1
-  
+if exists('g:polyglot_disabled') && index(g:polyglot_disabled, 'kotlin') != -1
+  finish
+endif
+
 " Vim indent file
 " Language: Kotlin
 " Maintainer: Alexander Udalov
-" Latest Revision: 27 June 2015
+" Latest Revision: 26 May 2019
 
-if exists("b:did_indent")
+if exists('b:did_indent')
     finish
 endif
 let b:did_indent = 1
 
+setlocal cinoptions& cinoptions+=j1,L0
 setlocal indentexpr=GetKotlinIndent()
 setlocal indentkeys=0},0),!^F,o,O,e,<CR>
 setlocal autoindent " TODO ?
@@ -25,30 +28,33 @@ function! GetKotlinIndent()
     let prev_indent = indent(prev_num)
     let cur = getline(v:lnum)
 
+    if cur =~ '^\s*\*'
+        return cindent(v:lnum)
+    endif
+
+    if prev =~ '^\s*\*/'
+        let st = prev
+        while st > 1
+            if getline(st) =~ '^\s*/\*'
+                break
+            endif
+            let st = st - 1
+        endwhile
+        return indent(st)
+    endif
+
     let prev_open_paren = prev =~ '^.*(\s*$'
     let cur_close_paren = cur =~ '^\s*).*$'
-
-    if prev_open_paren && !cur_close_paren
-        return prev_indent + 2 * &shiftwidth
-    endif
-
-    if cur_close_paren && !prev_open_paren
-        return prev_indent - 2 * &shiftwidth
-    endif
-
-
     let prev_open_brace = prev =~ '^.*\({\|->\)\s*$'
     let cur_close_brace = cur =~ '^\s*}.*$'
 
-    if prev_open_brace && !cur_close_brace
+    if prev_open_paren && !cur_close_paren || prev_open_brace && !cur_close_brace
         return prev_indent + &shiftwidth
     endif
 
-    if cur_close_brace && !prev_open_brace
+    if cur_close_paren && !prev_open_paren || cur_close_brace && !prev_open_brace
         return prev_indent - &shiftwidth
     endif
 
     return prev_indent
 endfunction
-
-endif

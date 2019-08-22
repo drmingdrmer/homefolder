@@ -1,5 +1,7 @@
-if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'fish') == -1
-  
+if exists('g:polyglot_disabled') && index(g:polyglot_disabled, 'fish') != -1
+  finish
+endif
+
 setlocal comments=:#
 setlocal commentstring=#%s
 setlocal define=\\v^\\s*function>
@@ -31,7 +33,7 @@ endif
 " Use the 'man' wrapper function in fish to include fish's man pages.
 " Have to use a script for this; 'fish -c man' would make the the man page an
 " argument to fish instead of man.
-execute 'setlocal keywordprg=fish\ '.expand('<sfile>:p:h:h').'/bin/man.fish'
+execute 'setlocal keywordprg=fish\ '.fnameescape(expand('<sfile>:p:h:h').'/bin/man.fish')
 
 let b:match_words =
             \ escape('<%(begin|function|if|switch|while|for)>:<end>', '<>%|)')
@@ -39,5 +41,3 @@ let b:match_words =
 let b:endwise_addition = 'end'
 let b:endwise_words = 'begin,function,if,switch,while,for'
 let b:endwise_syngroups = 'fishKeyword,fishConditional,fishRepeat'
-
-endif

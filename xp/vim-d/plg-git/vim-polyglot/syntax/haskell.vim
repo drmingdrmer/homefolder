@@ -1,5 +1,7 @@
-if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'haskell') == -1
-  
+if exists('g:polyglot_disabled') && index(g:polyglot_disabled, 'haskell') != -1
+  finish
+endif
+
 " syntax highlighting for haskell
 "
 " Heavily modified version of the haskell syntax
@@ -20,14 +22,14 @@ endif
 
 syn spell notoplevel
 syn match haskellRecordField contained containedin=haskellBlock
-  \ "[_a-z][a-zA-Z0-9_']*\(,\s*[_a-z][a-zA-Z0-9_']*\)*\_s\+::\s"
+  \ "[_a-z][a-zA-Z0-9_']*\(,\s*[_a-z][a-zA-Z0-9_']*\)*\_s\+::\_s"
   \ contains=
   \ haskellIdentifier,
   \ haskellOperators,
   \ haskellSeparator,
   \ haskellParens
 syn match haskellTypeSig
-  \ "^\s*\(where\s\+\|let\s\+\|default\s\+\)\?[_a-z][a-zA-Z0-9_']*\(,\s*[_a-z][a-zA-Z0-9_']*\)*\_s\+::\s"
+  \ "^\s*\(where\s\+\|let\s\+\|default\s\+\)\?[_a-z][a-zA-Z0-9_']*#\?\(,\s*[_a-z][a-zA-Z0-9_']*#\?\)*\_s\+::\_s"
   \ contains=
   \ haskellWhere,
   \ haskellLet,
@@ -38,7 +40,8 @@ syn match haskellTypeSig
   \ haskellParens
 syn keyword haskellWhere where
 syn keyword haskellLet let
-syn keyword haskellDeclKeyword module class instance newtype deriving in
+syn match HaskellDerive "\<deriving\>\(\s\+\<\(anyclass\|instance\|newtype\|stock\)\>\)\?"
+syn keyword haskellDeclKeyword module class instance newtype in
 syn match haskellDecl "\<\(type\|data\)\>\s\+\(\<family\>\)\?"
 syn keyword haskellDefault default
 syn keyword haskellImportKeywords import qualified safe as hiding contained
@@ -57,6 +60,7 @@ syn match haskellImport "^\s*\<import\>\s\+\(\<safe\>\s\+\)\?\(\<qualified\>\s\+
   \ haskellType,
   \ haskellLineComment,
   \ haskellBlockComment,
+  \ haskellString,
   \ haskellPragma
 syn keyword haskellKeyword do case of
 if get(g:, 'haskell_enable_static_pointers', 0)
@@ -99,6 +103,7 @@ syn region haskellBlockComment start="{-" end="-}"
   \ haskellTodo,
   \ @Spell
 syn region haskellPragma start="{-#" end="#-}"
+syn region haskellLiquid start="{-@" end="@-}"
 syn match haskellPreProc "^#.*$"
 syn keyword haskellTodo TODO FIXME contained
 " Treat a shebang line at the start of the file as a comment
@@ -147,6 +152,7 @@ highlight def link haskellShebang Comment
 highlight def link haskellLineComment Comment
 highlight def link haskellBlockComment Comment
 highlight def link haskellPragma SpecialComment
+highlight def link haskellLiquid SpecialComment
 highlight def link haskellString String
 highlight def link haskellChar String
 highlight def link haskellBacktick Operator
@@ -159,11 +165,13 @@ highlight def link haskellType Type
 highlight def link haskellImportKeywords Include
 if get(g:, 'haskell_classic_highlighting', 0)
   highlight def link haskellDeclKeyword Keyword
+  highlight def link HaskellDerive Keyword
   highlight def link haskellDecl Keyword
   highlight def link haskellWhere Keyword
   highlight def link haskellLet Keyword
 else
   highlight def link haskellDeclKeyword Structure
+  highlight def link HaskellDerive Structure
   highlight def link haskellDecl Structure
   highlight def link haskellWhere Structure
   highlight def link haskellLet Structure
@@ -202,5 +210,3 @@ if get(g:, 'haskell_backpack', 0)
   highlight def link haskellBackpackDependency Include
 endif
 let b:current_syntax = "haskell"
-
-endif

@@ -1,5 +1,7 @@
-if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'fish') == -1
-  
+if exists('g:polyglot_disabled') && index(g:polyglot_disabled, 'fish') != -1
+  finish
+endif
+
 if exists('b:current_syntax')
     finish
 endif
@@ -22,7 +24,7 @@ syntax match fishCommandSub /\v\(\s*\zs\k+>/
 
 syntax region fishLineContinuation matchgroup=fishStatement
             \ start='\v^\s*\zs\k+>' skip='\\$' end='$'
-            \ contains=fishSpecial,fishIdentifier,fishString,fishCharacter,fishStatement,fishCommandSub
+            \ contains=fishSpecial,fishIdentifier,fishString,fishCharacter,fishStatement,fishCommandSub,fishComment
 
 highlight default link fishKeyword Keyword
 highlight default link fishConditional Conditional
@@ -37,5 +39,3 @@ highlight default link fishStatement Statement
 highlight default link fishCommandSub fishStatement
 
 let b:current_syntax = 'fish'
-
-endif

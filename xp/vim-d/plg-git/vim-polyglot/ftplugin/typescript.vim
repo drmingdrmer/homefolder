@@ -1,5 +1,7 @@
-if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'typescript') == -1
-  
+if exists('g:polyglot_disabled') && index(g:polyglot_disabled, 'typescript') != -1
+  finish
+endif
+
 if exists("b:did_ftplugin")
   finish
 endif
@@ -15,11 +17,9 @@ setlocal commentstring=//\ %s
 " " and insert the comment leader when hitting <CR> or using "o".
 setlocal formatoptions-=t formatoptions+=croql
 
-setlocal suffixesadd+=.ts
+setlocal suffixesadd+=.ts,.tsx
 
 let b:undo_ftplugin = "setl fo< ofu< com< cms<"
 
 let &cpo = s:cpo_save
 unlet s:cpo_save
-
-endif

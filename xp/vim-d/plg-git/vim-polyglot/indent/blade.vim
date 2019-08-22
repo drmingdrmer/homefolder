@@ -1,5 +1,7 @@
-if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'blade') == -1
-  
+if exists('g:polyglot_disabled') && index(g:polyglot_disabled, 'blade') != -1
+  finish
+endif
+
 " Vim indent file
 " Language:     Blade (Laravel)
 " Maintainer:   Jason Walton <jwalton512@gmail.com>
@@ -19,7 +21,7 @@ let b:did_indent = 1
 
 " Doesn't include 'foreach' and 'forelse' because these already get matched by 'for'.
 let s:directives_start = 'if\|else\|unless\|for\|while\|empty\|push\|section\|can\|hasSection\|verbatim\|php\|' .
-            \ 'component\|slot\|prepend'
+            \ 'component\|slot\|prepend\|auth\|guest'
 let s:directives_end = 'else\|end\|empty\|show\|stop\|append\|overwrite'
 
 if exists('g:blade_custom_directives_pairs')
@@ -55,9 +57,9 @@ function! GetBladeIndent()
     let indent = indent(lnum)
 
     " 1. Check for special directives
-    " @section is a single-line directive if it has a second argument.
+    " @section and @slot are single-line if they have a second argument.
     " @php is a single-line directive if it is followed by parentheses.
-    if (line =~# '@section\%(.*@end\)\@!' && line !~# '@section\s*([^,]*)')
+    if (line =~# '@\%(section\|slot\)\%(.*@end\)\@!' && line !~# '@\%(section\|slot\)\s*([^,]*)')
                 \ || line =~# '@php\s*('
         return indent
     endif
@@ -95,5 +97,3 @@ function! GetBladeIndent()
 
     return indent
 endfunction
-
-endif

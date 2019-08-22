@@ -1,5 +1,7 @@
-if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'protobuf') == -1
-  
+if exists('g:polyglot_disabled') && index(g:polyglot_disabled, 'protobuf') != -1
+  finish
+endif
+
 " Protocol Buffers - Google's data interchange format
 " Copyright 2008 Google Inc.  All rights reserved.
 " https://developers.google.com/protocol-buffers/
@@ -61,6 +63,7 @@ syn keyword pbRepeat     optional required repeated
 syn keyword pbDefault    default
 syn keyword pbExtend     extend extensions to max reserved
 syn keyword pbRPC        service rpc returns
+syn keyword pbStream     stream
 
 syn keyword pbType      int32 int64 uint32 uint64 sint32 sint64
 syn keyword pbType      fixed32 fixed64 sfixed32 sfixed64
@@ -92,6 +95,7 @@ if version >= 508 || !exists("did_proto_syn_inits")
   HiLink pbDefault      Keyword
   HiLink pbExtend       Keyword
   HiLink pbRPC          Keyword
+  HiLink pbStream       Keyword
   HiLink pbType         Type
   HiLink pbTypedef      Typedef
   HiLink pbBool         Boolean
@@ -105,5 +109,3 @@ if version >= 508 || !exists("did_proto_syn_inits")
 endif
 
 let b:current_syntax = "proto"
-
-endif

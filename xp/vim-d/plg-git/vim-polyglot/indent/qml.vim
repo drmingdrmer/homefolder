@@ -1,10 +1,12 @@
-if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'qml') == -1
-  
+if exists('g:polyglot_disabled') && index(g:polyglot_disabled, 'qml') != -1
+  finish
+endif
+
 " Vim indent file
 " Language:     QML
 " Author:       Robert Kieffer
 " URL:
-" Last Change:  2010-03-27 (Happy Birthday, Dash!)
+" Last Change:  2017-10-27
 "
 " Improved JavaScript indent script.
 
@@ -22,10 +24,10 @@ if exists("*GetJsIndent")
   finish
 endif
 
-" Clean up a line of code by removing trailing '//' comments, and trimming
+" Clean up a line of code by removing trailing '//' and '/* */' comments, and trimming
 " whitespace
 function! Trim(line)
-  return substitute(substitute(a:line, '// .*', '', ''), '^\s*\|\s*$', '', 'g')
+  return substitute(substitute(substitute(a:line, '// .*', '', ''), '/\* .* \*/', '', ''), '^\s*\|\s*$', '', 'g')
 endfunction
 
 function! GetJsIndent()
@@ -59,5 +61,3 @@ function! GetJsIndent()
 
   return ind
 endfunction
-
-endif

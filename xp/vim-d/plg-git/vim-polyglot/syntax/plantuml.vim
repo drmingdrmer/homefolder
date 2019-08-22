@@ -1,74 +1,87 @@
-if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'plantuml') == -1
-  
-" Vim syntax file
-" Language:     PlantUML
-" Maintainer:   Anders Thøgersen <first name at bladre dot dk>
-if exists('b:current_syntax')
+if exists('g:polyglot_disabled') && index(g:polyglot_disabled, 'plantuml') != -1
   finish
 endif
 
 scriptencoding utf-8
+" Vim syntax file
+" Language:     PlantUML
+" Maintainer:   Anders Thøgersen <first name at bladre dot dk>
+" License:      VIM LICENSE
+if exists('b:current_syntax')
+  finish
+endif
 
 if v:version < 600
   syntax clear
 endif
 
-let s:cpo_orig=&cpo
-set cpo&vim
+let s:cpo_orig=&cpoptions
+set cpoptions&vim
 
 let b:current_syntax = 'plantuml'
 
 syntax sync minlines=100
 
-syntax match plantumlPreProc /\%(^@startuml\|^@enduml\)\|!\%(define|definelong|else|enddefinelong|endif|ifdef|ifndef|include|pragma|undef\)\s*.*/ contains=plantumlDir
+syntax match plantumlPreProc /\%(^@startuml\|^@enduml\)\|!\%(define\|definelong\|else\|enddefinelong\|endif\|exit\|if\|ifdef\|ifndef\|include\|pragma\|undef\)\s*.*/ contains=plantumlDir
 syntax region plantumlDir start=/\s\+/ms=s+1 end=/$/ contained
 
-syntax keyword plantumlTypeKeyword abstract actor agent artifact boundary card cloud component control
+syntax keyword plantumlTypeKeyword abstract actor agent archimate artifact boundary card cloud component control
 syntax keyword plantumlTypeKeyword database entity enum file folder frame node object package participant
 syntax keyword plantumlTypeKeyword queue rectangle stack state storage usecase
 
 syntax keyword plantumlClassKeyword class interface
 
 syntax keyword plantumlKeyword activate again also alt as autonumber bottom box break caption center create
-syntax keyword plantumlKeyword critical deactivate destroy down else elseif end endif endwhile footbox footer
-syntax keyword plantumlKeyword fork group header hide hnote if is kill left legend link loop namespace newpage
-syntax keyword plantumlKeyword note of on opt over package page par partition ref repeat return right rnote
-syntax keyword plantumlKeyword rotate show skin skinparam start stop title top up while
+syntax keyword plantumlKeyword critical deactivate destroy down else elseif end endif endsplit endwhile footbox
+syntax keyword plantumlKeyword footer fork group header hide hnote if is kill left legend link loop namespace
+syntax keyword plantumlKeyword newpage note of on opt over package page par partition ref repeat return right
+syntax keyword plantumlKeyword rnote rotate show skin skinparam split start stop title top up while
 " Not in 'java - jar plantuml.jar - language' output
 syntax keyword plantumlKeyword then detach sprite
 
 syntax keyword plantumlCommentTODO XXX TODO FIXME NOTE contained
 syntax match plantumlColor /#[0-9A-Fa-f]\{6\}\>/
-syntax keyword plantumlColor AliceBlue AntiqueWhite Aqua Aquamarine Azure Beige Bisque Black BlanchedAlmond
-syntax keyword plantumlColor Blue BlueViolet Brown BurlyWood CadetBlue Chartreuse Chocolate Coral
-syntax keyword plantumlColor CornflowerBlue Cornsilk Crimson Cyan DarkBlue DarkCyan DarkGoldenRod DarkGray
-syntax keyword plantumlColor DarkGreen DarkGrey DarkKhaki DarkMagenta DarkOliveGreen DarkOrchid DarkRed
-syntax keyword plantumlColor DarkSalmon DarkSeaGreen DarkSlateBlue DarkSlateGray DarkSlateGrey DarkTurquoise
-syntax keyword plantumlColor DarkViolet Darkorange DeepPink DeepSkyBlue DimGray DimGrey DodgerBlue FireBrick
-syntax keyword plantumlColor FloralWhite ForestGreen Fuchsia Gainsboro GhostWhite Gold GoldenRod Gray Green
-syntax keyword plantumlColor GreenYellow Grey HoneyDew HotPink IndianRed Indigo Ivory Khaki Lavender
-syntax keyword plantumlColor LavenderBlush LawnGreen LemonChiffon LightBlue LightCoral LightCyan
-syntax keyword plantumlColor LightGoldenRodYellow LightGray LightGreen LightGrey LightPink LightSalmon
-syntax keyword plantumlColor LightSeaGreen LightSkyBlue LightSlateGray LightSlateGrey LightSteelBlue
-syntax keyword plantumlColor LightYellow Lime LimeGreen Linen Magenta Maroon MediumAquaMarine MediumBlue
-syntax keyword plantumlColor MediumOrchid MediumPurple MediumSeaGreen MediumSlateBlue MediumSpringGreen
-syntax keyword plantumlColor MediumTurquoise MediumVioletRed MidnightBlue MintCream MistyRose Moccasin
-syntax keyword plantumlColor NavajoWhite Navy OldLace Olive OliveDrab Orange OrangeRed Orchid PaleGoldenRod
-syntax keyword plantumlColor PaleGreen PaleTurquoise PaleVioletRed PapayaWhip PeachPuff Peru Pink Plum
-syntax keyword plantumlColor PowderBlue Purple Red RosyBrown RoyalBlue SaddleBrown Salmon SandyBrown SeaGreen
-syntax keyword plantumlColor SeaShell Sienna Silver SkyBlue SlateBlue SlateGray SlateGrey Snow SpringGreen
-syntax keyword plantumlColor SteelBlue Tan Teal Thistle Tomato Turquoise Violet Wheat White WhiteSmoke Yellow
-syntax keyword plantumlColor YellowGreen
+syntax keyword plantumlColor APPLICATION AliceBlue AntiqueWhite Aqua Aquamarine Azure BUSINESS Beige Bisque
+syntax keyword plantumlColor Black BlanchedAlmond Blue BlueViolet Brown BurlyWood CadetBlue Chartreuse
+syntax keyword plantumlColor Chocolate Coral CornflowerBlue Cornsilk Crimson Cyan DarkBlue DarkCyan
+syntax keyword plantumlColor DarkGoldenRod DarkGray DarkGreen DarkGrey DarkKhaki DarkMagenta DarkOliveGreen
+syntax keyword plantumlColor DarkOrchid DarkRed DarkSalmon DarkSeaGreen DarkSlateBlue DarkSlateGray
+syntax keyword plantumlColor DarkSlateGrey DarkTurquoise DarkViolet Darkorange DeepPink DeepSkyBlue DimGray
+syntax keyword plantumlColor DimGrey DodgerBlue FireBrick FloralWhite ForestGreen Fuchsia Gainsboro
+syntax keyword plantumlColor GhostWhite Gold GoldenRod Gray Green GreenYellow Grey HoneyDew HotPink
+syntax keyword plantumlColor IMPLEMENTATION IndianRed Indigo Ivory Khaki Lavender LavenderBlush LawnGreen
+syntax keyword plantumlColor LemonChiffon LightBlue LightCoral LightCyan LightGoldenRodYellow LightGray
+syntax keyword plantumlColor LightGreen LightGrey LightPink LightSalmon LightSeaGreen LightSkyBlue
+syntax keyword plantumlColor LightSlateGray LightSlateGrey LightSteelBlue LightYellow Lime LimeGreen Linen
+syntax keyword plantumlColor MOTIVATION Magenta Maroon MediumAquaMarine MediumBlue MediumOrchid MediumPurple
+syntax keyword plantumlColor MediumSeaGreen MediumSlateBlue MediumSpringGreen MediumTurquoise MediumVioletRed
+syntax keyword plantumlColor MidnightBlue MintCream MistyRose Moccasin NavajoWhite Navy OldLace Olive
+syntax keyword plantumlColor OliveDrab Orange OrangeRed Orchid PHYSICAL PaleGoldenRod PaleGreen PaleTurquoise
+syntax keyword plantumlColor PaleVioletRed PapayaWhip PeachPuff Peru Pink Plum PowderBlue Purple Red
+syntax keyword plantumlColor RosyBrown RoyalBlue STRATEGY SaddleBrown Salmon SandyBrown SeaGreen SeaShell
+syntax keyword plantumlColor Sienna Silver SkyBlue SlateBlue SlateGray SlateGrey Snow SpringGreen SteelBlue
+syntax keyword plantumlColor TECHNOLOGY Tan Teal Thistle Tomato Turquoise Violet Wheat White WhiteSmoke
+syntax keyword plantumlColor Yellow YellowGreen
 
-" Arrows - Differentiate between horizontal and vertical arrows
-syntax match plantumlHorizontalArrow /\%([-\.]\%(|>\|>\|\*\|o\>\|\\\\\|\\\|\/\/\|\/\|\.\|-\)\|\%(<|\|<\|\*\|\<o\|\\\\\|\\\|\/\/\|\/\)[\.-]\)\%(\[[^\]]*\]\)\?/ contains=plantumlLabel
-syntax match plantumlDirectedOrVerticalArrowLR /[-\.]\%(le\?f\?t\?\|ri\?g\?h\?t\?\|up\?\|do\?w\?n\?\)\?[-\.]\%(|>\|>>\|>\|\*\|o\>\|\\\\\|\\\|\/\/\|\/\|\.\|-\)\%(\[[^\]]*\]\)\?/ contains=plantumlLabel
-syntax match plantumlDirectedOrVerticalArrowRL /\%(<|\|<<\|<\|\*\|\<o\|\\\\\|\\\|\/\/\|\/\)[-\.]\%(le\?f\?t\?\|ri\?g\?h\?t\?\|up\?\|do\?w\?n\?\)\?[-\.]\%(\[[^\]]*\]\)\?/ contains=plantumlLabel
-syntax region plantumlLabel start=/\[/ms=s+1 end=/\]/me=s-1 contained contains=plantumlText
-syntax match plantumlText /\%([0-9A-Za-zÀ-ÿ]\|\s\|[\.,;_-]\)\+/ contained
+" Arrows
+syntax match plantumlArrow /.\@=\([.-]\)\1\+\ze\s*\%(\w\|(\)/
+
+syntax match plantumlClassRelationLR /\([-.]\)\1*\%(\w\{,5\}\1\+\)\?\%(|>\|>\|*\|o\|x\|#\|{\|+\|\^\)/ contains=plantumlArrowDirectedLine
+syntax match plantumlClassRelationRL /\%(<|\|<\|*\|o\|x\|#\|}\|+\|\^\)\([-.]\)\1*\%(\w\{,5\}\1\+\)\?/ contains=plantumlArrowDirectedLine
+
+syntax match plantumlArrowLR /\[\?\([-.]\)\1*\%(\w\{,5}\1\+\)\?\(>\|\\\|\/\)\2\?[ox]\?\]\?\%(\[[^\]]*\]\)\?/ contains=plantumlText,plantumlArrowDirectedLine
+syntax match plantumlArrowRL /\[\?[ox]\?\(<\|\\\|\/\)\1\?\([-.]\)\2*\%(\w\{,5}\2\+\)\?\]\?\%(\[[^\]]*\]\)\?/ contains=plantumlText,plantumlArrowDirectedLine
+syntax match plantumlArrowBoth /[ox]\?\(<\|\\\|\/\)\1\?\([-.]\)\2*\%(\w\{,5}\2\+\)\?\(>\|\\\|\/\)\3\?[ox]\?/ contains=plantumlArrowDirectedLine
+syntax region plantumlText oneline start=/\[/ms=s+1 end=/\]/me=s-1 contained
+
+syntax match plantumlArrowDirectedLine /\([-.]\)\%(l\%[eft]\|r\%[ight]\|up\?\|d\%[own]\)\1/ contained
+
+" Note
+syntax region plantumlNoteMultiLine start=/\%(^\s*[rh]\?note\)\@<=\s\%([^:"]\+$\)\@=/ end=/^\%(\s*end \?[rh]\?note$\)\@=/ contains=plantumlSpecialString,plantumlNoteMultiLineStart
+syntax match plantumlNoteMultiLineStart /\%(^\s*[rh]\?note\)\@<=\s\%([^:]\+$\)/ contained contains=plantumlKeyword,plantumlColor,plantumlString
 
 " Class
-syntax region plantumlClass start=/\%(class\s[^{]\+\)\@<=\zs{/ end=/^\s*}/ contains=plantumlClassArrows,
+syntax region plantumlClass start=/\%(\%(class\|interface\|object\)\s[^{]\+\)\@<=\zs{/ end=/^\s*}/ contains=plantumlClassArrows,
 \                                                                                  plantumlClassKeyword,
 \                                                                                  @plantumlClassOp,
 \                                                                                  plantumlClassSeparator,
@@ -96,16 +109,19 @@ syntax region plantumlMultilineComment start=/\/'/ end=/'\// contains=plantumlCo
 syntax match plantumlColonLine /\S\@<=\s*\zs:.\+$/ contains=plantumlSpecialString
 
 " Stereotypes
-syntax match plantumlStereotype /<<.\{-1,}>>/ contains=plantumlSpecialString
+syntax match plantumlStereotype /<<[^-.]\+>>/ contains=plantumlSpecialString
 
 " Activity diagram
 syntax match plantumlActivityThing /([^)]*)/
 syntax match plantumlActivitySynch /===[^=]\+===/
+syntax match plantumlActivityLabel /\%(^\%(#\S\+\)\?\)\@<=:\_[^;|<>/\]}]\+[;|<>/\]}]$/ contains=plantumlSpecialString
 
 " Sequence diagram
 syntax match plantumlSequenceDivider /^\s*==[^=]\+==\s*$/
 syntax match plantumlSequenceSpace /^\s*|||\+\s*$/
 syntax match plantumlSequenceSpace /^\s*||\d\+||\+\s*$/
+syntax match plantumlSequenceDelay /^\.\{3}$/
+syntax region plantumlText oneline matchgroup=plantumlSequenceDelay start=/^\.\{3}/ end=/\.\{3}$/
 
 " Usecase diagram
 syntax match plantumlUsecaseActor /:.\{-1,}:/ contains=plantumlSpecialString
@@ -235,8 +251,8 @@ syntax keyword plantumlSkinparamKeyword SwimlaneBorderColor SwimlaneBorderThickn
 syntax keyword plantumlSkinparamKeyword SwimlaneTitleFontName SwimlaneTitleFontSize SwimlaneTitleFontStyle TabSize
 syntax keyword plantumlSkinparamKeyword TitleBackgroundColor TitleBorderColor TitleBorderRoundCorner
 syntax keyword plantumlSkinparamKeyword TitleBorderThickness TitleFontColor TitleFontName TitleFontSize TitleFontStyle
-syntax keyword plantumlSkinparamKeyword UsecaseBackgroundColor UsecaseBorderColor UsecaseFontColor UsecaseFontName
-syntax keyword plantumlSkinparamKeyword UsecaseFontSize UsecaseFontStyle UsecaseStereotypeFontColor
+syntax keyword plantumlSkinparamKeyword UsecaseBackgroundColor UsecaseBorderColor UsecaseBorderThickness UsecaseFontColor
+syntax keyword plantumlSkinparamKeyword UsecaseFontName UsecaseFontSize UsecaseFontStyle UsecaseStereotypeFontColor
 syntax keyword plantumlSkinparamKeyword UsecaseStereotypeFontName UsecaseStereotypeFontSize UsecaseStereotypeFontStyle
 " Not in 'java - jar plantuml.jar - language' output
 syntax keyword plantumlSkinparamKeyword activityArrowColor activityArrowFontColor activityArrowFontName
@@ -280,10 +296,13 @@ highlight default link plantumlTypeKeyword Type
 highlight default link plantumlPreProc PreProc
 highlight default link plantumlDir Constant
 highlight default link plantumlColor Constant
-highlight default link plantumlHorizontalArrow Identifier
-highlight default link plantumlDirectedOrVerticalArrowLR Identifier
-highlight default link plantumlDirectedOrVerticalArrowRL Identifier
-highlight default link plantumlLabel Special
+highlight default link plantumlArrow Identifier
+highlight default link plantumlArrowBoth Identifier
+highlight default link plantumlArrowLR Identifier
+highlight default link plantumlArrowRL Identifier
+highlight default link plantumlArrowDirectedLine Identifier
+highlight default link plantumlClassRelationLR Identifier
+highlight default link plantumlClassRelationRL Identifier
 highlight default link plantumlText Label
 highlight default link plantumlClass Type
 highlight default link plantumlClassPublic Structure
@@ -293,6 +312,7 @@ highlight default link plantumlClassPackPrivate Function
 highlight default link plantumlClassSeparator Comment
 highlight default link plantumlSequenceDivider Comment
 highlight default link plantumlSequenceSpace Comment
+highlight default link plantumlSequenceDelay Identifier
 highlight default link plantumlSpecialString Special
 highlight default link plantumlString String
 highlight default link plantumlComment Comment
@@ -300,11 +320,11 @@ highlight default link plantumlMultilineComment Comment
 highlight default link plantumlColonLine Comment
 highlight default link plantumlActivityThing Type
 highlight default link plantumlActivitySynch Type
+highlight default link plantumlActivityLabel String
 highlight default link plantumlSkinparamKeyword Identifier
+highlight default link plantumlNoteMultiLine String
 highlight default link plantumlUsecaseActor String
 highlight default link plantumlStereotype Type
 
-let &cpo=s:cpo_orig
+let &cpoptions=s:cpo_orig
 unlet s:cpo_orig
-
-endif

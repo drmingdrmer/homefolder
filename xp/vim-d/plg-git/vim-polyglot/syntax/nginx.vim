@@ -1,5 +1,7 @@
-if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'nginx') == -1
-  
+if exists('g:polyglot_disabled') && index(g:polyglot_disabled, 'nginx') != -1
+  finish
+endif
+
 " Vim syntax file
 " Language: nginx.conf
 " Maintainer: Chris Aumann <me@chr4.org>
@@ -558,6 +560,7 @@ syn keyword ngxDirective ssl_protocols nextgroup=ngxSSLProtocol,ngxSSLProtocolDe
 syn match ngxSSLProtocol 'TLSv1' contained nextgroup=ngxSSLProtocol,ngxSSLProtocolDeprecated skipwhite
 syn match ngxSSLProtocol 'TLSv1\.1' contained nextgroup=ngxSSLProtocol,ngxSSLProtocolDeprecated skipwhite
 syn match ngxSSLProtocol 'TLSv1\.2' contained nextgroup=ngxSSLProtocol,ngxSSLProtocolDeprecated skipwhite
+syn match ngxSSLProtocol 'TLSv1\.3' contained nextgroup=ngxSSLProtocol,ngxSSLProtocolDeprecated skipwhite
 
 " Do not enable highlighting of insecure protocols if sslecure is loaded
 if !exists('g:loaded_sslsecure')
@@ -707,8 +710,10 @@ if !exists('g:loaded_sslsecure')
   syn match ngxSSLCipherInsecure '[^!]\zsALL'
   syn match ngxSSLCipherInsecure '[^!]\zsCOMPLEMENTOFALL'
 
-  syn match ngxSSLCipherInsecure '[^!]\zsSHA\ze\D'      " Match SHA1 without matching SHA256+
-  syn match ngxSSLCipherInsecure '[^!]\zsSHA1'
+  " SHA ciphers are only used in HMAC with all known OpenSSL/ LibreSSL cipher suites and MAC
+  " usage is still considered safe
+  " syn match ngxSSLCipherInsecure '[^!]\zsSHA\ze\D'      " Match SHA1 without matching SHA256+
+  " syn match ngxSSLCipherInsecure '[^!]\zsSHA1'
   syn match ngxSSLCipherInsecure '[^!]\zsMD5'
   syn match ngxSSLCipherInsecure '[^!]\zsRC2'
   syn match ngxSSLCipherInsecure '[^!]\zsRC4'
@@ -2302,5 +2307,3 @@ hi link ngxGzipOn Error
 hi link ngxSSLCipherInsecure Error
 
 hi link ngxThirdPartyLuaBlock Function
-
-endif

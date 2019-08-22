@@ -1,12 +1,24 @@
-if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'crystal') == -1
-  
+if exists('g:polyglot_disabled') && index(g:polyglot_disabled, 'crystal') != -1
+  finish
+endif
+
 let s:save_cpo = &cpo
 set cpo&vim
 
-let s:V = vital#of('crystal')
+let s:V = vital#crystal#new()
 let s:P = s:V.import('Process')
-let s:J = s:V.import('Web.JSON')
 let s:C = s:V.import('ColorEcho')
+
+if exists('*json_decode')
+    function! s:decode_json(text) abort
+        return json_decode(a:text)
+    endfunction
+else
+    let s:J = s:V.import('Web.JSON')
+    function! s:decode_json(text) abort
+        return s:J.decode(a:text)
+    endfunction
+endif
 
 function! s:echo_error(msg, ...) abort
     echohl ErrorMsg
@@ -25,21 +37,45 @@ function! s:run_cmd(cmd) abort
     return s:P.system(a:cmd)
 endfunction
 
-function! s:find_root_by_spec(d) abort
-    let dir = finddir('spec', a:d . ';')
-    if dir ==# ''
+function! s:find_root_by(search_dir, d) abort
+    let found_dir = finddir(a:search_dir, a:d . ';')
+    if found_dir ==# ''
         return ''
     endif
 
-    " Note: ':h:h' for {root}/spec/ -> {root}/spec -> {root}
-    return fnamemodify(dir, ':p:h:h')
+    " Note: ':h:h' for {root}/{search_dir}/ -> {root}/{search_dir} -> {root}
+    return fnamemodify(found_dir, ':p:h:h')
+endfunction
+
+" Search the root directory containing a 'spec/' and a 'src/' directories.
+"
+" Searching for the 'spec/' directory is not enough: for example the crystal
+" compiler has a 'cr_sources/src/spec/' directory that would otherwise give the root
+" directory as 'cr_source/src/' instead of 'cr_sources/'.
+function! s:find_root_by_spec_and_src(d) abort
+    " Search for 'spec/'
+    let root = s:find_root_by('spec', a:d)
+    " Check that 'src/' is also there
+    if root !=# '' && isdirectory(root . '/src')
+        return root
+    endif
+
+    " Search for 'src/'
+    let root = s:find_root_by('src', a:d)
+    " Check that 'spec/' is also there
+    if root !=# '' && isdirectory(root . '/spec')
+        return root
+    endif
+
+    " Cannot find a directory containing both 'src/' and 'spec/'
+    return ''
 endfunction
 
 function! crystal_lang#entrypoint_for(file_path) abort
     let parent_dir = fnamemodify(a:file_path, ':p:h')
-    let root_dir = s:find_root_by_spec(parent_dir)
+    let root_dir = s:find_root_by_spec_and_src(parent_dir)
     if root_dir ==# ''
-        " No spec diretory found. No need to make temporary file
+        " No spec directory found. No need to make temporary file
         return a:file_path
     endif
 
@@ -102,7 +138,7 @@ function! crystal_lang#jump_to_definition(file, pos) abort
         return s:echo_error(cmd_result.output)
     endif
 
-    let impl = s:J.decode(cmd_result.output)
+    let impl = s:decode_json(cmd_result.output)
     if impl.status !=# 'ok'
         return s:echo_error(impl.message)
     endif
@@ -149,7 +185,6 @@ endfunction
 
 function! crystal_lang#complete(findstart, base) abort
     if a:findstart
-        echom 'find start'
         return s:find_completion_start()
     endif
 
@@ -158,7 +193,7 @@ function! crystal_lang#complete(findstart, base) abort
         return
     endif
 
-    let contexts = s:J.decode(cmd_result.output)
+    let contexts = s:decode_json(cmd_result.output)
     if contexts.status !=# 'ok'
         return
     endif
@@ -221,7 +256,7 @@ endfunction
 
 function! crystal_lang#run_all_spec(...) abort
     let path = a:0 == 0 ? expand('%:p:h') : a:1
-    let root_path = s:find_root_by_spec(path)
+    let root_path = s:find_root_by_spec_and_src(path)
     if root_path ==# ''
         return s:echo_error("'spec' directory is not found")
     endif
@@ -239,9 +274,9 @@ function! crystal_lang#run_current_spec(...) abort
     let source_dir = fnamemodify(path, ':h')
 
     " /foo/bar
-    let root_dir = s:find_root_by_spec(source_dir)
+    let root_dir = s:find_root_by_spec_and_src(source_dir)
     if root_dir ==# ''
-        return s:echo_error("'spec' directory is not found")
+        return s:echo_error("Root directory with 'src/' and 'spec/' not found")
     endif
 
     " src
@@ -271,62 +306,39 @@ function! crystal_lang#format_string(code, ...) abort
     return output
 endfunction
 
-function! s:get_saved_states() abort
-    let result = {}
-    let fname = bufname('%')
-    let current_winnr = winnr()
-    for i in range(1, winnr('$'))
-        let bufnr = winbufnr(i)
-        if bufnr == -1
-            continue
-        endif
-        if bufname(bufnr) ==# fname
-            execute i 'wincmd w'
-            let result[i] = {
-                \     'pos': getpos('.'),
-                \     'screen': winsaveview()
-                \ }
-        endif
-    endfor
-    execute current_winnr 'wincmd w'
-    return result
-endfunction
-
-function! crystal_lang#format(option_str) abort
+" crystal_lang#format(option_str [, on_save])
+function! crystal_lang#format(option_str, ...) abort
     if !executable(g:crystal_compiler_command)
         " Finish command silently
         return
     endif
 
-    let formatted = crystal_lang#format_string(join(getline(1, '$'), "\n"), a:option_str)
-    let formatted = substitute(formatted, '\n$', '', '')
+    let on_save = a:0 > 0 ? a:1 : 0
 
-    let sel_save = &l:selection
-    let ve_save = &virtualedit
-    let &l:selection = 'inclusive'
-    let &virtualedit = ''
-    let [save_g_reg, save_g_regtype] = [getreg('g'), getregtype('g')]
-    let windows_save = s:get_saved_states()
+    let before = join(getline(1, '$'), "\n")
+    let formatted = crystal_lang#format_string(before, a:option_str)
+    if !on_save
+        let after = substitute(formatted, '\n$', '', '')
+        if before ==# after
+            return
+        endif
+    endif
 
-    try
-        call setreg('g', formatted, 'v')
-        silent normal! ggvG$"gp
-    finally
-        call setreg('g', save_g_reg, save_g_regtype)
-        let &l:selection = sel_save
-        let &virtualedit = ve_save
-        let winnr = winnr()
-        for winnr in keys(windows_save)
-            let w = windows_save[winnr]
-            execute winnr 'wincmd w'
-            call setpos('.', w.pos)
-            call winrestview(w.screen)
-        endfor
-        execute winnr 'wincmd w'
-    endtry
+    let view_save = winsaveview()
+    let pos_save = getpos('.')
+    let lines = split(formatted, '\n')
+    silent! undojoin
+    if line('$') > len(lines)
+        execute len(lines) . ',$delete' '_'
+    endif
+    call setline(1, lines)
+    call winrestview(view_save)
+    call setpos('.', pos_save)
+endfunction
+
+function! crystal_lang#expand(file, pos, ...) abort
+    return crystal_lang#tool('expand', a:file, a:pos, get(a:, 1, ''))
 endfunction
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
-
-endif
