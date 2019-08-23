@@ -18,9 +18,20 @@ let g:XPvimrcCurrentDir = substitute(g:XPvimrcCurrentDir, '\V\[/\\]\$', '', '')
 
 exe "so ".g:XPvimrcCurrentDir."/rc.profile.vim"
 
-if has("win32") | exe "so " g:XPvimrcCurrentDir."/vimrc-win" | endif
-if has("unix")  | exe "so " g:XPvimrcCurrentDir."/vimrc-nix" | endif
-if has("mac")   | exe "so " g:XPvimrcCurrentDir."/vimrc-mac" | endif
+if has("win32")
+    exe "so " g:XPvimrcCurrentDir."/vimrc-win"
+endif
+if has("unix")
+    exe "so " g:XPvimrcCurrentDir."/vimrc-nix"
+    if has("nvim")
+        exe "so " g:XPvimrcCurrentDir."/vimrc-nix-nvim"
+    else
+        exe "so " g:XPvimrcCurrentDir."/vimrc-nix-vim"
+    endif
+endif
+if has("mac")
+    exe "so " g:XPvimrcCurrentDir."/vimrc-mac"
+endif
 
 exe "so ".g:XPvimrcCurrentDir."/rc.path.vim"
 exe "so ".g:XPvimrcCurrentDir."/rc.rtp.vim"
