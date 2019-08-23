@@ -1,0 +1,8 @@
+del_clip=True
+clip_delay=20
+lock_db=True
+lock_delay=60
+rem_db=True
+rem_key=False
+skip_menu=False
+pin=True
