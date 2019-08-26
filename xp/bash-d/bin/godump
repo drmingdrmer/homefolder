@@ -2,5 +2,5 @@
 
 
 pkg=$1
-go build -x -o godumpxxx ./$pkg
+go build -x -o godumpxxx ./$pkg || exit 1
 go tool objdump -S godumpxxx | less
