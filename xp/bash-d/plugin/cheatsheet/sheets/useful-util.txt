@@ -1,0 +1,1 @@
+s3 aws mock test python | https://github.com/spulec/moto | A library that allows you to easily mock out tests based on AWS infrastructure
