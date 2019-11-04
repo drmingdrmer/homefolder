@@ -1,2 +1,4 @@
 s3 aws mock test python | https://github.com/spulec/moto | A library that allows you to easily mock out tests based on AWS infrastructure
 s3 aws local test mock develop | https://github.com/localstack/localstack | A fully functional local AWS cloud stack. Develop and test your cloud & Serverless apps offline! 
+3d js javascript |  https://threejs.org | javascript 3d library.
+site blog python django cms wagtail | https://github.com/wagtail/wagtail |  Django content management system focused on flexibility and user experience https://wagtail.io
