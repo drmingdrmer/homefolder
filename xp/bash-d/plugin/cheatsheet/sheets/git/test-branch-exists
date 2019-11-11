@@ -1,1 +1,0 @@
-git rev-parse --quiet --verify refs/heads/<branch_name> >/dev/null

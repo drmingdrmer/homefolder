@@ -1,4 +1,0 @@
-cat > ~/.ssh/config <<-END
-Host server.example.com
-    ProxyCommand ssh -q proxy.example.org nc %h %p
-END

@@ -1,1 +1,0 @@
-brctl log --wait --shorten

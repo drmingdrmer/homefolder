@@ -1,3 +1,0 @@
-# Git has an option to disable the pager.
-
-git --no-pager log

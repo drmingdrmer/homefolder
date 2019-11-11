@@ -1,5 +1,0 @@
-# apt-get install phpmd
-# https://phpmd.org/documentation/index.html
-
-phpmd *.php text unusedcode
-

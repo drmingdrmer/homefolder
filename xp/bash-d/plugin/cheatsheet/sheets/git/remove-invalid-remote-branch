@@ -1,5 +1,0 @@
-git gc --prune=now
-
-git remote prune public
-
-http://stackoverflow.com/questions/1072171/how-do-you-remove-an-invalid-remote-branch-reference-from-git

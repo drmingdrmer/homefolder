@@ -1,4 +1,0 @@
-# ~/.ssh/config
-Host github.com
-    User                    git
-    ProxyCommand            nc -x localhost:9001 %h %p

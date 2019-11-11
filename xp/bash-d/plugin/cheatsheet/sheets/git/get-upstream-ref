@@ -1,8 +1,0 @@
-git rev-parse --symbolic-full-name --abbrev-ref master@{upstream} # origin/master
-git rev-parse --symbolic-full-name              master@{upstream} # refs/remotes/origin/master
-git rev-parse                                   master@{upstream} # 949547a4ec538aa4e5bb50cc53d7abdfed0832b5
-git rev-parse                                         @{upstream} # 949547a4ec538aa4e5bb50cc53d7abdfed0832b5
-git rev-parse                                         @{u}        # 949547a4ec538aa4e5bb50cc53d7abdfed0832b5
-
-# or:
-git for-each-ref --format='%(upstream:short)' $(git symbolic-ref -q HEAD)

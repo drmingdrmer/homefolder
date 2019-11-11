@@ -1,1 +1,0 @@
-git rev-list master..maybe_unmerged_branch

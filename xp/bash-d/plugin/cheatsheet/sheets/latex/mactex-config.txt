@@ -1,3 +1,0 @@
-preference:
-the top two config path:
-/usr/local/texlive/2018/bin/x86_64-darwin/

@@ -1,3 +1,0 @@
-gem update --system
-
-gem update `gem outdated | cut -d ' ' -f 1`

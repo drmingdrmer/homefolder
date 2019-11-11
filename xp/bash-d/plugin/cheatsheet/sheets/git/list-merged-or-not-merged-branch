@@ -1,5 +1,0 @@
-git branch --merged master
-
-git branch --merged
-
-git branch --no-merged

@@ -1,1 +1,0 @@
-{{ playbook_dir }}

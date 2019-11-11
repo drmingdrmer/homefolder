@@ -1,4 +1,0 @@
-npm install -g doctoc
-
-# generate for all file in this dir
-doctoc .

@@ -1,7 +1,0 @@
-/usr/share/dict/
-  connectives
-  propernames
-  README
-  web2
-  web2a
-  words       -> /usr/share/dict/web2

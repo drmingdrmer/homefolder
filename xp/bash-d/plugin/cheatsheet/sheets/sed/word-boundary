@@ -1,7 +1,0 @@
-# on mac
-# [[:<:]] [[:>:]]
-sed -i '' 's/[[:<:]]'"$Pattern"'[[:>:]]/'"$Repl"'/g' "$filename"
-
-# on linux
-sed -i '' 's/\<'"$Pattern"'\>/'"$Repl"'/g' "$filename"
-sed -i '' 's/\b'"$Pattern"'\b/'"$Repl"'/g' "$filename"

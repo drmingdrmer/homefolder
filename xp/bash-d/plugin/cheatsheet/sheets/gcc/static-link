@@ -1,5 +1,0 @@
-gcc x.c -l:libmysqlclient.a
-
-# instead of
-
-gcc x.c -lmysqlclient

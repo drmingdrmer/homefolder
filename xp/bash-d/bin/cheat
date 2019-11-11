@@ -93,13 +93,14 @@ CyanBG="$(                  tput setab 6)"
 LightCyan="$(    tput bold; tput setaf 6)"
 NC="$(                      tput sgr0)" # No Color
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+# DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 fpattern=$1
 shift
 
 (
-cd $DIR/../sheets
+# cd $DIR/../sheets
+cd $HOME/xp/wiki/sheets
 
 files=$(find . -type f -path "*$fpattern*" | grep -i "$1")
 for f in $files; do

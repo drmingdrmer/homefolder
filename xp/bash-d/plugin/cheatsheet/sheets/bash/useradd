@@ -1,1 +1,0 @@
-useradd -d /home/drdrxp -m -s $(which bash) drdrxp

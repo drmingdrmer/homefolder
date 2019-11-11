@@ -1,3 +1,0 @@
-# $^ prerequisite
-# $< first prerequisite
-# $@ target

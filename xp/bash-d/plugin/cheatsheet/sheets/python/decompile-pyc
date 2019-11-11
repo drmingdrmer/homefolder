@@ -1,4 +1,0 @@
-#!/bin/sh
-
-pip install uncompyle2
-uncompyle6 --help

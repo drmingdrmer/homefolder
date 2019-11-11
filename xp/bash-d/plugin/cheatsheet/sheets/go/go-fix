@@ -1,9 +1,0 @@
-go doc cmd/fix
-
-Fix finds Go programs that use old APIs and rewrites them to use newer ones.
-After you update to a new Go release, fix helps make the necessary changes
-to your programs.
-
-Usage:
-
-    go tool fix [-r name,...] [path ...]

@@ -1,3 +1,0 @@
-echo 'vm.swappiness = 0' >> /etc/sysctl.conf
-
-echo 0 > /proc/sys/vm/swappiness
