@@ -131,6 +131,9 @@ END
 [ -d $HOME/go/bin ]      && { export PATH=$HOME/go/bin:$PATH;      export GOROOT=$HOME/go; }
 [ -d $HOME/xp/go/bin ]   && { export PATH=$HOME/xp/go/bin:$PATH;   export GOROOT=$HOME/xp/go; }
 
+# add local bin for this computer: eg. Darwin-x86_64-bin
+export PATH="$HOME/xp/bash-d/$(uname -s)-$(uname -m)-bin:$PATH"
+
 # on mac: use homebrew ruby:
 export PATH="/usr/local/opt/ruby/bin:$PATH"
 export LDFLAGS="-L/usr/local/opt/ruby/lib"
