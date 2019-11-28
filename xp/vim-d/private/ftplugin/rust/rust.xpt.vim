@@ -16,4 +16,6 @@ fn main() {
     `cursor^
 }
 
+XPT ddbg " #[derive\(Debug)]
+#[derive(Debug)]
 
