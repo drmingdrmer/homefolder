@@ -33,8 +33,8 @@ xmap ]<space> ]%
 
 nmap <unique> <Leader>s <Plug>view:switchSetting
 
-" user complete
-inoremap <unique> <M-i> <C-x><C-u>
+" " user complete
+" inoremap <unique> <M-i> <C-x><C-u>
 
 " mapping:
 " key --> abstract function        --> function impl
@@ -59,6 +59,12 @@ nmap <unique> ,<Plug>F4           	 <Plug>buffer:rm_buf_win
 nmap <unique> <M-c>               	 <Plug>buffer:rm_buf_win
 nmap <unique> <M-W>               	 <Plug>buffer:rm_buf_win
 nmap <unique> <C-w><C-]>          	 <Plug>buffer:tag_in_preview_right
+
+nmap <unique> <C-]>               	 <Plug>(goto:definition)
+nmap <unique> gi                  	 <Plug>(goto:impl)
+nmap <unique> gr                  	 <Plug>(goto:reference)
+nmap <unique> K                  	 <Plug>(doc:ref)
+
 nmap <unique> <C-w>]              	 <Plug>buffer:tag_in_preview_top
 nmap <unique> ,0                  	 <Plug>buffer:to0
 nmap <unique> ,1                  	 <Plug>buffer:to1
@@ -66,14 +72,14 @@ nmap <unique> ,2                  	 <Plug>buffer:to2
 nmap <unique> ,3                  	 <Plug>buffer:to3
 nmap <unique> ,9                  	 <Plug>buffer:to9
 xmap <unique> <Leader>ccm         	 <Plug>case:camelize
-imap <unique> <C-space>           	 <Plug>complete:omni
+imap <unique> <M-i>               	 <Plug>(complete:syntax)
 nmap <unique> <Leader><Leader>ds  	 <Plug>diff:diff_with_saved
 nmap <unique> yw                  	 <Plug>edit:copy_cur_word
 xmap <unique> <M-c>               	 <Plug>edit:copy_to_tmp
 imap <unique> <C-u>               	 <Plug>edit:del
 nmap <unique> yp                  	 <Plug>edit:dupli_line
-nmap <unique> <Leader>e           	 <Plug>edit:error_next
-nmap <unique> <Leader>E           	 <Plug>edit:error_prev
+nmap <unique> <Leader>e           	 <Plug>(edit:error_next)
+nmap <unique> <Leader>E           	 <Plug>(edit:error_prev)
 nmap <unique> <C-g><C-]>          	 <Plug>edit:gtags:goto-definition
 nmap <unique> <C-g><C-r>          	 <Plug>edit:gtags:goto-reference
 imap <unique> <C-c>               	 <Plug>edit:insert:toNormal

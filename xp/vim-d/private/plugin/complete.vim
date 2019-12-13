@@ -5,6 +5,11 @@ inoremap    <M-.> <C-x><C-o>
 
 inoremap <Plug>edit:complete_noselect <C-r>=<SID>Compl()<cr>
 
+" use omni complete as default to complete by syntax
+if ''==mapcheck("<Plug>(complete:syntax)", "i")
+    inoremap     <Plug>(complete:syntax)        <C-x><C-o>
+endif
+
 augroup XPcompl
     au!
     au CursorMovedI * call <SID>ClearRecord()
