@@ -35,11 +35,19 @@ obj=$1
 is_obj_file=0
 linenr=0
 ori_linenr=0
+stashed=0
 
 
 if [ -z "$obj" ] || [ "$obj" = "-h" ] || [ "$obj" = "--help" ]; then
     usage
     exit 1
+fi
+
+if git diff --name-only --relative HEAD --quiet; then
+    :
+else
+    git stash
+    stashed=1
 fi
 
 if [ "$(git_object_type $obj)" = "commit" ]; then
@@ -69,6 +77,10 @@ sed_edit_commit="'$sed_edit_commit'"
 
 GIT_EDITOR='f(){ cat "$1" | sed '$sed_remove_after_blank' | sed '$sed_edit_commit' >"$1-tmp"; mv "$1-tmp" $1; }; f' \
     git rebase --interactive $commit~
+
+if [ "$stashed" == "1" ]; then
+    git stash pop || die fail to pop stash
+fi
 
 if [ "$is_obj_file" = "1" ]; then
     vim "$obj" +$ori_linenr -c "normal zR"
