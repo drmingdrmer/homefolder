@@ -39,6 +39,15 @@ env_init_path()
         # PATH=:$p/sbin${PATH//:$p\/sbin/}
         # PATH=:$p/bin${PATH//:$p\/bin/}
     done
+
+    # MacPorts Installer addition on 2012-09-23_at_22:32:56: adding an appropriate PATH variable for use with MacPorts.
+    export PATH=/usr/local/opt/ipython@5/bin:$PATH
+    export PATH=/opt/local/bin:$PATH
+    export PATH=/opt/local/sbin:$PATH
+    # Finished adapting your PATH environment variable for use with MacPorts.
+
+    export PATH="$HOME/.cargo/bin:$PATH"
+
     PATH=${PATH//::/:}
     PATH=${PATH#:}
     PATH=${PATH%:}
