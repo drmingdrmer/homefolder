@@ -1,6 +1,4 @@
-if exists('g:polyglot_disabled') && index(g:polyglot_disabled, 'ruby') != -1
-  finish
-endif
+if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'ruby') == -1
 
 " Vim syntax file
 " Language:		Ruby
@@ -467,6 +465,7 @@ syn match rubyDefinedOperator "\%#=1\<defined?" display
 " 1.9-style Hash Keys and Keyword Parameters {{{1
 syn match rubySymbol "\%([{(|,]\_s*\)\@<=\%(\h\|[^\x00-\x7F]\)\%(\w\|[^\x00-\x7F]\)*[?!]\=::\@!"he=e-1
 syn match rubySymbol "[]})\"':]\@1<!\<\%(\h\|[^\x00-\x7F]\)\%(\w\|[^\x00-\x7F]\)*[!?]\=:[[:space:],;]\@="he=e-1
+syn match rubySymbol "[[:space:],{(]\%(\h\|[^\x00-\x7F]\)\%(\w\|[^\x00-\x7F]\)*[!?]\=:[[:space:],;]\@="hs=s+1,he=e-1
 
 " __END__ Directive {{{1
 SynFold '__END__' syn region rubyData matchgroup=rubyDataDirective start="^__END__$" end="\%$"
@@ -596,3 +595,5 @@ unlet! s:cpo_sav
 delc SynFold
 
 " vim: nowrap sw=2 sts=2 ts=8 noet fdm=marker:
+
+endif

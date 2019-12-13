@@ -1,6 +1,4 @@
-if exists('g:polyglot_disabled') && index(g:polyglot_disabled, 'go') != -1
-  finish
-endif
+if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'go') == -1
 
 " don't spam the user when Vim is started in Vi compatibility mode
 let s:cpo_save = &cpo
@@ -25,10 +23,12 @@ endfunction
 function! go#config#SetBuildTags(value) abort
   if a:value is ''
     silent! unlet g:go_build_tags
+    call go#lsp#ResetWorkspaceDirectories()
     return
   endif
 
   let g:go_build_tags = a:value
+  call go#lsp#ResetWorkspaceDirectories()
 endfunction
 
 function! go#config#TestTimeout() abort
@@ -49,6 +49,14 @@ endfunction
 
 function! go#config#TermMode() abort
   return get(g:, 'go_term_mode', 'vsplit')
+endfunction
+
+function! go#config#TermCloseOnExit() abort
+  return get(g:, 'go_term_close_on_exit', 1)
+endfunction
+
+function! go#config#SetTermCloseOnExit(value) abort
+  let g:go_term_close_on_exit = a:value
 endfunction
 
 function! go#config#TermEnabled() abort
@@ -199,9 +207,10 @@ endfunction
 
 function! go#config#DebugWindows() abort
   return get(g:, 'go_debug_windows', {
-            \ 'stack': 'leftabove 20vnew',
-            \ 'out':   'botright 10new',
             \ 'vars':  'leftabove 30vnew',
+            \ 'stack': 'leftabove 20new',
+            \ 'goroutines': 'botright 10new',
+            \ 'out':        'botright 5new',
             \ }
          \ )
 
@@ -218,7 +227,7 @@ function! go#config#DebugCommands() abort
 endfunction
 
 function! go#config#DebugLogOutput() abort
-  return get(g:, 'go_debug_log_output', 'debugger, rpc')
+  return get(g:, 'go_debug_log_output', 'debugger,rpc')
 endfunction
 
 function! go#config#LspLog() abort
@@ -252,7 +261,7 @@ function! go#config#SetTemplateAutocreate(value) abort
 endfunction
 
 function! go#config#MetalinterCommand() abort
-  return get(g:, "go_metalinter_command", "gometalinter")
+  return get(g:, "go_metalinter_command", "golangci-lint")
 endfunction
 
 function! go#config#MetalinterAutosaveEnabled() abort
@@ -344,7 +353,7 @@ function! go#config#FmtCommand() abort
 endfunction
 
 function! go#config#FmtOptions() abort
-  return get(g:, "go_fmt_options", {})
+  return get(b:, "go_fmt_options", get(g:, "go_fmt_options", {}))
 endfunction
 
 function! go#config#FmtFailSilently() abort
@@ -357,6 +366,11 @@ endfunction
 
 function! go#config#PlayOpenBrowser() abort
   return get(g:, "go_play_open_browser", 1)
+endfunction
+
+function! go#config#RenameCommand() abort
+  " delegate to go#config#GorenameBin for backwards compatability.
+  return get(g:, "go_rename_command", go#config#GorenameBin())
 endfunction
 
 function! go#config#GorenameBin() abort
@@ -454,6 +468,14 @@ function! go#config#HighlightVariableDeclarations() abort
   return get(g:, 'go_highlight_variable_declarations', 0)
 endfunction
 
+function! go#config#HighlightDiagnosticErrors() abort
+  return get(g:, 'go_highlight_diagnostic_errors', 1)
+endfunction
+
+function! go#config#HighlightDiagnosticWarnings() abort
+  return get(g:, 'go_highlight_diagnostic_warnings', 1)
+endfunction
+
 function! go#config#HighlightDebug() abort
   return get(g:, 'go_highlight_debug', 1)
 endfunction
@@ -473,6 +495,35 @@ function! go#config#CodeCompletionEnabled() abort
   return get(g:, "go_code_completion_enabled", 1)
 endfunction
 
+function! go#config#Updatetime() abort
+  let go_updatetime = get(g:, 'go_updatetime', 800)
+  return go_updatetime == 0 ? &updatetime : go_updatetime
+endfunction
+
+function! go#config#ReferrersMode() abort
+  return get(g:, 'go_referrers_mode', 'gopls')
+endfunction
+
+function! go#config#GoplsCompleteUnimported() abort
+  return get(g:, 'go_gopls_complete_unimported', 0)
+endfunction
+
+function! go#config#GoplsDeepCompletion() abort
+  return get(g:, 'go_gopls_deep_completion', 1)
+endfunction
+
+function! go#config#GoplsFuzzyMatching() abort
+  return get(g:, 'go_gopls_fuzzy_matching', 1)
+endfunction
+
+function! go#config#GoplsUsePlaceholders() abort
+  return get(g:, 'go_gopls_use_placeholders', 0)
+endfunction
+
+function! go#config#GoplsEnabled() abort
+  return get(g:, 'go_gopls_enabled', 1)
+endfunction
+
 " Set the default value. A value of "1" is a shortcut for this, for
 " compatibility reasons.
 if exists("g:go_gorename_prefill") && g:go_gorename_prefill == 1
@@ -484,3 +535,5 @@ let &cpo = s:cpo_save
 unlet s:cpo_save
 
 " vim: sw=2 ts=2 et
+
+endif

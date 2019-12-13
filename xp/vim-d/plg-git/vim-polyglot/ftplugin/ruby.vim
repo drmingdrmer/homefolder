@@ -1,6 +1,4 @@
-if exists('g:polyglot_disabled') && index(g:polyglot_disabled, 'ruby') != -1
-  finish
-endif
+if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'ruby') == -1
 
 " Vim filetype plugin
 " Language:		Ruby
@@ -90,7 +88,7 @@ endfunction
 
 function! s:build_path(path) abort
   let path = join(map(copy(a:path), 'v:val ==# "." ? "" : v:val'), ',')
-  if &g:path !~# '\v^\.%(,/%(usr|emx)/include)=,,$'
+  if &g:path !~# '\v^%(\.,)=%(/%(usr|emx)/include,)=,$'
     let path = substitute(&g:path,',,$',',','') . ',' . path
   endif
   return path
@@ -376,7 +374,6 @@ function! RubyCursorFile() abort
   endtry
   let pre = matchstr(strpart(getline('.'), 0, col('.')-1), '.*\f\@<!')
   let post = matchstr(strpart(getline('.'), col('.')), '\f\@!.*')
-  let ext = getline('.') =~# '^\s*\%(require\%(_relative\)\=\|autoload\)\>' && cfile !~# '\.rb$' ? '.rb' : ''
   if s:synid() ==# hlID('rubyConstant')
     let cfile = substitute(cfile,'\.\w\+[?!=]\=$','','')
     let cfile = substitute(cfile,'^::','','')
@@ -385,12 +382,15 @@ function! RubyCursorFile() abort
     let cfile = substitute(cfile,'\(\l\|\d\)\(\u\)','\1_\2', 'g')
     return tolower(cfile) . '.rb'
   elseif getline('.') =~# '^\s*require_relative\s*\(["'']\).*\1\s*$'
-    let cfile = expand('%:p:h') . '/' . matchstr(getline('.'),'\(["'']\)\zs.\{-\}\ze\1') . ext
+    let cfile = expand('%:p:h') . '/' . matchstr(getline('.'),'\(["'']\)\zs.\{-\}\ze\1')
+    let cfile .= cfile !~# '\.rb$' ? '.rb' : ''
   elseif getline('.') =~# '^\s*\%(require[( ]\|load[( ]\|autoload[( ]:\w\+,\)\s*\%(::\)\=File\.expand_path(\(["'']\)\.\./.*\1,\s*__FILE__)\s*$'
     let target = matchstr(getline('.'),'\(["'']\)\.\.\zs/.\{-\}\ze\1')
-    let cfile = expand('%:p:h') . target . ext
+    let cfile = expand('%:p:h') . target
+    let cfile .= cfile !~# '\.rb$' ? '.rb' : ''
   elseif getline('.') =~# '^\s*\%(require \|load \|autoload :\w\+,\)\s*\(["'']\).*\1\s*$'
-    let cfile = matchstr(getline('.'),'\(["'']\)\zs.\{-\}\ze\1') . ext
+    let cfile = matchstr(getline('.'),'\(["'']\)\zs.\{-\}\ze\1')
+    let cfile .= cfile !~# '\.rb$' ? '.rb' : ''
   elseif pre.post =~# '\<File.expand_path[( ].*[''"]\{2\}, *__FILE__\>' && cfile =~# '^\.\.'
     let cfile = expand('%:p:h') . strpart(cfile, 2)
   else
@@ -436,3 +436,5 @@ endfunction
 "
 
 " vim: nowrap sw=2 sts=2 ts=8:
+
+endif

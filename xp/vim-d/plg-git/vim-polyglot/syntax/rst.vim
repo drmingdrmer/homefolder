@@ -1,6 +1,4 @@
-if exists('g:polyglot_disabled') && index(g:polyglot_disabled, 'rst') != -1
-  finish
-endif
+if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'rst') == -1
 
 " Vim syntax file
 " Language: reStructuredText documentation format
@@ -177,7 +175,7 @@ syn match   rstStandaloneHyperlink  contains=@NoSpell
       \ "\<\%(\%(\%(https\=\|file\|ftp\|gopher\)://\|\%(mailto\|news\):\)[^[:space:]'\"<>]\+\|www[[:alnum:]_-]*\.[[:alnum:]_-]\+\.[^[:space:]'\"<>]\+\)[[:alnum:]/]"
 
 syn region rstCodeBlock contained matchgroup=rstDirective
-      \ start=+\%(sourcecode\|code\%(-block\)\=\)::\s*\n\%(\s*:.*:\s*.*\s*\n\)*\n\ze\z(\s\+\)+
+      \ start=+\%(sourcecode\|code\%(-block\)\=\)::\s*\(\S*\)\?\s*\n\%(\s*:.*:\s*.*\s*\n\)*\n\ze\z(\s\+\)+
       \ skip=+^$+
       \ end=+^\z1\@!+
       \ contains=@NoSpell
@@ -292,3 +290,5 @@ let b:current_syntax = "rst"
 
 let &cpo = s:cpo_save
 unlet s:cpo_save
+
+endif

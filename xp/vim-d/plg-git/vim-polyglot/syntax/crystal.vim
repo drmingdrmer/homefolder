@@ -1,6 +1,4 @@
-if exists('g:polyglot_disabled') && index(g:polyglot_disabled, 'crystal') != -1
-  finish
-endif
+if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'crystal') == -1
 
 " Language: Crystal
 " Based on Ruby syntax highlight
@@ -123,7 +121,7 @@ syn match crystalPredefinedConstant "\%(\%(\.\@<!\.\)\@<!\|::\)\_s*\zs\%(crystal
 
 " Normal Regular Expression
 syn region crystalRegexp matchgroup=crystalRegexpDelimiter start="\%(\%(^\|\<\%(and\|or\|while\|until\|unless\|if\|elsif\|ifdef\|when\|not\|then\|else\)\|[;\~=!|&(,[<>?:*+-]\)\s*\)\@<=/" end="/[iomxneus]*" skip="\\\\\|\\/" contains=@crystalRegexpSpecial fold
-syn region crystalRegexp matchgroup=crystalRegexpDelimiter start="\%(\h\k*\s\+\)\@<=/[ \t=]\@!" end="/[iomxneus]*" skip="\\\\\|\\/" contains=@crystalRegexpSpecial fold
+syn region crystalRegexp matchgroup=crystalRegexpDelimiter start="\%(\h\k*\s\+\)\@<=/[ \t=/]\@!" end="/[iomxneus]*" skip="\\\\\|\\/" contains=@crystalRegexpSpecial fold
 
 " Generalized Regular Expression
 syn region crystalRegexp matchgroup=crystalRegexpDelimiter start="%r\z([~`!@#$%^&*_\-+=|\:;"',.? /]\)" end="\z1[iomxneus]*" skip="\\\\\|\\\z1" contains=@crystalRegexpSpecial fold
@@ -292,7 +290,7 @@ if !exists('g:crystal_no_special_methods')
   syn match   crystalInclude   "\<include\>[?!]\@!" display
   syn keyword crystalInclude   extend require
   syn keyword crystalKeyword   caller typeof pointerof sizeof instance_sizeof
-  syn match   crystalRecord    "\<record\>[?!]\@!" display
+  syn match   crystalRecord    "\<record\%(\s\+\u\w*\)\@=" display
 endif
 
 " Macro
@@ -401,3 +399,5 @@ hi def link crystalSpaceError		crystalError
 let b:current_syntax = 'crystal'
 
 " vim: nowrap sw=2 sts=2 ts=8 noet:
+
+endif

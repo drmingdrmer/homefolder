@@ -1,6 +1,4 @@
-if exists('g:polyglot_disabled') && index(g:polyglot_disabled, 'qml') != -1
-  finish
-endif
+if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'qml') == -1
 
 " Vim syntax file
 " Language:     QML
@@ -31,7 +29,7 @@ endif
 
 syn case ignore
 
-syn cluster qmlExpr              contains=qmlStringD,qmlString,SqmlCharacter,qmlNumber,qmlObjectLiteralType,qmlBoolean,qmlType,qmlJsType,qmlNull,qmlGlobal,qmlFunction
+syn cluster qmlExpr              contains=qmlStringD,qmlStringS,SqmlCharacter,qmlNumber,qmlObjectLiteralType,qmlBoolean,qmlType,qmlJsType,qmlNull,qmlGlobal,qmlFunction
 syn keyword qmlCommentTodo       TODO FIXME XXX TBD contained
 syn match   qmlLineComment       "\/\/.*" contains=@Spell,qmlCommentTodo
 syn match   qmlCommentSkip       "^[ \t]*\*\($\|[ \t]\+\)"
@@ -136,4 +134,6 @@ endif
 let b:current_syntax = "qml"
 if main_syntax == 'qml'
   unlet main_syntax
+endif
+
 endif

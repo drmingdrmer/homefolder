@@ -1,13 +1,21 @@
-if exists('g:polyglot_disabled') && index(g:polyglot_disabled, 'rust') != -1
-  finish
-endif
+if !exists('g:polyglot_disabled') || index(g:polyglot_disabled, 'rust') == -1
 
 function! cargo#Load() 
     " Utility call to get this script loaded, for debugging
 endfunction
 
 function! cargo#cmd(args)
-    execute "! cargo" a:args
+    " Trim trailing spaces. This is necessary since :terminal command parses
+    " trailing spaces as an empty argument.
+    let args = substitute(a:args, '\s\+$', '', '')
+    if has('terminal')
+        let cmd = 'terminal'
+    elseif has('nvim')
+        let cmd = 'noautocmd new | terminal'
+    else
+        let cmd = '!'
+    endif
+    execute cmd 'cargo' args
 endfunction
 
 function! s:nearest_cargo(...) abort
@@ -117,3 +125,5 @@ function! cargo#runtarget(args)
 endfunction
 
 " vim: set et sw=4 sts=4 ts=8:
+
+endif
