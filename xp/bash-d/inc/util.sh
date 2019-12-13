@@ -40,13 +40,53 @@ env_init_path()
         # PATH=:$p/bin${PATH//:$p\/bin/}
     done
 
-    # MacPorts Installer addition on 2012-09-23_at_22:32:56: adding an appropriate PATH variable for use with MacPorts.
-    export PATH=/usr/local/opt/ipython@5/bin:$PATH
-    export PATH=/opt/local/bin:$PATH
-    export PATH=/opt/local/sbin:$PATH
-    # Finished adapting your PATH environment variable for use with MacPorts.
+    while read p; do
+        if [ -z "$p" ] || [ "${p:0:1}" == "#" ]; then
+            continue
+        fi
+        [ -d "$p" ] && { export PATH="$p:$PATH"; }
+    done <<-END
+# python
+/usr/local/opt/ipython@5/bin
+$HOME/Library/Python/3.7/bin
 
-    export PATH="$HOME/.cargo/bin:$PATH"
+# rust
+$HOME/.cargo/bin
+
+# ruby gem
+/usr/local/lib/ruby/gems/2.6.0/bin
+
+/usr/local/opt/opencv3/bin
+
+# add local bin for this computer: eg. Darwin-x86_64-bin
+$HOME/xp/bash-d/$(uname -s)-$(uname -m)-bin
+END
+
+# golang paths
+while read p; do
+    if [ -z "$p" ] || [ "${p:0:1}" == "#" ]; then
+        continue
+    fi
+    [ -d "$p/bin" ] && {
+        export PATH="$p/bin:$PATH"
+            export GOROOT="$p"
+        }
+done <<-END
+/usr/local/go/bin
+$HOME/go/bin
+$HOME/xp/go/bin
+END
+
+export GOPATH=$HOME/xp/vcs/go
+export PATH=$GOPATH/bin:$PATH
+
+
+# on mac: use homebrew ruby:
+export PATH="/usr/local/opt/ruby/bin:$PATH"
+export LDFLAGS="-L/usr/local/opt/ruby/lib"
+export CPPFLAGS="-I/usr/local/opt/ruby/include"
+export PKG_CONFIG_PATH="/usr/local/opt/ruby/lib/pkgconfig"
+
 
     PATH=${PATH//::/:}
     PATH=${PATH#:}

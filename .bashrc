@@ -98,7 +98,7 @@ source_dir()
 . ~/.profile
 d end profile
 
-. $XPBASE/inc/util.sh
+. $HOME/xp/bash-d/inc/util.sh
 d end util
 
 if [ -z $LANG ]; then
@@ -120,32 +120,6 @@ export HISTSIZE=50000
 export HISTCONTROL=ignoreboth
 export HISTTIMEFORMAT="%Y/%m/%d %H:%M:%S "
 
-while read p; do
-    [ -d "$p" ] && { export PATH="$PATH:$p"; }
-done <<-END
-$HOME/Library/Python/3.7/bin
-/usr/local/opt/opencv3/bin
-END
-
-[ -d /usr/local/go/bin ] && { export PATH=/usr/local/go/bin:$PATH; export GOROOT=/usr/local/go; }
-[ -d $HOME/go/bin ]      && { export PATH=$HOME/go/bin:$PATH;      export GOROOT=$HOME/go; }
-[ -d $HOME/xp/go/bin ]   && { export PATH=$HOME/xp/go/bin:$PATH;   export GOROOT=$HOME/xp/go; }
-
-# add local bin for this computer: eg. Darwin-x86_64-bin
-export PATH="$HOME/xp/bash-d/$(uname -s)-$(uname -m)-bin:$PATH"
-
-# on mac: use homebrew ruby:
-export PATH="/usr/local/opt/ruby/bin:$PATH"
-export LDFLAGS="-L/usr/local/opt/ruby/lib"
-export CPPFLAGS="-I/usr/local/opt/ruby/include"
-export PKG_CONFIG_PATH="/usr/local/opt/ruby/lib/pkgconfig"
-
-# ruby gem bin
-export PATH="/usr/local/lib/ruby/gems/2.6.0/bin:$PATH"
-
-
-export GOPATH=$HOME/xp/vcs/go
-export PATH=$GOPATH/bin:$PATH
 
 export HISTIGNORE="l:la:ll:ls:gl"
 export GREP_COLORS="ms=01;33:mc=01;31:sl=0;33:cx=:fn=35:ln=32:bn=32:se=36"
