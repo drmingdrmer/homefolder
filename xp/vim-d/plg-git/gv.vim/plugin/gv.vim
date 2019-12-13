@@ -103,11 +103,11 @@ function! s:open(visual, ...)
   endif
 
   call s:split(a:0)
+  call s:scratch()
   if type == 'commit'
     execute 'e' escape(target, ' ')
     nnoremap <silent> <buffer> gb :Gbrowse<cr>
   elseif type == 'diff'
-    call s:scratch()
     call s:fill(target)
     setf diff
   endif
@@ -166,6 +166,7 @@ endfunction
 
 function! s:maps()
   nnoremap <silent> <buffer> q    :$wincmd w <bar> close<cr>
+  nnoremap <silent> <buffer> <nowait> gq :$wincmd w <bar> close<cr>
   nnoremap <silent> <buffer> gb   :call <sid>gbrowse()<cr>
   nnoremap <silent> <buffer> <cr> :call <sid>open(0)<cr>
   nnoremap <silent> <buffer> o    :call <sid>open(0)<cr>
@@ -208,13 +209,6 @@ function! s:setup(git_dir, git_origin)
     let b:git_origin = printf('%s%s/%s', scheme, origin[2], origin[3])
   endif
   let b:git_dir = a:git_dir
-endfunction
-
-function! s:git_dir()
-  if empty(get(b:, 'git_dir', ''))
-    return fugitive#extract_git_dir(expand('%:p'))
-  endif
-  return b:git_dir
 endfunction
 
 function! s:scratch()
@@ -306,6 +300,7 @@ function! s:gl(buf, visual)
   nnoremap <buffer> o <cr><c-w><c-w>
   nnoremap <buffer> O :call <sid>gld()<cr>
   nnoremap <buffer> q :tabclose<cr>
+  nnoremap <buffer> gq :tabclose<cr>
   call matchadd('Conceal', '^fugitive://.\{-}\.git//')
   call matchadd('Conceal', '^fugitive://.\{-}\.git//\x\{7}\zs.\{-}||')
   setlocal concealcursor=nv conceallevel=3 nowrap
@@ -326,7 +321,7 @@ function! s:gv(bang, visual, line1, line2, args) abort
     return s:warn('fugitive not found')
   endif
 
-  let git_dir = s:git_dir()
+  let git_dir = FugitiveGitDir()
   if empty(git_dir)
     return s:warn('not in git repo')
   endif
