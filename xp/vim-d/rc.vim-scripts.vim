@@ -1,13 +1,18 @@
 let s:pref = "," . g:XPvimrcCurrentDir . "/plg-git/"
 
+let g:xp_enabled_plugin = {}
+
 if ! exists( "g:xp_disabled" )
     let g:xp_disabled = "xxxxxxxxxxxxxxxxxx"
 endif
 fun! s:add(k)
     if a:k !~ g:xp_disabled
         let &rtp .= s:pref . a:k
+        let g:xp_enabled_plugin[a:k] = a:k
     endif
 endfunction
+
+com FinishIfNotLoaded if !has_key(g:xp_enabled_plugin, expand("<sfile>:t")[:-5]) | finish | endif
 
 call s:add('Align')
 call s:add('FuzzyFinder')
@@ -64,6 +69,7 @@ call s:add('xptemplate')
 
 " call s:add('vim-racer')
 
+call s:add('coc.nvim')
 
 " call s:add('Hints-for-C-Library-Functions')
 " call s:add('Hints-for-C-Library-Functions-B')
