@@ -62,7 +62,7 @@ call s:add('xptemplate')
 " rust
 " call s:add('rust.vim')
 
-call s:add('vim-racer')
+" call s:add('vim-racer')
 
 
 " call s:add('Hints-for-C-Library-Functions')

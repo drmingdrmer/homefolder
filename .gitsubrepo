@@ -79,10 +79,13 @@ vcscommand.vim.git              vim-scripts/vcscommand.vim   master
 xmledit                         vim-scripts/                 master
 
 # rust: rust.vim: syntastic, tagbar, rustfmt, playgen
-
 rust.vim                        rust-lang/                   master
 
+# rust: vim-racer: complete, jump, doc
 vim-racer                       racer-rust/                  master
+
+# coc:  full language server protocol support
+coc.nvim                        neoclide/                    master
 
 [ base: xp/gdb-d/plugin ]
 
