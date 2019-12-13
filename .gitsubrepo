@@ -78,6 +78,12 @@ taglist.vim                     vim-scripts/                 master
 vcscommand.vim.git              vim-scripts/vcscommand.vim   master
 xmledit                         vim-scripts/                 master
 
+# rust: rust.vim: syntastic, tagbar, rustfmt, playgen
+
+rust.vim                        rust-lang/                   master
+
+vim-racer                       racer-rust/                  master
+
 [ base: xp/gdb-d/plugin ]
 
 gdb-dashboard                   cyrus-and/                   master

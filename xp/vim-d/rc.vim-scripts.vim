@@ -59,6 +59,12 @@ call s:add('xp-vim-colorscheme')
 call s:add('xp-vim-git')
 call s:add('xptemplate')
 
+" rust
+" call s:add('rust.vim')
+
+call s:add('vim-racer')
+
+
 " call s:add('Hints-for-C-Library-Functions')
 " call s:add('Hints-for-C-Library-Functions-B')
 " call s:add('auto-pairs')
