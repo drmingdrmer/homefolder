@@ -85,7 +85,7 @@ rust.vim                        rust-lang/                   master
 vim-racer                       racer-rust/                  master
 
 # coc:  full language server protocol support
-coc.nvim                        neoclide/                    master
+coc.nvim                        neoclide/                    release
 
 [ base: xp/gdb-d/plugin ]
 
