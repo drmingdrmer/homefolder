@@ -117,7 +117,7 @@ separated by dots (`.`).
 
 Here is a list of formatprograms that are supported by default, and thus will be detected and used by vim when they are installed properly.
 
-* `clang-format` for __C__, __C++__, __Objective-C__ (supports formatting ranges).
+* `clang-format` for __C__, __C++__, __Objective-C__, __Protobuf__ (supports formatting ranges).
   Clang-format is a product of LLVM source builds.
   If you `brew install llvm`, clang-format can be found in /usr/local/Cellar/llvm/bin/.
   Vim-autoformat checks whether there exists a `.clang-format` or a `_clang-format` file up in
@@ -160,7 +160,7 @@ Here is a list of formatprograms that are supported by default, and thus will be
   The python version version is also supported by default, which does not need `nodejs` to run.
   Here is the link to the repository: https://github.com/einars/js-beautify.
 
-* `JSCS` for __Javascript__. http://jscs.info/
+* `JSCS` for __Javascript__. https://jscs-dev.github.io/
 
 * `standard` for __Javascript__.
   It can be installed by running `npm install -g standard` (`nodejs` is required). No more configuration needed.
@@ -247,6 +247,12 @@ Here is a list of formatprograms that are supported by default, and thus will be
 
 * `sqlformat` for __SQL__.
   Install `sqlparse` with `pip`.
+
+* `cmake-format` for __CMake__.
+  Install `cmake_format` with `pip`. See https://github.com/cheshirekow/cmake_format for more info.
+
+* `latexindent.pl` for __LaTeX__.
+  Installation instructions at https://github.com/cmhughes/latexindent.pl.
 
 
 ## Help, the formatter doesn't work as expected!
@@ -346,11 +352,13 @@ would then only format the selected part.
 
 ## Contributing
 
-Pull requests are welcome.
-Any feedback is welcome.
-If you have any suggestions on this plugin or on this readme, if you have some nice default
+This project is community driven. I don't actively do development on vim-autoformat myself, 
+as it's current state fulfills my personal needs.
+However, I will review pull requests and keep an eye on the general sanity of the code.
+
+If you have any improvements on this plugin or on this readme, if you have some
 formatter definition that can be added to the defaults, or if you experience problems, please
-contact me by creating an issue in this repository.
+open a pull request or an issue in this repository.
 
 ## Major Change Log
 

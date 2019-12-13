@@ -128,6 +128,12 @@ if !exists('g:formatters_objc')
 endif
 
 
+" Protobuf
+if !exists('g:formatters_proto')
+    let g:formatters_proto = ['clangformat']
+endif
+
+
 " Java
 if !exists('g:formatdef_astyle_java')
     if filereadable('.astylerc')
@@ -496,4 +502,22 @@ if !exists('g:formatdef_sqlformat')
 endif
 if !exists('g:formatters_sql')
     let g:formatters_sql = ['sqlformat']
+endif
+
+" CMake
+if !exists('g:formatdef_cmake_format')
+    let g:formatdef_cmake_format = '"cmake-format - --tab-size ".shiftwidth()." ".(&textwidth ? "--line-width=".&textwidth : "")'
+endif
+
+if !exists('g:formatters_cmake')
+    let g:formatters_cmake = ['cmake_format']
+endif
+
+" Latex
+if !exists('g:formatdef_latexindent')
+    let g:formatdef_latexindent = '"latexindent.pl -"'
+endif
+
+if !exists('g:formatters_latex')
+    let g:formatters_tex = ['latexindent']
 endif
