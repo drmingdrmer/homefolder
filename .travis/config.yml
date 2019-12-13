@@ -1,8 +1,8 @@
 ---
 last_check:
-  etag: '"1f7ab3a8e56584ec249f49899add10fd"'
+  etag: '"2c9775ffbbeec98794e3919cc606257e"'
   version: 1.8.10
-  at: 1558515592
+  at: 1569223723
 checked_completion: true
 completion_version: 1.8.10
 endpoints:
@@ -12,4 +12,6 @@ repos:
   openacid/slim:
     endpoint: https://api.travis-ci.org/
   openacid/low:
+    endpoint: https://api.travis-ci.org/
+  openacid/trie:
     endpoint: https://api.travis-ci.org/
