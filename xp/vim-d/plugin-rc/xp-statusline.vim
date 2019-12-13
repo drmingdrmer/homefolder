@@ -22,6 +22,7 @@ endfunction "}}}
 
 fun! MyStatuslineLeft() "{{{
     let sss=""
+    let sss.="%{coc#status()}"
     let sss.="%#StatuslineBufNr#%-1.2n "                  " buffer number
     let sss.="%h%#StatuslineFlag#%m%r%w"                 " flags
     let sss.="%#StatuslinePath# %-0.20{StatusLineGetPath()}%0*" " path
@@ -51,4 +52,12 @@ fun! MyStatuslineRight() "{{{
 
 endfunction "}}}
 
+
+" <	The result can contain %{} items that will be evaluated too.
+"         Note that the "%!" expression is evaluated in the context of the
+"         current window and buffer, while %{} items are evaluated in the
+"         context of the window that the statusline belongs to.
+
 set statusline=%!MyStatuslineLeft().MyStatuslineRight()
+" set statusline=%{MyStatuslineLeft().MyStatuslineRight()}
+" set statusline=%{coc#status()}%{get(b:,'coc_current_function','')}
