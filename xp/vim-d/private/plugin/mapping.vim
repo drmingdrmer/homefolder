@@ -36,6 +36,13 @@ nmap <unique> <Leader>s <Plug>view:switchSetting
 " user complete
 inoremap <unique> <M-i> <C-x><C-u>
 
+" mapping:
+" key --> abstract function        --> function impl
+" 99rr    <Plug>(refactor:rename)      <Plug>(coc-rename)    // for rust
+"                                      :GoRename<CR>         // for go
+"
+"                                      in ftplugin or other plugin rc
+
 xmap <unique> DW                  	 :call edit#align#VerticalDeleteToWordStart()<CR>
 nmap <unique> <C-w><C-l>          	 :call edit#preview#Open()<CR>
 nmap <unique> <C-g><C-l>          	 :clist<CR>
@@ -97,7 +104,7 @@ nmap <unique> <M-i>               	 <Plug>nav:tab_next
 nmap <unique> <M-u>               	 <Plug>nav:tab_prev
 nmap <unique> <Leader>pc          	 <Plug>path:to_cur_file
 nmap <unique> <Leader><Leader>gf  	 <Plug>git:gotofix
-nmap <unique> <Leader><Leader>rr  	 <Plug>refactor:rename
+nmap <unique> <Leader><Leader>rr  	 <Plug>(refactor:rename)
 nmap <unique> <Leader><Leader>ub  	 <Plug>run:build
 nmap <unique> <Leader><Leader>ur  	 <Plug>run:run
 nmap <unique> <Leader><Leader>ut  	 <Plug>run:test:current_dir
