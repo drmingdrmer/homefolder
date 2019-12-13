@@ -1,3 +1,5 @@
+FinishIfNotLoaded
+
 au FileType rust nmap <C-]>      <Plug>(rust-def)
 au FileType rust nmap <C-w>]     <Plug>(rust-def-split)
 au FileType rust nmap <C-w><C-]> <Plug>(rust-def-vertical)
