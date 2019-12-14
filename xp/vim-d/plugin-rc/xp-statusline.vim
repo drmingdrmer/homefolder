@@ -22,7 +22,7 @@ endfunction "}}}
 
 fun! MyStatuslineLeft() "{{{
     let sss=""
-    let sss.="%{coc#status()}"
+    let sss.="%{coc#status()} "
     let sss.="%#StatuslineBufNr#%-1.2n "                  " buffer number
     let sss.="%h%#StatuslineFlag#%m%r%w"                 " flags
     let sss.="%#StatuslinePath# %-0.20{StatusLineGetPath()}%0*" " path
