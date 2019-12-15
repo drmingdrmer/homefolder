@@ -115,7 +115,8 @@ sync_once()
         # change ~ to real home path, and expand *
         eval "ls -dp $path" | while read p; do
 
-            if test ! -d "$p/.git"; then
+            if test ! -d "$p/.git" && test ! -f "$p/.git"; then
+                err "not git dir: ($p)"
                 continue
             fi
 
