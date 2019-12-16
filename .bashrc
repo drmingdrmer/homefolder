@@ -71,7 +71,7 @@ init_plugin()
         fi
 
         if [ -d "$plgpath/bin" ]; then
-            export PATH=$PATH:$plgpath/bin
+            export PATH=$plgpath/bin:$PATH
         fi
 
 
