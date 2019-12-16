@@ -1,9 +1,0 @@
-#!/bin/sh
-
-fn="$1.md"
-cd ~/xp/wiki/pieces/
-
-[ -f "$fn" ] || echo "" >>"$fn"
-open "$fn"
-
-

@@ -1,0 +1,21 @@
+#!/bin/sh
+
+fn="$1.md"
+if [ "x${fn:0:1}" == "x." ]; then
+    :
+else
+    cd ~/xp/wiki/pieces/
+fi
+
+p="$(pwd)"
+
+[ -f "$fn" ] || {
+    cat >>"$fn" <<-END
+---
+typora-root-url: $p
+---
+END
+}
+open "$fn"
+
+
