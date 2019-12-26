@@ -146,11 +146,21 @@ if which brew >/dev/null 2>/dev/null && [ -f $(brew --prefix)/etc/bash_completio
 fi
 d end brew
 
-test -f $HOME/.xp-bashrc && source $HOME/.xp-bashrc
+while read p; do
+    if [ -z "$p" ] || [ "${p:0:1}" == "#" ]; then
+        continue
+    fi
+    [ -f "$p" ] && source "$p"
+done <<-END
+# Optional local bashrc
+$HOME/.xp-bashrc
+
+# added by travis gem
+$HOME/.travis/travis.sh
+END
 
 if which gocomplete >/dev/null 2>/dev/null; then
     complete -C gocomplete go
 fi
 
-# added by travis gem
-[ -f /Users/drdrxp/.travis/travis.sh ] && source /Users/drdrxp/.travis/travis.sh
+cd $HOME/xp
