@@ -59,6 +59,7 @@ nmap <unique> ,<Plug>F4           	 <Plug>buffer:rm_buf_win
 nmap <unique> <M-c>               	 <Plug>buffer:rm_buf_win
 nmap <unique> <M-W>               	 <Plug>buffer:rm_buf_win
 nmap <unique> <C-w><C-]>          	 <Plug>buffer:tag_in_preview_right
+imap <unique> <C-]>               	 <Plug>(edit:digraph:trigger)
 
 nmap <unique> <C-]>               	 <Plug>(goto:definition)
 nmap <unique> gi                  	 <Plug>(goto:impl)

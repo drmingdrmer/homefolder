@@ -46,7 +46,7 @@ nnoremap P "0P
 
 " <C-g><C-c>
 
-
+inoremap <expr> <Plug>(edit:digraph:trigger) edit#digraph#trigger()
 
 "
 "map{{{
