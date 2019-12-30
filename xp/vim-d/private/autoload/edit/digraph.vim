@@ -4,12 +4,13 @@ fun! edit#digraph#trigger() "{{{
     " See: :help digraph
     let [x, l, c, y] = getpos(".")
     let line = getline(l)
-    let c1c2 = line[:c-1][-2:]
+    let c1c2 = line[:c-2][-2:]
+    echom string(c1c2)
     if len(c1c2) < 2
         return ""
     endif
     if has_key(s:digraphs, c1c2)
-        return "\<BS>\<BS>" . s:digraphs[c1c2][0]
+        return "\<BS>\<BS>" . s:digraphs[c1c2][0] . ' '
     endif
     return ""
 endfunction "}}}
@@ -778,6 +779,8 @@ let s:digraphs = {
     \ "FA"  :  [  "∀",       "for all"],
     \ "dP"  :  [  "∂",       "partial differential"],
     \ "TE"  :  [  "∃",       "there exists"],
+    \ "33"  :  [  "∃",       "there exists", "xps"],
+    \ "-]"  :  [  "∃",       "there exists", "xps"],
     \ "/0"  :  [  "∅",       "empty set"],
     \ "DE"  :  [  "∆",       "increment"],
     \ "NB"  :  [  "∇",       "nabla"],
@@ -808,6 +811,7 @@ let s:digraphs = {
     \ ":R"  :  [  "∶",       "ratio"],
     \ "::"  :  [  "∷",       "proportion"],
     \ "?1"  :  [  "∼",       "tilde operator"],
+    \ "~~"  :  [  "∼",       "tilde operator", "xps", "equivilent class"],
     \ "CG"  :  [  "∾",       "inverted lazy s"],
     \ "?-"  :  [  "≃",       "asymptotically equal to"],
     \ "?="  :  [  "≅",       "approximately equal to"],
@@ -937,10 +941,12 @@ let s:digraphs = {
     \ "uT"  :  [  "△",       "white up-pointing triangle"],
     \ "PR"  :  [  "▶",       "black right-pointing triangle"],
     \ "Tr"  :  [  "▷",       "white right-pointing triangle"],
+    \ "|>"  :  [  "▷",       "white right-pointing triangle", "xps"],
     \ "Dt"  :  [  "▼",       "black down-pointing triangle"],
     \ "dT"  :  [  "▽",       "white down-pointing triangle"],
     \ "PL"  :  [  "◀",       "black left-pointing triangle"],
     \ "Tl"  :  [  "◁",       "white left-pointing triangle"],
+    \ "<|"  :  [  "◁",       "white left-pointing triangle", "xps"],
     \ "Db"  :  [  "◆",       "black diamond"],
     \ "Dw"  :  [  "◇",       "white diamond"],
     \ "LZ"  :  [  "◊",       "lozenge"],
