@@ -5,7 +5,6 @@ fun! edit#digraph#trigger() "{{{
     let [x, l, c, y] = getpos(".")
     let line = getline(l)
     let c1c2 = line[:c-2][-2:]
-    echom string(c1c2)
     if len(c1c2) < 2
         return ""
     endif
