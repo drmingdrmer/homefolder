@@ -1,0 +1,12 @@
+#!/bin/sh
+
+pip2 install virtualenv
+while read p; do
+    virtualenv --no-site-packages $p
+    (
+    cd $p
+    pip2 install $p
+    )
+done <<-END
+pyinstaller
+END
