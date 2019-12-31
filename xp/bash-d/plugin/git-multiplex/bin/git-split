@@ -743,6 +743,7 @@ while getopts "b:m:p:s:orh" opname; do
             exit 0
             ;;
         [?])
+            echo "unknown option: ($opname)"
             usage
             exit 1
             ;;
