@@ -163,4 +163,4 @@ if which gocomplete >/dev/null 2>/dev/null; then
     complete -C gocomplete go
 fi
 
-cd $HOME/xp
+# cd $HOME/xp
