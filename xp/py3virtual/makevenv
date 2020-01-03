@@ -1,0 +1,14 @@
+#!/bin/sh
+
+while read p pkg; do
+    python3 -m venv $p
+    if [ ".$pkg" = "." ]; then
+        pkg=$p
+    fi
+    (
+    cd $p
+    pip3 install $pkg
+    )
+done <<-END
+git GitPython
+END
