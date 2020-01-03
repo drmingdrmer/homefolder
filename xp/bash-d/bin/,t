@@ -3,4 +3,4 @@
 # set shell-window title
 
 title="$1"
-echo -e '\033k'$title'\033\\'
+gecho -e '\033k'$title'\033\\'
