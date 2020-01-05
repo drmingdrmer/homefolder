@@ -1,11 +1,18 @@
 #!/bin/sh
 
 pip2 install virtualenv
-while read p; do
+while read p pkg; do
+
+    if [ ".$pkg" = "." ]; then
+        pkg=$p
+    fi
+
     virtualenv --no-site-packages $p
     (
     cd $p
-    pip2 install $p
+    source ./bin/activate
+    pip2 install $pkg
+    deactivate
     )
 done <<-END
 pyinstaller
