@@ -2,6 +2,20 @@
 
 source shlib.sh
 
+usage()
+{
+   cat <<-END
+Commit staged files to previous branches in which it changed and merge back.
+Usage:
+    git bci [-b target-branch] [-m message] [-p]
+
+Option:
+    -b branch     specify what branch to commit to
+    -m message    commit message
+    -p            if branch changed a file not found, find a branch modified its parent dir.
+END
+}
+
 # to commit index on to its own branch and merge it back
 
 dest_branch=""
@@ -19,10 +33,14 @@ init()
 
 load_opts()
 { #{{{
-    while getopts b:m:p opname; do
+    while getopts b:hm:p opname; do
         case $opname in
             b)
                 dest_branch=$OPTARG
+                ;;
+            h)
+                usage
+                exit 0
                 ;;
             m)
                 commit_mes="$OPTARG"
