@@ -1,0 +1,7 @@
+#!/bin/sh
+
+if [ ".$1" != "." ]; then
+    echo "$@" > $HOME/xp/session/savepwd/saved
+else
+    pwd > $HOME/xp/session/savepwd/saved
+fi

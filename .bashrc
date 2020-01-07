@@ -39,7 +39,7 @@ init_prompt()
 
     # PROMPT_COMMAND='echo -ne "\033]0;${mainip}\007"'
     # export PROMPT_COMMAND='screen -X title "$(basename "$(git rev-parse --show-toplevel 2>/dev/null)"):$(git symbolic-ref --short HEAD 2>/dev/null)" >/dev/null'
-    # export PROMPT_COMMAND=''
+    export PROMPT_COMMAND='savepwd'
 
     local ps="$Green\u \h$NC"
     ps=$ps"$Yellow${eth0_ip}$NC"
@@ -49,6 +49,7 @@ init_prompt()
     ps=$ps"$Brown\$(git config --get branch.\$(git symbolic-ref --short HEAD 2>/dev/null).merge 2>/dev/null | sed 's/^refs\/heads\///')$NC"
     ps=$ps" \t:"
     ps=$ps"\$(ps_pwd 2>/dev/null || { echo; pwd; })\n"
+    ps=$ps"\$(savepwd)"
     export PS1="$ps"
     d end ps1
 }
@@ -163,4 +164,8 @@ if which gocomplete >/dev/null 2>/dev/null; then
     complete -C gocomplete go
 fi
 
-# cd $HOME/xp
+# workaround: tmux does not understand quote.
+# need to do it in vim because vim does not trigger shell
+#   autocmd CursorHold,CursorHoldI * !savepwd
+# Also PS1 and PROMPT_COMMAND is set up there.
+cd "$(cat $HOME/xp/session/savepwd/saved)"

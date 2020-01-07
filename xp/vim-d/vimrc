@@ -89,3 +89,6 @@ exe "so ".g:XPvimrcCurrentDir."/gvimrc"
 
 runtime macros/matchit.vim
 autocmd User Flags call Hoist("window", "SyntasticStatuslineFlag")
+
+" save pwd to workaround tmux issue: tmux does not understand quotes
+autocmd CursorHold,CursorHoldI * !savepwd
