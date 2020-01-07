@@ -9,7 +9,7 @@ fun! edit#digraph#trigger() "{{{
         return ""
     endif
     if has_key(s:digraphs, c1c2)
-        return "\<BS>\<BS>" . s:digraphs[c1c2][0] . ' '
+        return "\<BS>\<BS>" . s:digraphs[c1c2][0]
     endif
     return ""
 endfunction "}}}

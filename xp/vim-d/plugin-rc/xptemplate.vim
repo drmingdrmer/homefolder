@@ -103,29 +103,17 @@ let g:SuperTabMappingForward = '<Plug>xpt_void'
 let g:xptemplate_fallback = '<C-r>=XPTwrapSuperTab("n")<CR>'
 
 fun! XPTwrapSuperTab(command) "{{{
-    let v = SuperTab(a:command)
-    if v == ''
-        return "\<Tab>"
-    else
+
+    let v = edit#digraph#trigger()
+    echom "digraph v:" . string(v)
+    if v != ''
         return v
-    end
+    endif
+
+    let v = SuperTab(a:command)
+    if v != ''
+        return v
+    endif
+
+    return "\<Tab>"
 endfunction "}}}
-
-
-
-" " Xpt Template
-" let g:xptemplate_key = '<Tab>'
-" let g:xptemplate_key_pum_only = '<S-Tab>'
-" let g:xptemplate_goback = '<C-g>'
-" let g:xptemplate_to_right = '<C-;>'
-" let g:xptemplate_vars = "author=your_name&email=drdr.xp@gmail.com&..."
-
-" " Ycm hook
-" let g:xptemplate_minimal_prefix = 'full'
-" let g:xptemplate_fallback = '<C-n>'
-
-" " Valloric/YouCompleteMe#1932
-
-" " trigger completion key
-" let g:ycm_key_invoke_completion = '<C-n>'
-" let g:ycm_key_list_select_completion = "<C-n>"
