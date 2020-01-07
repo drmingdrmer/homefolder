@@ -811,6 +811,7 @@ let s:digraphs = {
     \ "::"  :  [  "∷",       "proportion"],
     \ "?1"  :  [  "∼",       "tilde operator"],
     \ "~~"  :  [  "∼",       "tilde operator", "xps", "equivilent class"],
+    \ "!~"  :  [  "≁",       "not tilde",  "xps", "not equivilent class"],
     \ "CG"  :  [  "∾",       "inverted lazy s"],
     \ "?-"  :  [  "≃",       "asymptotically equal to"],
     \ "?="  :  [  "≅",       "approximately equal to"],
