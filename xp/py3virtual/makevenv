@@ -13,5 +13,5 @@ while read p pkg; do
     )
 done <<-END
 git GitPython
-ipython
+ipython3 ipython
 END
