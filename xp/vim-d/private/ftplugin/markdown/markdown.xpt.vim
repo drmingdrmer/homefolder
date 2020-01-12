@@ -72,3 +72,7 @@ XPT farguments
 XPT largument
 -   \``x^\`:
     `cursor^
+
+
+XPT def " [name]: url
+[`refid^]: `refid^
