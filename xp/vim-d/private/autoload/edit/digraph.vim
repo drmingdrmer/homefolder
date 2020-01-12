@@ -715,6 +715,7 @@ let s:digraphs = {
     \ "(s"  :  [  "₍",       "subscript left parenthesis"],
     \ ")s"  :  [  "₎",       "subscript right parenthesis"],
     \ "bs"  :  [  "ᵦ",       "subscript beta", "xps"],
+    \ "xs"  :  [  "ᵦ",       "subscript x", "xps"],
     \ "Li"  :  [  "₤",       "lira sign"],
     \ "Pt"  :  [  "₧",       "peseta sign"],
     \ "W="  :  [  "₩",       "won sign"],
