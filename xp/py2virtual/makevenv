@@ -16,4 +16,5 @@ while read p pkg; do
     )
 done <<-END
 pyinstaller
+linters  autopep8 autoflake isort pyflakes
 END
