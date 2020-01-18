@@ -76,3 +76,6 @@ XPT largument
 
 XPT def " [name]: url
 [`refid^]: `refid^
+
+XPT link " [name](url)
+[`n^](`n^)
