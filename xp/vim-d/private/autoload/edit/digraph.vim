@@ -840,6 +840,7 @@ let s:digraphs = {
     \ "-V"  :  [  "∠",       "angle"],
     \ "PP"  :  [  "∥",       "parallel to"],
     \ "AN"  :  [  "∧",       "logical and"],
+    \ "^^"  :  [  "∧",       "logical and", "xps"],
     \ "OR"  :  [  "∨",       "logical or"],
     \ "(U"  :  [  "∩",       "intersection"],
     \ ")U"  :  [  "∪",       "union"],
