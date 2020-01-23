@@ -170,3 +170,6 @@ fi
 # Also PS1 and PROMPT_COMMAND is set up there.
 cd "$(cat $HOME/xp/session/savepwd/saved)"
 # source $HOME/xp/tmp/subrepo/git-subrepo/.rc
+
+# auto start a python virtual env
+. $HOME/xp/py3virtual/dev/bin/activate
