@@ -173,3 +173,4 @@ cd "$(cat $HOME/xp/session/savepwd/saved)"
 
 # auto start a python virtual env
 . $HOME/xp/py3virtual/dev/bin/activate
+export PATH="$HOME/xp/py3virtual/dev/bin:$PATH"
