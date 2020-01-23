@@ -1,5 +1,6 @@
 #!/usr/bin/env pip install -r
 
+ipython
 
 # tool kits
 pyflakes
