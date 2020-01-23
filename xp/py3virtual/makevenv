@@ -1,17 +1,11 @@
 #!/bin/sh
 
-while read p pkg; do
+for $p in $(ls . | grep -v makevenv); do
     python3 -m venv $p
-    if [ ".$pkg" = "." ]; then
-        pkg=$p
-    fi
     (
     cd $p
     source ./bin/activate
-    pip3 install $pkg
+    ./requirements.txt
     deactivate
     )
-done <<-END
-git GitPython
-ipython3 ipython
-END
+done
