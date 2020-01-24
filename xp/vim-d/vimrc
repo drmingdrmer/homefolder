@@ -51,6 +51,9 @@ set noswapfile
 " do not fsync to speedup, such as writefile()
 " set nofsync
 
+" always show sign column or screen shakes while updating signs
+set signcolumn=yes
+
 colorscheme default
 
 " Nice window title
