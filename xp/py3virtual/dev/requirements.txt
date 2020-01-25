@@ -1,6 +1,7 @@
 #!/usr/bin/env pip install -r
 
 ipython
+pyinstaller # build python into binary
 
 pyflakes
 autopep8
