@@ -1,5 +1,7 @@
 [ "x$__BASHRC__" == "x" ] && { __BASHRC__=1; } || { return; }
 
+git="$(which git)"
+
 d()
 {
     return 0
@@ -7,7 +9,7 @@ d()
 }
 parse_git_branch()
 {
-   git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'
+   $git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'
 }
 ps_pwd()
 {
@@ -44,9 +46,9 @@ init_prompt()
     local ps="$Green\u \h$NC"
     ps=$ps"$Yellow${eth0_ip}$NC"
     ps=$ps".\j"
-    ps=$ps" $LightGreen\$(parse_git_branch 2>/dev/null || git branch --no-color 2> /dev/null)$NC"
-    ps=$ps" -> $Red\$(git config --get branch.\$(git symbolic-ref --short HEAD 2>/dev/null).remote 2>/dev/null)/$NC"
-    ps=$ps"$Brown\$(git config --get branch.\$(git symbolic-ref --short HEAD 2>/dev/null).merge 2>/dev/null | sed 's/^refs\/heads\///')$NC"
+    ps=$ps" $LightGreen\$(parse_git_branch 2>/dev/null || $git branch --no-color 2> /dev/null)$NC"
+    ps=$ps" -> $Red\$($git config --get branch.\$($git symbolic-ref --short HEAD 2>/dev/null).remote 2>/dev/null)/$NC"
+    ps=$ps"$Brown\$($git config --get branch.\$($git symbolic-ref --short HEAD 2>/dev/null).merge 2>/dev/null | sed 's/^refs\/heads\///')$NC"
     ps=$ps" \t:"
     ps=$ps"\$(ps_pwd 2>/dev/null || { echo; pwd; })\n"
     ps=$ps"\$(savepwd)"
