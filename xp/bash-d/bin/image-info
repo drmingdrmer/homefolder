@@ -1,0 +1,4 @@
+#!/bin/sh
+
+# require imagemagick
+identify -ping -format '%w %h\n' "$1"
