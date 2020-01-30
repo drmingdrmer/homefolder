@@ -874,6 +874,8 @@ let s:digraphs = {
     \ "(("  :  [  "⊂",       "subset of", "xps"],
     \ ")C"  :  [  "⊃",       "superset of"],
     \ "))"  :  [  "⊃",       "superset of", "xps"],
+    \ "!)"  :  [  "⊅",       "not superset of", "xps"],
+    \ "!("  :  [  "⊄",       "not subset of", "xps"],
     \ "(_"  :  [  "⊆",       "subset of or equal to"],
     \ ")_"  :  [  "⊇",       "superset of or equal to"],
     \ "0."  :  [  "⊙",       "circled dot operator"],
