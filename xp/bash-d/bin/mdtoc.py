@@ -10,16 +10,16 @@ import argparse
 config = {
         'gitbook' : {
                 'regex': [
-                        (ur'[,?_*()&]', ''),
-                        (ur'[^0-9a-zA-Z_\u00ff-\uffff]', '-'),
+                        (r'[,?_*()&]', ''),
+                        (r'[^0-9a-zA-Z_\u00ff-\uffff]', '-'),
                 ]
         },
         'jekyll' : {
                 'regex': [
-                        (ur'[,?_*()&:=+\[\].\^]', ''),
+                        (r'[,?_*()&:=+\[\].\^]', ''),
                         # unicode: 🌰 \U0001f330: in python is 2 unicode: u'\ud83c', u'\udf30'
-                        (ur'\ud83c.', ''),
-                        (ur'[^0-9a-zA-Z_\u00ff-\uffff]', '-'),
+                        (r'\ud83c.', ''),
+                        (r'[^0-9a-zA-Z_\u00ff-\uffff]', '-'),
                 ]
         }
 }
@@ -32,7 +32,6 @@ def add_md_toc(path):
     with open(path, 'r') as f:
         cont = f.read()
 
-    cont = cont.decode('utf-8')
     _lines = cont.split('\n')
 
     lines = []
@@ -151,4 +150,4 @@ if __name__ == "__main__":
     cont = add_md_toc(path)
 
     with open(dst, 'w') as f:
-        f.write(cont.encode('utf-8'))
+        f.write(cont)
