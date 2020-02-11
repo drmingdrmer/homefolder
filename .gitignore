@@ -30,7 +30,7 @@
 !/.tmux.conf
 !/.travis
 !/.vimrc
-!/.vim/coc*
+!/.vim/coc-settings.json
 
 !/.ssh
 /.ssh/*
