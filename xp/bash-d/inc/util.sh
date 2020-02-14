@@ -72,7 +72,6 @@ while read p; do
             export GOROOT="$p"
         }
 done <<-END
-/usr/local/go/bin
 $HOME/go/bin
 $HOME/xp/go/bin
 END
