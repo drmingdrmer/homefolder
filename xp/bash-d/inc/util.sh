@@ -56,6 +56,9 @@ $HOME/.cargo/bin
 # ruby gem
 /usr/local/lib/ruby/gems/2.6.0/bin
 
+# locally installed npm module
+$HOME/node_modules/.bin
+
 /usr/local/opt/opencv3/bin
 
 # add local bin for this computer: eg. Darwin-x86_64-bin

@@ -171,8 +171,14 @@ fi
 #   autocmd CursorHold,CursorHoldI * !savepwd
 # Also PS1 and PROMPT_COMMAND is set up there.
 cd "$(cat $HOME/xp/session/savepwd/saved)"
+
 # source $HOME/xp/tmp/subrepo/git-subrepo/.rc
 
 # auto start a python virtual env
 . $HOME/xp/py3virtual/dev/bin/activate
-export PATH="$HOME/xp/py3virtual/dev/bin:$PATH"
+
+export PATH="$HOME/xp/vcs/xp/drmingdrmer/gift:$PATH"
+alias git='gift --exec-path='"$(git --exec-path)"
+
+export PATH="$HOME/.basher/bin:$PATH"
+eval "$(basher init -)"
