@@ -1,0 +1,2 @@
+dirs:
+  xp/vim-d/plg-git/xptemplate: ssh://git@github.com/drmingdrmer/xptemplate@rc
