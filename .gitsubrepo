@@ -34,7 +34,6 @@ vim-syntax-util                 drmingdrmer/                 master
 vim-tabbar                      drmingdrmer/                 master
 vim-tiny-unittest               drmingdrmer/                 master
 vim-toggle-quickfix             drmingdrmer/                 master
-xptemplate                      drmingdrmer/                 rc
 supertab                        ervandew/                    master
 vim-go.fatih                    fatih/vim-go                 master
 unite-gtags                     hewes/                       master
