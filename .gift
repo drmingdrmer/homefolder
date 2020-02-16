@@ -1,2 +1,3 @@
 dirs:
+  xp/vim-d/plg-git/vim-toml:   ssh://git@github.com/cespare/vim-toml@master
   xp/vim-d/plg-git/xptemplate: ssh://git@github.com/drmingdrmer/xptemplate@rc
