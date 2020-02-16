@@ -57,6 +57,7 @@ call s:add('vim-tabbar')
 call s:add('vim-toggle-quickfix')
 call s:add('vim-visual-increment')
 call s:add('vim-yaml')
+call s:add('vim-toml')
 call s:add('xmledit')
 
 call s:add('vim-xpsnip')
