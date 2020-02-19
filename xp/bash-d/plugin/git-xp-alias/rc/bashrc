@@ -6,11 +6,47 @@
 # make "," a ", "
 bind '",":", "'
 
+# git help log:
+# --diff-filter:
+# include:
+#   ACDMRTUXB
+# exclude:
+#   acdmrtuxb
+#
+# Added                            (A),
+# Copied                           (C),
+# Deleted                          (D),
+# Modified                         (M),
+# Renamed                          (R),
+#
+# have their type i.e. regular file, symlink, submodule, ...
+# changed                          (T),
+# are Unmerged                     (U),
+# are Unknown                      (X),
+# or have had their pairing Broken (B)
 export git_comma_options='a   all
 b   simplify-by-decoration
 c   cached
 d   date-order
-f   first-parent
+fA  diff-filter=A
+fB  diff-filter=B
+fC  diff-filter=C
+fD  diff-filter=D
+fM  diff-filter=M
+fR  diff-filter=R
+fT  diff-filter=T
+fU  diff-filter=U
+fX  diff-filter=X
+fa  diff-filter=a
+fb  diff-filter=b
+fc  diff-filter=c
+fd  diff-filter=d
+fm  diff-filter=m
+fr  diff-filter=r
+ft  diff-filter=t
+fu  diff-filter=u
+fx  diff-filter=x
+fp  first-parent
 g   graph
 i   ignore-all-space
 ld  format=diff
