@@ -1,0 +1,79 @@
+{
+    "python.jediEnabled": true,
+    "python.linting.flake8Enabled": true,
+    "python.linting.pylintEnabled": false,
+    "python.linting.flake8Path": "/usr/local/bin/flake8",
+    "python.pythonPath": "/usr/local/bin/python",
+    "suggest.timeout": 5000,
+    "suggest.noselect": true,
+    "suggest.enablePreselect": false,
+    "languageserver": {
+        "golang": {
+            "command": "gopls",
+            "rootPatterns": [
+                "go.mod",
+                ".vim/",
+                ".git/",
+                ".hg/"
+            ],
+            "filetypes": [
+                "go"
+            ]
+        },
+        "cquery": {
+            "command": "cquery",
+            "args": [
+                "--log-file=/tmp/cq.log"
+            ],
+            "filetypes": [
+                "c",
+                "cpp"
+            ],
+            "rootPatterns": [
+                "compile_flags.txt",
+                "compile_commands.json",
+                ".vim/",
+                ".git/",
+                ".hg/"
+            ],
+            "initializationOptions": {
+                "cacheDirectory": "/tmp/cquery"
+            }
+        },
+        "lua": {
+            "command": "java",
+            "args": [
+                "-cp",
+                "/Users/liubaohai/Share/workspace/EmmyLua-LanguageServer/EmmyLua-LS/build/libs/EmmyLua-LS-all.jar",
+                "com.tang.vscode.MainKt"
+            ],
+            "filetypes": [
+                "lua"
+            ],
+            "rootPatterns": [
+                ".git/"
+            ]
+        },
+        "bash": {
+            "command": "bash-language-server",
+            "args": [
+                "start"
+            ],
+            "filetypes": [
+                "sh"
+            ],
+            "ignoredRootPaths": [
+                "~"
+            ]
+        },
+        "rust": {
+            "command": "ra_lsp_server",
+            "filetypes": [
+                "rust"
+            ],
+            "rootPatterns": [
+                "Cargo.toml"
+            ]
+        }
+    }
+}
