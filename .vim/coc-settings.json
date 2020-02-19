@@ -1,3 +1,18 @@
 {
-    "suggest.autoTrigger": "trigger"
+    "suggest.autoTrigger": "trigger", 
+    "suggest.timeout": 5000,
+    "suggest.noselect": true,
+    "suggest.enablePreselect": false,
+    "languageserver": {
+        "rust": {
+            "command": "rust-analyzer",
+            "filetypes": [
+                "rust"
+            ],
+            "rootPatterns": [
+                "Cargo.toml"
+            ]
+        }
+    }
 }
+
