@@ -75,8 +75,8 @@ while read p; do
             export GOROOT="$p"
         }
 done <<-END
-$HOME/go/bin
-$HOME/xp/go/bin
+$HOME/go
+$HOME/xp/go
 END
 
 export GOPATH=$HOME/xp/vcs/go
