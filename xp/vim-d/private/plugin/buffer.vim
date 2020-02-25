@@ -141,12 +141,12 @@ augroup END
 nmap <F12> <PLug>buffer:quit_all
 nnoremap <Plug>buffer:quit_all :qa!<cr>
 nnoremap <Plug>buffer:createTags    :silent! !ctags -R *<CR>:redraw!<CR>
-nnoremap <Plug>buffer:make_executable :silent !chmod +x %<CR>:redraw!<CR>
+nnoremap <Plug>buffer:make_executable :silent !chmod +x "%"<CR>:redraw!<CR>
 
 fun! s:TryToMakeExcutable() "{{{
     if &buftype == ''
         if getline( 1 ) =~ '\V\^#!/'
-            silent! !chmod +x %
+            silent! !chmod +x "%"
         endif
     endif
 endfunction "}}}
