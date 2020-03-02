@@ -9,6 +9,7 @@ autoflake
 isort
 coveralls
 virtualenv
+twine           # pip package support
 
 nose
 
