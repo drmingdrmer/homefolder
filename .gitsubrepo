@@ -49,7 +49,6 @@ vim-markdown                    plasticboy/                  master
 snipmate-snippets.git           scrooloose/snipmate-snippets master
 vim-autopep8                    tell-k/                      master
 vim-fugitive                    tpope/                       master
-vim-multiple-cursors            terryma/                     master
 vim-pathogen                    tpope/                       master
 vim-polyglot                    sheerun/                     master
 vim-visual-increment            triglav/                     master
