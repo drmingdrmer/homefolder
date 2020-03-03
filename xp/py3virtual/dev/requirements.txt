@@ -10,6 +10,7 @@ isort
 coveralls
 virtualenv
 twine           # pip package support
+requirements-parser
 
 nose
 
