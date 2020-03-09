@@ -1,0 +1,28 @@
+#!/bin/sh
+
+since="${1}"
+
+rev_exist()
+{
+    git rev-parse --verify --quiet "$1" >/dev/null
+}
+
+[ ".$since" = "." ] && {
+    for r in m/master origin/master github/master; do
+        rev_exist $r && since=$r
+    done
+}
+
+[ ".$since" = "." ] && {
+    echo can not find base.
+    exit 1
+}
+
+echo pr-message since: $since
+
+git log --format='### %s%n%+b%n' $since.. | pbcopy
+
+echo "Following message are copied into clipboard"
+echo ""
+
+git log --format='### %s%n%+b%n' $since..
