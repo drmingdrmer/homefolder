@@ -26,6 +26,8 @@ set cindent
 set joinspaces		" Join adds two spaces after a period.
 set completeopt=menu,longest
 
+set spelllang=en_us
+
 " netrw tree window
 let g:netrw_liststyle=3 " tree view
 let g:netrw_browse_split=4 " open in previous window
