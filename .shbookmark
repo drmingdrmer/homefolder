@@ -14,9 +14,10 @@
 ~/xp/vcs/bscbit/data/devops
 ~/xp/vcs/bscbit/plut/predictor
 ~/xp/vcs/cele/openacid/celeritasdb
+~/xp/vcs/cele/seppo0010/rsedis
 ~/xp/vcs/coding/drmingdrmer/drmingdrmer
-~/xp/vcs/coding/drmingdrmer/xpkit/info
-~/xp/vcs/coding/drmingdrmer/xpkit/install
+~/xp/vcs/xp/drmingdrmer/xpkit/info
+~/xp/vcs/xp/drmingdrmer/xpkit/install
 ~/xp/vcs/gh/baishancloud/learn
 ~/xp/vcs/gh/baishancloud/lrc-erasure-code
 ~/xp/vcs/gh/baishancloud/lua-acid
@@ -40,6 +41,7 @@
 ~/xp/vcs/go/src/github.com/openacid/gobenchmark
 ~/xp/vcs/go/src/github.com/openacid/low
 ~/xp/vcs/go/src/github.com/openacid/slim
+~/xp/vcs/pykit3-super/pykit3proc
 ~/xp/vcs/xp/JakSprats/datanet
 ~/xp/vcs/xp/drmingdrmer/drmingdrmer.github.io
 ~/xp/vcs/xp/drmingdrmer/gift
@@ -55,6 +57,7 @@
 ~/xp/vim-d/private
 ~/xp/vim-d/private/ftplugin/go
 ~/xp/wiki/pieces
+~/xp/wiki/sec/Mackup
 ~/xp/wiki/sec/passwdgen/acc
 ~/xp/wiki/sheets
 ~/xp/wiki/snippet/rust
