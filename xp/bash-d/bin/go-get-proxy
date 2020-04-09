@@ -1,7 +1,9 @@
 #!/bin/sh
 
 # shadowsocks
-sock5="socks5://127.0.0.1:1086"
+# sock5="socks5://127.0.0.1:1086"
+# trojan
+sock5="socks5://127.0.0.1:1080"
 
 git config --global http.proxy $sock5
 http_proxy=$sock5 go get -v "$@"
