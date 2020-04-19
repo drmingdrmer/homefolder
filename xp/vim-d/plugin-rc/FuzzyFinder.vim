@@ -7,6 +7,10 @@ let g:fuf_mrufile_maxItem = 300
 let g:fuf_mrucmd_maxItem = 400
 
 
+" target is rust building dir
+let g:fuf_dir_exclude = '\v(^|[/\\])(\.hg|\.git|\.bzr|target)($|[/\\])'
+let g:fuf_coveragefile_exclude = '\v\~$|\.(o|exe|dll|bak|orig|swp)$|(^|[/\\])(\.hg|\.git|\.bzr|target)($|[/\\])'
+
 " nnoremap <silent> <C-n>      :FufBuffer<CR>
 " nnoremap <silent> <C-p>      :FufFileWithCurrentBufferDir<CR>
 " nnoremap <silent> <C-f><C-p> :FufFileWithFullCwd<CR>
