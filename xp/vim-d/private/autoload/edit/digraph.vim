@@ -911,6 +911,8 @@ let s:digraphs = {
     \ "))"  :  [  "⊃",       "superset of", "xps"],
     \ "!)"  :  [  "⊅",       "not superset of", "xps"],
     \ "!("  :  [  "⊄",       "not subset of", "xps"],
+    \ "!⊃"  :  [  "⊅",       "not superset of", "xps"],
+    \ "!⊂"  :  [  "⊄",       "not subset of", "xps"],
     \ "(_"  :  [  "⊆",       "subset of or equal to"],
     \ ")_"  :  [  "⊇",       "superset of or equal to"],
     \ "-T"  :  [  "⊥",       "up tack"],
