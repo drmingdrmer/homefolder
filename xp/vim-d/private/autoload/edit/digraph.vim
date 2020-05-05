@@ -4,8 +4,9 @@ fun! edit#digraph#trigger() "{{{
     " See: :help digraph
     let [x, l, c, y] = getpos(".")
     let line = getline(l)
-    let c1c2 = line[:c-2][-2:]
-    if len(c1c2) < 2
+    let upto_col = line[:c-2]
+    let c1c2 = matchstr(upto_col, '\v..$')
+    if c1c2 == ''
         return ""
     endif
     if has_key(s:digraphs, c1c2)
@@ -859,6 +860,7 @@ let s:digraphs = {
     \ "NB"  :  [  "∇",       "nabla"],
     \ "(-"  :  [  "∈",       "element of"],
     \ "-)"  :  [  "∋",       "contains as member"],
+    \ "!∈"  :  [  "∉",       "not element of"],
     \ "*P"  :  [  "∏",       "n-ary product `"],
     \ "+Z"  :  [  "∑",       "n-ary summation `"],
     \ "-2"  :  [  "−",       "minus sign"],
