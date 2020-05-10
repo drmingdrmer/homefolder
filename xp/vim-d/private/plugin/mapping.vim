@@ -32,6 +32,7 @@ xmap [<space> [%
 xmap ]<space> ]%
 
 nmap <unique> <Leader>s <Plug>view:switchSetting
+nmap <unique> ~         <Plug>(edit:case:switch)
 
 " " user complete
 " inoremap <unique> <M-i> <C-x><C-u>

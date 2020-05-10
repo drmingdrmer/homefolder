@@ -44,11 +44,10 @@ nnoremap p "0p
 xnoremap P "0P
 nnoremap P "0P
 
-
-
 " <C-g><C-c>
 
 inoremap <expr> <Plug>(edit:digraph:trigger) edit#digraph#trigger()
+nnoremap <expr> <Plug>(edit:case:switch)     edit#case#Switch()
 
 "
 "map{{{
