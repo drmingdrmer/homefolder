@@ -38,6 +38,7 @@ let g:menuly_menu = {
       \ 'l': 'list',
       \ 'm': 'modifiable',
       \ 'n': 'number',
+      \ 's': 'scrollbind',
       \ 'p': 'spell',
       \ 't': ['tabline', {
       \         'l': ['showtabline', 0, 2],
