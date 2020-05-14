@@ -193,3 +193,8 @@ epaxos
 livelock
 γ
 δ
+linearizability
+SCC
+deps
+#estinition
+DFS
