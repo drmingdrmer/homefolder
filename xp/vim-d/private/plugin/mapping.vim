@@ -129,8 +129,6 @@ nmap <unique> <M-K>               	 <Plug>view:highlight_focus_prev
 nmap <unique> <Leader><Leader>th  	 <Plug>view:highlight_focus_toggle
 nmap <unique> <C-y>               	 <Plug>(view:scroll:ignorebind:u)
 nmap <unique> <C-e>               	 <Plug>(view:scroll:ignorebind:d)
-" nmap <unique> ,3                  	 <Plug>window:location:toggle
-" nmap <unique> <M-3>               	 <Plug>window:quickfix:toggle
 nmap <unique> <M-3>               	 <Plug>window:quickfix:loop
 nmap <unique> <Leader>ccm         	 V<Plug>case:camelize
 
