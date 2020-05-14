@@ -32,7 +32,7 @@ xmap [<space> [%
 xmap ]<space> ]%
 
 nmap <unique> <Leader>s <Plug>view:switchSetting
-nmap <unique> ~         <Plug>(edit:case:switch)
+nmap <unique> ^         <Plug>(edit:case:switch)
 
 " " user complete
 " inoremap <unique> <M-i> <C-x><C-u>
@@ -43,6 +43,7 @@ nmap <unique> ~         <Plug>(edit:case:switch)
 "                                      :GoRename<CR>         // for go
 "
 "                                      in ftplugin or other plugin rc
+
 
 xmap <unique> DW                  	 :call edit#align#VerticalDeleteToWordStart()<CR>
 nmap <unique> <C-w><C-l>          	 :call edit#preview#Open()<CR>
@@ -126,6 +127,8 @@ nmap <unique> <Leader><Leader>sr  	 <Plug>search:word_ref
 nmap <unique> <M-J>               	 <Plug>view:highlight_focus_next
 nmap <unique> <M-K>               	 <Plug>view:highlight_focus_prev
 nmap <unique> <Leader><Leader>th  	 <Plug>view:highlight_focus_toggle
+nmap <unique> <C-y>               	 <Plug>(view:scroll:ignorebind:u)
+nmap <unique> <C-e>               	 <Plug>(view:scroll:ignorebind:d)
 " nmap <unique> ,3                  	 <Plug>window:location:toggle
 " nmap <unique> <M-3>               	 <Plug>window:quickfix:toggle
 nmap <unique> <M-3>               	 <Plug>window:quickfix:loop
