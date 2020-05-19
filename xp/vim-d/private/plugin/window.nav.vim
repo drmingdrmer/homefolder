@@ -108,6 +108,7 @@ nmap <F7>       <F2><C-w>R
 nmap <Plug>F1 :call <SID>SwitchVertWin(1)<CR>
 nmap <Plug>F2 :call <SID>SwitchVertWin(0)<CR>
 
+" alt + left hand hjkl to jump to a window
 nmap <M-a> <C-w>h
 nmap <M-f> <C-w>l
 nmap <M-d> <C-w>j:call <SID>Win_Resize_To_Tiny()<CR>
@@ -134,5 +135,7 @@ nmap <M--> 4<C-w>-
 nmap <M-0> 4<C-w>>
 nmap <M-9> 4<C-w><
 
+" split window
 nnoremap <M-4> <C-w><C-v><C-w>=
+" close current window
 nnoremap <M-1> <C-w>c<C-w>=
