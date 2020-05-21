@@ -17,9 +17,10 @@ set wrapmargin=2
 " break line at char in 'breakat', rather than the last char
 set linebreak
 " wrapped line continue visually indented
-call xputil#Set('breakindent')
-" a char at the start of lines that have been wrapped
-call xputil#Set('showbreak', '>>')
+    call xputil#Set('breakindent')
+    " a char at the start of lines that have been wrapped
+" call xputil#Set('showbreak', '>>')
+call xputil#Set('showbreak', '')
 
 set tabstop=8     " how many space a tab represents
 set shiftwidth=4  " indent length
