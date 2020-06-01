@@ -1,0 +1,10 @@
+#!/bin/sh
+
+src=$1
+dst=$2
+shift
+shift
+args="$@"
+for i in `ls $src`; do
+    convert $args $src/$i $dst/$i
+done
