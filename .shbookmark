@@ -1,11 +1,11 @@
 ~/Library/Containers/com.tencent.xinWeChat/Data/Library/Application Support
 ~/foo
 ~/xp/Dropbox/Sync
-~/xp/Dropbox/Sync/sticker/origin
 ~/xp/bash-d/plugin/git-multiplex
 ~/xp/bash-d/plugin/git-xp-alias/bin
 ~/xp/icloud
 ~/xp/icloud/openacid
+~/xp/icloud/stickers-表情包/ori-stickers
 ~/xp/py3virtual/dev
 ~/xp/reference
 ~/xp/va
@@ -16,8 +16,6 @@
 ~/xp/vcs/cele/openacid/celeritasdb
 ~/xp/vcs/cele/seppo0010/rsedis
 ~/xp/vcs/coding/drmingdrmer/drmingdrmer
-~/xp/vcs/xp/drmingdrmer/xpkit/info
-~/xp/vcs/xp/drmingdrmer/xpkit/install
 ~/xp/vcs/gh/baishancloud/learn
 ~/xp/vcs/gh/baishancloud/lrc-erasure-code
 ~/xp/vcs/gh/baishancloud/lua-acid
@@ -42,6 +40,7 @@
 ~/xp/vcs/go/src/github.com/openacid/low
 ~/xp/vcs/go/src/github.com/openacid/slim
 ~/xp/vcs/pykit3-super/pykit3proc
+~/xp/vcs/pykit3/k3num
 ~/xp/vcs/xp/JakSprats/datanet
 ~/xp/vcs/xp/drmingdrmer/drmingdrmer.github.io
 ~/xp/vcs/xp/drmingdrmer/gift
@@ -50,6 +49,9 @@
 ~/xp/vcs/xp/drmingdrmer/sinastorage
 ~/xp/vcs/xp/drmingdrmer/vcs-manifest
 ~/xp/vcs/xp/drmingdrmer/vim-tabbar
+~/xp/vcs/xp/drmingdrmer/writing
+~/xp/vcs/xp/drmingdrmer/xpkit/info
+~/xp/vcs/xp/drmingdrmer/xpkit/install
 ~/xp/vcs/xp/drmingdrmer/xptemplate
 ~/xp/vcs/xp/python-zk/kazoo
 ~/xp/vim-d/plg-git
