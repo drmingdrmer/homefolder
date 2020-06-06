@@ -1,6 +1,7 @@
 #!/bin/sh
 
-fn="$1.md"
+fn="${1%.md}"
+fn="$fn.md"
 if [ "x${fn:0:1}" == "x." ]; then
     :
 else
@@ -8,6 +9,8 @@ else
 fi
 
 p="$(pwd)"
+
+echo editing: "$p/$fn"
 
 [ -f "$fn" ] || {
     cat >>"$fn" <<-END
