@@ -34,6 +34,10 @@ xmap ]<space> ]%
 nmap <unique> <Leader>s <Plug>view:switchSetting
 nmap <unique> ^         <Plug>(edit:case:switch)
 
+" TODO only on mac it uses open
+" it also redraw to update vim display.
+nnoremap <Plug>(buffer:open:with-external-editor) :silent! !open %<CR>:redraw!<CR>
+
 " " user complete
 " inoremap <unique> <M-i> <C-x><C-u>
 
@@ -66,7 +70,8 @@ imap <unique> <C-]>               	 <Plug>(edit:digraph:trigger)
 nmap <unique> <C-]>               	 <Plug>(goto:definition)
 nmap <unique> gi                  	 <Plug>(goto:impl)
 nmap <unique> gr                  	 <Plug>(goto:reference)
-nmap <unique> K                  	 <Plug>(doc:ref)
+nmap <unique> go                  	 <Plug>(buffer:open:with-external-editor)
+nmap <unique> K                   	 <Plug>(doc:ref)
 
 nmap <unique> <C-w>]              	 <Plug>buffer:tag_in_preview_top
 nmap <unique> ,0                  	 <Plug>buffer:to0

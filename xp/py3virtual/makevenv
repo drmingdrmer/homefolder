@@ -1,6 +1,7 @@
 #!/bin/sh
 
-for $p in $(ls . | grep -v makevenv); do
+for p in $(ls . | grep -v makevenv); do
+    echo init python 3 venv: $p
     python3 -m venv $p
     (
     cd $p
