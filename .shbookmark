@@ -39,6 +39,7 @@
 ~/xp/vcs/go/src/github.com/openacid/gobenchmark
 ~/xp/vcs/go/src/github.com/openacid/low
 ~/xp/vcs/go/src/github.com/openacid/slim
+~/xp/vcs/ofs/ofs
 ~/xp/vcs/pykit3-super/pykit3proc
 ~/xp/vcs/pykit3/k3num
 ~/xp/vcs/xp/JakSprats/datanet
@@ -56,7 +57,7 @@
 ~/xp/vim-d/plg-git/vim-fugitive
 ~/xp/vim-d/private
 ~/xp/vim-d/private/ftplugin/go
-~/xp/wiki/install-mac
+~/xp/wiki/install-mac/src
 ~/xp/wiki/pieces
 ~/xp/wiki/sec/Mackup
 ~/xp/wiki/sec/passwdgen/acc
