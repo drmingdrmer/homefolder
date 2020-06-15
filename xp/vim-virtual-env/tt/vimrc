@@ -1,0 +1,20 @@
+set      nocompatible
+filetype plugin indent on
+syntax   on
+
+
+" venv base
+let vbase = substitute(expand("<sfile>"), 'vimrc', '', '')
+let vbase = substitute(vbase, '\V\[/\\]\$', '', '')
+
+" remove traditional vim runtime path
+set rtp-=$HOME/.vim
+set rtp-=$HOME/.vim/after
+
+let plugins = [
+      \ 'xptemplate', 
+      \ ]
+
+for plg in plugins
+    let &rtp .= ',' . vbase . '/rtp/' . plg
+endfor
