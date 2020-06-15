@@ -1,3 +1,7 @@
+" to reproduce the problem: xptemplate with deoplete-clang:
+"
+" https://github.com/drmingdrmer/xptemplate/issues/95
+
 set      nocompatible
 filetype plugin indent on
 syntax   on
