@@ -16,4 +16,5 @@ let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 let g:syntastic_aggregate_errors = 1
 
+let g:syntastic_python_checkers=['mypy']
 let g:syntastic_python_flake8_args = '--max-line-length=120'
