@@ -36,7 +36,7 @@ nmap <unique> ^         <Plug>(edit:case:switch)
 
 " TODO only on mac it uses open
 " it also redraw to update vim display.
-nnoremap <Plug>(buffer:open:with-external-editor) :silent! !open %<CR>:redraw!<CR>
+nnoremap <Plug>(buffer:open:with-external-editor) :silent! !open "%"<CR>:redraw!<CR>
 
 " " user complete
 " inoremap <unique> <M-i> <C-x><C-u>
