@@ -3,6 +3,12 @@ filetype plugin indent on
 syntax   on
 
 
+let g:deoplete#enable_at_startup=1
+
+" let g:deoplete#sources#clang#libclang_path = "/usr/lib/llvm-6.0/lib/libclang.so"
+" let g:deoplete#sources#clang#clang_header = "/usr/lib/llvm-6.0/include/clang"
+
+
 " venv base
 let vbase = substitute(expand("<sfile>"), 'vimrc', '', '')
 let vbase = substitute(vbase, '\V\[/\\]\$', '', '')
@@ -12,9 +18,13 @@ set rtp-=$HOME/.vim
 set rtp-=$HOME/.vim/after
 
 let plugins = [
-      \ 'xptemplate', 
+      \ 'xptemplate',
+      \ 'deoplete-clang',
+      \ 'deoplete.nvim',
       \ ]
 
 for plg in plugins
     let &rtp .= ',' . vbase . '/rtp/' . plg
 endfor
+
+

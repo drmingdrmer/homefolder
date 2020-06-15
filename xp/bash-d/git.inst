@@ -37,6 +37,7 @@ $gconf pull.ff                  only
 $gconf pull.rebase              true
 $gconf color.diff               true
 $gconf color.interactive        true
+$gconf color.status             true
 $gconf diff.noprefix            true
 $gconf diff.context             10
 $gconf diff.algorithm           histogram
