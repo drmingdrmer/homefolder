@@ -1,0 +1,4 @@
+#!/bin/sh
+
+git config user.name 'Zhang Yanpo' --replace-all
+git config user.email 'yanpo.zyp@alibaba-inc.com' --replace-all
