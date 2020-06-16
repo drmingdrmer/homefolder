@@ -2,7 +2,7 @@
 
 #Bracket style
 #总体采用Kernighan & Ritchie风格,函数/if/else/while的括号/空格/缩进
-style=kr
+style=ob
 
 #Tab
 #使用2个空格作为一个缩进单位
