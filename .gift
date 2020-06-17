@@ -1,5 +1,6 @@
 dirs:
   xp/vim-d/plg-git/nerdcommenter: git@github.com:preservim/nerdcommenter.git@master
   xp/vim-d/plg-git/nerdtree: git@github.com:preservim/nerdtree.git@master
+  xp/vim-d/plg-git/nerdtree-git-plugin: git@github.com:Xuyuanp/nerdtree-git-plugin.git@master
   xp/vim-d/plg-git/vim-toml: ssh://git@github.com/cespare/vim-toml@master
   xp/vim-d/plg-git/xptemplate: ssh://git@github.com/drmingdrmer/xptemplate@rc
