@@ -41,7 +41,10 @@ if __name__ == "__main__":
     f = open('CMakeLists.txt', 'w')
     ScanDirectory()
     f.write("#Init by clioninit.py\n")
+
     f.write("add_definitions(-D" "FIU_ENABLE=1)\n")
+    f.write("include_directories(/usr/local/include)\n")
+
     f.write("cmake_minimum_required(VERSION " + cmake_version + ")\n")
     f.write("project(" + os.path.basename(os.getcwd()) + ")\n\n")
     f.write("set(CMAKE_CXX_FLAGS \"${CMAKE_CXX_FLAGS} -std=c++11\")\n\n")
