@@ -28,6 +28,7 @@
 !/.screenrc
 !/.shbookmark
 !/.tmux.conf
+!/.tmux-e.conf
 !/.travis
 !/.vimrc
 !/.vim
