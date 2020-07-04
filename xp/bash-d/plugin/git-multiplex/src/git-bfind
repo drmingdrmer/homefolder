@@ -1,0 +1,11 @@
+#!/bin/sh
+
+usage()
+{
+    cat <<-END
+Usage:
+    git-bfind <good-commit> <bad-commit> <test-command>
+END
+}
+
+
