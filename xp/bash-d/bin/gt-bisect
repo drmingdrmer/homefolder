@@ -1,0 +1,46 @@
+#!/bin/sh
+
+usage()
+{
+    cat <<-END
+Easy to use git-bisect command.
+
+Usage:
+    git-bfind <good-commit>..<bad-commit> <test-command>
+
+    Find first bad commit upto HEAD
+    git-bfind <good-commit>.. <test-command>
+END
+}
+
+range="$1"
+shift
+
+good="${range%%..*}"
+bad="${range##*..}"
+
+echo "bisect find: good: $good, bad: $bad"
+
+if [ "x$bad" == "x" ]; then
+    bad="HEAD"
+fi
+
+cmd="$@"
+
+if [ "$good" == "-h" ]; then
+    usage
+    exit 0
+fi
+
+main()
+{
+
+    echo "$cmd" > /tmp/git-bisect-cmd
+    chmod +x /tmp/git-bisect-cmd
+    git bisect start
+    git bisect good "$good"
+    git bisect bad "$bad"
+    git bisect run /tmp/git-bisect-cmd
+}
+
+main
