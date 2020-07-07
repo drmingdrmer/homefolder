@@ -55,6 +55,8 @@ lm  format=medium
 lo  format=oneline
 lr  format=pullrequest
 n   name-only
+oM  no-merges
+om  merges
 p   patch
 r   relative
 R   reverse
