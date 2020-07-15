@@ -92,7 +92,7 @@ export git_comma_option_expr="$(git_comma_make_option_expr)"
 fmt_hash='%C(dim yellow)%h%C(reset)'
 fmt_time='%C(bold cyan)%ar%C(reset)'
 fmt_subject='%C(bold green)%s%C(reset)'
-fmt_author='%C(dim magenta)%an%C(reset)'
+fmt_author='%C(yellow)%an%C(reset)'
 fmt_ref='%C(dim yellow)%d%C(reset)'
 fmt_body='%C(white)%+b%C(reset)'
 
