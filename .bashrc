@@ -194,6 +194,11 @@ oin()
         && ob flow merge-review \
         && ob flow core-test
 }
+ocore()
+{
+    ob flow checkin \
+        && ob flow core-test
+}
 obuild()
 {
     ./build.sh clean \
