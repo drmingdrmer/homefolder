@@ -182,3 +182,27 @@ alias git='gift --exec-path='"$(git --exec-path)"
 
 export PATH="$HOME/.basher/bin:$PATH"
 eval "$(basher init -)"
+
+ostart()
+{
+    ob flow start "$@"
+    export br=$(git symbolic-ref --short HEAD)
+}
+oin()
+{
+    ob flow checkin \
+        && ob flow merge-review \
+        && ob flow core-test
+}
+obuild()
+{
+    ./build.sh clean \
+        && ./build.sh init \
+        && ./build.sh release \
+        && cd build-release \
+        && ob-make
+}
+
+git remote -v | grep 'git@gitlab.alibaba-inc.com:oceanbase/ofs.git' && {
+    export br=$(git symbolic-ref --short HEAD)
+}
