@@ -53,6 +53,7 @@ if __name__ == "__main__":
             "add_definitions(-D" "FIU_ENABLE=1)",
             "",
             "include_directories(/usr/local/include)",
+            "include_directories(../googletest/googletest/include)",
             "cmake_minimum_required(VERSION " + cmake_version + ")",
             "project(" + os.path.basename(os.getcwd()) + ")",
             "",
