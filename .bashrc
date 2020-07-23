@@ -205,4 +205,9 @@ obuild()
 
 git remote -v | grep 'git@gitlab.alibaba-inc.com:oceanbase/ofs.git' && {
     export br=$(git symbolic-ref --short HEAD)
+    pwd | grep "/work/.*" && {
+        workname="$(pwd)"
+        workname="${workname##*work/}"
+        screen -X title "$workname"
+    }
 }
