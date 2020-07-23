@@ -208,6 +208,7 @@ git remote -v | grep 'git@gitlab.alibaba-inc.com:oceanbase/ofs.git' && {
     pwd | grep "/work/.*" && {
         workname="$(pwd)"
         workname="${workname##*work/}"
-        screen -X title "$workname"
+        workname="${workname%%/*}"
+        screen -X title "$workname-$br"
     }
 }
