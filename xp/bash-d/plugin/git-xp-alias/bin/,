@@ -107,7 +107,11 @@ if [ "$get_shortcut" = "1" ]; then
     exit 0
 fi
 
-eval git $(_git_xp_interrept_flag conf $arg1) \
+# echo $(_git_xp_interrept_flag conf $arg1) >&2
+
+# eval git \
+eval gift \
+    $(_git_xp_interrept_flag conf $arg1) \
     $cmd \
     "$(_git_xp_interrept_flag arg $arg1)" "$@" \
     || echo git $(_git_xp_interrept_flag conf $arg1) \

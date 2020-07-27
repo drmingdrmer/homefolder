@@ -183,37 +183,6 @@ alias git='gift --exec-path='"$(git --exec-path)"
 export PATH="$HOME/.basher/bin:$PATH"
 eval "$(basher init -)"
 
-ostart()
-{
-    ob flow start "$@"
-    export br=$(git symbolic-ref --short HEAD)
-}
-oin()
-{
-    ob flow checkin \
-        && ob flow merge-review \
-        && ob flow core-test
-}
-ocore()
-{
-    ob flow checkin \
-        && ob flow core-test
-}
-obuild()
-{
-    ./build.sh clean \
-        && ./build.sh init \
-        && ./build.sh release \
-        && cd build-release \
-        && ob-make
-}
-
-git remote -v | grep 'git@gitlab.alibaba-inc.com:oceanbase/ofs.git' && {
-    export br=$(git symbolic-ref --short HEAD)
-    pwd | grep "/work/.*" && {
-        workname="$(pwd)"
-        workname="${workname##*work/}"
-        workname="${workname%%/*}"
-        screen -X title "$workname ${br##*/}"
-    }
-}
+# Wasmer
+export WASMER_DIR="/Users/drdrxp/.wasmer"
+[ -s "$WASMER_DIR/wasmer.sh" ] && source "$WASMER_DIR/wasmer.sh"
