@@ -9,4 +9,4 @@
 branchname=$(git symbolic-ref --short HEAD)
 remote=$(git config --get branch.${branchname}.remote)
 url="${1-$remote}"
-git remote get-url "$url" | set-clipboard
+printf "%s" $(git remote get-url "$url") | set-clipboard
