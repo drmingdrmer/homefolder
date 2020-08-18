@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# copy current git remote url into clipboard
+#
+# Usage:
+#       copy-git-url
+#       copy-git-url origin
+
+branchname=$(git symbolic-ref --short HEAD)
+remote=$(git config --get branch.${branchname}.remote)
+url="${1-$remote}"
+git remote get-url "$url" | set-clipboard
