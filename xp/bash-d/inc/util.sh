@@ -50,6 +50,18 @@ env_init_path()
 /usr/local/opt/ipython@5/bin
 $HOME/Library/Python/3.7/bin
 
+# brew:
+# If you need to have python@3.8 first in your PATH run:
+#   echo 'export PATH="/usr/local/opt/python@3.8/bin:$PATH"' >> ~/.profile
+# 
+# For compilers to find python@3.8 you may need to set:
+#   export LDFLAGS="-L/usr/local/opt/python@3.8/lib"
+# 
+# For pkg-config to find python@3.8 you may need to set:
+#   export PKG_CONFIG_PATH="/usr/local/opt/python@3.8/lib/pkgconfig"
+#
+/usr/local/opt/python@3.8/bin
+
 # rust
 $HOME/.cargo/bin
 

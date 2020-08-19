@@ -175,7 +175,8 @@ cd "$(cat $HOME/xp/session/savepwd/saved)"
 # source $HOME/xp/tmp/subrepo/git-subrepo/.rc
 
 # auto start a python virtual env
-. $HOME/xp/py3virtual/dev/bin/activate
+# . $HOME/xp/py3virtual/dev/bin/activate
+. $HOME/xp/py3virtual/p38/bin/activate
 
 export PATH="$HOME/xp/vcs/xp/drmingdrmer/gift:$PATH"
 alias git='gift --exec-path='"$(git --exec-path)"
