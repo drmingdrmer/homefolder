@@ -27,8 +27,7 @@
 !/.profile
 !/.screenrc
 !/.shbookmark
-!/.tmux.conf
-!/.tmux-e.conf
+!/.tmux*.conf
 !/.travis
 !/.vimrc
 !/.vim
