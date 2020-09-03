@@ -200,4 +200,7 @@ tmsh()
 
     unset TMUX
     tmux attach -t $name
+
+    # to detach:
+    # tmux detach
 }
