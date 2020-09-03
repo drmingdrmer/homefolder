@@ -187,3 +187,17 @@ eval "$(basher init -)"
 # Wasmer
 export WASMER_DIR="/Users/drdrxp/.wasmer"
 [ -s "$WASMER_DIR/wasmer.sh" ] && source "$WASMER_DIR/wasmer.sh"
+
+
+tmsh()
+{
+    local name=shared
+
+    # make current tmux pane a shared pane
+    local ww=$(tmux display -p "#{window_width}")
+    local ww=$(($ww * 40 / 100))
+    tmux resize-pane -x $ww
+
+    unset TMUX
+    tmux attach -t $name
+}
