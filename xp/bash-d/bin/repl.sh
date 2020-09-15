@@ -22,8 +22,7 @@ do
         fi
     fi
 
-    echo 'replacing:' "$filename"
-    continue
+    echo 'replace:' "$filename"
 
     if test "$(uname -s)" = "Darwin"
     then
