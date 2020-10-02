@@ -1,10 +1,12 @@
 - - xp/vim-d/plg-git/nerdcommenter
   - fade3d4b26f5a0d58f256a06ba7b0a04d9fb4f3b
 - - xp/vim-d/plg-git/nerdtree
-  - d48ab70721d4f688ed34bd5939e2d6f4c89548c5
+  - f8aa749985754091e980c1dc93ec3206ee3dec1f
 - - xp/vim-d/plg-git/nerdtree-git-plugin
-  - f522a091e2838812d2669c331d7e9c283db6d54d
+  - 97eeaee46308a39cadfd2273280fcc4906988dd0
 - - xp/vim-d/plg-git/vim-toml
   - a4ec206052aa347d7df90dc4b6697b7f2b7929bc
+- - xp/vim-d/plg-git/vimtex
+  - 6ba6a35edadd53d20ef53d8fc981ae31b294a544
 - - xp/vim-d/plg-git/xptemplate
   - 79d650bad58b9c896ec47785f8a0c7b603105c2d
