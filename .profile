@@ -22,3 +22,5 @@ fi
 [ -t 1 ] && mesg y
 
 # vim: ft=sh
+
+export PATH="$HOME/.cargo/bin:$PATH"
