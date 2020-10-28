@@ -1,0 +1,17 @@
+#!/bin/sh
+
+usage()
+{
+    cat <<-END
+Resize images to specific width with ratio kept
+$0 width a.jpg b.jpg
+END
+}
+width=$1
+shift
+
+for fn in "$@"; do
+    # resize width to 600, with ratio kept
+    convert -resize "$width" "$fn" "$fn"
+done
+
