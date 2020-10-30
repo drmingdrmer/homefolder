@@ -5,7 +5,7 @@ main()
     local onto="${1}"
     local base="$(git merge-base HEAD $onto)" || die "find merge-base"
 
-    for commit in $(git log --reverse $base..$onto --format="%H"); do
+    for commit in $(git log --first-parent --reverse $base..$onto --format="%H"); do
         # git rebase $commit || { git rebase --abort; die "failed to rebase onto $commit"; }
         git rebase $commit || die "failed to rebase onto $commit"
         git                           \
