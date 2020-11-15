@@ -191,6 +191,10 @@ export WASMER_DIR="/Users/drdrxp/.wasmer"
 # trojan
 tj_sock5="socks5://127.0.0.1:1080"
 
+# go proxy:
+# https://arslan.io/2019/08/02/why-you-should-use-a-go-module-proxy/
+export GOPROXY=https://goproxy.cn
+
 
 tmsh()
 {
