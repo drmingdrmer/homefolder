@@ -200,3 +200,6 @@ deps
 DFS
 Qpaxos
 EPaxos
+slimarray
+protobuf
+uint32
