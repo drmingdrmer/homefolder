@@ -1,0 +1,4 @@
+#!/usr/bin/env pip install -r
+
+PyYAML~=5.3
+k3proc

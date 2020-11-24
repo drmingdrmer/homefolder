@@ -195,6 +195,14 @@ tj_sock5="socks5://127.0.0.1:1080"
 # https://arslan.io/2019/08/02/why-you-should-use-a-go-module-proxy/
 export GOPROXY=https://goproxy.cn
 
+p3venv()
+{
+    # make a python3 virtual env in current dir
+    python3 -m venv .
+    . ./bin/activate
+    touch requirements.txt
+}
+
 
 tmsh()
 {
