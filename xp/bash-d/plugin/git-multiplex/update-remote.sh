@@ -115,6 +115,6 @@ git-history-msg  gist/git-history-msg   git@gist.github.com:7a59b2536e1de5bc6f86
 git-split        gist/git-split         git@gist.github.com:aadec82ccc43c25b9a1a40fcaa96f7e9.git
 git-subrepo      gist/git-subrepo       git@gist.github.com:ff72ee00df7b7a359263fc3b15d093b0.git
 p8ln             gist/p8ln              git@gist.github.com:8dd50b66aca51595e71dc247dcb559c1.git
-git-subrepo      repo/git-subrepo       git@github.com:baishancloud/git-subrepo.git
-git-upstream     repo/git-upstream      git@github.com:baishancloud/git-upstream.git
+git-subrepo      repo/git-subrepo       git@github.com:drmingdrmer/git-subrepo.git
+git-upstream     repo/git-upstream      git@github.com:drmingdrmer/git-upstream.git
 END
