@@ -3,6 +3,8 @@
 ipython
 pyinstaller # build python into binary
 
+asciinema       # command line screen recorder
+
 pyflakes
 autopep8
 autoflake
