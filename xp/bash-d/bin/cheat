@@ -102,7 +102,8 @@ shift
 # cd $DIR/../sheets
 cd $HOME/xp/wiki/sheets
 
-files=$(find . -type f -path "*$fpattern*" | grep -i "$1")
+# xx.assets are images
+files=$(find . -type f -path "*$fpattern*" | grep -i "$1" | grep -v '.assets')
 for f in $files; do
     LR=l text_hr "$Yellow=$NC" "$White##  ${f}$NC  "
     echo ""
