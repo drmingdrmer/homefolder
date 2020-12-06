@@ -67,6 +67,7 @@ $HOME/.cargo/bin
 
 # ruby gem
 /usr/local/lib/ruby/gems/2.6.0/bin
+/usr/local/lib/ruby/gems/2.7.0/bin
 
 # perl
 /usr/local/Cellar/perl/5.30.1/bin
