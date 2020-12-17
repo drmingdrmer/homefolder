@@ -1,0 +1,8 @@
+#!/bin/sh
+
+usage()
+{
+    echo make a python3 virtual env in current dir
+}
+python3 -m venv .
+. ./bin/activate
