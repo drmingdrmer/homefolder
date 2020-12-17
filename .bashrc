@@ -203,6 +203,13 @@ p3venv()
     touch requirements.txt
 }
 
+secsh()
+{
+    printf "enter des-ede3-cbc decryption password:"
+    read -s pass
+    SECPASS="$pass" bash
+}
+
 
 tmsh()
 {

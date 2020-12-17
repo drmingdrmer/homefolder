@@ -6,4 +6,9 @@ fn=$1
 fn=${fn%.des3}.des3
 [ -f "$fn" ] || touch $fn
 
-openssl des3 -d -in $fn
+if [ ".$SECPASS" = "." ]; then
+    printf "enter des-ede3-cbc decryption password:"
+    read -s SECPASS
+fi
+
+SECPASS="$SECPASS" openssl des3 -d -pass env:SECPASS -in $fn
