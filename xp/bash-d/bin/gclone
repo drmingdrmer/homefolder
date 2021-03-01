@@ -11,6 +11,7 @@ if [ "${url:0:4}" == "git@" ]; then
     dir="${dir##*:}"
 
     giturl="$url"
+    httpurl="https://$host/$dir.git"
 elif [ "${url:0:8}" == "https://" ]; then
     # https://github.com/apache/parquet-format.git
 
@@ -20,15 +21,16 @@ elif [ "${url:0:8}" == "https://" ]; then
     dir="${stripped#*/}"
 
     giturl="git@$host:$dir.git"
+    httpurl="$url"
 fi
 
 
 echo $host $dir
 
-if [ "$2" == "git" ]; then
-    git clone $giturl "$host/$dir"
+if [ "$2" == "http" ]; then
+    git clone $httpurl "$host/$dir"
 else
-    git clone $url "$host/$dir"
+    git clone $giturl "$host/$dir"
 fi
 
 ln -s "$host/$dir" .
