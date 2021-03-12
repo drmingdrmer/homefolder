@@ -20,8 +20,8 @@ else:
 
 datas = json.loads(cont, encoding='utf-8')
 
-print yaml.safe_dump(datas,
-                     encoding='utf-8',
+print(yaml.safe_dump(datas,
+                     #  encoding='utf-8',
                      allow_unicode=True,
                      default_flow_style=False
-)
+))
