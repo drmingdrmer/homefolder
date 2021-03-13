@@ -9,7 +9,7 @@ print("| name | tags | desc |")
 print("| :-- | :-- | :-- |")
 for l in j:
     l["tags"] = " ".join(l["tags"]).lower()
-    l["lang"] = l["lang"].lower()
+    l["lang"] = (l["lang"] or "").lower()
     l = "| {name} | {lang} {tags} | {desc} |".format(**l)
 
     print(l)
