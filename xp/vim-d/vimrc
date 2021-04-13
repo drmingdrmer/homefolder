@@ -94,4 +94,10 @@ runtime macros/matchit.vim
 autocmd User Flags call Hoist("window", "SyntasticStatuslineFlag")
 
 " save pwd to workaround tmux issue: tmux does not understand quotes
-autocmd CursorHold,CursorHoldI * call job_start('savepwd')
+if exists('*job_start')
+    " vim 
+    autocmd CursorHold,CursorHoldI * call job_start('savepwd')
+elseif exists('*jobstart')
+    " neovim
+    autocmd CursorHold,CursorHoldI * call jobstart('savepwd')
+endif
