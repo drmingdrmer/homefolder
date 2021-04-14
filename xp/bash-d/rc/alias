@@ -25,7 +25,7 @@ fi
 # to hard directory hierarchy, which means, discard all symbol links
 mk_alias .q "cd -P ."
 
-mk_alias grep "grep --color=always "
+mk_alias grep "grep --color=auto "
 mk_alias igrep "grep --ignore-case "
 
 # some more ls aliases
