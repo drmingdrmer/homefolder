@@ -65,14 +65,25 @@ nmap <unique> ,<Plug>F4           	 <Plug>buffer:rm_buf_win
 nmap <unique> <M-c>               	 <Plug>buffer:rm_buf_win
 nmap <unique> <M-W>               	 <Plug>buffer:rm_buf_win
 nmap <unique> <C-w><C-]>          	 <Plug>buffer:tag_in_preview_right
-imap <unique> <C-]>               	 <Plug>(edit:digraph:trigger)
 
+nmap <unique> go                  	 <Plug>(buffer:open:with-external-editor)
+nmap <unique> <Leader>fa          	 <Plug>(code:action)
+nmap <unique> <Leader>ff          	 <Plug>(code:fix)
+imap <unique> <M-i>               	 <Plug>(complete:syntax)
+nmap <unique> K                   	 <Plug>(doc:ref)
+imap <unique> <C-]>               	 <Plug>(edit:digraph:trigger)
+nmap <unique> <Leader><Leader>ff  	 <Plug>(format:file)
+nmap <unique> <Leader><Leader>fi  	 <Plug>(format:import)
 nmap <unique> <C-]>               	 <Plug>(goto:definition)
-nmap <unique> gt                  	 <Plug>(goto:type)
 nmap <unique> gi                  	 <Plug>(goto:impl)
 nmap <unique> gr                  	 <Plug>(goto:reference)
-nmap <unique> go                  	 <Plug>(buffer:open:with-external-editor)
-nmap <unique> K                   	 <Plug>(doc:ref)
+nmap <unique> gt                  	 <Plug>(goto:type)
+nmap <unique> <Leader>e           	 <Plug>(navigate:error_next)
+nmap <unique> <Leader>E           	 <Plug>(navigate:error_prev)
+nmap <unique> <Leader><Leader>rr  	 <Plug>(refactor:rename)
+
+nmap <unique> <C-y>               	 <Plug>(view:scroll:ignorebind:u)
+nmap <unique> <C-e>               	 <Plug>(view:scroll:ignorebind:d)
 
 nmap <unique> <C-w>]              	 <Plug>buffer:tag_in_preview_top
 nmap <unique> ,0                  	 <Plug>buffer:to0
@@ -81,16 +92,11 @@ nmap <unique> ,2                  	 <Plug>buffer:to2
 nmap <unique> ,3                  	 <Plug>buffer:to3
 nmap <unique> ,9                  	 <Plug>buffer:to9
 xmap <unique> <Leader>ccm         	 <Plug>case:camelize
-imap <unique> <M-i>               	 <Plug>(complete:syntax)
 nmap <unique> <Leader><Leader>ds  	 <Plug>diff:diff_with_saved
 nmap <unique> yw                  	 <Plug>edit:copy_cur_word
 xmap <unique> <M-c>               	 <Plug>edit:copy_to_tmp
 imap <unique> <C-u>               	 <Plug>edit:del
 nmap <unique> yp                  	 <Plug>edit:dupli_line
-nmap <unique> <Leader>e           	 <Plug>(navigate:error_next)
-nmap <unique> <Leader>E           	 <Plug>(navigate:error_prev)
-nmap <unique> <Leader>fa          	 <Plug>(code:action)
-nmap <unique> <Leader>ff          	 <Plug>(code:fix)
 nmap <unique> <C-g><C-]>          	 <Plug>edit:gtags:goto-definition
 nmap <unique> <C-g><C-r>          	 <Plug>edit:gtags:goto-reference
 imap <unique> <C-c>               	 <Plug>edit:insert:toNormal
@@ -109,8 +115,6 @@ imap <unique> <C-a><C-v>          	 <Plug>edit:x_paste
 nmap <unique> ,x                  	 <Plug>edit:switch_word
 xmap <unique> ,b                  	 <Plug>format:c:func_split_80
 xmap <unique> ,c                  	 <Plug>format:c:func_with_blank
-nmap <unique> <Leader><Leader>ff  	 <Plug>(format:file)
-nmap <unique> <Leader><Leader>fi  	 <Plug>(format:import)
 nmap <unique> <Leader><Leader>idn 	 <Plug>format:json_format
 nmap <unique> ][                  	 <Plug>func_end
 nmap <unique> [[                  	 <Plug>func_start
@@ -121,7 +125,6 @@ nmap <unique> <M-i>               	 <Plug>nav:tab_next
 nmap <unique> <M-u>               	 <Plug>nav:tab_prev
 nmap <unique> <Leader>pc          	 <Plug>path:to_cur_file
 nmap <unique> <Leader><Leader>gf  	 <Plug>git:gotofix
-nmap <unique> <Leader><Leader>rr  	 <Plug>(refactor:rename)
 nmap <unique> <Leader><Leader>ub  	 <Plug>run:build
 nmap <unique> <Leader><Leader>ur  	 <Plug>run:run
 nmap <unique> <Leader><Leader>ut  	 <Plug>run:test:current_dir
@@ -135,8 +138,6 @@ nmap <unique> <Leader><Leader>sr  	 <Plug>search:word_ref
 nmap <unique> <M-J>               	 <Plug>view:highlight_focus_next
 nmap <unique> <M-K>               	 <Plug>view:highlight_focus_prev
 nmap <unique> <Leader><Leader>th  	 <Plug>view:highlight_focus_toggle
-nmap <unique> <C-y>               	 <Plug>(view:scroll:ignorebind:u)
-nmap <unique> <C-e>               	 <Plug>(view:scroll:ignorebind:d)
 nmap <unique> <M-3>               	 <Plug>window:quickfix:loop
 nmap <unique> <Leader>ccm         	 V<Plug>case:camelize
 
