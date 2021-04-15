@@ -62,8 +62,6 @@ imap     <Plug>complete:omni          <C-x><C-o>
 nmap     <Plug>edit:copy_cur_word     :let @"=<C-r>='expand("<cword>")'<cr><cr>
 vnoremap <Plug>edit:copy_to_tmp       :w! ~/clp<cr>gv"+y
 
-if ''==mapcheck("<Plug>(edit:error_next)", "n") | nnoremap <Plug>(edit:error_next)        :cn<CR>| endif
-if ''==mapcheck("<Plug>(edit:error_prev)", "n") | nnoremap <Plug>(edit:error_prev)        :cp<CR>| endif
 
 fun! s:try_map_clipboard() "{{{
     let t = reltime()

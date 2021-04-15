@@ -53,4 +53,4 @@ fun! s:format_astyle() "{{{
     echom 'astyle codes with setting' . msg
 endfunction "}}}
 
-nnoremap <buffer> <silent> <Plug>format:format_file :call <SID>format_astyle()<CR>
+nnoremap <buffer> <silent> <Plug>(format:file) :call <SID>format_astyle()<CR>

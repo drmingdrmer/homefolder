@@ -1,5 +1,3 @@
-nnoremap <buffer> <Plug>format:format_file :GoFmt<CR>
-
 let g:go_fmt_autosave = 1
 let g:go_fmt_command = "goimports"
 

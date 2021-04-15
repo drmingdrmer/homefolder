@@ -25,22 +25,24 @@ inoremap  <silent><expr>   <Plug>(complete:syntax)        coc#refresh()
 " Or use `complete_info` if your vim support it, like:
 " inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
 
-" Use `[g` and `]g` to navigate diagnostics
-" nmap <silent> [g <Plug>(coc-diagnostic-prev)
-" nmap <silent> ]g <Plug>(coc-diagnostic-next)
-nmap <silent> <Plug>(edit:error_prev) <Plug>(coc-diagnostic-prev)
-nmap <silent> <Plug>(edit:error_next) <Plug>(coc-diagnostic-next)
+nmap     <silent> <Plug>(navigate:error_prev) <Plug>(coc-diagnostic-prev)
+nmap     <silent> <Plug>(navigate:error_next) <Plug>(coc-diagnostic-next)
+nmap     <silent> <Plug>(goto:definition)     <Plug>(coc-definition)
+nmap     <silent> <Plug>(goto:type)           <Plug>(coc-type-definition)
+nmap     <silent> <Plug>(goto:impl)           <Plug>(coc-implementation)
+nmap     <silent> <Plug>(goto:reference)      <Plug>(coc-references)
+nnoremap <silent> <Plug>(doc:ref)             :call <SID>show_documentation()<CR>
+nmap     <silent> <Plug>(refactor:rename)     <Plug>(coc-rename)
+" Remap for do codeAction of current line
+nmap     <silent> <Plug>(code:action)         <Plug>(coc-codeaction)
+" Fix autofix problem of current line
+nmap     <silent> <Plug>(code:fix)            <Plug>(coc-fix-current)
+nnoremap <silent> <Plug>(format:file)         :call CocAction('format')<CR>
+nnoremap <silent> <Plug>(format:import)       :call CocAction('runCommand', 'editor.action.organizeImport')<CR>
 
-" Remap keys for gotos
-nmap <silent> <Plug>(goto:definition) <Plug>(coc-definition)
-" nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> <Plug>(goto:impl) <Plug>(coc-implementation)
-nmap <silent> <Plug>(goto:reference) <Plug>(coc-references)
+" Use `:Fold` to fold current buffer
+command! -nargs=? Fold :call     CocAction('fold', <f-args>)
 
-
-" Use K to show documentation in preview window
-" nnoremap <silent> K :call <SID>show_documentation()<CR>
-nnoremap <silent> <Plug>(doc:ref) :call <SID>show_documentation()<CR>
 
 function! s:show_documentation()
   if (index(['vim','help'], &filetype) >= 0)
@@ -53,11 +55,6 @@ endfunction
 " Highlight symbol under cursor on CursorHold
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
-" " Remap for rename current word
-" nmap <leader>rn <Plug>(coc-rename)
-
-" managed by xp
-nmap <Plug>(refactor:rename) <Plug>(coc-rename)
 
 " " Remap for format selected region
 " xmap <leader>f  <Plug>(coc-format-selected)
@@ -75,10 +72,6 @@ augroup end
 xmap <leader>a  <Plug>(coc-codeaction-selected)
 nmap <leader>a  <Plug>(coc-codeaction-selected)
 
-" Remap for do codeAction of current line
-nmap <leader>ac  <Plug>(coc-codeaction)
-" Fix autofix problem of current line
-nmap <leader>qf  <Plug>(coc-fix-current)
 
 " Create mappings for function text object, requires document symbols feature of languageserver.
 xmap if <Plug>(coc-funcobj-i)
@@ -89,15 +82,6 @@ omap af <Plug>(coc-funcobj-a)
 " " Use <C-d> for select selections ranges, needs server support, like: coc-tsserver, coc-python
 " nmap <silent> <C-d> <Plug>(coc-range-select)
 " xmap <silent> <C-d> <Plug>(coc-range-select)
-
-" Use `:Format` to format current buffer
-command! -nargs=0 Format :call CocAction('format')
-
-" Use `:Fold` to fold current buffer
-command! -nargs=? Fold :call     CocAction('fold', <f-args>)
-
-" use `:OR` for organize import of current buffer
-command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
 
 " Add status line support, for integration with other plugin, checkout `:h coc-status`
 set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}

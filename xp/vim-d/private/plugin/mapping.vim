@@ -68,6 +68,7 @@ nmap <unique> <C-w><C-]>          	 <Plug>buffer:tag_in_preview_right
 imap <unique> <C-]>               	 <Plug>(edit:digraph:trigger)
 
 nmap <unique> <C-]>               	 <Plug>(goto:definition)
+nmap <unique> gt                  	 <Plug>(goto:type)
 nmap <unique> gi                  	 <Plug>(goto:impl)
 nmap <unique> gr                  	 <Plug>(goto:reference)
 nmap <unique> go                  	 <Plug>(buffer:open:with-external-editor)
@@ -86,8 +87,10 @@ nmap <unique> yw                  	 <Plug>edit:copy_cur_word
 xmap <unique> <M-c>               	 <Plug>edit:copy_to_tmp
 imap <unique> <C-u>               	 <Plug>edit:del
 nmap <unique> yp                  	 <Plug>edit:dupli_line
-nmap <unique> <Leader>e           	 <Plug>(edit:error_next)
-nmap <unique> <Leader>E           	 <Plug>(edit:error_prev)
+nmap <unique> <Leader>e           	 <Plug>(navigate:error_next)
+nmap <unique> <Leader>E           	 <Plug>(navigate:error_prev)
+nmap <unique> <Leader>fa          	 <Plug>(code:action)
+nmap <unique> <Leader>ff          	 <Plug>(code:fix)
 nmap <unique> <C-g><C-]>          	 <Plug>edit:gtags:goto-definition
 nmap <unique> <C-g><C-r>          	 <Plug>edit:gtags:goto-reference
 imap <unique> <C-c>               	 <Plug>edit:insert:toNormal
@@ -106,8 +109,8 @@ imap <unique> <C-a><C-v>          	 <Plug>edit:x_paste
 nmap <unique> ,x                  	 <Plug>edit:switch_word
 xmap <unique> ,b                  	 <Plug>format:c:func_split_80
 xmap <unique> ,c                  	 <Plug>format:c:func_with_blank
-nmap <unique> <Leader><Leader>ff  	 <Plug>format:format_file
-nmap <unique> <Leader><Leader>fi  	 <Plug>format:import
+nmap <unique> <Leader><Leader>ff  	 <Plug>(format:file)
+nmap <unique> <Leader><Leader>fi  	 <Plug>(format:import)
 nmap <unique> <Leader><Leader>idn 	 <Plug>format:json_format
 nmap <unique> ][                  	 <Plug>func_end
 nmap <unique> [[                  	 <Plug>func_start
