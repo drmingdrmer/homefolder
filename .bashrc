@@ -220,6 +220,7 @@ tmsh()
     # make current tmux pane a shared pane
     local ww=$(tmux display -p "#{window_width}")
     local ww=$(($ww * 40 / 100))
+    local ww=60
     tmux resize-pane -x $ww
 
     unset TMUX
