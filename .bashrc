@@ -213,6 +213,8 @@ secsh()
 
 tmsh()
 {
+    # to shared:
+    # tmux new -s shared
     local name=shared
 
     # make current tmux pane a shared pane
