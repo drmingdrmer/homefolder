@@ -1,3 +1,4 @@
 set hidden
 map x delete
 map <c-l> $vim "$f"
+map <c-n> $echo "$f" >$HOME/xp/session/savepwd/saved && tmux new-window -a
