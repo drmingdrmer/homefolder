@@ -1,0 +1,3 @@
+set hidden
+map x delete
+map <c-l> $vim "$f"
