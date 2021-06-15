@@ -1,0 +1,13 @@
+#!/bin/sh
+
+source shlib.sh
+
+onto=$1
+
+git show-ref \
+    | grep ' refs/remotes/' | {
+    while read hsh ref; do
+        ref=${ref#refs/remotes/}
+        echo $ref
+    done
+}

@@ -18,5 +18,5 @@ fns="$@"
 
 base=${range%..*}
 
-script="git rm -f $fns 2>/dev/null; git checkout $base -- $fns 2>/dev/null; git st >/dev/null"
+script="git rm -f -r $fns ; git checkout $base -- $fns ; git status >/dev/null"
 git filter-branch -f --prune-empty --tree-filter "$script" $range
