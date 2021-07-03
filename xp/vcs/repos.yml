@@ -1,0 +1,14 @@
+#!/usr/bin/env xp-workspace.py ~/xp/vcs/
+
+fastcfs:
+  - github.com/happyfish100/libfastcommon
+  - github.com/happyfish100/libserverframe
+  - github.com/happyfish100/fastDIR
+  - github.com/happyfish100/faststore
+fuse:
+  - datafuselabs/datafusedev.github.io
+  - datafuselabs/fuse-query
+  - datafuselabs/fuse-store
+
+other:
+  - github.com/ClickHouse/ClickHouse
