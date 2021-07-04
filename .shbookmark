@@ -39,6 +39,7 @@
 ~/xp/vcs/gh/openacid/mistune
 ~/xp/vcs/gh/openacid/openacid.github.io
 ~/xp/vcs/gh/openacid/slim
+~/xp/vcs/github.com/drmingdrmer/async-raft
 ~/xp/vcs/go/src/github.com/drmingdrmer/hello-grpc
 ~/xp/vcs/go/src/github.com/openacid/gobenchmark
 ~/xp/vcs/go/src/github.com/openacid/low
@@ -48,6 +49,7 @@
 ~/xp/vcs/ofs/ofs
 ~/xp/vcs/pykit3-super/pykit3proc
 ~/xp/vcs/pykit3/k3num
+~/xp/vcs/snip/rust
 ~/xp/vcs/xp/JakSprats/datanet
 ~/xp/vcs/xp/drmingdrmer/drmingdrmer.github.io
 ~/xp/vcs/xp/drmingdrmer/gift
@@ -75,6 +77,5 @@
 ~/xp/wiki/sec/Mackup
 ~/xp/wiki/sec/passwdgen/acc
 ~/xp/wiki/sheets
-~/xp/wiki/snippet/rust
 ~/xp/wiki/tip
 ~/xp/wiki/tip/doris
