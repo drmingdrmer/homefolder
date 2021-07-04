@@ -37,6 +37,6 @@
 !/.ssh/config
 
 !/xp
-!/xp-vcs
 !/xp-bash
+!/xp-vcs
 !/xp-vim
