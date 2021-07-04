@@ -70,11 +70,11 @@ class WorkSpace(object):
 
 
 if __name__ == "__main__":
-    
-    
+
     parser = argparse.ArgumentParser(
         description='Convert markdown to zhihu compatible')
 
+    #  TODO cmd: init: initialize all repos
     parser.add_argument('cmd', type=str,
                         nargs=1,
                         choices=["import"],
