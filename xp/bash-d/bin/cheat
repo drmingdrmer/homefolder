@@ -107,7 +107,15 @@ files=$(find . -type f -path "*$fpattern*" | grep -i "$1" | grep -v '.assets')
 for f in $files; do
     LR=l text_hr "$Yellow=$NC" "$White##  ${f}$NC  "
     echo ""
-    cat $f
+    {
+        loc=$(wc -l $f | awk '{print $1}')
+        if [ "$loc" -ge "20" ]; then
+            cat $f | head -n 20
+            echo "$Blue... more ...$NC"
+        else
+            cat $f
+        fi
+    }
     echo ""
     echo ""
 done | less -r +"/##"
