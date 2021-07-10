@@ -24,3 +24,12 @@ fi
 # vim: ft=sh
 
 export PATH="$HOME/.cargo/bin:$PATH"
+
+
+
+# from brew info llvm:
+
+LDFLAGS="-L/usr/local/opt/llvm/lib -Wl,-rpath,/usr/local/opt/llvm/lib"
+export PATH="/usr/local/opt/llvm/bin:$PATH"
+export LDFLAGS="-L/usr/local/opt/llvm/lib"
+export CPPFLAGS="-I/usr/local/opt/llvm/include"
