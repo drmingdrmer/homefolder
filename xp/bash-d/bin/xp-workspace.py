@@ -5,6 +5,7 @@ import argparse
 import yaml
 import os
 from k3handy import *
+import k3git
 
 class WorkSpace(object):
     def __init__(self):
@@ -155,7 +156,9 @@ class WorkSpace(object):
             flag = obj['fav']
             path = pjoin(base, url)
             if not self.is_git_repo(path):
-                cmdx('git', 'clone', url, path)
+                sshurl = k3git.GitUrl.parse(url).fmt('ssh')
+                print("clone:", sshurl)
+                cmdx('git', 'clone', sshurl, path)
 
             if 'f' in flag:
                 repo = url.split('/')[-1]
