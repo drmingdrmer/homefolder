@@ -27,14 +27,49 @@ class WorkSpace(object):
                 self.groups[cate] = {}
 
             for url in urls:
-                elts = url.split('/')
-                if len(elts) == 2:
-                    elts = [self.default_host]  + elts
+                url, fav = self.parse_item(url)
 
-                url = '/'.join(elts)
+                o = { "url": url, 
+                      "fav": fav,
+                }
+                self.groups[cate][url] = o
+                self.by_url[url] = o
 
-                self.groups[cate][url] = True
-                self.by_url[url] = True
+    def parse_item(self, itm):
+        """
+        Parse an item:
+            
+            github.com/user/repo
+            user/repo
+
+        A trailing ``*`` indicate a favorite
+
+            github.com/user/repo *
+            user/repo *
+
+        """
+        elts = itm.split()
+        if len(elts) >= 2:
+            url, fav = elts[:2]
+        else:
+            url, fav = elts[0], None
+
+        elts = url.split('/')
+        if len(elts) == 2:
+            #  url without host: user/repo
+            #  use default host
+            elts = [self.default_host]  + elts
+
+        url = '/'.join(elts)
+
+        return url, fav
+
+    def encode_item(self, obj):
+        if obj['fav'] is not None:
+            return '{url} {fav}'.format(**obj)
+        else:
+            return url
+
 
     def import_repos(self):
         base = 'github.com'
@@ -59,9 +94,11 @@ class WorkSpace(object):
         #  move 'other' to last
         ks = [x for x in ks if x!='other'] + ['other']
         for k in ks:
-            urls = list(self.groups[k].keys())
-            rst[k] = sorted(urls)
-
+            g = self.groups[k]
+            urls = list(g.keys())
+            urls = sorted(urls)
+            urls = [self.encode_item(g[x]) for x in urls]
+            rst[k] = urls
 
         s = yaml.dump(rst)
         fwrite(self.conffn, head + "\n" + s)
