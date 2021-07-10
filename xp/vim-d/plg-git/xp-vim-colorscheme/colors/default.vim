@@ -37,11 +37,12 @@ hi Label        cterm=none                     ctermfg=yellow
 hi MatchParen   cterm=none ctermbg=cyan        ctermfg=none
 hi NonText      cterm=none                     ctermfg=darkcyan
 hi Operator     cterm=none                     ctermfg=darkyellow
+hi Pmenu        cterm=none ctermbg=cyan        ctermfg=none
 hi PmenuSel     cterm=none ctermbg=white       ctermfg=black
 hi PmenuThumb   cterm=none ctermbg=green       ctermfg=black
 hi Repeat       cterm=none                     ctermfg=green
 hi SpecialKey   cterm=none                     ctermfg=darkcyan
-hi Statement    cterm=none                     ctermfg=darkyellow
+hi Statement    cterm=none ctermbg=none        ctermfg=darkyellow
 hi StorageClass cterm=none                     ctermfg=darkgreen
 hi String       cterm=none                     ctermfg=magenta
 hi Title        cterm=none ctermbg=none        ctermfg=yellow
