@@ -6,6 +6,11 @@ import yaml
 import os
 from k3handy import *
 import k3git
+import k3jobq
+import k3thread
+import queue
+import time
+from rich.console import Console
 
 class WorkSpace(object):
     def __init__(self):
@@ -30,7 +35,7 @@ class WorkSpace(object):
             for url in urls:
                 url, fav = self.parse_item(url)
 
-                o = { "url": url, 
+                o = { "url": url,
                       "fav": fav,
                 }
                 self.groups[cate][url] = o
@@ -39,7 +44,7 @@ class WorkSpace(object):
     def parse_item(self, itm):
         """
         Parse an item:
-            
+
             github.com/user/repo
             user/repo
 
@@ -98,7 +103,7 @@ class WorkSpace(object):
                         fav = 'f'
                     self.groups['other'][path] = {
                             'url': path,
-                            'fav': fav, 
+                            'fav': fav,
                     }
                 else:
                     fav = None
@@ -151,21 +156,63 @@ class WorkSpace(object):
 
     def clone(self):
         base = "."
-        for obj in self.by_url.values():
+        q = queue.Queue()
+
+        def clone_repo(args):
+            obj = args
+
             url = obj['url']
             flag = obj['fav']
+
+            q.put(('start', url))
+
             path = pjoin(base, url)
+
             if not self.is_git_repo(path):
                 sshurl = k3git.GitUrl.parse(url).fmt('ssh')
-                print("clone:", sshurl)
-                cmdx('git', 'clone', sshurl, path)
+                res = cmdf('git', 'clone', sshurl, path, flag='')
+                if res[0] != 0:
+                    return (url, ) + res
 
             if 'f' in flag:
                 repo = url.split('/')[-1]
-                print("link:", repo, url)
-                if os.path.islink(pjoin(base, repo)):
-                    continue
-                os.symlink(url, repo, target_is_directory=True)
+                if not os.path.islink(pjoin(base, repo)):
+                    os.symlink(url, repo, target_is_directory=True)
+
+            return (url, 0, )
+
+        results = []
+        def collect(args):
+            url = args[0]
+            q.put(('stop', url))
+
+        def st():
+            tasks = {}
+            console = Console()
+            console.print()
+            with console.status("") as status:
+                while True:
+                    itm = q.get()
+                    act, url = itm
+                    repo = url.split('/')[-1]
+                    if act == 'start':
+                        tasks[url] = True
+                    else:
+                        console.log('Done: ' + url)
+                        del tasks[url]
+
+                    t = sorted(list(tasks.keys()))
+                    t = [x.split('/')[-1] for x in t]
+                    t = ','.join(t)
+                    t = 'cloning: ' + t
+                    status.update(status=t)
+
+        k3thread.daemon(st)
+
+        k3jobq.run(self.by_url.values(), [
+                (clone_repo, 8),
+                collect,
+        ])
 
 
 if __name__ == "__main__":
@@ -181,12 +228,13 @@ if __name__ == "__main__":
 
 
     args = parser.parse_args()
-    print(args.cmd)
     w = WorkSpace()
     if args.cmd[0] == 'import':
         w.import_repos()
         w.dump()
     elif args.cmd[0] == 'clone':
         w.clone()
+    else:
+        raise ValueError("unknown cmd:" + args.cmd[0])
 
 

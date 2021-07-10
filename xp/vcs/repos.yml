@@ -7,7 +7,6 @@ fastcfs:
 fuse:
 - f github.com/async-raft/async-raft
 - . github.com/datafuselabs/fuse-query
-- f github.com/datafuselabs/fuse-store
 - f github.com/drmingdrmer/arrow-rs
 - . github.com/drmingdrmer/async-raft
 - f github.com/drmingdrmer/clickhouse-svr
@@ -29,9 +28,7 @@ other:
 - f github.com/datafuse-extras/sqlparser-rs
 - f github.com/diem/diem
 - f github.com/drmingdrmer/fuse-query
-- . github.com/drmingdrmer/go-datastructures
 - f github.com/drmingdrmer/go-typegraph
-- f github.com/drmingdrmer/singlemd
 - f github.com/drmingdrmer/skiplist
 - f github.com/drmingdrmer/snip
 - f github.com/drmingdrmer/wal
@@ -64,5 +61,4 @@ other:
 - f github.com/tikv/raft-engine
 - f github.com/tikv/raft-rs
 - . github.com/tokio-rs/tokio
-- . github.com/tokio-rs/tokio2
 - . github.com/whfuyn/rust-blog
