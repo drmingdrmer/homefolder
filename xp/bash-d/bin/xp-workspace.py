@@ -42,17 +42,19 @@ class WorkSpace(object):
             github.com/user/repo
             user/repo
 
-        A trailing ``*`` indicate a favorite
+        A trailing ``f`` indicate a favorite
 
-            github.com/user/repo *
-            user/repo *
+            f github.com/user/repo
+            f user/repo
 
         """
+        itm = itm.strip()
+
         elts = itm.split()
         if len(elts) >= 2:
-            url, fav = elts[:2]
+            fav, url = elts[:2]
         else:
-            url, fav = elts[0], None
+            fav, url = '.', elts[0]
 
         elts = url.split('/')
         if len(elts) == 2:
@@ -65,13 +67,20 @@ class WorkSpace(object):
         return url, fav
 
     def encode_item(self, obj):
+        res = obj['url']
+
         if obj['fav'] is not None:
-            return '{url} {fav}'.format(**obj)
+            res = obj['fav'] + " " + res
         else:
-            return url
+            res = ". " + res
+
+        return res
 
 
     def import_repos(self):
+
+        links, rlinks = self.find_links()
+
         base = 'github.com'
         users = os.listdir(base)
         for user in users:
@@ -79,11 +88,46 @@ class WorkSpace(object):
             repos = os.listdir(p)
             for repo in repos:
                 path  = pjoin(base, user, repo)
-                if not os.path.exists(pjoin(path, '.git')):
+                if not self.is_git_repo(path):
                     continue
 
                 if path not in self.by_url:
-                    self.groups['other'][path] = True
+                    fav = None
+                    if path in rlinks:
+                        fav = 'f'
+                    self.groups['other'][path] = {
+                            'url': path,
+                            'fav': fav, 
+                    }
+                else:
+                    fav = None
+                    if path in rlinks:
+                        fav = 'f'
+                    self.by_url[path]['fav'] = fav
+
+
+
+    def find_links(self):
+        favorites = {}
+        rfavorites = {}
+
+        base = "."
+        links = os.listdir(base)
+        for link in links:
+            p = pjoin(base, link)
+            if not os.path.islink(p):
+                continue
+
+            repo_path = os.readlink(p)
+            if self.is_git_repo(repo_path):
+                favorites[link] = repo_path
+                rfavorites[repo_path] = link
+
+        return favorites, rfavorites
+
+    def is_git_repo(self, *path):
+        return os.path.exists(pjoin(*path, '.git'))
+
 
     def dump(self):
         head = '#!/usr/bin/env xp-workspace.py'
@@ -104,6 +148,21 @@ class WorkSpace(object):
         fwrite(self.conffn, head + "\n" + s)
 
 
+    def clone(self):
+        base = "."
+        for obj in self.by_url.values():
+            url = obj['url']
+            flag = obj['fav']
+            path = pjoin(base, url)
+            if not self.is_git_repo(path):
+                cmdx('git', 'clone', url, path)
+
+            if 'f' in flag:
+                repo = url.split('/')[-1]
+                print("link:", repo, url)
+                if os.path.islink(pjoin(base, repo)):
+                    continue
+                os.symlink(url, repo, target_is_directory=True)
 
 
 if __name__ == "__main__":
@@ -114,7 +173,7 @@ if __name__ == "__main__":
     #  TODO cmd: init: initialize all repos
     parser.add_argument('cmd', type=str,
                         nargs=1,
-                        choices=["import"],
+                        choices=["import", "clone"],
                         help='')
 
 
@@ -124,5 +183,7 @@ if __name__ == "__main__":
     if args.cmd[0] == 'import':
         w.import_repos()
         w.dump()
+    elif args.cmd[0] == 'clone':
+        w.clone()
 
 
