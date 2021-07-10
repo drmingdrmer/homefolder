@@ -20,6 +20,7 @@
 #    fetch              fetch all remote.
 #    fetch-p            fetch all remote with argument "-p", to purge remote branch those are not on remote any more.
 #    merge-ff           merge --ff-only to default tracking remote branch.
+#    reset              reset to default tracking remote branch.
 #    rebase             rebase onto default tracking remote branch.
 #    push               push current branch to default tracking remote.
 #
@@ -172,6 +173,16 @@ sync_once()
                         || err "merge-ff"
                 else
                     info "HEAD is not a branch, skip merge"
+                fi
+            fi
+
+            if _has_act $actions reset; then
+                if test -n "$branch"; then
+                    git reset $upstream \
+                        && ok  "reset" \
+                        || err "reset"
+                else
+                    info "HEAD is not a branch, skip reset"
                 fi
             fi
 
