@@ -1,64 +1,64 @@
 #!/usr/bin/env xp-workspace.py
 fastcfs:
-- . github.com/happyfish100/fastDIR
-- . github.com/happyfish100/faststore
-- . github.com/happyfish100/libfastcommon
-- . github.com/happyfish100/libserverframe
+- - . github.com/happyfish100/fastDIR
+- - . github.com/happyfish100/faststore
+- - . github.com/happyfish100/libfastcommon
+- - . github.com/happyfish100/libserverframe
 fuse:
-- f github.com/async-raft/async-raft
-- . github.com/datafuselabs/fuse-query
-- f github.com/drmingdrmer/arrow-rs
-- . github.com/drmingdrmer/async-raft
-- f github.com/drmingdrmer/clickhouse-svr
-- f github.com/drmingdrmer/datafuse-presentations
-- f github.com/drmingdrmer/datafuse-shop
+- - f github.com/drmingdrmer/fuse-query
+  - ups github.com/datafuselabs/fuse-query
+- - f github.com/drmingdrmer/arrow-rs
+- - f github.com/drmingdrmer/async-raft
+  - ups github.com/async-raft/async-raft
+- - f github.com/drmingdrmer/clickhouse-svr
+- - f github.com/drmingdrmer/datafuse-presentations
+- - f github.com/drmingdrmer/datafuse-shop
 other:
-- f github.com/BohuTANG/bots
-- . github.com/BryanCutler/SparkArrowFlight
-- f github.com/ClickHouse/ClickHouse
-- . github.com/EDDYCJY/go-grpc-example
-- . github.com/Kethku/neovide
-- . github.com/MauriceGit/skiplist
-- f github.com/Workiva/go-datastructures
-- . github.com/algolia/docsearch-website
-- f github.com/apache/arrow
-- f github.com/apache/orc
-- f github.com/apache/parquet-cpp
-- f github.com/apache/parquet-format
-- f github.com/datafuse-extras/sqlparser-rs
-- f github.com/diem/diem
-- f github.com/drmingdrmer/fuse-query
-- f github.com/drmingdrmer/go-typegraph
-- f github.com/drmingdrmer/skiplist
-- f github.com/drmingdrmer/snip
-- f github.com/drmingdrmer/wal
-- f github.com/etcd-io/bbolt
-- f github.com/facebook/rocksdb
-- f github.com/gmarik/go-erd
-- f github.com/gnzlbg/jemallocator
-- f github.com/google/flatbuffers
-- f github.com/google/leveldb
-- . github.com/happyfish100/FastCFS
-- . github.com/huandu/skiplist
-- f github.com/hyperium/h2
-- f github.com/hyperium/hyper
-- f github.com/hyperium/tonic
-- . github.com/istio/api
-- f github.com/lni/dragonboat
-- f github.com/lni/dragonboat-example
-- f github.com/mambisi/escanor
-- f github.com/matrixorigin/matrixcube
-- . github.com/neovim/neovim
-- f github.com/oronsh/raftor
-- f github.com/pretzelhammer/rust-blog
-- f github.com/radondb/radon
-- f github.com/redis-developer/redis-developer.github.io
-- f github.com/rust-analyzer/rust-analyzer
-- . github.com/sean-public/fast-skiplist
-- f github.com/spacejam/sled
-- . github.com/sunnysid3up/python-linter
-- f github.com/syndtr/goleveldb
-- f github.com/tikv/raft-engine
-- f github.com/tikv/raft-rs
-- . github.com/tokio-rs/tokio
-- . github.com/whfuyn/rust-blog
+- - f github.com/BohuTANG/bots
+- - . github.com/BryanCutler/SparkArrowFlight
+- - f github.com/ClickHouse/ClickHouse
+- - . github.com/EDDYCJY/go-grpc-example
+- - . github.com/Kethku/neovide
+- - . github.com/MauriceGit/skiplist
+- - f github.com/Workiva/go-datastructures
+- - . github.com/algolia/docsearch-website
+- - f github.com/apache/arrow
+- - f github.com/apache/orc
+- - f github.com/apache/parquet-cpp
+- - f github.com/apache/parquet-format
+- - f github.com/datafuse-extras/sqlparser-rs
+- - f github.com/diem/diem
+- - f github.com/drmingdrmer/go-typegraph
+- - f github.com/drmingdrmer/skiplist
+- - f github.com/drmingdrmer/snip
+- - f github.com/drmingdrmer/wal
+- - f github.com/etcd-io/bbolt
+- - f github.com/facebook/rocksdb
+- - f github.com/gmarik/go-erd
+- - f github.com/gnzlbg/jemallocator
+- - f github.com/google/flatbuffers
+- - f github.com/google/leveldb
+- - . github.com/happyfish100/FastCFS
+- - . github.com/huandu/skiplist
+- - f github.com/hyperium/h2
+- - f github.com/hyperium/hyper
+- - f github.com/hyperium/tonic
+- - . github.com/istio/api
+- - f github.com/lni/dragonboat
+- - f github.com/lni/dragonboat-example
+- - f github.com/mambisi/escanor
+- - f github.com/matrixorigin/matrixcube
+- - . github.com/neovim/neovim
+- - f github.com/oronsh/raftor
+- - f github.com/pretzelhammer/rust-blog
+- - f github.com/radondb/radon
+- - f github.com/redis-developer/redis-developer.github.io
+- - f github.com/rust-analyzer/rust-analyzer
+- - . github.com/sean-public/fast-skiplist
+- - f github.com/spacejam/sled
+- - . github.com/sunnysid3up/python-linter
+- - f github.com/syndtr/goleveldb
+- - f github.com/tikv/raft-engine
+- - f github.com/tikv/raft-rs
+- - . github.com/tokio-rs/tokio
+- - . github.com/whfuyn/rust-blog

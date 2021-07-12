@@ -33,26 +33,57 @@ class WorkSpace(object):
                 self.groups[cate] = {}
 
             for url in urls:
-                url, fav = self.parse_item(url)
+                o = self.parse_item(url)
 
-                o = { "url": url,
-                      "fav": fav,
-                }
-                self.groups[cate][url] = o
-                self.by_url[url] = o
+                self.groups[cate][o['url']] = o
+                self.by_url[o['url']] = o
 
-    def parse_item(self, itm):
+    def parse_item(self, itms):
         """
         Parse an item:
 
-            github.com/user/repo
-            user/repo
+            - github.com/user/repo
+            - user/repo
 
         A trailing ``f`` indicate a favorite
 
-            f github.com/user/repo
-            f user/repo
+            - f github.com/user/repo
+            - . user/repo
 
+        Nested list indicates multi remote:
+            - - f github.com/user/repo
+              - . boss/repo
+
+        """
+
+        if isinstance(itms, str):
+            itms = [itms]
+
+        fav, url = self.parse_item_line(itms[0])
+
+        res = self.new_repo(fav, url)
+
+        for it in itms[1:]:
+            upstream, url = self.parse_item_line(it)
+            res['remotes'][upstream] = url
+
+        return res
+
+    def new_repo(self, fav, url):
+        return {
+                'fav':fav,
+                'url': url,
+                'remotes': {}
+        }
+
+    def parse_item_line(self, itm):
+        """
+        Simplest:
+            github.com/user/repo
+
+        With flag(f: favorite; .: nothing):
+            f github.com/user/repo
+            . user/repo
         """
         itm = itm.strip()
 
@@ -62,6 +93,10 @@ class WorkSpace(object):
         else:
             fav, url = '.', elts[0]
 
+        url = self.norm_url(url)
+        return fav, url
+
+    def norm_url(self, url):
         elts = url.split('/')
         if len(elts) == 2:
             #  url without host: user/repo
@@ -69,16 +104,12 @@ class WorkSpace(object):
             elts = [self.default_host]  + elts
 
         url = '/'.join(elts)
-
-        return url, fav
+        return url
 
     def encode_item(self, obj):
-        res = obj['url']
-
-        if obj['fav'] is not None:
-            res = obj['fav'] + " " + res
-        else:
-            res = ". " + res
+        res = [obj['fav'] + " " + obj['url']]
+        for k, v in obj['remotes'].items():
+            res.append(k + " " + v)
 
         return res
 
@@ -97,18 +128,14 @@ class WorkSpace(object):
                 if not self.is_git_repo(path):
                     continue
 
+                fav = "."
+                if path in rlinks:
+                    fav = 'f'
+
                 if path not in self.by_url:
-                    fav = None
-                    if path in rlinks:
-                        fav = 'f'
-                    self.groups['other'][path] = {
-                            'url': path,
-                            'fav': fav,
-                    }
+                    self.groups['other'][path] = self.new_repo(fav, path)
+                    self.by_url[path] = self.groups['other'][path]
                 else:
-                    fav = None
-                    if path in rlinks:
-                        fav = 'f'
                     self.by_url[path]['fav'] = fav
 
 
@@ -179,6 +206,21 @@ class WorkSpace(object):
                 if not os.path.islink(pjoin(base, repo)):
                     os.symlink(url, repo, target_is_directory=True)
 
+            for upstream, rurl in obj['remotes'].items():
+                sshurl = k3git.GitUrl.parse(rurl).fmt('ssh')
+
+                g = k3git.Git(k3git.GitOpt(), cwd=path)
+                rem = g.remote_get(upstream)
+                if rem is None:
+                    res = cmdf('git', 'remote', 'add', upstream, sshurl, cwd=path)
+                    if res[0] != 0:
+                        return (rurl, ) + res
+                else:
+                    res = cmdf('git', 'remote', 'set-url', upstream, sshurl, cwd=path)
+                    if res[0] != 0:
+                        return (rurl, ) + res
+
+
             return (url, 0, )
 
         results = []
@@ -193,13 +235,18 @@ class WorkSpace(object):
             with console.status("") as status:
                 while True:
                     itm = q.get()
+                    if itm == 'done':
+                        return
+
                     act, url = itm
                     repo = url.split('/')[-1]
                     if act == 'start':
                         tasks[url] = True
-                    else:
+                    elif act == 'stop':
                         console.log('Done: ' + url)
                         del tasks[url]
+                    else:
+                        raise
 
                     t = sorted(list(tasks.keys()))
                     t = [x.split('/')[-1] for x in t]
@@ -207,12 +254,15 @@ class WorkSpace(object):
                     t = 'cloning: ' + t
                     status.update(status=t)
 
-        k3thread.daemon(st)
+        h = k3thread.daemon(st)
 
         k3jobq.run(self.by_url.values(), [
                 (clone_repo, 8),
                 collect,
         ])
+
+        q.put("done")
+        h.join()
 
 
 if __name__ == "__main__":
