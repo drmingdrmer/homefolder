@@ -13,8 +13,9 @@ fuse:
 - - f github.com/drmingdrmer/clickhouse-svr
 - - f github.com/drmingdrmer/datafuse-presentations
 - - f github.com/drmingdrmer/datafuse-shop
-other:
+  - ups github.com/datafuselabs/datafuse-shop
 - - f github.com/BohuTANG/bots
+other:
 - - . github.com/BryanCutler/SparkArrowFlight
 - - f github.com/ClickHouse/ClickHouse
 - - . github.com/EDDYCJY/go-grpc-example
