@@ -79,3 +79,9 @@ XPT def " [name]: url
 
 XPT link " [name](url)
 [`n^](`n^)
+
+XPT folder " ▷ details ...
+<details>
+<summary><b>`title^</b></summary>
+`cursor^
+</details>
