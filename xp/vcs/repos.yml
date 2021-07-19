@@ -15,6 +15,9 @@ fuse:
 - - f github.com/drmingdrmer/datafuse-shop
   - ups github.com/datafuselabs/datafuse-shop
 - - f github.com/BohuTANG/bots
+pykit2:
+- - github.com/drmingdrmer/pykit
+  - ups github.com/bsc-s2/pykit
 other:
 - - . github.com/BryanCutler/SparkArrowFlight
 - - f github.com/ClickHouse/ClickHouse
