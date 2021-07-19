@@ -18,6 +18,9 @@ fuse:
 pykit2:
 - - github.com/drmingdrmer/pykit
   - ups github.com/bsc-s2/pykit
+pk3:
+- - f github.com/drmingdrmer/pk3
+  - ups github.com/pykit3/pk3
 other:
 - - . github.com/BryanCutler/SparkArrowFlight
 - - f github.com/ClickHouse/ClickHouse
