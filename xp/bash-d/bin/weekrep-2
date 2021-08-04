@@ -1,7 +1,7 @@
 #!/bin/sh
 
 
-_days=5
+_days=7
 _show_time=0
 _author=""
 
