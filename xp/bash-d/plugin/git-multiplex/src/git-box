@@ -177,12 +177,17 @@ sync_once()
             fi
 
             if _has_act $actions reset; then
-                if test -n "$branch"; then
-                    git reset $upstream \
-                        && ok  "reset" \
-                        || err "reset"
+                # reset only when upstream is not ancestor
+                if git merge-base --is-ancestor  "$upstream" "$branch"; then
+                    info "$upstream is ancestor, do not need to reset"
                 else
-                    info "HEAD is not a branch, skip reset"
+                    if test -n "$branch"; then
+                        git reset $upstream \
+                            && ok  "reset" \
+                            || err "reset"
+                    else
+                        info "HEAD is not a branch, skip reset"
+                    fi
                 fi
             fi
 
