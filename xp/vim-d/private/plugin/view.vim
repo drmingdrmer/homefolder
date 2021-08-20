@@ -68,3 +68,7 @@ nnoremap <Plug>view:width_max :set columns=999<CR>
 
 noremap <Plug>(view:scroll:ignorebind:u) :call view#scroll#IgnoreBinding("u")<CR>
 noremap <Plug>(view:scroll:ignorebind:d) :call view#scroll#IgnoreBinding("d")<CR>
+
+nnoremap <Plug>(view:scroll:left:10) 10zh
+nnoremap <Plug>(view:scroll:right:10) 10zl
+

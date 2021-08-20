@@ -84,6 +84,8 @@ nmap <unique> <Leader><Leader>rr  	 <Plug>(refactor:rename)
 
 nmap <unique> <C-y>               	 <Plug>(view:scroll:ignorebind:u)
 nmap <unique> <C-e>               	 <Plug>(view:scroll:ignorebind:d)
+nmap <unique> <M-H>               	 <Plug>(view:scroll:left:10)
+nmap <unique> <M-L>               	 <Plug>(view:scroll:right:10)
 
 nmap <unique> <C-w>]              	 <Plug>buffer:tag_in_preview_top
 nmap <unique> ,0                  	 <Plug>buffer:to0
