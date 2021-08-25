@@ -5,8 +5,12 @@ fastcfs:
 - - . github.com/happyfish100/libfastcommon
 - - . github.com/happyfish100/libserverframe
 fuse:
-- - f github.com/drmingdrmer/fuse-query
-  - ups github.com/datafuselabs/fuse-query
+- - f github.com/BohuTANG/bots
+- - f github.com/datafuse-extras/msql-srv
+- - . github.com/datafuse-extras/sled
+- - f github.com/datafuse-extras/sqlparser-rs
+- - . github.com/datafuselabs/fuse-query
+- - f github.com/datafuselabs/weekly
 - - f github.com/drmingdrmer/arrow-rs
 - - f github.com/drmingdrmer/async-raft
   - ups github.com/async-raft/async-raft
@@ -14,13 +18,8 @@ fuse:
 - - f github.com/drmingdrmer/datafuse-presentations
 - - f github.com/drmingdrmer/datafuse-shop
   - ups github.com/datafuselabs/datafuse-shop
-- - f github.com/BohuTANG/bots
-pykit2:
-- - github.com/drmingdrmer/pykit
-  - ups github.com/bsc-s2/pykit
-pk3:
-- - f github.com/drmingdrmer/pk3
-  - ups github.com/pykit3/pk3
+- - f github.com/drmingdrmer/fuse-query
+  - ups github.com/datafuselabs/fuse-query
 other:
 - - . github.com/BryanCutler/SparkArrowFlight
 - - f github.com/ClickHouse/ClickHouse
@@ -33,9 +32,10 @@ other:
 - - f github.com/apache/orc
 - - f github.com/apache/parquet-cpp
 - - f github.com/apache/parquet-format
-- - f github.com/datafuse-extras/sqlparser-rs
+- - . github.com/dgryski/go-tsz
 - - f github.com/diem/diem
 - - f github.com/drmingdrmer/go-typegraph
+- - f github.com/drmingdrmer/md2zhihu
 - - f github.com/drmingdrmer/skiplist
 - - f github.com/drmingdrmer/snip
 - - f github.com/drmingdrmer/wal
@@ -55,7 +55,10 @@ other:
 - - f github.com/lni/dragonboat-example
 - - f github.com/mambisi/escanor
 - - f github.com/matrixorigin/matrixcube
+- - f github.com/meilisearch/MeiliSearch
 - - . github.com/neovim/neovim
+- - f github.com/open-telemetry/opentelemetry-rust
+- - f github.com/openacid/paxoskv
 - - f github.com/oronsh/raftor
 - - f github.com/pretzelhammer/rust-blog
 - - f github.com/radondb/radon
@@ -67,5 +70,14 @@ other:
 - - f github.com/syndtr/goleveldb
 - - f github.com/tikv/raft-engine
 - - f github.com/tikv/raft-rs
+- - f github.com/tikv/tikv
 - - . github.com/tokio-rs/tokio
+- - f github.com/tokio-rs/tracing
 - - . github.com/whfuyn/rust-blog
+pk3:
+- - . github.com/drmingdrmer/pk3
+  - ups github.com/pykit3/pk3
+- - f github.com/pykit3/pk3
+pykit2:
+- - . github.com/drmingdrmer/pykit
+  - ups github.com/bsc-s2/pykit
