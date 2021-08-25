@@ -110,7 +110,7 @@ fi
 # echo $(_git_xp_interrept_flag conf $arg1) >&2
 
 # eval git \
-eval gift \
+eval git \
     $(_git_xp_interrept_flag conf $arg1) \
     $cmd \
     "$(_git_xp_interrept_flag arg $arg1)" "$@" \

@@ -6,7 +6,7 @@ flags=$1
 export GIT_COMMA_FLAG=glo
 
 # eval git \
-eval gift \
+eval git \
     $(_git_xp_interrept_flag conf $flags) \
     log --color \
     --decorate \
