@@ -60,6 +60,7 @@ other:
 - - f github.com/open-telemetry/opentelemetry-rust
 - - f github.com/openacid/paxoskv
 - - f github.com/oronsh/raftor
+- - f github.com/pingcap/failpoint
 - - f github.com/pretzelhammer/rust-blog
 - - f github.com/radondb/radon
 - - f github.com/redis-developer/redis-developer.github.io
