@@ -82,8 +82,8 @@ nmap <unique> <Leader>e           	 <Plug>(navigate:error_next)
 nmap <unique> <Leader>E           	 <Plug>(navigate:error_prev)
 nmap <unique> <Leader><Leader>rr  	 <Plug>(refactor:rename)
 
-nmap <unique> <C-y>               	 <Plug>(view:scroll:ignorebind:u)
-nmap <unique> <C-e>               	 <Plug>(view:scroll:ignorebind:d)
+" nmap <unique> <C-y>               	 <Plug>(view:scroll:ignorebind:u)
+" nmap <unique> <C-e>               	 <Plug>(view:scroll:ignorebind:d)
 nmap <unique> <M-H>               	 <Plug>(view:scroll:left:10)
 nmap <unique> <M-L>               	 <Plug>(view:scroll:right:10)
 
