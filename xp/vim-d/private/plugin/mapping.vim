@@ -86,6 +86,8 @@ nmap <unique> <Leader><Leader>rr  	 <Plug>(refactor:rename)
 " nmap <unique> <C-e>               	 <Plug>(view:scroll:ignorebind:d)
 nmap <unique> <M-H>               	 <Plug>(view:scroll:left:10)
 nmap <unique> <M-L>               	 <Plug>(view:scroll:right:10)
+nmap <unique> <M-J>               	 <Plug>(view:scroll:down:5)
+nmap <unique> <M-K>               	 <Plug>(view:scroll:up:5)
 
 nmap <unique> <C-w>]              	 <Plug>buffer:tag_in_preview_top
 nmap <unique> ,0                  	 <Plug>buffer:to0
@@ -137,9 +139,9 @@ nmap <unique> <Leader><Leader>sc  	 <Plug>search:word_callstack
 nmap <unique> <Leader><Leader>sf  	 <Plug>search:word_in_cfile
 nmap <unique> <Leader><Leader>sd  	 <Plug>search:word_in_cwd
 nmap <unique> <Leader><Leader>sr  	 <Plug>search:word_ref
-nmap <unique> <M-J>               	 <Plug>view:highlight_focus_next
-nmap <unique> <M-K>               	 <Plug>view:highlight_focus_prev
-nmap <unique> <Leader><Leader>th  	 <Plug>view:highlight_focus_toggle
+" nmap <unique> <M-J>               	 <Plug>view:highlight_focus_next
+" nmap <unique> <M-K>               	 <Plug>view:highlight_focus_prev
+" nmap <unique> <Leader><Leader>th  	 <Plug>view:highlight_focus_toggle
 nmap <unique> <M-3>               	 <Plug>window:quickfix:loop
 nmap <unique> <Leader>ccm         	 V<Plug>case:camelize
 

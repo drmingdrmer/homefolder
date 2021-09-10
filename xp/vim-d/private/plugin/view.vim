@@ -71,4 +71,6 @@ noremap <Plug>(view:scroll:ignorebind:d) :call view#scroll#IgnoreBinding("d")<CR
 
 nnoremap <Plug>(view:scroll:left:10) 10zh
 nnoremap <Plug>(view:scroll:right:10) 10zl
+nnoremap <Plug>(view:scroll:up:5) 5<C-y>
+nnoremap <Plug>(view:scroll:down:5) 5<C-e>
 
