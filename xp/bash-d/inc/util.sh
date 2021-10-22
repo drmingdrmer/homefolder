@@ -77,7 +77,7 @@ $HOME/node_modules/.bin
 
 /usr/local/opt/opencv3/bin
 
-/usr/local/Cellar/mysql-client/8.0.25/bin/
+/usr/local/Cellar/mysql-client/8.0.26/bin/
 
 # add local bin for this computer: eg. Darwin-x86_64-bin
 $HOME/xp/bash-d/$(uname -s)-$(uname -m)-bin
