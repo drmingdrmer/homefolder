@@ -32,8 +32,11 @@ other:
 - - f github.com/apache/orc
 - - f github.com/apache/parquet-cpp
 - - f github.com/apache/parquet-format
+- - f github.com/async-rs/futures-timer
+- - f github.com/clap-rs/clap
 - - . github.com/dgryski/go-tsz
 - - f github.com/diem/diem
+- - . github.com/drmingdrmer/drmingdrmer
 - - f github.com/drmingdrmer/go-typegraph
 - - f github.com/drmingdrmer/md2zhihu
 - - f github.com/drmingdrmer/skiplist
@@ -50,6 +53,7 @@ other:
 - - f github.com/hyperium/h2
 - - f github.com/hyperium/hyper
 - - f github.com/hyperium/tonic
+- - f github.com/intel/isa-l
 - - . github.com/istio/api
 - - f github.com/lni/dragonboat
 - - f github.com/lni/dragonboat-example
@@ -61,6 +65,7 @@ other:
 - - f github.com/openacid/paxoskv
 - - f github.com/oronsh/raftor
 - - f github.com/pingcap/failpoint
+- - f github.com/pingcap/titan
 - - f github.com/pretzelhammer/rust-blog
 - - f github.com/radondb/radon
 - - f github.com/redis-developer/redis-developer.github.io
