@@ -12,8 +12,14 @@ import queue
 import time
 from rich.console import Console
 
+class Log(object):
+    def error(self, *msg):
+        print(' '.join([str(x) for x in msg]))
+
 class WorkSpace(object):
     def __init__(self):
+        self.log = Log()
+
         self.conffn = 'repos.yml'
         self.by_url = {}
 
@@ -25,6 +31,9 @@ class WorkSpace(object):
 
         self.groups = {'other':{}}
         self.parse_conf()
+
+    def output(self, *msg):
+        print(' '.join([str(x) for x in msg]))
 
 
     def parse_conf(self):
@@ -264,6 +273,68 @@ class WorkSpace(object):
         q.put("done")
         h.join()
 
+    def for_each(self, func, ctx):
+        base = "."
+
+        for itm in self.by_url.values():
+
+            url = itm['url']
+
+            path = pjoin(base, url)
+
+            if not self.is_git_repo(path):
+                self.log.error("not a git:", path)
+                continue
+
+            g = k3git.Git(k3git.GitOpt(), cwd=path)
+
+            func(path, g, ctx)
+
+
+    def subcmd_stat(self, path, g, ctx):
+
+        head_branch = g.head_branch(flag='x')
+        st = g.cmdf("status", flag='ox')
+
+        self.output(path, 
+                    #  "HEAD:", head_branch,
+                    #  "remote:", remote, 
+        )
+        for line in st:
+            self.output(line)
+
+    def subcmd_merge_pr(self, path, g, ctx):
+
+        pr_branch = ctx['pr']
+
+        self.output("try to rebase to", path, pr_branch)
+
+        # fetch to update
+        g.cmdf("fetch", '--all', flag='xp')
+
+        if not g.worktree_is_clean():
+            self.output(path, "not clean")
+            return
+
+        b = g.head_branch(flag='x')
+        remote = g.branch_default_remote(b, flag='x')
+        upstream = g.branch_default_upstream(b, flag='x')
+
+        b_rev = g.rev_of(b)
+        u_rev = g.rev_of(upstream)
+
+        if b_rev != u_rev:
+            self.output(b, "and", upstream, "not same:", b_rev, u_rev)
+            return
+
+        pr_rev = g.rev_of(pr_branch)
+        if pr_rev is None:
+            self.output("no such branch:", pr_branch)
+            return
+
+        g.cmdf("rebase", pr_branch, flag='xp')
+        g.cmdf("push", remote, b, flag='xp')
+
 
 if __name__ == "__main__":
 
@@ -273,7 +344,11 @@ if __name__ == "__main__":
     #  TODO cmd: init: initialize all repos
     parser.add_argument('cmd', type=str,
                         nargs=1,
-                        choices=["import", "clone"],
+                        choices=["import", "clone", "stat", "merge"],
+                        help='')
+
+    parser.add_argument('args', type=str,
+                        nargs='*',
                         help='')
 
 
@@ -284,6 +359,10 @@ if __name__ == "__main__":
         w.dump()
     elif args.cmd[0] == 'clone':
         w.clone()
+    elif args.cmd[0] == 'stat':
+        w.for_each(w.subcmd_stat, {})
+    elif args.cmd[0] == 'merge':
+        w.for_each(w.subcmd_merge_pr, {'pr':args.args[0]})
     else:
         raise ValueError("unknown cmd:" + args.cmd[0])
 
