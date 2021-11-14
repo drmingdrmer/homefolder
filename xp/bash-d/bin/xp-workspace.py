@@ -299,9 +299,9 @@ class WorkSpace(object):
 
         self.output(path, 
                     head_branch,
-                    ":", len(diver[1]),
+                    "+", len(diver[1]),
                     "->", upstream, 
-                    ":", len(diver[2])
+                    "+", len(diver[2])
         )
 
     def subcmd_merge_pr(self, path, g, ctx):
