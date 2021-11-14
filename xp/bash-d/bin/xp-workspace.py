@@ -294,14 +294,15 @@ class WorkSpace(object):
     def subcmd_stat(self, path, g, ctx):
 
         head_branch = g.head_branch(flag='x')
-        st = g.cmdf("status", flag='ox')
+        upstream = g.branch_default_upstream(head_branch)
+        diver = g.branch_divergency(head_branch)
 
         self.output(path, 
-                    #  "HEAD:", head_branch,
-                    #  "remote:", remote, 
+                    head_branch,
+                    ":", len(diver[1]),
+                    "->", upstream, 
+                    ":", len(diver[2])
         )
-        for line in st:
-            self.output(line)
 
     def subcmd_merge_pr(self, path, g, ctx):
 
