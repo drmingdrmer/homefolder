@@ -297,10 +297,10 @@ class WorkSpace(object):
         upstream = g.branch_default_upstream(head_branch)
         diver = g.branch_divergency(head_branch)
 
-        self.output(path, 
+        self.output(path,
                     head_branch,
                     "+", len(diver[1]),
-                    "->", upstream, 
+                    "->", upstream,
                     "+", len(diver[2])
         )
 
