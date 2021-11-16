@@ -19,6 +19,7 @@
 #    commit             commit staged changes.
 #    fetch              fetch all remote.
 #    fetch-p            fetch all remote with argument "-p", to purge remote branch those are not on remote any more.
+#    fetch-notags       fetch all remote with argument "--no-tags": do not fetch tags.
 #    merge-ff           merge --ff-only to default tracking remote branch.
 #    reset              reset to default tracking remote branch.
 #    rebase             rebase onto default tracking remote branch.
@@ -58,7 +59,7 @@ _has_act()
 {
     local actions=",$1,"
     local act="$2"
-    expr "$actions" : ".*,$act,.*" >/dev/null
+    expr ",$actions," : ".*,$act,.*" >/dev/null
 }
 
 
@@ -148,11 +149,14 @@ sync_once()
                 if _has_act $actions "fetch-p"; then
                     arg=" --prune "
                 fi
+                if _has_act $actions "fetch-notags"; then
+                    arg=" --no-tags "
+                fi
 
                 while read remote; do
                     git fetch $remote --quiet $arg \
-                        && ok  "fetch" "$remote" \
-                        || err "fetch" "$remote"
+                        && ok  "fetch" "$arg" "$remote" \
+                        || err "fetch" "$arg" "$remote"
                 done<<<"$(git remote)"
 
             fi
