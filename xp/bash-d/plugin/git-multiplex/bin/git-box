@@ -777,7 +777,7 @@ sync_once()
                     arg=" --prune "
                 fi
                 if _has_act $actions "fetch-notags"; then
-                    arg=" --no-tags "
+                    arg="$arg --no-tags "
                 fi
 
                 while read remote; do
