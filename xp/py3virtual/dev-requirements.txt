@@ -38,6 +38,7 @@ astunparse~=1.6.3           # convert ast back to source code
 pandas~=1.1.4               # python data analysis
 yapf                        # python formatter
 boto3                       # aws lib
+moto                        # mock aws services
 
 
 # MySQL-python~=1.2.5
