@@ -37,6 +37,7 @@ PyYAML~=5.3
 astunparse~=1.6.3           # convert ast back to source code
 pandas~=1.1.4               # python data analysis
 yapf                        # python formatter
+boto3                       # aws lib
 
 
 # MySQL-python~=1.2.5
