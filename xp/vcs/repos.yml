@@ -25,6 +25,7 @@ xp:
 - - f github.com/drmingdrmer/gift
 - - f github.com/drmingdrmer/wiki
 openacid:
+- - . github.com/openacid/gh-config
 - - . github.com/openacid/openacid.github.io
 - - f github.com/openacid/paxoskv
 other:
