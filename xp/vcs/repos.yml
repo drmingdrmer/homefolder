@@ -20,6 +20,9 @@ fuse:
   - ups github.com/datafuselabs/datafuse-shop
 - - f github.com/drmingdrmer/fuse-query
   - ups github.com/datafuselabs/fuse-query
+xp:
+- - . github.com/drmingdrmer/drmingdrmer.github.io
+- - f github.com/drmingdrmer/gift
 other:
 - - . github.com/BryanCutler/SparkArrowFlight
 - - . github.com/ClickHouse/ClickHouse
