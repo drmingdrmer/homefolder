@@ -24,6 +24,9 @@ xp:
 - - . github.com/drmingdrmer/drmingdrmer.github.io
 - - f github.com/drmingdrmer/gift
 - - f github.com/drmingdrmer/wiki
+openacid:
+- - . github.com/openacid/openacid.github.io
+- - f github.com/openacid/paxoskv
 other:
 - - . github.com/BryanCutler/SparkArrowFlight
 - - . github.com/ClickHouse/ClickHouse
@@ -66,7 +69,6 @@ other:
 - - . github.com/meilisearch/MeiliSearch
 - - . github.com/neovim/neovim
 - - . github.com/open-telemetry/opentelemetry-rust
-- - f github.com/openacid/paxoskv
 - - f github.com/oronsh/raftor
 - - . github.com/pingcap/failpoint
 - - . github.com/pingcap/titan
