@@ -229,3 +229,4 @@ tmsh()
     # to detach:
     # tmux detach
 }
+. "$HOME/.cargo/env"

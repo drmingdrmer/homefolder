@@ -23,13 +23,17 @@ fi
 
 # vim: ft=sh
 
-export PATH="$HOME/.cargo/bin:$PATH"
 
+export BREW_BASE=/usr/local
 
-# m1 mac brew
+# m1 mac brew: from brew installation instruction
 if [ -f /opt/homebrew/bin/brew ]; then
     eval "$(/opt/homebrew/bin/brew shellenv)"
+    export BREW_BASE=/opt/homebrew
 fi
+
+
+export PATH="$BREW_BASE/share/git-core/contrib/diff-highlight:$PATH"
 
 
 # from brew info llvm:
@@ -38,3 +42,4 @@ LDFLAGS="-L/usr/local/opt/llvm/lib -Wl,-rpath,/usr/local/opt/llvm/lib"
 export PATH="/usr/local/opt/llvm/bin:$PATH"
 export LDFLAGS="-L/usr/local/opt/llvm/lib"
 export CPPFLAGS="-I/usr/local/opt/llvm/include"
+. "$HOME/.cargo/env"
