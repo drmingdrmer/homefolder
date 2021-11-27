@@ -26,6 +26,11 @@ fi
 export PATH="$HOME/.cargo/bin:$PATH"
 
 
+# m1 mac brew
+if [ -f /opt/homebrew/bin/brew ]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
+
 
 # from brew info llvm:
 
