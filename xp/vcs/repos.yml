@@ -23,6 +23,7 @@ fuse:
 xp:
 - - . github.com/drmingdrmer/drmingdrmer.github.io
 - - f github.com/drmingdrmer/gift
+- - f github.com/drmingdrmer/wiki
 other:
 - - . github.com/BryanCutler/SparkArrowFlight
 - - . github.com/ClickHouse/ClickHouse
