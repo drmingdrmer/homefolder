@@ -27,6 +27,7 @@ xp:
 openacid:
 - - . github.com/openacid/gh-config
 - - . github.com/openacid/openacid.github.io
+- - f github.com/openacid/celeritasdb
 - - f github.com/openacid/paxoskv
 other:
 - - . github.com/BryanCutler/SparkArrowFlight
