@@ -43,6 +43,7 @@ moto                        # mock aws services
 k3git
 k3jobq
 rich
+shfmt-py                   
 
 
 # MySQL-python~=1.2.5
