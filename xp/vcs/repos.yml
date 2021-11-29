@@ -20,14 +20,10 @@ fuse:
   - ups github.com/datafuselabs/datafuse-shop
 - - f github.com/drmingdrmer/fuse-query
   - ups github.com/datafuselabs/fuse-query
-xp:
-- - . github.com/drmingdrmer/drmingdrmer.github.io
-- - f github.com/drmingdrmer/gift
-- - f github.com/drmingdrmer/wiki
 openacid:
+- - f github.com/openacid/celeritasdb
 - - . github.com/openacid/gh-config
 - - . github.com/openacid/openacid.github.io
-- - f github.com/openacid/celeritasdb
 - - f github.com/openacid/paxoskv
 other:
 - - . github.com/BryanCutler/SparkArrowFlight
@@ -50,6 +46,7 @@ other:
 - - f github.com/drmingdrmer/md2zhihu
 - - . github.com/drmingdrmer/skiplist
 - - f github.com/drmingdrmer/snip
+- - f github.com/drmingdrmer/succinct-rs
 - - f github.com/drmingdrmer/wal
 - - f github.com/etcd-io/bbolt
 - - . github.com/facebook/rocksdb
@@ -95,3 +92,7 @@ pk3:
 pykit2:
 - - . github.com/drmingdrmer/pykit
   - ups github.com/bsc-s2/pykit
+xp:
+- - . github.com/drmingdrmer/drmingdrmer.github.io
+- - f github.com/drmingdrmer/gift
+- - f github.com/drmingdrmer/wiki
