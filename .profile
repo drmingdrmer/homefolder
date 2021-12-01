@@ -45,3 +45,5 @@ export CPPFLAGS="-I/usr/local/opt/llvm/include"
 . "$HOME/.cargo/env"
 
 export PATH="/opt/homebrew/opt/mysql-client/bin:$PATH"
+
+export GOPROXY=https://goproxy.cn
