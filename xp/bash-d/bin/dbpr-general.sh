@@ -4,6 +4,40 @@
 # Deps:
 # brew install gh
 
+usage()
+{
+    cat <<-END
+    $0 [-l <label>]
+    
+END
+
+}
+
+map_label()
+{
+    case $1 in
+        meta)
+            echo 'A-databend-meta'
+            ;;
+        *)
+            echo "$1"
+            ;;
+
+    esac
+}
+
+
+labels=""
+case $1 in
+    -l)
+        shift
+        lb="$(map_label "$1")"
+        labels="--label $lb"
+        shift
+    ;;
+
+esac
+
 upstream='ups/main'
 
 branch=$(git symbolic-ref --short HEAD)
@@ -81,6 +115,7 @@ gh pr create \
     --draft \
     --base main \
     --head drmingdrmer:$branch \
+    $labels \
     --title "$title" \
     --body "$body"
 
