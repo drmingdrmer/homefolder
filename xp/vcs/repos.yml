@@ -12,7 +12,8 @@ fuse:
 - - . github.com/datafuselabs/fuse-query
 - - f github.com/datafuselabs/weekly
 - - . github.com/drmingdrmer/arrow-rs
-- - f github.com/drmingdrmer/async-raft
+- - f github.com/drmingdrmer/openraft
+  - bend github.com/datafuselabs/openraft
   - ups github.com/async-raft/async-raft
 - - . github.com/drmingdrmer/clickhouse-svr
 - - . github.com/drmingdrmer/datafuse-presentations
@@ -33,12 +34,15 @@ other:
 - - . github.com/MauriceGit/skiplist
 - - . github.com/Workiva/go-datastructures
 - - . github.com/algolia/docsearch-website
+- - f github.com/andreev-io/little-raft
 - - . github.com/apache/arrow
 - - . github.com/apache/orc
 - - . github.com/apache/parquet-cpp
 - - . github.com/apache/parquet-format
 - - . github.com/async-rs/futures-timer
+- - f github.com/bsc-s2/BaishanCloud-CMMI-L3
 - - f github.com/clap-rs/clap
+- - f github.com/cssivision/mpool
 - - . github.com/dgryski/go-tsz
 - - f github.com/diem/diem
 - - . github.com/drmingdrmer/drmingdrmer
@@ -68,6 +72,10 @@ other:
 - - . github.com/meilisearch/MeiliSearch
 - - . github.com/neovim/neovim
 - - . github.com/open-telemetry/opentelemetry-rust
+- - f github.com/openacid/low
+- - f github.com/openacid/slim
+- - . github.com/openacid/succinct
+- - f github.com/openacid/testkeys
 - - f github.com/oronsh/raftor
 - - . github.com/pingcap/failpoint
 - - . github.com/pingcap/titan
@@ -75,6 +83,7 @@ other:
 - - . github.com/radondb/radon
 - - . github.com/redis-developer/redis-developer.github.io
 - - . github.com/rust-analyzer/rust-analyzer
+- - f github.com/rust-rocksdb/rust-rocksdb
 - - . github.com/sean-public/fast-skiplist
 - - f github.com/spacejam/sled
 - - . github.com/sunnysid3up/python-linter
