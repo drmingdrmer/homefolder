@@ -38,7 +38,7 @@ case $1 in
 
 esac
 
-upstream_branch=master
+upstream_branch=main
 upstream="ups/$upstream_branch"
 
 branch=$(git symbolic-ref --short HEAD)
