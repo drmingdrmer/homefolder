@@ -69,7 +69,7 @@ fi
 body="$(
 cat <<-END
 
-I hereby agree to the terms of the CLA available at: https://databend.rs/policies/cla/
+I hereby agree to the terms of the CLA available at: https://databend.rs/dev/policies/cla/
 
 ## Summary
 
