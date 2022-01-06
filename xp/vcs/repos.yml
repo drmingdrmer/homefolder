@@ -13,8 +13,7 @@ fuse:
 - - f github.com/datafuselabs/weekly
 - - . github.com/drmingdrmer/arrow-rs
 - - f github.com/drmingdrmer/openraft
-  - bend github.com/datafuselabs/openraft
-  - ups github.com/async-raft/async-raft
+  - ups github.com/datafuselabs/openraft
 - - . github.com/drmingdrmer/clickhouse-svr
 - - . github.com/drmingdrmer/datafuse-presentations
 - - . github.com/drmingdrmer/datafuse-shop
