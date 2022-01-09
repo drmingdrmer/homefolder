@@ -12,14 +12,14 @@ fuse:
 - - . github.com/datafuselabs/fuse-query
 - - f github.com/datafuselabs/weekly
 - - . github.com/drmingdrmer/arrow-rs
-- - f github.com/drmingdrmer/openraft
-  - ups github.com/datafuselabs/openraft
 - - . github.com/drmingdrmer/clickhouse-svr
 - - . github.com/drmingdrmer/datafuse-presentations
 - - . github.com/drmingdrmer/datafuse-shop
   - ups github.com/datafuselabs/datafuse-shop
 - - f github.com/drmingdrmer/fuse-query
   - ups github.com/datafuselabs/fuse-query
+- - f github.com/drmingdrmer/openraft
+  - ups github.com/datafuselabs/openraft
 openacid:
 - - f github.com/openacid/celeritasdb
 - - . github.com/openacid/gh-config
@@ -40,10 +40,15 @@ other:
 - - . github.com/apache/parquet-format
 - - . github.com/async-rs/futures-timer
 - - f github.com/bsc-s2/BaishanCloud-CMMI-L3
+- - f github.com/bsc-s2/mysql-devops
+- - f github.com/bsc-s2/s2
+- - f github.com/bsc-s2/s2-init
 - - f github.com/clap-rs/clap
 - - f github.com/cssivision/mpool
+- - f github.com/datafuselabs/fusebots
 - - . github.com/dgryski/go-tsz
 - - f github.com/diem/diem
+- - f github.com/drmingdrmer/anyerror
 - - . github.com/drmingdrmer/drmingdrmer
 - - . github.com/drmingdrmer/go-typegraph
 - - f github.com/drmingdrmer/md2zhihu
