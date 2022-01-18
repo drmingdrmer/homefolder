@@ -113,6 +113,8 @@ gh pr create \
     --repo datafuselabs/openraft \
     --base $upstream_branch \
     --head drmingdrmer:$branch \
+    --reviewer lichuang \
+    --reviewer ariesdevil \
     $labels \
     --title "$title" \
     --body "$body"
