@@ -24,7 +24,12 @@ openacid:
 - - f github.com/openacid/celeritasdb
 - - . github.com/openacid/gh-config
 - - f github.com/openacid/openacid.github.io
+  - ups github.com/mmistakes/minimal-mistakes
 - - f github.com/openacid/paxoskv
+- - f github.com/openacid/low
+- - f github.com/openacid/slim
+- - . github.com/openacid/succinct
+- - f github.com/openacid/testkeys
 other:
 - - . github.com/BryanCutler/SparkArrowFlight
 - - . github.com/ClickHouse/ClickHouse
@@ -78,10 +83,6 @@ other:
 - - . github.com/meilisearch/MeiliSearch
 - - . github.com/neovim/neovim
 - - . github.com/open-telemetry/opentelemetry-rust
-- - f github.com/openacid/low
-- - f github.com/openacid/slim
-- - . github.com/openacid/succinct
-- - f github.com/openacid/testkeys
 - - f github.com/oronsh/raftor
 - - . github.com/pingcap/failpoint
 - - . github.com/pingcap/titan
