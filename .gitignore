@@ -8,6 +8,9 @@
 
 !/.astylerc
 !/.bashrc
+!/.cargo/
+/.cargo/*
+!/.cargo/config
 !/.config
 !/.ctags
 !/.gdbinit

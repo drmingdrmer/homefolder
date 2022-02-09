@@ -45,6 +45,7 @@ k3jobq
 rich
 shfmt-py                   
 
+pymysql
 
 # MySQL-python~=1.2.5
 

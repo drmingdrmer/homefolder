@@ -23,7 +23,7 @@ fuse:
 openacid:
 - - f github.com/openacid/celeritasdb
 - - . github.com/openacid/gh-config
-- - . github.com/openacid/openacid.github.io
+- - f github.com/openacid/openacid.github.io
 - - f github.com/openacid/paxoskv
 other:
 - - . github.com/BryanCutler/SparkArrowFlight
@@ -52,6 +52,8 @@ other:
 - - . github.com/drmingdrmer/drmingdrmer
 - - . github.com/drmingdrmer/go-typegraph
 - - f github.com/drmingdrmer/md2zhihu
+- - f github.com/drmingdrmer/openkv
+  - ups github.com/datafuselabs/openkv
 - - . github.com/drmingdrmer/skiplist
 - - f github.com/drmingdrmer/snip
 - - f github.com/drmingdrmer/succinct-rs
@@ -83,9 +85,11 @@ other:
 - - f github.com/oronsh/raftor
 - - . github.com/pingcap/failpoint
 - - . github.com/pingcap/titan
+- - . github.com/ppamorim/t-pro-cognito
 - - f github.com/pretzelhammer/rust-blog
 - - . github.com/radondb/radon
 - - . github.com/redis-developer/redis-developer.github.io
+- - f github.com/ritelabs/riteraft
 - - . github.com/rust-analyzer/rust-analyzer
 - - f github.com/rust-rocksdb/rust-rocksdb
 - - . github.com/sean-public/fast-skiplist
