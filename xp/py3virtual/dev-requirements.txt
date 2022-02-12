@@ -20,6 +20,7 @@ neovim          # Pynvim implements support for python plugins in Nvim. It also 
 clang           # python binding for clang
 
 nose
+requirements-parser
 
 scikit-image    # image processing
 
