@@ -1,0 +1,121 @@
+#!/bin/sh
+
+# Create pr from CLI
+# Deps:
+# brew install gh
+
+usage()
+{
+    cat <<-END
+    $0 [-l <label>]
+    
+END
+
+}
+
+map_label()
+{
+    case $1 in
+        meta)
+            echo 'A-databend-meta'
+            ;;
+        *)
+            echo "$1"
+            ;;
+
+    esac
+}
+
+
+labels=""
+case $1 in
+    -l)
+        shift
+        lb="$(map_label "$1")"
+        labels="--label $lb"
+        shift
+    ;;
+
+esac
+
+upstream_branch=main
+upstream="ups/$upstream_branch"
+
+branch=$(git symbolic-ref --short HEAD)
+title="$(git log -n1 --format='%s')"
+body="$(git log $upstream..HEAD --format='##### %s%+b%n')"
+
+c_feat=''
+c_fix=''
+c_doc=''
+c_refine=''
+c_test=''
+
+if git log $upstream..HEAD --format='%s' | grep 'feature:'; then
+    c_feat="- New Feature"
+fi
+if git log $upstream..HEAD --format='%s' | grep 'fix:'; then
+    c_fix="- Bug Fix"
+fi
+if git log $upstream..HEAD --format='%s' | grep 'doc:'; then
+    c_doc="- Documentation"
+fi
+if git log $upstream..HEAD --format='%s' | grep 'refine:\|refactor:\|test:'; then
+    c_refine="- Improvement"
+fi
+if git log $upstream..HEAD --format='%s' | grep 'ci:\|test:'; then
+    c_test="- Build/Testing/CI"
+fi
+
+body="$(
+cat <<-END
+
+## Changelog
+
+$body
+
+---
+
+$c_feat
+$c_fix
+$c_doc
+$c_refine
+$c_test
+
+END
+)"
+
+
+# - New Feature
+# - Bug Fix
+# - Improvement
+# - Performance Improvement
+# - Build/Testing/CI
+# - Documentation
+# - Website
+# - Other
+
+echo "$title"
+echo "$body"
+
+read -p "Continue? [y/n]" a
+if [ ".$a" == ".y" ]; then
+    :
+else
+    echo "Exit"
+    exit 0
+fi
+
+git push origin $branch || exit 1
+
+gh pr create \
+    --draft \
+    --repo datafuselabs/openkv \
+    --base $upstream_branch \
+    --head drmingdrmer:$branch \
+    --reviewer lichuang \
+    --reviewer ariesdevil \
+    $labels \
+    --title "$title" \
+    --body "$body"
+
