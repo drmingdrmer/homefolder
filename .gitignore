@@ -30,6 +30,7 @@
 !/.profile
 !/.screenrc
 !/.shbookmark
+!/.spr.yml
 !/.tmux*.conf
 !/.travis
 !/.vimrc
