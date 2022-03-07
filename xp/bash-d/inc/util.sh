@@ -71,6 +71,7 @@ $HOME/.cargo/bin
 
 # perl
 /usr/local/Cellar/perl/5.30.1/bin
+/opt/homebrew/Cellar/perl/5.34.0/bin
 
 # locally installed npm module
 $HOME/node_modules/.bin
