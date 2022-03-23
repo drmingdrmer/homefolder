@@ -53,19 +53,24 @@ other:
 - - f github.com/clap-rs/clap
 - - f github.com/cssivision/mpool
 - - f github.com/datafuselabs/fusebots
+- - . github.com/datafuselabs/openraft
 - - . github.com/dgryski/go-tsz
 - - f github.com/diem/diem
 - - f github.com/drmingdrmer/anyerror
+- - . github.com/drmingdrmer/consensus-bugs
 - - . github.com/drmingdrmer/drmingdrmer
 - - f github.com/drmingdrmer/erasure-code-py
 - - . github.com/drmingdrmer/go-typegraph
+- - f github.com/drmingdrmer/lol
 - - f github.com/drmingdrmer/md2zhihu
 - - f github.com/drmingdrmer/mdBook
 - - . github.com/drmingdrmer/mdbook-full
 - - f github.com/drmingdrmer/mdbook-katex
 - - . github.com/drmingdrmer/mdbook-svgbob
+- - f github.com/drmingdrmer/opendal
 - - f github.com/drmingdrmer/openkv
   - ups github.com/datafuselabs/openkv
+- - f github.com/drmingdrmer/phi-detector
 - - f github.com/drmingdrmer/rust-smallvec
 - - . github.com/drmingdrmer/skiplist
 - - f github.com/drmingdrmer/snip
@@ -73,12 +78,15 @@ other:
 - - . github.com/drmingdrmer/svgbob
 - - f github.com/drmingdrmer/t-pro-cognito
 - - f github.com/drmingdrmer/wal
+- - f github.com/dtolnay/anyhow
+- - f github.com/ejoffe/spr
 - - f github.com/etcd-io/bbolt
 - - . github.com/facebook/rocksdb
 - - . github.com/gmarik/go-erd
 - - . github.com/gnzlbg/jemallocator
 - - . github.com/google/flatbuffers
 - - . github.com/google/leveldb
+- - . github.com/gryadka/js
 - - . github.com/happyfish100/FastCFS
 - - . github.com/huandu/skiplist
 - - . github.com/hyperium/h2
@@ -98,6 +106,8 @@ other:
 - - f github.com/mwhittaker/bipartisan_paxos
 - - . github.com/neovim/neovim
 - - . github.com/open-telemetry/opentelemetry-rust
+- - f github.com/openacid/mmp3
+- - . github.com/openacid/openraft
 - - f github.com/oronsh/raftor
 - - . github.com/pingcap/failpoint
 - - . github.com/pingcap/titan
@@ -117,7 +127,9 @@ other:
 - - . github.com/tikv/tikv
 - - f github.com/tokio-rs/tokio
 - - . github.com/tokio-rs/tracing
+- - f github.com/tower-rs/tower
 - - . github.com/whfuyn/rust-blog
+- - f github.com/xiaoyong-z/pangolin
 - - f github.com/xxchan/xxchan.github.io
 pk3:
 - - . github.com/drmingdrmer/pk3
