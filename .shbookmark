@@ -4,6 +4,7 @@
 ~/xp/Dropbox/Sync
 ~/xp/bash-d/plugin/git-multiplex
 ~/xp/bash-d/plugin/git-xp-alias/bin
+~/xp/databend
 ~/xp/doc/tip
 ~/xp/icloud
 ~/xp/icloud/databend
@@ -38,10 +39,12 @@
 ~/xp/vcs/gh/drmingdrmer/pykit
 ~/xp/vcs/gh/openacid/gh-config
 ~/xp/vcs/gh/openacid/mistune
-~/xp/vcs/github.com/openacid/openacid.github.io
 ~/xp/vcs/gh/openacid/slim
 ~/xp/vcs/github.com/drmingdrmer/async-raft
+~/xp/vcs/github.com/drmingdrmer/drmingdrmer.github.io
+~/xp/vcs/github.com/drmingdrmer/gift
 ~/xp/vcs/github.com/drmingdrmer/md2zhihu
+~/xp/vcs/github.com/openacid/openacid.github.io
 ~/xp/vcs/go/src/github.com/drmingdrmer/hello-grpc
 ~/xp/vcs/go/src/github.com/openacid/gobenchmark
 ~/xp/vcs/go/src/github.com/openacid/low
@@ -53,8 +56,6 @@
 ~/xp/vcs/pykit3/k3num
 ~/xp/vcs/snip/rust
 ~/xp/vcs/xp/JakSprats/datanet
-~/xp/vcs/github.com/drmingdrmer/drmingdrmer.github.io
-~/xp/vcs/github.com/drmingdrmer/gift
 ~/xp/vcs/xp/drmingdrmer/ibiu
 ~/xp/vcs/xp/drmingdrmer/journal
 ~/xp/vcs/xp/drmingdrmer/mistune
