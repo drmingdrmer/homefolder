@@ -130,6 +130,10 @@ class WorkSpace(object):
         base = 'github.com'
         users = os.listdir(base)
         for user in users:
+            if user == '.DS_Store':
+                # hidden meta file on mac
+                continue
+
             p = pjoin(base, user)
             repos = os.listdir(p)
             for repo in repos:
