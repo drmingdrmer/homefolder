@@ -1,0 +1,49 @@
+#!/bin/sh
+
+usage()
+{
+    cat <<-END
+In a forked git working dir, add a git-remote pointing to the fork source repo.
+Usage:
+    $0 [<parent_remote_name>]
+
+parent_remote_name is "ups" by default
+END
+exit 0
+}
+
+remote_name=${1-ups}
+
+# first remote:
+# git@github.com:drmingdrmer/homefolder.git
+remote=$(git remote -v | head -n 1 | awk '{print $2}')
+
+# drmingdrmer/homefolder.git
+remote=${remote#*:}
+
+# drmingdrmer/homefolder
+remote=${remote%.git}
+
+owner=${remote%/*}
+repo=${remote#*/}
+
+echo this repo: $owner $repo
+
+# Need gh: github client
+# `brew install gh`
+#
+# And customized command `repo_parent` in ~/.config/gh/config.yml
+#
+# `bla/homefolder`
+parent_remote=$(gh repo_parent $owner $repo)
+
+if [ ".$parent" = "./" ]; then
+    echo "no parent"
+    exit 0
+fi
+
+echo "parent: $remote_name: $parent_remote"
+
+git remote add $remote_name git@github.com:$parent_remote.git
+
+git remote -v
