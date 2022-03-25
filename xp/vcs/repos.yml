@@ -60,6 +60,7 @@ other:
 - - . github.com/drmingdrmer/consensus-bugs
 - - . github.com/drmingdrmer/drmingdrmer
 - - f github.com/drmingdrmer/erasure-code-py
+- - . github.com/drmingdrmer/futures-rs
 - - . github.com/drmingdrmer/go-typegraph
 - - f github.com/drmingdrmer/lol
 - - f github.com/drmingdrmer/md2zhihu
@@ -71,12 +72,14 @@ other:
 - - f github.com/drmingdrmer/openkv
   - ups github.com/datafuselabs/openkv
 - - f github.com/drmingdrmer/phi-detector
+- - f github.com/drmingdrmer/rust-in-databend
 - - f github.com/drmingdrmer/rust-smallvec
 - - . github.com/drmingdrmer/skiplist
 - - f github.com/drmingdrmer/snip
 - - f github.com/drmingdrmer/succinct-rs
 - - . github.com/drmingdrmer/svgbob
 - - f github.com/drmingdrmer/t-pro-cognito
+- - f github.com/drmingdrmer/tokio
 - - f github.com/drmingdrmer/wal
 - - f github.com/dtolnay/anyhow
 - - f github.com/ejoffe/spr
