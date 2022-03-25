@@ -1,4 +1,23 @@
 aliases:
+    # get parent of a forked parent
+    # `gh repo_parent <owner> <repo_name>`
+    repo_parent: |
+      !gh api graphql -f owner="$1" -f repo="$2" -f query='
+        query($owner: String!, $repo: String!) {
+          repositoryOwner(login: $owner) {
+            repository(name: $repo) {
+              parent {
+                  owner {
+                      login
+                  }
+                  name
+              }
+            }
+          }
+        }
+        '\
+        | jq --join-output -r '.data.repositoryOwner.repository.parent.owner.login+"/"+.data.repositoryOwner.repository.parent.name'
+
     # list repos: `gh repos cli`
     repos: |
         !gh api --paginate graphql -f owner="$1" -f query='
