@@ -42,6 +42,7 @@ boto3                       # aws lib
 moto                        # mock aws services
 
 k3git
+k3handy
 k3jobq
 rich
 shfmt-py                   
