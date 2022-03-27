@@ -1,3 +1,0 @@
-#!/usr/bin/env pip install -r
-
--r ../dev-requirements.txt
