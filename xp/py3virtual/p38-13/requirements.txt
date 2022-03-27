@@ -1,8 +1,3 @@
 #!/usr/bin/env pip install -r
 
 -r ../dev-requirements.txt
-
-k3handy
-k3git
-k3jobq
-rich
