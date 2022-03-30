@@ -4,6 +4,7 @@ ipython
 pyinstaller # build python into binary
 
 asciinema       # command line screen recorder
+you-get         # download youtube, youku video
 
 pyflakes
 autopep8
