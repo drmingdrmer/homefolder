@@ -108,8 +108,8 @@ fi
 
 git push origin $branch || exit 1
 
+    # --draft \
 gh pr create \
-    --draft \
     --repo datafuselabs/openraft \
     --base $upstream_branch \
     --head drmingdrmer:$branch \
