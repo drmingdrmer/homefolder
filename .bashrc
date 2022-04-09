@@ -181,6 +181,8 @@ cd "$(cat $HOME/xp/session/savepwd/saved)"
 export PATH="$HOME/xp/vcs/github.com/drmingdrmer/gift:$PATH"
 alias git='gift --exec-path='"$(git --exec-path)"
 
+# export PATH="$HOME/xp/vcs/github.com/jwiegley/git-scripts:$PATH"
+
 export PATH="$HOME/.basher/bin:$PATH"
 eval "$(basher init -)"
 
