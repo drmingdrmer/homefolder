@@ -3,6 +3,9 @@ local wezterm = require 'wezterm';
 return {
     color_scheme = "Afterglow",
 
+    debug_key_events = true,
+
+
     font = wezterm.font(
             "Monaco",
             { weight="Bold",
@@ -51,7 +54,7 @@ return {
         {key="z", mods="CMD", action={SendKey={key="z", mods="ALT"}}}, 
 
         -- {key=".", mods="ALT", action={SendString="\x1b."}}, 
-        {key=".", mods="CMD", action={SendString="dot"}}, 
+        {key=".", mods="CMD", action={SendKey={key=".", mods="ALT"}}}, 
         -- {key=".", mods="ALT", action={SendString="dot"}}, 
         {key=",", mods="CMD", action={SendKey={key=",", mods="ALT"}}}, 
     }, 
