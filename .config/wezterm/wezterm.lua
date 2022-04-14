@@ -6,19 +6,12 @@ function hsb(h, s, b)
 end
 
 return {
-    -- color_scheme = "Afterglow",
     colors = {
-        -- The default text color
         foreground = hsb(42, 0, 198),
-        -- The default background color
-        background = "hsv(0, 0, 0)",
+        background = hsb(0, 0, 0),
+        cursor_bg  = hsb(5, 247, 255),
+        cursor_fg  = hsb(0, 0, 0),
 
-        -- Overrides the cell background color when the current cell is occupied by the
-        -- cursor and the cursor style is set to Block
-        cursor_bg = hsb(5, 247, 255),
-
-        -- Overrides the text color when the current cell is occupied by the cursor
-        cursor_fg = "black",
         -- Specifies the border color of the cursor when the cursor style is set to Block,
         -- or the color of the vertical or horizontal bar when the cursor style is set to
         -- Bar or Underline.
@@ -36,24 +29,24 @@ return {
         split = "#444444",
 
         ansi = {
-            hsb(0,   0,   0),   -- "black",
-            hsb(252, 109, 136), -- "maroon",
-            hsb(65,  204, 128), -- "green",
-            hsb(31,  245, 200), -- "olive",
-            hsb(155, 131, 197), -- "navy",
-            hsb(207, 72,  141), -- "purple",
-            hsb(127, 69,  61),  -- "teal",
-            hsb(0,  0,   193), -- "silver"
+            hsb(0,   0,   0   ), -- "black",
+            hsb(252, 109, 136 ), -- "maroon",
+            hsb(65,  204, 128 ), -- "green",
+            hsb(31,  245, 200 ), -- "olive",
+            hsb(155, 131, 197 ), -- "navy",
+            hsb(207, 72,  141 ), -- "purple",
+            hsb(127, 69,  61  ), -- "teal",
+            hsb(0,   0,   193 ), -- "silver"
         },
         brights = {
-            hsb(0,   23,   85), -- "grey",
-            hsb(252, 127, 254), -- "red",
-            hsb(65,  143, 213), -- "lime",
-            hsb(31,  157, 252), -- "yellow",
-            hsb(155, 131, 254), -- "blue",
-            hsb(207, 54,  188), -- "fuchsia",
-            hsb(127, 100,  138),  -- "aqua",
-            hsb(0,  0,   255), -- "white"
+            hsb(0,   0,   85  ), -- "grey",
+            hsb(252, 109, 254 ), -- "red",
+            hsb(65,  143, 213 ), -- "lime",
+            hsb(31,  157, 252 ), -- "yellow",
+            hsb(155, 131, 254 ), -- "blue",
+            hsb(207, 54,  188 ), -- "fuchsia",
+            hsb(127, 100, 138 ), -- "aqua",
+            hsb(0,   0,   255 ), -- "white"
         },
 
         -- Arbitrary colors of the palette in the range from 16 to 255
@@ -68,7 +61,6 @@ return {
 
     -- debug_key_events = true,
 
-
     font = wezterm.font(
             "Monaco",
             {
@@ -78,22 +70,23 @@ return {
     ),
 
     --
-    hide_tab_bar_if_only_one_tab = true, 
-    enable_scroll_bar = false, 
-    window_decorations = "RESIZE", 
+
+    hide_tab_bar_if_only_one_tab = true,
+    enable_scroll_bar = false,
+    window_decorations = "RESIZE",
     window_padding = {
         left = 0,
         right = 0,
         top = 0,
         bottom = 0,
-
-    }, 
+    },
 
     window_close_confirmation = "AlwaysPrompt",
 
-
     keys = {
         { key="n", mods="CMD|ALT", action="SpawnWindow"},
+
+        -- window control
 
         { key = "p",          mods="CMD|ALT", action=wezterm.action{SplitHorizontal={domain="CurrentPaneDomain"}}},
         { key = "w",          mods="CMD|ALT", action=wezterm.action{CloseCurrentPane={confirm=true}}},
@@ -114,7 +107,7 @@ return {
 
         {key="a", mods="CMD", action={SendKey={key="a", mods="ALT"}}},
         {key="b", mods="CMD", action={SendKey={key="b", mods="ALT"}}},
-        {key="c", mods="CMD", action={SendKey={key="c", mods="ALT"}}},
+        -- {key="c", mods="CMD", action={SendKey={key="c", mods="ALT"}}},
         {key="d", mods="CMD", action={SendKey={key="d", mods="ALT"}}},
         {key="e", mods="CMD", action={SendKey={key="e", mods="ALT"}}},
         {key="f", mods="CMD", action={SendKey={key="f", mods="ALT"}}},
@@ -133,7 +126,7 @@ return {
         {key="s", mods="CMD", action={SendKey={key="s", mods="ALT"}}},
         {key="t", mods="CMD", action={SendKey={key="t", mods="ALT"}}},
         {key="u", mods="CMD", action={SendKey={key="u", mods="ALT"}}},
-        {key="v", mods="CMD", action={SendKey={key="v", mods="ALT"}}},
+        -- {key="v", mods="CMD", action={SendKey={key="v", mods="ALT"}}},
         {key="w", mods="CMD", action={SendKey={key="w", mods="ALT"}}},
         {key="x", mods="CMD", action={SendKey={key="x", mods="ALT"}}},
         {key="y", mods="CMD", action={SendKey={key="y", mods="ALT"}}},
