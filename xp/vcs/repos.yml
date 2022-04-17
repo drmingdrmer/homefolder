@@ -56,7 +56,9 @@ other:
 - - . github.com/datafuselabs/openraft
 - - . github.com/dgryski/go-tsz
 - - f github.com/diem/diem
+- - f github.com/drmingdrmer/abstract-paxos
 - - f github.com/drmingdrmer/anyerror
+- - f github.com/drmingdrmer/async-entry
 - - . github.com/drmingdrmer/consensus-bugs
 - - . github.com/drmingdrmer/drmingdrmer
 - - f github.com/drmingdrmer/erasure-code-py
@@ -71,7 +73,9 @@ other:
 - - f github.com/drmingdrmer/opendal
 - - f github.com/drmingdrmer/openkv
   - ups github.com/datafuselabs/openkv
+- - . github.com/drmingdrmer/openraft-bkp
 - - f github.com/drmingdrmer/phi-detector
+- - f github.com/drmingdrmer/python-paxos-jepsen
 - - f github.com/drmingdrmer/rust-in-databend
 - - f github.com/drmingdrmer/rust-smallvec
 - - . github.com/drmingdrmer/skiplist
@@ -84,6 +88,7 @@ other:
 - - f github.com/dtolnay/anyhow
 - - f github.com/ejoffe/spr
 - - f github.com/etcd-io/bbolt
+- - f github.com/etcd-io/etcd
 - - . github.com/facebook/rocksdb
 - - . github.com/gmarik/go-erd
 - - . github.com/gnzlbg/jemallocator
@@ -98,6 +103,7 @@ other:
 - - . github.com/intel/isa-l
 - - . github.com/istio/api
 - - . github.com/ivanceras/svgbob
+- - f github.com/jwiegley/git-scripts
 - - . github.com/lni/dragonboat
 - - . github.com/lni/dragonboat-example
 - - . github.com/lzanini/mdbook-katex
@@ -131,6 +137,7 @@ other:
 - - f github.com/tokio-rs/tokio
 - - . github.com/tokio-rs/tracing
 - - f github.com/tower-rs/tower
+- - f github.com/wez/wezterm
 - - . github.com/whfuyn/rust-blog
 - - f github.com/xiaoyong-z/pangolin
 - - f github.com/xxchan/xxchan.github.io

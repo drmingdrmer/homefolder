@@ -68,6 +68,8 @@ return {
                 -- italic=true
             }
     ),
+    font_size = 12.0, 
+    line_height = 1.0, 
 
     --
 
