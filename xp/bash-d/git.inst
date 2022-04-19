@@ -56,9 +56,32 @@ $gconf color.diff.commit                         'yellow'
 
 if [ -x $git_base/share/git-core/contrib/diff-highlight/diff-highlight ]; then
     $gconf pager.log 'diff-highlight | less'
-    $gconf pager.show 'diff-highlight | less'
-    $gconf pager.diff 'diff-highlight | less'
+    # $gconf pager.show 'diff-highlight | less'
+    # $gconf pager.diff 'diff-highlight | less'
+elif which delta; then
+
+    # https://github.com/dandavison/delta
+    # [core]
+    #     pager = delta
+    # [interactive]
+    #     diffFilter = delta --color-only
+    # [delta]
+    #     navigate = true  # use n and N to move between diff sections
+    # [merge]
+    #     conflictstyle = diff3
+    # [diff]
+    #     colorMoved = default
+
+
+    $gconf core.pager 'delta'
+    $gconf interactive.diffFilter 'delta --color-only'
+    $gconf delta.navigate 'true'
+    $gconf merge.conflictstyle 'diff3'
+    $gconf diff colorMoved 'default'
+
 fi
+
+
 
 $gconf i18n.commitencoding    utf-8
 $gconf i18n.logoutputencoding utf-8
