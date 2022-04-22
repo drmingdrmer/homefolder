@@ -28,6 +28,7 @@ export git_comma_options='a   all
 b   simplify-by-decoration
 c   cached
 d   date-order
+e   ext-diff
 fA  diff-filter=A
 fB  diff-filter=B
 fC  diff-filter=C
