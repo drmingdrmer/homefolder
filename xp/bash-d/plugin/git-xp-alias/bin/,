@@ -35,6 +35,7 @@ ri   ,          rebase --interactive
 rp   ,          rebase --preserve-merges
 rr   ,          rebase
 RH   ,          reset --hard
+RS   ,          reset --soft
 sb   ,          status --short --branch                                   # status with branch info
 sf   ,          diff --name-only --relative HEAD                          # status about file changes
 st   ,          status
