@@ -30,8 +30,8 @@ return {
 
         ansi = {
             hsb(0,   0,   0   ), -- "black",
-            hsb(252, 109, 136 ), -- "maroon",
-            hsb(65,  204, 128 ), -- "green",
+            hsb(252, 109, 156 ), -- "maroon",
+            hsb(65,  204, 170 ), -- "green",
             hsb(31,  245, 200 ), -- "olive",
             hsb(155, 131, 197 ), -- "navy",
             hsb(207, 72,  141 ), -- "purple",
@@ -39,14 +39,14 @@ return {
             hsb(0,   0,   193 ), -- "silver"
         },
         brights = {
-            hsb(0,   0,   85  ), -- "grey",
-            hsb(252, 109, 254 ), -- "red",
-            hsb(65,  143, 213 ), -- "lime",
-            hsb(31,  157, 252 ), -- "yellow",
-            hsb(155, 131, 254 ), -- "blue",
-            hsb(207, 54,  188 ), -- "fuchsia",
-            hsb(127, 100, 138 ), -- "aqua",
-            hsb(0,   0,   255 ), -- "white"
+            hsb(0,   0,   120 ), -- "grey",        bright  "black",
+            hsb(252, 109, 254 ), -- "red",         bright  "maroon"
+            hsb(65,  143, 213 ), -- "lime",        bright  "green",
+            hsb(31,  157, 252 ), -- "yellow",      bright  "olive",
+            hsb(155, 131, 254 ), -- "blue",        bright  "navy", 
+            hsb(207, 54,  188 ), -- "fuchsia",     bright  "purple"
+            hsb(127, 100, 138 ), -- "aqua",        bright  "teal", 
+            hsb(0,   0,   255 ), -- "white"        bright  "silver"
         },
 
         -- Arbitrary colors of the palette in the range from 16 to 255
@@ -136,5 +136,6 @@ return {
 
         {key=".", mods="CMD", action={SendKey={key=".", mods="ALT"}}},
         {key=",", mods="CMD", action={SendKey={key=",", mods="ALT"}}},
+        {key="\\", mods="CMD", action={SendKey={key="\\", mods="ALT"}}},
     },
 }
