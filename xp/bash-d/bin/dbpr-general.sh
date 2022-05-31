@@ -50,7 +50,7 @@ c_doc=''
 c_refine=''
 c_test=''
 
-if git log $upstream..HEAD --format='%s' | grep 'feature:'; then
+if git log $upstream..HEAD --format='%s' | grep 'feature:\|feat:'; then
     c_feat="- New Feature"
 fi
 if git log $upstream..HEAD --format='%s' | grep 'fix:'; then

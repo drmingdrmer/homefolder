@@ -174,13 +174,6 @@ cd "$(cat $HOME/xp/session/savepwd/saved)"
 
 # source $HOME/xp/tmp/subrepo/git-subrepo/.rc
 
-# auto start a python virtual env
-# . $HOME/xp/py3virtual/dev/bin/activate
-. $HOME/xp/py3virtual/p38-13/bin/activate
-
-export PATH="$HOME/xp/vcs/github.com/drmingdrmer/gift:$PATH"
-alias git='gift --exec-path='"$(git --exec-path)"
-
 # export PATH="$HOME/xp/vcs/github.com/jwiegley/git-scripts:$PATH"
 
 export PATH="$HOME/.basher/bin:$PATH"
@@ -198,9 +191,6 @@ export NVM_DIR="$HOME/.nvm"
 # trojan
 tj_sock5="socks5://127.0.0.1:1080"
 
-# go proxy:
-# https://arslan.io/2019/08/02/why-you-should-use-a-go-module-proxy/
-export GOPROXY=https://goproxy.cn
 
 p3venv()
 {

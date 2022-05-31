@@ -36,14 +36,30 @@ fi
 export PATH="$BREW_BASE/share/git-core/contrib/diff-highlight:$PATH"
 
 
-# from brew info llvm:
+# ==== APPs path ==== 
 
+# from brew info llvm:
 LDFLAGS="-L/usr/local/opt/llvm/lib -Wl,-rpath,/usr/local/opt/llvm/lib"
 export PATH="/usr/local/opt/llvm/bin:$PATH"
 export LDFLAGS="-L/usr/local/opt/llvm/lib"
 export CPPFLAGS="-I/usr/local/opt/llvm/include"
 . "$HOME/.cargo/env"
 
+# mysql
 export PATH="/opt/homebrew/opt/mysql-client/bin:$PATH"
 
+
+
+
+# python virtual env
+# . $HOME/xp/py3virtual/dev/bin/activate
+. $HOME/xp/py3virtual/p38-13/bin/activate
+
+
+export PATH="$HOME/xp/vcs/github.com/drmingdrmer/gift:$PATH"
+alias git='gift --exec-path='"$(git --exec-path)"
+
+
+# go proxy:
+# https://arslan.io/2019/08/02/why-you-should-use-a-go-module-proxy/
 export GOPROXY=https://goproxy.cn
