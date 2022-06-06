@@ -44,7 +44,7 @@ upstream="ups/$upstream_branch"
 branch=$(git symbolic-ref --short HEAD)
 echo "($branch)"
 title="$(git log -n1 --format='%s')"
-body="$(git log $upstream..HEAD --format='##### %s%+b%n')"
+body="$(git log $upstream..HEAD --format='##### %s%n%+b%n')"
 
 c_feat=''
 c_fix=''
@@ -74,8 +74,6 @@ cat <<-END
 ## Changelog
 
 $body
-
----
 
 $c_feat
 $c_fix

@@ -42,7 +42,7 @@ upstream='ups/main'
 
 branch=$(git symbolic-ref --short HEAD)
 title="$(git log -n1 --format='%s')"
-body="$(git log $upstream..HEAD --format='##### %s%+b%n')"
+body="$(git log $upstream..HEAD --format='##### %s%n%+b%n')"
 
 c_feat=''
 c_fix=''
