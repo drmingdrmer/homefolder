@@ -117,6 +117,7 @@ gh pr create \
     --head drmingdrmer:$branch \
     --reviewer lichuang \
     --reviewer ariesdevil \
+    --reviewer devillove084 \
     $labels \
     --title "$title" \
     --body "$body" \
