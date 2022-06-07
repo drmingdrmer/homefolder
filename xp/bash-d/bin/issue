@@ -1,0 +1,35 @@
+#!/bin/sh
+
+usage()
+{
+    echo "Create a issue in the repo the remote 'ups' or 'origin' pointing to"
+    echo "Usage:"
+    echo "    $0 my issue title"
+}
+
+get_repo()
+{
+    local remote="$1"
+
+    remote=$(git remote get-url $remote)
+
+    # drmingdrmer/homefolder.git
+    remote=${remote#*:}
+
+    # drmingdrmer/homefolder
+    remote=${remote%.git}
+
+    echo "$remote"
+}
+
+repo="$(get_repo ups)" || repo="$(get_repo origin)"
+echo "=== Create issue in repo: $repo"
+
+title="$@"
+
+gh issue create \
+    --title "$title" \
+    --body "$body" \
+    --repo $repo \
+
+
