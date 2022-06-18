@@ -29,7 +29,8 @@ title="$@"
 
 gh issue create \
     --title "$title" \
-    --body "$body" \
     --repo $repo \
+    
+    # --body "$body" \
 
 
