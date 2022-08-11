@@ -118,6 +118,9 @@ d end tmp
 . $XPBASE/rc/alias
 d end alias
 
+# force 16-colors term
+export TERM=xterm
+
 export EDITOR=vim
 export HISTSIZE=50000
 export HISTCONTROL=ignoreboth
