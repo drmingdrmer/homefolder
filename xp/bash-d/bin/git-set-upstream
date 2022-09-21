@@ -24,26 +24,34 @@ remote=${remote#*:}
 # drmingdrmer/homefolder
 remote=${remote%.git}
 
-owner=${remote%/*}
-repo=${remote#*/}
 
-echo this repo: $owner $repo
+while ``; do
 
-# Need gh: github client
-# `brew install gh`
-#
-# And customized command `repo_parent` in ~/.config/gh/config.yml
-#
-# `bla/homefolder`
-parent_remote=$(gh repo_parent $owner $repo)
+    owner=${remote%/*}
+    repo=${remote#*/}
 
-if [ ".$parent" = "./" ]; then
-    echo "no parent"
-    exit 0
-fi
+    echo curr-repo: $owner $repo
 
-echo "parent: $remote_name: $parent_remote"
+    # Need gh: github client
+    # `brew install gh`
+    #
+    # And customized command `repo_parent` in ~/.config/gh/config.yml
+    #
+    # `bla/homefolder`
+    parent_remote=$(gh repo_parent $owner $repo)
 
-git remote add $remote_name git@github.com:$parent_remote.git
+    if [ ".$parent_remote" = "./" ]; then
+        echo "no parent"
+        exit 0
+    fi
 
-git remote -v
+    echo "parent: $remote_name: $parent_remote"
+
+    git remote add $remote_name git@github.com:$parent_remote.git
+
+    git remote -v
+
+    remote="$parent_remote"
+    remote_name="${remote_name}s"
+
+done
