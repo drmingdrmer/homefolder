@@ -7,12 +7,23 @@ In a forked git working dir, add a git-remote pointing to the fork source repo.
 Usage:
     $0 [<parent_remote_name>]
 
-parent_remote_name is "ups" by default
+parent_remote_name is "ups" by default.
+It recursively adds all parent repo:
+
+git remote -v
+origin        git@github.com:drmingdrmer/async-trait.git (fetch)
+origin        git@github.com:drmingdrmer/async-trait.git (push)
+ups           git@github.com:datafuse-extras/async-trait.git (fetch)
+ups           git@github.com:datafuse-extras/async-trait.git (push)
+upss-wvwwvwwv git@github.com:wvwwvwwv/async-trait-fn.git (fetch)
+upss-wvwwvwwv git@github.com:wvwwvwwv/async-trait-fn.git (push)
+upsss-dtolnay git@github.com:dtolnay/async-trait.git (fetch)
+upsss-dtolnay git@github.com:dtolnay/async-trait.git (push)
 END
 exit 0
 }
 
-remote_name=${1-ups}
+first_parent_name=${1-ups}
 
 # first remote:
 # git@github.com:drmingdrmer/homefolder.git
@@ -24,13 +35,15 @@ remote=${remote#*:}
 # drmingdrmer/homefolder
 remote=${remote%.git}
 
+remote_name=''
+
 
 while ``; do
 
     owner=${remote%/*}
     repo=${remote#*/}
 
-    echo curr-repo: $owner $repo
+    echo "=== curr-repo: $owner $repo"
 
     # Need gh: github client
     # `brew install gh`
@@ -41,17 +54,28 @@ while ``; do
     parent_remote=$(gh repo_parent $owner $repo)
 
     if [ ".$parent_remote" = "./" ]; then
-        echo "no parent"
+        echo "=== no parent found, quit"
         exit 0
     fi
 
-    echo "parent: $remote_name: $parent_remote"
+    # For parent of parent, add a owner suffix
+    if [ ".$remote_name" = "." ]; then
+        remote_name=${first_parent_name}
+    else
+        remote_name="${first_parent_name}-${parent_remote%/*}"
+    fi
+    echo "=== parent:    name=$remote_name: repo=$parent_remote"
+
+    echo ""
+    echo "=== git remotes:"
+    echo ""
 
     git remote add $remote_name git@github.com:$parent_remote.git
 
     git remote -v
+    echo ""
 
     remote="$parent_remote"
-    remote_name="${remote_name}s"
+    first_parent_name=${first_parent_name}s
 
 done
