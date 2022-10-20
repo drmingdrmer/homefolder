@@ -8,4 +8,4 @@ next=$(git rev-list --reverse $branch..$target --first-parent | head -n1)
 
 echo set $branch to $next
 
-git update-refs refs/heads/$branch $next
+git update-ref refs/heads/$branch $next
