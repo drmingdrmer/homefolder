@@ -1,0 +1,11 @@
+#!/bin/sh
+
+branch=$1
+
+target=$2
+
+next=$(git rev-list --reverse $branch..$target --first-parent | head -n1)
+
+echo set $branch to $next
+
+git update-refs refs/heads/$branch $next
