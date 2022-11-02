@@ -3,7 +3,12 @@
 flags=$1
 [ ".$flags" != "." ] && shift
 
-export GIT_COMMA_FLAG=glo
+# g: graph
+# lo: format=oneline
+# d: data-order
+#
+# see rc/bashrc:
+export GIT_COMMA_FLAG=glod
 
 # eval git \
 eval gift \
