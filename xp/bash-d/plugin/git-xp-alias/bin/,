@@ -19,6 +19,7 @@ au   ,          add -u
 c1   ,          commit -m $commit_message_one_file $one_changed           # commit one file
 cc   ,          commit -m $commit_message_one_file                        # commit all staged(cached)
 ca   ,          commit -m $commit_message_one_file -a                     # commit all staged(cached) or not
+cx   ,          commit --amend --no-edit                                  # commit all staged(cached) to previous commit with --amend, AKA fixup
 ci   ,          commit                                                    # commit
 co   ,          checkout
 d    ,          diff --color --find-renames --no-ext-diff                 # by default disable external diff
