@@ -31,7 +31,7 @@ return {
         ansi = {
             hsb(0,   0,   0   ), -- "black",
             hsb(252, 109, 156 ), -- "maroon",
-            hsb(65,  204, 170 ), -- "green",
+            hsb(65,  204, 160 ), -- "green",
             hsb(31,  245, 200 ), -- "olive",
             hsb(155, 131, 197 ), -- "navy",
             hsb(207, 72,  141 ), -- "purple",
@@ -134,8 +134,12 @@ return {
         {key="y", mods="CMD", action={SendKey={key="y", mods="ALT"}}},
         {key="z", mods="CMD", action={SendKey={key="z", mods="ALT"}}},
 
+
         {key=".", mods="CMD", action={SendKey={key=".", mods="ALT"}}},
         {key=",", mods="CMD", action={SendKey={key=",", mods="ALT"}}},
+        -- {key=",", mods="CMD|SHIFT", action={SendKey={key=",", mods="ALT|SHIFT"}}},
+        -- {key=",", mods="CMD|SHIFT", action={SendKey={key="1", mods=""}}},
+        -- , , , , , , , , , 
         {key="\\", mods="CMD", action={SendKey={key="\\", mods="ALT"}}},
     },
 }

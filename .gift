@@ -1,4 +1,5 @@
 dirs:
+  xp/tmux-d/plugin/tmux-copycat: ssh://git@github.com/tmux-plugins/tmux-copycat.git@master
   xp/vim-d/plg-git/nerdcommenter: git@github.com:preservim/nerdcommenter.git@master
   xp/vim-d/plg-git/nerdtree: git@github.com:preservim/nerdtree.git@master
   xp/vim-d/plg-git/nerdtree-git-plugin: git@github.com:Xuyuanp/nerdtree-git-plugin.git@master
