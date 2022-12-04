@@ -4,6 +4,6 @@ dirs:
   xp/vim-d/plg-git/nerdtree: git@github.com:preservim/nerdtree.git@master
   xp/vim-d/plg-git/nerdtree-git-plugin: git@github.com:Xuyuanp/nerdtree-git-plugin.git@master
   xp/vim-d/plg-git/vim-flatbuffers: git@github.com:zchee/vim-flatbuffers.git@master
-  xp/vim-d/plg-git/vim-toml: ssh://git@github.com/cespare/vim-toml@master
+  xp/vim-d/plg-git/vim-toml: ssh://git@github.com/cespare/vim-toml@main
   xp/vim-d/plg-git/vimtex: ssh://git@github.com/lervag/vimtex@master
   xp/vim-d/plg-git/xptemplate: ssh://git@github.com/drmingdrmer/xptemplate@rc
