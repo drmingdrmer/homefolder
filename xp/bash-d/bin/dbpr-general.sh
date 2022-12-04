@@ -8,7 +8,6 @@ usage()
 {
     cat <<-END
     $0 [-l <label>]
-    
 END
 
 }
