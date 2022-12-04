@@ -1,5 +1,7 @@
 - - xp/tmux-d/plugin/tmux-copycat
   - d7f7e6c1de0bc0d6915f4beea5be6a8a42045c09
+- - xp/tmux-d/plugin/tmux-open
+  - 763d0a852e6703ce0f5090a508330012a7e6788e
 - - xp/vim-d/plg-git/nerdcommenter
   - 6d30ebcd428eb5a244229a125420a1e044b42b52
 - - xp/vim-d/plg-git/nerdtree
