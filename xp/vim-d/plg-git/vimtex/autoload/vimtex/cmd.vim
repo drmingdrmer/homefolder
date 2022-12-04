@@ -1,4 +1,4 @@
-" vimtex - LaTeX plugin for Vim
+" VimTeX - LaTeX plugin for Vim
 "
 " Maintainer: Karl Yngve Lervåg
 " Email:      karl.yngve@gmail.com
@@ -191,9 +191,8 @@ endfunction
 
 " }}}1
 function! vimtex#cmd#create_visual() abort " {{{1
-  let l:cmd = vimtex#echo#input({
-        \ 'info' :
-        \   ['Create command: ', ['VimtexWarning', '(empty to cancel)']],
+  let l:cmd = vimtex#ui#input({
+        \ 'info': ['Create command: ', ['VimtexWarning', '(empty to cancel)']],
         \})
   let l:cmd = substitute(l:cmd, '^\\', '', '')
   call vimtex#cmd#create(l:cmd, 1)
@@ -270,7 +269,30 @@ endfunction
 
 " }}}1
 
+function! s:get_frac_toggled(origin, numerator, denominator) abort " {{{1
+  let l:target = get(g:vimtex_toggle_fractions, a:origin, 'INLINE')
+
+  if l:target ==# 'INLINE'
+    let l:numerator = (a:numerator =~# '^\\\?\w*$')
+          \ ? a:numerator
+          \ : '(' . a:numerator . ')'
+
+    let l:denominator = (a:denominator =~# '^\\\?\w*$')
+          \ ? a:denominator
+          \ : '(' . a:denominator . ')'
+
+    return l:numerator . '/' . l:denominator
+  endif
+
+  return printf('\%s{%s}{%s}', l:target, a:numerator, a:denominator)
+endfunction
+
+" }}}1
 function! s:get_frac_cmd() abort " {{{1
+  let l:frac_cmds = map(filter(
+        \ keys(g:vimtex_toggle_fractions), { _, x -> x !~# 'INLINE' }),
+        \ { _, x -> '\' .. x })
+
   let l:save_pos = vimtex#pos#get_cursor()
   while 1
     let l:cmd = s:get_cmd('prev')
@@ -279,7 +301,8 @@ function! s:get_frac_cmd() abort " {{{1
       return {}
     endif
 
-    if l:cmd.name ==# '\frac'
+    " Note: \dfrac and \cfrac are defined by amsmath and are common variants
+    if index(l:frac_cmds, l:cmd.name) >= 0
       break
     endif
 
@@ -289,22 +312,23 @@ function! s:get_frac_cmd() abort " {{{1
 
   let l:frac = {
         \ 'type': 'cmd',
+        \ 'origin': l:cmd.name[1:],
         \ 'col_start': l:cmd.pos_start.cnum - 1,
         \ 'col_end': l:cmd.pos_end.cnum - 1,
         \}
 
   if len(l:cmd.args) >= 2
     let l:consume = []
-    let l:frac.denominator = l:cmd.args[0].text
-    let l:frac.numerator = l:cmd.args[1].text
+    let l:frac.numerator = l:cmd.args[0].text
+    let l:frac.denominator = l:cmd.args[1].text
   elseif len(l:cmd.args) == 1
-    let l:consume = ['numerator']
-    let l:frac.denominator = l:cmd.args[0].text
-    let l:frac.numerator = ''
-  else
-    let l:consume = ['denominator', 'numerator']
+    let l:consume = ['denominator']
+    let l:frac.numerator = l:cmd.args[0].text
     let l:frac.denominator = ''
+  else
+    let l:consume = ['numerator', 'denominator']
     let l:frac.numerator = ''
+    let l:frac.denominator = ''
   endif
 
   " Handle unfinished cases
@@ -332,38 +356,33 @@ function! s:get_frac_cmd() abort " {{{1
 
   let l:frac.text = strpart(getline('.'),
         \ l:frac.col_start, l:frac.col_end - l:frac.col_start + 1)
+  let l:frac.text_toggled = s:get_frac_toggled(
+        \ l:frac.origin, l:frac.numerator, l:frac.denominator)
 
-  return s:get_frac_cmd_aux(l:frac)
+  return l:frac
 endfunction
 
 " }}}1
 function! s:get_frac_cmd_visual(selected) abort " {{{1
-  let l:matches = matchlist(a:selected, '^\s*\\frac\s*{\(.*\)}\s*{\(.*\)}\s*$')
+  let l:frac_re = '\\\(' . join(filter(
+        \ keys(g:vimtex_toggle_fractions),
+        \ { _, x -> x !~# 'INLINE' }), '\|') . '\)'
+  let l:matches = matchlist(
+        \ a:selected, '^\s*' . l:frac_re . '\s*{\(.*\)}\s*{\(.*\)}\s*$')
   if empty(l:matches) | return {} | endif
 
   let l:frac = {
         \ 'type': 'cmd',
+        \ 'origin': l:matches[1],
         \ 'text': a:selected,
-        \ 'denominator': l:matches[1],
         \ 'numerator': l:matches[2],
+        \ 'denominator': l:matches[3],
         \}
 
-  return s:get_frac_cmd_aux(l:frac)
-endfunction
+  let l:frac.text_toggled = s:get_frac_toggled(
+        \ l:frac.origin, l:frac.numerator, l:frac.denominator)
 
-" }}}1
-function! s:get_frac_cmd_aux(frac) abort " {{{1
-  let l:denominator = (a:frac.denominator =~# '^\\\?\w*$')
-        \ ? a:frac.denominator
-        \ : '(' . a:frac.denominator . ')'
-
-  let l:numerator = (a:frac.numerator =~# '^\\\?\w*$')
-        \ ? a:frac.numerator
-        \ : '(' . a:frac.numerator . ')'
-
-  let a:frac.text_toggled = l:denominator . '/' . l:numerator
-
-  return a:frac
+  return l:frac
 endfunction
 
 " }}}1
@@ -434,11 +453,12 @@ function! s:get_frac_inline() abort " {{{1
     "
     " Combine/Parse inline and frac expressions
     "
+    let l:frac.origin = 'INLINE'
     let l:frac.text = strpart(l:line,
           \ l:frac.col_start,
           \ l:frac.col_end - l:frac.col_start + 1)
-    let l:frac.text_toggled  = printf('\frac{%s}{%s}',
-          \ l:frac.numerator, l:frac.denominator)
+    let l:frac.text_toggled  = s:get_frac_toggled(
+          \ l:frac.origin, l:frac.numerator, l:frac.denominator)
 
     "
     " Accept result if the range contains the cursor column
@@ -458,13 +478,14 @@ function! s:get_frac_inline_visual(selected) abort " {{{1
 
   let l:frac = {
         \ 'type': 'inline',
+        \ 'origin': 'INLINE',
         \ 'text': a:selected,
         \ 'numerator': s:get_inline_trim(l:parts[0]),
         \ 'denominator': s:get_inline_trim(l:parts[1]),
         \}
 
-  let l:frac.text_toggled  = printf('\frac{%s}{%s}',
-        \ l:frac.numerator, l:frac.denominator)
+  let l:frac.text_toggled = s:get_frac_toggled(
+        \ l:frac.origin, l:frac.numerator, l:frac.denominator)
 
   return l:frac
 endfunction
@@ -562,12 +583,12 @@ function! s:operator_setup(operator) abort " {{{1
     let l:current = vimtex#cmd#get_current()
     if empty(l:current) | return | endif
 
-    let s:operator_cmd_name = substitute(vimtex#echo#input({
-          \ 'info' : ['Change command: ', ['VimtexWarning', l:current.name]],
+    let s:operator_cmd_name = substitute(vimtex#ui#input({
+          \ 'info': ['Change command: ', ['VimtexWarning', l:current.name]],
           \}), '^\\', '', '')
   elseif s:operator ==# 'create'
-    let s:operator_cmd_name = substitute(vimtex#echo#input({
-          \ 'info' : ['Create command: ', ['VimtexWarning', '(empty to cancel)']],
+    let s:operator_cmd_name = substitute(vimtex#ui#input({
+          \ 'info': ['Create command: ', ['VimtexWarning', '(empty to cancel)']],
           \}), '^\\', '', '')
   endif
 endfunction
@@ -602,6 +623,7 @@ function! s:get_cmd(direction) abort " {{{1
         \ 'pos_start' : { 'lnum' : lnum, 'cnum' : cnum },
         \ 'pos_end' : { 'lnum' : lnum, 'cnum' : cnum + strlen(match) - 1 },
         \ 'args' : [],
+        \ 'opts' : [],
         \}
 
   " Environments always start with environment name and allows option
@@ -622,20 +644,25 @@ function! s:get_cmd(direction) abort " {{{1
     let res.pos_end.cnum = res.overlay.close.cnum
   endif
 
-  " Get options
-  let res.opt = s:get_cmd_part('[', res.pos_end)
-  if !empty(res.opt)
-    let res.pos_end.lnum = res.opt.close.lnum
-    let res.pos_end.cnum = res.opt.close.cnum
-  endif
+  " Get options and arguments
+  while v:true
+    let opt = s:get_cmd_part('[', res.pos_end)
+    if !empty(opt)
+      call add(res.opts, opt)
+      let res.pos_end.lnum = opt.close.lnum
+      let res.pos_end.cnum = opt.close.cnum
+      continue
+    endif
 
-  " Get arguments
-  let arg = s:get_cmd_part('{', res.pos_end)
-  while !empty(arg)
-    call add(res.args, arg)
-    let res.pos_end.lnum = arg.close.lnum
-    let res.pos_end.cnum = arg.close.cnum
     let arg = s:get_cmd_part('{', res.pos_end)
+    if !empty(arg)
+      call add(res.args, arg)
+      let res.pos_end.lnum = arg.close.lnum
+      let res.pos_end.cnum = arg.close.cnum
+      continue
+    endif
+
+    break
   endwhile
 
   " Include entire cmd text
@@ -646,8 +673,10 @@ endfunction
 
 " }}}1
 function! s:get_cmd_name(next) abort " {{{1
-  let [l:lnum, l:cnum] = searchpos('\v\\\a+\*?', a:next ? 'nW' : 'cbnW')
-  let l:match = matchstr(getline(l:lnum), '^\v\\\a*\*?', l:cnum-1)
+  let [l:lnum, l:cnum] = searchpos(
+        \ '\v\\%(\a+\*?|[,:;!])',
+        \ a:next ? 'nW' : 'cbnW')
+  let l:match = matchstr(getline(l:lnum), '^\v\\%([,:;!]|\a*\*?)', l:cnum-1)
   return [l:lnum, l:cnum, l:match]
 endfunction
 
@@ -657,17 +686,18 @@ function! s:get_cmd_part(part, start_pos) abort " {{{1
   call vimtex#pos#set_cursor(a:start_pos)
   let l:open = vimtex#delim#get_next('delim_tex', 'open')
   call vimtex#pos#set_cursor(l:save_pos)
+  if empty(l:open) | return | endif
 
   "
   " Ensure that the delimiter
-  " 1) exists,
-  " 2) is of the right type,
-  " 3) and is the next non-whitespace character.
+  " 1) is of the right type,
+  " 2) and is the next non-whitespace character.
   "
-  if empty(l:open)
-        \ || l:open.match !=# a:part
-        \ || strlen(substitute(
-        \        s:text_between(a:start_pos, l:open), '\_s', '', 'g')) != 0
+  let l:separate = s:text_between(a:start_pos, l:open)
+  let l:newlines = count(l:separate, "\n")
+  if l:open.match !=# a:part
+        \ || strlen(substitute(l:separate, '\_s\+', '', 'g')) != 0
+        \ || l:newlines > 1
     return {}
   endif
 
@@ -685,7 +715,7 @@ endfunction
 
 " }}}1
 function! s:get_cmd_overlay(lnum, cnum) abort " {{{1
-  let l:match = matchstr(getline(a:lnum), '^\s*[^>]*>', a:cnum)
+  let l:match = matchstr(getline(a:lnum), '^\s*<[^>]*>', a:cnum)
 
   return empty(l:match)
         \ ? {}

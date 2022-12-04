@@ -1,29 +1,19 @@
-" vimtex - LaTeX plugin for Vim
+" VimTeX - LaTeX plugin for Vim
 "
 " Maintainer: Karl Yngve Lervåg
 " Email:      karl.yngve@gmail.com
 "
 
-function! vimtex#syntax#p#asymptote#load() abort " {{{1
-  if has_key(b:vimtex_syntax, 'asymptote') | return | endif
-  let b:vimtex_syntax.asymptote = 1
+function! vimtex#syntax#p#asymptote#load(cfg) abort " {{{1
+  let l:opts = empty(vimtex#syntax#nested#include('asy'))
+        \ ? {}
+        \ : {'contains': '@vimtex_nested_asy'}
 
-  call vimtex#syntax#misc#add_to_section_clusters('texZoneAsymptote')
+  call vimtex#syntax#core#new_region_env('texAsymptoteZone', 'asy', l:opts)
+  call vimtex#syntax#core#new_region_env('texAsymptoteZone', 'asydef', l:opts)
 
-  if !empty(vimtex#syntax#misc#include('asy'))
-    syntax region texZoneAsymptote
-          \ start='\\begin{asy\z(def\)\?}'rs=s
-          \ end='\\end{asy\z1}'re=e
-          \ keepend
-          \ transparent
-          \ contains=texBeginEnd,@vimtex_nested_asy
-  else
-    syntax region texZoneAsymptote
-          \ start='\\begin{asy\z(def\)\?}'rs=s
-          \ end='\\end{asy\z1}'re=e
-          \ keepend
-          \ contains=texBeginEnd
-    highlight def link texZoneAsymptote texZone
+  if empty(l:opts)
+    highlight def link texAsymptoteZone texZone
   endif
 endfunction
 

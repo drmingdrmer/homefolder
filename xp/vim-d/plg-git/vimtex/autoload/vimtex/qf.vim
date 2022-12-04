@@ -1,4 +1,4 @@
-" vimtex - LaTeX plugin for Vim
+" VimTeX - LaTeX plugin for Vim
 "
 " Maintainer: Karl Yngve Lervåg
 " Email:      karl.yngve@gmail.com
@@ -21,7 +21,7 @@ function! vimtex#qf#init_state(state) abort " {{{1
     call l:qf.init(a:state)
     unlet l:qf.init
     let a:state.qf = l:qf
-  catch /vimtex: Requirements not met/
+  catch /VimTeX: Requirements not met/
     call vimtex#log#warning(
           \ 'Quickfix state not initialized!',
           \ 'Please see :help g:vimtex_quickfix_method')
@@ -44,7 +44,7 @@ function! vimtex#qf#open(force) abort " {{{1
 
   try
     call vimtex#qf#setqflist()
-  catch /Vimtex: No log file found/
+  catch /VimTeX: No log file found/
     if a:force
       call vimtex#log#warning('No log file found')
     endif
@@ -53,7 +53,9 @@ function! vimtex#qf#open(force) abort " {{{1
     endif
     return
   catch
-    call vimtex#log#error('Something went wrong when parsing log files!')
+    call vimtex#log#error(
+          \ 'Something went wrong when parsing log files!',
+          \ v:exception)
     if g:vimtex_quickfix_mode > 0
       cclose
     endif
@@ -83,6 +85,7 @@ function! vimtex#qf#open(force) abort " {{{1
     let s:previous_window = win_getid()
     botright cwindow
     if g:vimtex_quickfix_mode == 2
+      redraw
       call win_gotoid(s:previous_window)
     endif
     if g:vimtex_quickfix_autoclose_after_keystrokes > 0
@@ -99,22 +102,22 @@ endfunction
 function! vimtex#qf#setqflist(...) abort " {{{1
   if !exists('b:vimtex.qf.addqflist') | return | endif
 
-  if a:0 > 0
+  if a:0 > 0 && !empty(a:1)
     let l:tex = a:1
     let l:log = fnamemodify(l:tex, ':r') . '.log'
     let l:blg = fnamemodify(l:tex, ':r') . '.blg'
     let l:jump = 0
   else
     let l:tex = b:vimtex.tex
-    let l:log = b:vimtex.log()
-    let l:blg = b:vimtex.ext('blg')
+    let l:log = b:vimtex.get_aux_file('log')
+    let l:blg = b:vimtex.get_aux_file('blg')
     let l:jump = g:vimtex_quickfix_autojump
   endif
 
   try
     " Initialize the quickfix list
-    " Note: Only create new list if the current list is not a vimtex qf list
-    if get(getqflist({'title': 1}), 'title') =~# 'Vimtex'
+    " Note: Only create new list if the current list is not a VimTeX qf list
+    if get(getqflist({'title': 1}), 'title') =~# 'VimTeX'
       call setqflist([], 'r')
     else
       call setqflist([])
@@ -141,7 +144,7 @@ function! vimtex#qf#setqflist(...) abort " {{{1
 
     " Set title if supported
     try
-      call setqflist([], 'r', {'title': 'Vimtex errors (' . b:vimtex.qf.name . ')'})
+      call setqflist([], 'r', {'title': 'VimTeX errors (' . b:vimtex.qf.name . ')'})
     catch
     endtry
 
@@ -149,8 +152,8 @@ function! vimtex#qf#setqflist(...) abort " {{{1
     if l:jump
       cfirst
     endif
-  catch /Vimtex: No log file found/
-    throw 'Vimtex: No log file found'
+  catch /VimTeX: No log file found/
+    throw 'VimTeX: No log file found'
   endtry
 endfunction
 
@@ -186,6 +189,7 @@ endfunction
 
 " }}}1
 
+
 function! s:qf_has_errors() abort " {{{1
   return len(filter(getqflist(), 'v:val.type ==# ''E''')) > 0
 endfunction
@@ -196,14 +200,17 @@ function! s:qf_autoclose_check() abort " {{{1
     let s:keystroke_counter = g:vimtex_quickfix_autoclose_after_keystrokes
   endif
 
-  redir => l:bufstring
-  silent! ls!
-  redir END
+  let l:qf_winnr = map(
+        \ filter(getwininfo(),
+        \   {_, x -> x.tabnr == tabpagenr() && x.quickfix && !x.loclist}),
+        \ {_, x -> x.winnr})
 
-  if empty(filter(split(l:bufstring, '\n'), 'v:val =~# ''%a- .*Quickfix'''))
-    let s:keystroke_counter -= 1
-  else
+  if empty(l:qf_winnr)
+    let s:keystroke_counter = 0
+  elseif l:qf_winnr[0] == winnr()
     let s:keystroke_counter = g:vimtex_quickfix_autoclose_after_keystrokes + 1
+  else
+    let s:keystroke_counter -= 1
   endif
 
   if s:keystroke_counter == 0

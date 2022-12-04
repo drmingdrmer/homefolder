@@ -1,73 +1,31 @@
-" vimtex - LaTeX plugin for Vim
+" VimTeX - LaTeX plugin for Vim
 "
 " Maintainer: Karl Yngve Lervåg
 " Email:      karl.yngve@gmail.com
 "
 
-function! vimtex#syntax#p#tabularx#load() abort " {{{1
-  if has_key(b:vimtex_syntax, 'tabularx') | return | endif
-  let b:vimtex_syntax.tabularx = 1
+function! vimtex#syntax#p#tabularx#load(cfg) abort " {{{1
+  call vimtex#syntax#packages#load('array')
 
-  call vimtex#syntax#misc#add_to_section_clusters('texTabular')
+  " The format is \begin{tabularx}{WIDTH}[POS]{PREAMBLE}
+  syntax match texCmdTabularx "\\begin{tabularx}"
+        \ skipwhite skipnl
+        \ nextgroup=texTabularxWidth
+        \ contains=texCmdEnv
+  call vimtex#syntax#core#new_arg('texTabularxWidth', {
+        \ 'next': 'texTabularxPreamble,texTabularxOpt,',
+        \})
+  call vimtex#syntax#core#new_opt('texTabularxOpt', {
+        \ 'next': 'texTabularxPreamble',
+        \ 'contains': 'texComment,@NoSpell',
+        \})
+  call vimtex#syntax#core#new_arg('texTabularxPreamble', {
+        \ 'contains': '@texClusterTabular'
+        \})
 
-  syntax match texTabular '\\begin{tabular}\_[^{]\{-}\ze{'
-        \ contains=texBeginEnd
-        \ nextgroup=texTabularArg
-        \ contained
-  syntax region texTabularArg matchgroup=Delimiter
-        \ start='{' end='}'
-        \ contained
-
-  syntax match texTabularCol /[lcr]/
-        \ containedin=texTabularArg
-        \ contained
-  syntax match texTabularCol /[pmb]/
-        \ containedin=texTabularArg
-        \ nextgroup=texTabularLength
-        \ contained
-  syntax match texTabularCol /\*/
-        \ containedin=texTabularArg
-        \ nextgroup=texTabularMulti
-        \ contained
-  syntax region texTabularMulti matchgroup=Delimiter
-        \ start='{' end='}'
-        \ containedin=texTabularArg
-        \ nextgroup=texTabularArg
-        \ contained
-
-  syntax match texTabularAtSep /@/
-        \ containedin=texTabularArg
-        \ nextgroup=texTabularLength
-        \ contained
-  syntax match texTabularVertline /||\?/
-        \ containedin=texTabularArg
-        \ contained
-  syntax match texTabularPostPre /[<>]/
-        \ containedin=texTabularArg
-        \ nextgroup=texTabularPostPreArg
-        \ contained
-
-  syntax region texTabularPostPreArg matchgroup=Delimiter
-        \ start='{' end='}'
-        \ containedin=texTabularArg
-        \ contains=texLength,texStatement,texMathDelimSingle
-        \ contained
-
-  syntax region texTabularLength matchgroup=Delimiter
-        \ start='{' end='}'
-        \ containedin=texTabularArg
-        \ contains=texLength,texStatement
-        \ contained
-
-  syntax match texMathDelimSingle /\$\$\?/
-        \ containedin=texTabularPostPreArg
-        \ contained
-
-  highlight def link texTabularCol        Directory
-  highlight def link texTabularAtSep      Type
-  highlight def link texTabularVertline   Type
-  highlight def link texTabularPostPre    Type
-  highlight def link texMathDelimSingle   Delimiter
+  highlight def link texTabularxPreamble    texOpt
+  highlight def link texTabularxWidth       texLength
+  highlight def link texTabularxOpt         texEnvOpt
 endfunction
 
 " }}}1

@@ -1,4 +1,4 @@
-" vimtex - LaTeX plugin for Vim
+" VimTeX - LaTeX plugin for Vim
 "
 " Maintainer: Karl Yngve Lervåg
 " Email:      karl.yngve@gmail.com
@@ -85,9 +85,13 @@ endfunction
 " }}}1
 
 function! vimtex#fold#refresh(map) abort " {{{1
-  setlocal foldmethod=expr
-  execute 'normal!' a:map
-  setlocal foldmethod=manual
+  if &diff
+    setlocal foldmethod=diff
+  else
+    setlocal foldmethod=expr
+    execute 'normal!' a:map
+    setlocal foldmethod=manual
+  endif
 endfunction
 
 " }}}1

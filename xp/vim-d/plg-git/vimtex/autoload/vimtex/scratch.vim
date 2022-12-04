@@ -1,4 +1,4 @@
-" vimtex - LaTeX plugin for Vim
+" VimTeX - LaTeX plugin for Vim
 "
 " Maintainer: Karl Yngve Lervåg
 " Email:      karl.yngve@gmail.com
@@ -25,6 +25,7 @@ function! s:scratch.open() abort dict " {{{1
   let b:scratch = self
   let b:vimtex = l:vimtex
 
+  setlocal noreadonly
   setlocal bufhidden=wipe
   setlocal buftype=nofile
   setlocal concealcursor=nvic

@@ -1,4 +1,4 @@
-" vimtex - LaTeX plugin for Vim
+" VimTeX - LaTeX plugin for Vim
 "
 " Maintainer: Karl Yngve Lervåg
 " Email:      karl.yngve@gmail.com
@@ -19,11 +19,13 @@ function! vimtex#parser#auxiliary#labels() abort " {{{1
   "
   " Returns a list of candidates like {'word': name, 'menu': type number page}.
   "
-  let l:files = [[b:vimtex.aux(), '']]
+  let l:files = [[b:vimtex.get_aux_file('aux'), '']]
 
   " Handle local file editing (e.g. subfiles package)
   if exists('b:vimtex_local') && b:vimtex_local.active
-    let l:files += [[vimtex#state#get(b:vimtex_local.main_id).aux(), '']]
+    let l:files += [
+          \ [vimtex#state#get(b:vimtex_local.main_id).get_aux_file('aux'), '']
+          \]
   endif
 
   " Add externaldocuments (from \externaldocument in preamble)
@@ -112,6 +114,8 @@ function! s:parse_labels(file, prefix) abort " {{{1
   for l:line in l:lines
     let l:line = vimtex#util#tex2unicode(l:line)
     let l:tree = vimtex#util#tex2tree(l:line)[1:]
+    if len(l:tree) < 2 | continue | endif
+
     let l:name = get(remove(l:tree, 0), 0, '')
     if empty(l:name) | continue | endif
 

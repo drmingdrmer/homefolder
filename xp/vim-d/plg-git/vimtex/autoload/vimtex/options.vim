@@ -1,4 +1,4 @@
-" vimtex - LaTeX plugin for Vim
+" VimTeX - LaTeX plugin for Vim
 "
 " Maintainer: Karl Yngve Lervåg
 " Email:      karl.yngve@gmail.com
@@ -16,13 +16,26 @@ function! vimtex#options#init() abort " {{{1
         \])
 
   call s:init_option('vimtex_compiler_enabled', 1)
+  call s:init_option('vimtex_compiler_silent', 0)
   call s:init_option('vimtex_compiler_method', 'latexmk')
-  call s:init_option('vimtex_compiler_progname',
-        \ has('nvim') && executable('nvr')
-        \   ? 'nvr'
-        \   : get(v:, 'progpath', get(v:, 'progname', '')))
-  call s:init_option('vimtex_compiler_latexmk_engines', {})
-  call s:init_option('vimtex_compiler_latexrun_engines', {})
+  call s:init_option('vimtex_compiler_latexmk_engines', {
+        \  '_'                : '-pdf',
+        \  'pdfdvi'           : '-pdfdvi',
+        \  'pdfps'            : '-pdfps',
+        \  'pdflatex'         : '-pdf',
+        \  'luatex'           : '-lualatex',
+        \  'lualatex'         : '-lualatex',
+        \  'xelatex'          : '-xelatex',
+        \  'context (pdftex)' : '-pdf -pdflatex=texexec',
+        \  'context (luatex)' : '-pdf -pdflatex=context',
+        \  'context (xetex)'  : '-pdf -pdflatex=''texexec --xtx''',
+        \ })
+  call s:init_option('vimtex_compiler_latexrun_engines', {
+        \ '_'        : 'pdflatex',
+        \ 'pdflatex' : 'pdflatex',
+        \ 'lualatex' : 'lualatex',
+        \ 'xelatex'  : 'xelatex',
+        \})
 
   call s:init_option('vimtex_complete_enabled', 1)
   call s:init_option('vimtex_complete_close_braces', 0)
@@ -30,13 +43,21 @@ function! vimtex#options#init() abort " {{{1
   call s:init_option('vimtex_complete_smart_case', &smartcase)
   call s:init_option('vimtex_complete_bib', {
         \ 'simple': 0,
+        \ 'match_str_fmt': '@key [@type] @author_all (@year), "@title"',
         \ 'menu_fmt': '[@type] @author_short (@year), "@title"',
         \ 'abbr_fmt': '',
+        \ 'auth_len': 20,
         \ 'custom_patterns': [],
         \})
   call s:init_option('vimtex_complete_ref', {
         \ 'custom_patterns': [],
         \})
+
+  let l:viewer = get(g:, 'vimtex_view_method', 'general')
+  if l:viewer ==# 'general'
+    let l:viewer = 'NONE'
+  endif
+  call s:init_option('vimtex_context_pdf_viewer', l:viewer)
 
   call s:init_option('vimtex_delim_timeout', 300)
   call s:init_option('vimtex_delim_insert_timeout', 60)
@@ -45,17 +66,27 @@ function! vimtex#options#init() abort " {{{1
   call s:init_option('vimtex_include_search_enabled', 1)
 
   call s:init_option('vimtex_doc_enabled', 1)
+  call s:init_option('vimtex_doc_confirm_single', v:true)
   call s:init_option('vimtex_doc_handlers', [])
 
   call s:init_option('vimtex_echo_verbose_input', 1)
 
   call s:init_option('vimtex_env_change_autofill', 0)
+  call s:init_option('vimtex_env_toggle_math_map', {
+        \ '$': '\[',
+        \ '\[': 'equation',
+        \ '$$': '\[',
+        \ '\(': '$',
+        \})
 
   if &diff
     let g:vimtex_fold_enabled = 0
+    let g:vimtex_fold_bib_enabled = 0
   else
     call s:init_option('vimtex_fold_enabled', 0)
+    call s:init_option('vimtex_fold_bib_enabled', g:vimtex_fold_enabled)
   endif
+  call s:init_option('vimtex_fold_bib_max_key_width', 0)
   call s:init_option('vimtex_fold_manual', 0)
   call s:init_option('vimtex_fold_levelmarker', '*')
   call s:init_option('vimtex_fold_types', {})
@@ -72,9 +103,9 @@ function! vimtex#options#init() abort " {{{1
         \ 'sections' : {
         \   'parse_levels' : 0,
         \   'sections' : [
-        \     'part',
-        \     'chapter',
-        \     'section',
+        \     '%(add)?part',
+        \     '%(chapter|addchap)',
+        \     '%(section|addsec)',
         \     'subsection',
         \     'subsubsection',
         \   ],
@@ -116,9 +147,28 @@ function! vimtex#options#init() abort " {{{1
         \})
 
   call s:init_option('vimtex_format_enabled', 0)
+  call s:init_option('vimtex_format_border_begin', '\v^\s*%(' . join([
+        \ '\\item',
+        \ '\\begin',
+        \ '\\end',
+        \ '%(\\\[|\$\$)\s*$',
+        \], '|') . ')')
+  call s:init_option('vimtex_format_border_end', '\v\\%(' . join([
+        \ '\\\*?',
+        \ 'clear%(double)?page',
+        \ 'linebreak',
+        \ 'new%(line|page)',
+        \ 'pagebreak',
+        \ '%(begin|end)\{[^}]*\}',
+        \], '|') . ')\s*$' . '|^\s*%(\\\]|\$\$)\s*$')
 
+  call s:init_option('vimtex_grammar_textidote', {
+        \ 'jar': '',
+        \ 'args': '',
+        \})
   call s:init_option('vimtex_grammar_vlty', {
         \ 'lt_directory': '~/lib/LanguageTool',
+        \ 'lt_command': '',
         \ 'lt_disable': 'WHITESPACE_RULE',
         \ 'lt_enable': '',
         \ 'lt_disablecategories': '',
@@ -126,10 +176,12 @@ function! vimtex#options#init() abort " {{{1
         \ 'server': 'no',
         \ 'shell_options': '',
         \ 'show_suggestions': 0,
+        \ 'encoding': 'auto',
         \})
 
   call s:init_option('vimtex_imaps_enabled', 1)
   call s:init_option('vimtex_imaps_disabled', [])
+  call s:init_option('vimtex_imaps_leader', '`')
   call s:init_option('vimtex_imaps_list', [
         \ { 'lhs' : '0',  'rhs' : '\emptyset' },
         \ { 'lhs' : '6',  'rhs' : '\partial' },
@@ -179,7 +231,6 @@ function! vimtex#options#init() abort " {{{1
         \ { 'lhs' : 'w',  'rhs' : '\omega' },
         \ { 'lhs' : 'z',  'rhs' : '\zeta' },
         \ { 'lhs' : 'x',  'rhs' : '\xi' },
-        \ { 'lhs' : 'G',  'rhs' : '\Gamma' },
         \ { 'lhs' : 'D',  'rhs' : '\Delta' },
         \ { 'lhs' : 'F',  'rhs' : '\Phi' },
         \ { 'lhs' : 'G',  'rhs' : '\Gamma' },
@@ -202,12 +253,16 @@ function! vimtex#options#init() abort " {{{1
         \ { 'lhs' : 'c',  'rhs' : 'vimtex#imaps#style_math("mathcal")', 'expr' : 1, 'leader' : '#'},
         \ { 'lhs' : '-',  'rhs' : 'vimtex#imaps#style_math("overline")', 'expr' : 1, 'leader' : '#'},
         \ { 'lhs' : 'B',  'rhs' : 'vimtex#imaps#style_math("mathbb")', 'expr' : 1, 'leader' : '#'},
+        \ { 'lhs' : g:vimtex_imaps_leader,
+        \   'rhs' : repeat(g:vimtex_imaps_leader, 2),
+        \   'wrapper' : 'vimtex#imaps#wrap_trivial'},
         \])
 
   call s:init_option('vimtex_indent_enabled', 1)
   call s:init_option('vimtex_indent_bib_enabled', 1)
+  call s:init_option('vimtex_indent_tikz_commands', 1)
   call s:init_option('vimtex_indent_conditionals', {
-        \ 'open': '\v%(\\newif)@<!\\if%(field|name|numequal|thenelse)@!',
+        \ 'open': '\v%(\\newif)@<!\\if%(f>|field|name|numequal|thenelse|toggle)@!',
         \ 'else': '\\else\>',
         \ 'close': '\\fi\>',
         \})
@@ -236,42 +291,95 @@ function! vimtex#options#init() abort " {{{1
   call s:init_option('vimtex_labels_enabled', 1)
   call s:init_option('vimtex_labels_refresh_always', 1)
 
+
+  let s:chktexrc = (empty($XDG_CONFIG_HOME)
+        \ ? $HOME . '/.config'
+        \ : $XDG_CONFIG_HOME) . '/chktexrc'
+
+  call s:init_option('vimtex_lint_chktex_parameters',
+        \ filereadable(s:chktexrc)
+        \   ? '--localrc ' . shellescape(s:chktexrc)
+        \   : '')
+  call s:init_option('vimtex_lint_chktex_ignore_warnings',
+        \ '-n1 -n3 -n8 -n25 -n36')
+
   call s:init_option('vimtex_parser_bib_backend', 'bibtex')
 
   call s:init_option('vimtex_quickfix_enabled', 1)
   call s:init_option('vimtex_quickfix_method', 'latexlog')
-  call s:init_option('vimtex_quickfix_autojump', '0')
+  call s:init_option('vimtex_quickfix_autojump', 0)
   call s:init_option('vimtex_quickfix_ignore_filters', [])
-  call s:init_option('vimtex_quickfix_mode', '2')
-  call s:init_option('vimtex_quickfix_open_on_warning', '1')
+  call s:init_option('vimtex_quickfix_mode', 2)
+  call s:init_option('vimtex_quickfix_open_on_warning', 1)
   call s:init_option('vimtex_quickfix_blgparser', {})
-  call s:init_option('vimtex_quickfix_autoclose_after_keystrokes', '0')
+  call s:init_option('vimtex_quickfix_autoclose_after_keystrokes', 0)
+
+  call s:init_option('vimtex_subfile_start_local', 0)
 
   call s:init_option('vimtex_syntax_enabled', 1)
+  call s:init_option('vimtex_syntax_conceal', {
+        \ 'accents': 1,
+        \ 'ligatures': 1,
+        \ 'cites': 1,
+        \ 'fancy': 1,
+        \ 'greek': 1,
+        \ 'math_bounds': 1,
+        \ 'math_delimiters': 1,
+        \ 'math_fracs': 1,
+        \ 'math_super_sub': 1,
+        \ 'math_symbols': 1,
+        \ 'sections': 0,
+        \ 'styles': 1,
+        \})
+  call s:init_option('vimtex_syntax_conceal_cites', {
+        \ 'type': 'brackets',
+        \ 'icon': '📖',
+        \ 'verbose': v:true,
+        \})
+  call s:init_option('vimtex_syntax_conceal_disable', 0)
+  call s:init_option('vimtex_syntax_custom_cmds', [])
   call s:init_option('vimtex_syntax_nested', {
         \ 'aliases' : {
         \   'C' : 'c',
         \   'csharp' : 'cs',
         \ },
         \ 'ignored' : {
+        \   'sh' : ['shSpecial'],
+        \   'bash' : ['shSpecial'],
         \   'cs' : [
         \     'csBraces',
+        \   ],
+        \   'haskell' : [
+        \     'hsVarSym',
+        \   ],
+        \   'java' : [
+        \     'javaError',
+        \   ],
+        \   'markdown' : [
+        \     'mkdNonListItemBlock',
         \   ],
         \   'python' : [
         \     'pythonEscape',
         \     'pythonBEscape',
         \     'pythonBytesEscape',
         \   ],
-        \   'java' : [
-        \     'javaError',
-        \   ],
-        \   'haskell' : [
-        \     'hsVarSym',
-        \   ],
         \ }
         \})
-  call s:init_option('vimtex_syntax_autoload_packages', ['amsmath'])
-  call s:init_option('vimtex_syntax_nospell_commands', [])
+  call s:init_option('vimtex_syntax_nospell_comments', 0)
+  call s:init_option('vimtex_syntax_packages', {
+        \ 'amsmath': {'load': 2},
+        \ 'babel': {'conceal': 1},
+        \ 'hyperref': {'conceal': 1},
+        \ 'fontawesome5': {'conceal': 1},
+        \})
+
+  " Disable conceals if chosen
+  if g:vimtex_syntax_conceal_disable
+    call map(g:vimtex_syntax_conceal, {k, v -> 0})
+    let g:vimtex_syntax_packages.babel.conceal = 0
+    let g:vimtex_syntax_packages.hyperref.conceal = 0
+    let g:vimtex_syntax_packages.fontawesome5.conceal = 0
+  endif
 
   call s:init_option('vimtex_texcount_custom_arg', '')
 
@@ -280,14 +388,8 @@ function! vimtex#options#init() abort " {{{1
   call s:init_option('vimtex_text_obj_linewise_operators', ['d', 'y'])
 
   call s:init_option('vimtex_toc_enabled', 1)
-  call s:init_option('vimtex_toc_custom_matchers', [])
-  call s:init_option('vimtex_toc_show_preamble', 1)
-  call s:init_option('vimtex_toc_todo_labels', {
-        \ 'TODO': 'TODO: ',
-        \ 'FIXME': 'FIXME: '
-        \})
   call s:init_option('vimtex_toc_config', {
-        \ 'name' : 'Table of contents (vimtex)',
+        \ 'name' : 'Table of contents (VimTeX)',
         \ 'mode' : 1,
         \ 'fold_enable' : 0,
         \ 'fold_level_start' : -1,
@@ -317,12 +419,26 @@ function! vimtex#options#init() abort " {{{1
         \ 'tocdepth' : 3,
         \ 'todo_sorted' : 1,
         \})
+  call s:init_option('vimtex_toc_config_matchers', {})
+  call s:init_option('vimtex_toc_custom_matchers', [])
+  call s:init_option('vimtex_toc_show_preamble', 1)
+  call s:init_option('vimtex_toc_todo_labels', {
+        \ 'TODO': 'TODO: ',
+        \ 'FIXME': 'FIXME: '
+        \})
+
+  call s:init_option('vimtex_toggle_fractions', {
+        \ 'INLINE': 'frac',
+        \ 'frac': 'INLINE',
+        \ 'dfrac': 'INLINE',
+        \})
 
   call s:init_option('vimtex_view_enabled', 1)
   call s:init_option('vimtex_view_automatic', 1)
   call s:init_option('vimtex_view_method', 'general')
   call s:init_option('vimtex_view_use_temp_files', 0)
   call s:init_option('vimtex_view_forward_search_on_start', 1)
+  call s:init_option('vimtex_view_reverse_search_edit_cmd', 'edit')
 
   " OS dependent defaults
   let l:os = vimtex#util#get_os()
@@ -331,29 +447,34 @@ function! vimtex#options#init() abort " {{{1
       call s:init_option('vimtex_view_general_viewer', 'SumatraPDF')
       call s:init_option('vimtex_view_general_options',
             \ '-reuse-instance -forward-search @tex @line @pdf')
-      call s:init_option('vimtex_view_general_options_latexmk',
-            \ 'reuse-instance')
     elseif executable('mupdf')
       call s:init_option('vimtex_view_general_viewer', 'mupdf')
+      call s:init_option('vimtex_view_general_options', '@pdf')
     else
-      call s:init_option('vimtex_view_general_viewer', '')
+      call s:init_option('vimtex_view_general_viewer', 'start ""')
+      call s:init_option('vimtex_view_general_options', '@pdf')
     endif
   else
     call s:init_option('vimtex_view_general_viewer', get({
           \ 'linux' : 'xdg-open',
           \ 'mac'   : 'open',
-          \ 'win'   : 'start',
           \}, l:os, ''))
     call s:init_option('vimtex_view_general_options', '@pdf')
-    call s:init_option('vimtex_view_general_options_latexmk', '')
   endif
 
   call s:init_option('vimtex_view_mupdf_options', '')
   call s:init_option('vimtex_view_mupdf_send_keys', '')
+  call s:init_option('vimtex_view_sioyek_exe', 'sioyek')
   call s:init_option('vimtex_view_skim_activate', 0)
-  call s:init_option('vimtex_view_skim_reading_bar', 1)
+  call s:init_option('vimtex_view_skim_sync', 0)
+  call s:init_option('vimtex_view_skim_reading_bar', 0)
   call s:init_option('vimtex_view_zathura_options', '')
   call s:init_option('vimtex_view_zathura_check_libsynctex', 1)
+
+  " Fallback option
+  if g:vimtex_context_pdf_viewer ==# 'NONE'
+    let g:vimtex_context_pdf_viewer = g:vimtex_view_general_viewer
+  endif
 
   let s:initialized = v:true
 endfunction
@@ -369,6 +490,7 @@ function! s:check_for_deprecated_options() abort " {{{1
         \ 'g:vimtex_change_set_formatexpr',
         \ 'g:vimtex_change_toggled_delims',
         \ 'g:vimtex_compiler_callback_hooks',
+        \ 'g:vimtex_disable_recursive_main_file_detection',
         \ 'g:vimtex_env_complete_list',
         \ 'g:vimtex_fold_commands',
         \ 'g:vimtex_fold_commands_default',
@@ -398,6 +520,10 @@ function! s:check_for_deprecated_options() abort " {{{1
         \ 'g:vimtex_quickfix_ignored_warnings',
         \ 'g:vimtex_quickfix_latexlog',
         \ 'g:vimtex_quickfix_warnings',
+        \ 'g:vimtex_syntax_autoload_packages',
+        \ 'g:vimtex_syntax_conceal_default',
+        \ 'g:vimtex_syntax_nospell_commands',
+        \ 'g:vimtex_textidote_jar',
         \ 'g:vimtex_toc_fold',
         \ 'g:vimtex_toc_fold_level_start',
         \ 'g:vimtex_toc_fold_levels',
@@ -415,9 +541,11 @@ function! s:check_for_deprecated_options() abort " {{{1
         \ 'g:vimtex_toc_split_pos',
         \ 'g:vimtex_toc_tocdepth',
         \ 'g:vimtex_toc_width',
+        \ 'g:vimtex_view_automatic_xwin',
         \ 'g:vimtex_view_general_callback',
         \ 'g:vimtex_view_general_hook_callback',
         \ 'g:vimtex_view_general_hook_view',
+        \ 'g:vimtex_view_general_options_latexmk',
         \ 'g:vimtex_view_mupdf_hook_callback',
         \ 'g:vimtex_view_mupdf_hook_view',
         \ 'g:vimtex_view_skim_hook_callback',
@@ -450,11 +578,18 @@ function! s:init_highlights() abort " {{{1
         \ ['VimtexInfoOther', ''],
         \ ['VimtexMsg', 'ModeMsg'],
         \ ['VimtexSuccess', 'Statement'],
+        \ ['VimtexTodo', 'Todo'],
+        \ ['VimtexWarning', 'WarningMsg'],
+        \ ['VimtexError', 'Error'],
+        \ ['VimtexFatal', 'ErrorMsg'],
         \ ['VimtexTocHelp', 'helpVim'],
         \ ['VimtexTocHelpKey', 'ModeMsg'],
         \ ['VimtexTocHelpLayerOn', 'Statement'],
         \ ['VimtexTocHelpLayerOff', 'Comment'],
-        \ ['VimtexTocTodo', 'Todo'],
+        \ ['VimtexTocTodo', 'VimtexTodo'],
+        \ ['VimtexTocWarning', 'VimtexWarning'],
+        \ ['VimtexTocError', 'VimtexError'],
+        \ ['VimtexTocFatal', 'VimtexFatal'],
         \ ['VimtexTocNum', 'Number'],
         \ ['VimtexTocSec0', 'Title'],
         \ ['VimtexTocSec1', ''],
@@ -468,8 +603,6 @@ function! s:init_highlights() abort " {{{1
         \ ['VimtexTocLabelsTab', 'String'],
         \ ['VimtexTocIncl', 'Number'],
         \ ['VimtexTocInclPath', ''],
-        \ ['VimtexWarning', 'WarningMsg'],
-        \ ['VimtexError', 'ErrorMsg'],
         \]
     if !hlexists(l:name) && !empty(l:target)
       silent execute 'highlight default link' l:name l:target

@@ -1,4 +1,4 @@
-" vimtex - LaTeX plugin for Vim
+" VimTeX - LaTeX plugin for Vim
 "
 " Maintainer: Karl Yngve Lervåg
 " Email:      karl.yngve@gmail.com
@@ -48,24 +48,22 @@ function! vimtex#misc#wordcount(...) abort " {{{1
     let l:file = vimtex#parser#selection_to_texfile({'range': l:range})
   endif
 
-  let cmd  = 'cd ' . vimtex#util#shellescape(l:file.root)
-  let cmd .= has('win32') ? '& ' : '; '
-  let cmd .= 'texcount -nosub -sum '
-  let cmd .= get(l:opts, 'count_letters') ? '-letter ' : ''
-  let cmd .= get(l:opts, 'detailed') ? '-inc ' : '-q -1 -merge '
-  let cmd .= g:vimtex_texcount_custom_arg . ' '
-  let cmd .= vimtex#util#shellescape(l:file.base)
-  let lines = vimtex#process#capture(cmd)
+  let l:cmd = 'texcount -nosub -sum '
+        \ . (get(l:opts, 'count_letters') ? '-letter ' : '')
+        \ . (get(l:opts, 'detailed') ? '-inc ' : '-q -1 -merge ')
+        \ . g:vimtex_texcount_custom_arg . ' '
+        \ . vimtex#util#shellescape(l:file.base)
+  let l:lines = vimtex#jobs#capture(l:cmd, {'cwd': l:file.root})
 
   if l:file.base !=# b:vimtex.base
     call delete(l:file.tex)
   endif
 
   if get(l:opts, 'detailed')
-    return lines
+    return l:lines
   else
-    call filter(lines, 'v:val !~# ''ERROR\|^\s*$''')
-    return join(lines, '')
+    call filter(l:lines, 'v:val !~# ''ERROR\|^\s*$''')
+    return join(l:lines, '')
   endif
 endfunction
 
@@ -120,7 +118,7 @@ if get(s:, 'reload_guard', 1)
   function! vimtex#misc#reload() abort
     let s:reload_guard = 0
 
-    for l:file in glob(fnamemodify(s:file, ':h') . '/../**/*.vim', 0, 1)
+    for l:file in glob(s:file . '/**/*.vim', 0, 1)
       execute 'source' l:file
     endfor
 
@@ -152,4 +150,4 @@ endif
 " }}}1
 
 
-let s:file = expand('<sfile>')
+let s:file = expand('<sfile>:h:h')

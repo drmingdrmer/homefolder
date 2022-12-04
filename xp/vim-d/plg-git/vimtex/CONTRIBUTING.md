@@ -1,28 +1,27 @@
-# Issue descriptions
-
-Please see the [issue template](ISSUE_TEMPLATE.md) for how to write a good
-issue description. In short, it should contain the following:
-
-1. Describe the issue in detail, include steps to reproduce the issue
-2. Include a minimal working example
-3. Include a minimal vimrc file
-4. If you have a `.latexmkrc` file, please mention it and provide the relevant
-   content
-
 # Guide for code contributions
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+
+- [Branch model](#branch-model)
+- [Documentation style](#documentation-style)
+- [Code style](#code-style)
+- [Running tests](#running-tests)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Branch model
 
-vimtex is developed mainly through the master branch, and pull requests should
+VimTeX is developed mainly through the master branch, and pull requests should
 be [fork based](https://help.github.com/articles/using-pull-requests/).
 
 ## Documentation style
 
 Vim help files have their own specific syntax. There is a Vim help section on
-how to write them, see [`:h
-help-writing`](http://vimdoc.sourceforge.net/htmldoc/helphelp.html#help-writing).
+how to write them, see [`:h help-writing`](http://vimdoc.sourceforge.net/htmldoc/helphelp.html#help-writing).
 
-The vimtex documentation style should be relatively clear, and it should be
+The VimTeX documentation style should be relatively clear, and it should be
 easy to see from the existing documentation how to write it. Still, here are
 some pointers:
 
@@ -33,9 +32,14 @@ some pointers:
 - The section tags should be right aligned at the 79th column
 - Sections should be included and linked to from the table of contents
 
+VimTeX also has a high level code [documentation](./DOCUMENTATION.md) mainly
+for developers. It should provide an overview of the VimTeX code and APIs and
+may help developers (and users) to to understand the functionalities of the
+plugin a little bit faster.
+
 ## Code style
 
-When submitting code for vimtex, please adhere to the following standards:
+When submitting code for VimTeX, please adhere to the following standards:
 
 - Use `shiftwidth=2` - no tabs!
 - Write readable code
@@ -60,7 +64,7 @@ When submitting code for vimtex, please adhere to the following standards:
 ## Running tests
 
 New functionality should be accompanied by tests. Tests can be run from the
-`test/tests` folder with `make`. The tests currently only run on Linux, and the
+`test` folder with `make`. The tests currently only run on Linux, and the
 following utilities are required to run all the tests:
 
 - `wget`

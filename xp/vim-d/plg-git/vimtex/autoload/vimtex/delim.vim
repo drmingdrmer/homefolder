@@ -1,4 +1,4 @@
-" vimtex - LaTeX plugin for Vim
+" VimTeX - LaTeX plugin for Vim
 "
 " Maintainer: Karl Yngve Lervåg
 " Email:      karl.yngve@gmail.com
@@ -25,14 +25,18 @@ function! vimtex#delim#init_buffer() abort " {{{1
   nnoremap <silent><buffer> <plug>(vimtex-delim-delete)
         \ :<c-u>call <sid>operator_setup('delete')<bar>normal! g@l<cr>
 
-  inoremap <silent><buffer> <plug>(vimtex-delim-close)
-        \ <c-r>=vimtex#delim#close()<cr>
+  inoremap <silent><buffer><expr> <plug>(vimtex-delim-close)
+        \ vimtex#delim#close()
+
+  nnoremap <silent><buffer> <plug>(vimtex-delim-add-modifiers)
+        \ :<c-u>call vimtex#delim#add_modifiers()<cr>
 endfunction
 
 " }}}1
 
 function! vimtex#delim#close() abort " {{{1
   let l:save_pos = vimtex#pos#get_cursor()
+  let l:indent = g:vimtex_indent_enabled ? "\<c-f>" : ''
   let l:posval_cursor = vimtex#pos#val(l:save_pos)
   let l:posval_current = l:posval_cursor
   let l:posval_last = l:posval_cursor + 1
@@ -47,7 +51,7 @@ function! vimtex#delim#close() abort " {{{1
     let l:close = vimtex#delim#get_matching(l:open)
     if empty(l:close.match)
       call vimtex#pos#set_cursor(l:save_pos)
-      return l:open.corr
+      return l:open.corr . l:indent
     endif
 
     let l:posval_last = l:posval_current
@@ -56,7 +60,7 @@ function! vimtex#delim#close() abort " {{{1
     if l:posval_current != l:posval_cursor
           \ && l:posval_try > l:posval_cursor
       call vimtex#pos#set_cursor(l:save_pos)
-      return l:open.corr
+      return l:open.corr . l:indent
     endif
 
     call vimtex#pos#set_cursor(vimtex#pos#prev(l:open))
@@ -95,28 +99,45 @@ function! vimtex#delim#toggle_modifier(...) abort " {{{1
     endif
   endfor
 
+  " Possibly shift right delimiter position
+  let l:cnum = l:close.cnum
+  let l:shift = len(newmods[0]) - len(l:open.mod)
+  if l:open.lnum == l:close.lnum
+    let l:cnum += l:shift
+  endif
+
+  " Calculate new position
+  let l:pos = vimtex#pos#get_cursor()
+  let l:do_adjust_right = l:pos[2] >= l:close.cnum + len(l:close.mod)
+  if l:pos[1] == l:open.lnum && l:pos[2] > l:open.cnum
+    if l:pos[2] > l:open.cnum + len(l:open.mod)
+      let l:pos[2] += l:shift
+    elseif l:shift < 0
+      let l:pos[2] = l:open.cnum
+    endif
+  endif
+  if l:pos[1] == l:close.lnum && l:pos[2] >= l:cnum
+    if l:do_adjust_right
+      let l:pos[2] += len(newmods[1]) - len(l:close.mod)
+    else
+      let l:pos[2] = l:cnum
+    endif
+  endif
+
+  " Change current text
   let line = getline(l:open.lnum)
   let line = strpart(line, 0, l:open.cnum - 1)
         \ . newmods[0]
         \ . strpart(line, l:open.cnum + len(l:open.mod) - 1)
   call setline(l:open.lnum, line)
 
-  let l:cnum = l:close.cnum
-  if l:open.lnum == l:close.lnum
-    let n = len(newmods[0]) - len(l:open.mod)
-    let l:cnum += n
-    let pos = vimtex#pos#get_cursor()
-    if pos[2] > l:open.cnum + len(l:open.mod)
-      let pos[2] += n
-      call vimtex#pos#set_cursor(pos)
-    endif
-  endif
-
   let line = getline(l:close.lnum)
   let line = strpart(line, 0, l:cnum - 1)
         \ . newmods[1]
         \ . strpart(line, l:cnum + len(l:close.mod) - 1)
   call setline(l:close.lnum, line)
+
+  call vimtex#pos#set_cursor(l:pos)
 
   return newmods
 endfunction
@@ -197,6 +218,60 @@ endfunction
 
 " }}}1
 
+function! vimtex#delim#add_modifiers() abort " {{{1
+  " Save cursor position
+  let l:cursor = vimtex#pos#get_cursor()
+
+  " Use syntax highlights to detect region math region
+  let l:ww = &whichwrap
+  set whichwrap=h
+  while vimtex#syntax#in_mathzone()
+    normal! h
+    if vimtex#pos#get_cursor()[1:2] == [1, 1] | break | endif
+  endwhile
+  let &whichwrap = l:ww
+  let l:startval = vimtex#pos#val(vimtex#pos#get_cursor())
+
+  let l:undostore = v:true
+  call vimtex#pos#set_cursor(l:cursor)
+
+  while v:true
+    let [l:open, l:close] = vimtex#delim#get_surrounding('delim_modq_math')
+    if empty(l:open) || vimtex#pos#val(l:open) <= l:startval
+      break
+    endif
+
+    call vimtex#pos#set_cursor(vimtex#pos#prev(l:open))
+    if !empty(l:open.mod) | continue | endif
+
+    if l:undostore
+      let l:undostore = v:false
+      call vimtex#pos#set_cursor(l:cursor)
+      call vimtex#util#undostore()
+      call vimtex#pos#set_cursor(vimtex#pos#prev(l:open))
+    endif
+
+    " Add close modifier
+    let line = getline(l:close.lnum)
+    let line = strpart(line, 0, l:close.cnum - 1)
+          \ .  '\right' . strpart(line, l:close.cnum - 1)
+    call setline(l:close.lnum, line)
+
+    " Add open modifier
+    let line = getline(l:open.lnum)
+    let line = strpart(line, 0, l:open.cnum - 1)
+          \ . '\left' . strpart(line, l:open.cnum - 1)
+    call setline(l:open.lnum, line)
+
+    " Adjust cursor position
+    let l:cursor[2] += 5
+  endwhile
+
+  call vimtex#pos#set_cursor(l:cursor)
+endfunction
+
+" }}}1
+
 function! vimtex#delim#change(...) abort " {{{1
   let [l:open, l:close] = vimtex#delim#get_surrounding('delim_math')
   if empty(l:open) | return | endif
@@ -208,10 +283,12 @@ function! vimtex#delim#change(...) abort " {{{1
           \ ? l:open.match . ' ... ' . l:open.corr
           \ : l:open.match . ' ... ' . l:open.corr)
 
-    let l:new_delim = vimtex#echo#input({
-          \ 'info' :
-          \   ['Change surrounding delimiter: ', ['VimtexWarning', l:name]],
-          \ 'complete' : 'customlist,vimtex#delim#change_input_complete',
+    let l:new_delim = vimtex#ui#input({
+          \ 'info': [
+          \   'Change surrounding delimiter: ',
+          \   ['VimtexWarning', l:name]
+          \ ],
+          \ 'completion': 'customlist,vimtex#delim#change_input_complete',
           \})
   endif
 
@@ -347,6 +424,7 @@ function! vimtex#delim#get_matching(delim) abort " {{{1
     else
       unlet l:matching.env_cmd
     endif
+    let l:matching.name = matchstr(l:match, '{\zs\k*\ze\*\?}')
   endif
 
   return l:matching
@@ -359,7 +437,16 @@ function! vimtex#delim#get_surrounding(type) abort " {{{1
   let l:pos_val_last = l:pos_val_cursor
   let l:pos_val_open = l:pos_val_cursor - 1
 
-  while l:pos_val_open < l:pos_val_last
+  " Avoid long iterations
+  let l:count = 0
+  let l:max_tries = get({
+        \ 'env_tex': 100,
+        \ 'env_math': 3,
+        \ 'env_all': 100,
+        \} , a:type, 100)
+
+  while l:pos_val_open < l:pos_val_last && l:count < l:max_tries
+    let l:count += 1
     let l:open = vimtex#delim#get_prev(a:type, 'open')
     if empty(l:open) | break | endif
 
@@ -395,10 +482,12 @@ function! s:operator_setup(operator) abort " {{{1
           \ ? l:open.match . ' ... ' . l:open.corr
           \ : l:open.match . ' ... ' . l:open.corr)
 
-    let s:operator_delim = vimtex#echo#input({
-          \ 'info' :
-          \   ['Change surrounding delimiter: ', ['VimtexWarning', l:name]],
-          \ 'complete' : 'customlist,vimtex#delim#change_input_complete',
+    let s:operator_delim = vimtex#ui#input({
+          \ 'info': [
+          \   'Change surrounding delimiter: ',
+          \   ['VimtexWarning', l:name]
+          \ ],
+          \ 'completion': 'customlist,vimtex#delim#change_input_complete',
           \})
   endif
 endfunction
@@ -421,7 +510,6 @@ function! s:snr() abort " {{{1
 endfunction
 
 " }}}1
-"
 
 function! s:get_delim(opts) abort " {{{1
   "
@@ -539,7 +627,7 @@ function! s:parser_env(match, lnum, cnum, ...) abort " {{{1
   let result = {}
 
   let result.type = 'env'
-  let result.name = matchstr(a:match, '{\zs\k*\ze\*\?}')
+  let result.name = matchstr(a:match, '{\zs[^}*]*\ze\*\?}')
   let result.starred = match(a:match, '\*}$') > 0
   let result.side = a:match =~# '\\begin' ? 'open' : 'close'
   let result.is_open = result.side ==# 'open'
@@ -559,8 +647,8 @@ function! s:parser_env(match, lnum, cnum, ...) abort " {{{1
         \ : substitute(a:match, 'end', 'begin', '')
 
   let result.re = {
-        \ 'open' : '\m\\begin\s*{' . result.name . '\*\?}',
-        \ 'close' : '\m\\end\s*{' . result.name . '\*\?}',
+        \ 'open' : '\m\\begin\s*{[^}]*}',
+        \ 'close' : '\m\\end\s*{[^}]*}',
         \}
 
   let result.re.this = result.is_open ? result.re.open  : result.re.close
@@ -591,7 +679,7 @@ function! s:parser_tex(match, lnum, cnum, side, type, direction) abort " {{{1
         \ 'close' : '\m' . escape(a:match, '$'),
         \}
   let result.side = vimtex#syntax#in(
-        \   (a:match ==# '$' ? 'texMathZoneX' : 'texMathZoneY'),
+        \   (a:match ==# '$' ? 'texMathZoneTI' : 'texMathZoneTD'),
         \   a:lnum, a:cnum+1)
         \ ? 'open' : 'close'
   let result.is_open = result.side ==# 'open'

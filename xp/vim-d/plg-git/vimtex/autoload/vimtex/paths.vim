@@ -1,8 +1,16 @@
-" vimtex - LaTeX plugin for Vim
+" VimTeX - LaTeX plugin for Vim
 "
 " Maintainer: Karl Yngve Lervåg
 " Email:      karl.yngve@gmail.com
 "
+
+function! vimtex#paths#asset(name) abort " {{{1
+  return vimtex#paths#join(s:root, 'assets/' . a:name)
+endfunction
+
+let s:root = resolve(expand('<sfile>:p:h:h:h'))
+
+" }}}1
 
 function! vimtex#paths#pushd(path) abort " {{{1
   if empty(a:path) || getcwd() ==# fnamemodify(a:path, ':p')
@@ -23,6 +31,20 @@ endfunction
 
 " }}}1
 
+function! vimtex#paths#join(root, tail) abort " {{{1
+  return vimtex#paths#s(a:root . '/' . a:tail)
+endfunction
+
+" }}}1
+
+function! vimtex#paths#s(path) abort " {{{1
+  " Use backslash on Windows
+  return simplify(vimtex#util#is_win()
+        \ ? tr(a:path, '/', '\')
+        \ : a:path)
+endfunction
+
+" }}}1
 function! vimtex#paths#is_abs(path) abort " {{{1
   return a:path =~# s:re_abs
 endfunction
@@ -31,8 +53,8 @@ endfunction
 
 function! vimtex#paths#shorten_relative(path) abort " {{{1
   " Input: An absolute path
-  " Output: Relative path with respect to the vimtex root, path relative to
-  "         vimtex root (unless absolute path is shorter)
+  " Output: Relative path with respect to the VimTeX root, path relative to
+  "         VimTeX root (unless absolute path is shorter)
 
   let l:relative = vimtex#paths#relative(a:path, b:vimtex.root)
   return strlen(l:relative) < strlen(a:path)
@@ -84,4 +106,4 @@ let s:cd = haslocaldir()
       \ : exists(':tcd') && haslocaldir(-1) ? 'tcd' : 'cd'
 let s:qpath = get(s:, 'qpath', [])
 
-let s:re_abs = has('win32') ? '^[A-Z]:[\\/]' : '^/'
+let s:re_abs = has('win32') ? '^\a:[\\/]' : '^/'

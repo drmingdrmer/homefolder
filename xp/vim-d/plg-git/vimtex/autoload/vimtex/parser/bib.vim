@@ -1,4 +1,4 @@
-" vimtex - LaTeX plugin for Vim
+" VimTeX - LaTeX plugin for Vim
 "
 " Maintainer: Karl Yngve Lervåg
 " Email:      karl.yngve@gmail.com
@@ -9,19 +9,89 @@ function! vimtex#parser#bib#parse(file, opts) abort " {{{1
 
   let l:backend = get(a:opts, 'backend', g:vimtex_parser_bib_backend)
 
-  if l:backend ==# 'bibtex'
-    if !executable('bibtex') | let l:backend = 'vim' | endif
-  elseif l:backend ==# 'bibparse'
-    if !executable('bibparse') | let l:backend = 'vim' | endif
-  else
-    let l:backend = 'vim'
-  endif
-
-  return s:parse_with_{l:backend}(a:file)
+  try
+    return s:parse_with_{l:backend}(a:file)
+  catch /E117/
+    call vimtex#log#error(
+          \ printf('bib parser backend "%s" does not exist!', l:backend))
+    return []
+  endtry
 endfunction
 
 " }}}1
+function! vimtex#parser#bib#parse_cheap(start_line, end_line, opts) abort " {{{1
+  " This function implements a quick and dirty bib parser in Vimscript. It does
+  " not parse all keys, just the type, the key, and the title/entryset. It is
+  " used e.g. by wiki#fold#bib#foldtext().
 
+  let l:get_description = get(a:opts, 'get_description', v:true)
+  let l:entries = []
+  let l:firstlines = filter(
+        \ range(a:start_line, a:end_line),
+        \ {_, i -> vimtex#util#trim(getline(i))[0] == "@"})
+  let l:total_entries = len(l:firstlines)
+  let l:entry_lines = map(l:firstlines, {idx, val -> [val,
+        \ idx == l:total_entries - 1
+        \  ? a:end_line
+        \  : l:firstlines[idx + 1] - 1
+        \ ]})
+
+  let l:n = 0
+  while l:n < l:total_entries
+    let l:current = {}
+    let l:firstline = l:entry_lines[l:n][0]
+    let l:lastline = l:entry_lines[l:n][1]
+
+    let l:lnum = l:firstline
+    let l:entry_info = getline(l:lnum)
+    while l:lnum <= l:lastline
+      let l:type_key_match = matchlist(l:entry_info,
+            \ '\v\@\s*(\a+)\s*\{\s*(\S+)\s*,')
+      if empty(l:type_key_match)
+        " Add the next line into the text to be matched and try again
+        let l:entry_info .= getline(l:lnum + 1)
+        let l:lnum += 1
+        continue
+      else
+        let l:current.type = l:type_key_match[1]
+        let l:current.key = l:type_key_match[2]
+        break
+      endif
+    endwhile
+
+    if empty(l:type_key_match)
+      " This will happen e.g. with  @string{ foo = Mrs. Foo }
+      let l:n += 1
+      continue
+    endif
+
+    if l:get_description
+      " The description for a @set is the 'entryset'; for all other entry
+      " types it's the 'title'.
+      let l:description_pattern = l:current.type == 'set' ?
+            \ '\v^\s*entryset\s*\=\s*(\{.+\}|\".+\")\s*,?' :
+            \ '\v^\s*title\s*\=\s*(\{.+\}|\".+\")\s*,?'
+      while l:lnum <= l:lastline
+        let l:description_match = matchlist(
+              \ getline(l:lnum), l:description_pattern)
+        if l:description_match != []
+          " Remove surrounding braces or quotes
+          let l:current.description = l:description_match[1][1:-2]
+          break
+        else
+          let l:lnum += 1
+        endif
+      endwhile
+    endif
+
+    call add(l:entries, l:current)
+    let l:n += 1
+  endwhile
+
+  return l:entries
+endfunction
+
+" }}}1
 
 function! s:parse_with_bibtex(file) abort " {{{1
   call s:parse_with_bibtex_init()
@@ -42,10 +112,7 @@ function! s:parse_with_bibtex(file) abort " {{{1
         \ ], tmp.aux)
 
   " Create the temporary bbl file
-  call vimtex#process#run('bibtex -terse ' . fnameescape(tmp.aux), {
-        \ 'background' : 0,
-        \ 'silent' : 1,
-        \})
+  call vimtex#jobs#run('bibtex -terse ' . fnameescape(tmp.aux))
 
   " Parse temporary bbl file
   let lines = join(readfile(tmp.bbl), "\n")
@@ -95,7 +162,7 @@ function! s:parse_with_bibtex_init() abort " {{{1
           \ 'bibtex is not executable and may not be used to parse bib files!')
   endif
 
-  " Check if bstfile contains whitespace (not handled by vimtex)
+  " Check if bstfile contains whitespace (not handled by VimTeX)
   if stridx(s:bibtex_bstfile, ' ') >= 0
     let l:oldbst = s:bibtex_bstfile . '.bst'
     let s:bibtex_bstfile = tempname()
@@ -113,10 +180,7 @@ function! s:parse_with_bibparse(file) abort " {{{1
   call s:parse_with_bibparse_init()
   if s:bibparse_not_executable | return [] | endif
 
-  call vimtex#process#run('bibparse ' . fnameescape(a:file)
-        \ . ' >_vimtex_bibparsed.log', {'background' : 0, 'silent' : 1})
-  let l:lines = readfile('_vimtex_bibparsed.log')
-  call delete('_vimtex_bibparsed.log')
+  let l:lines = vimtex#jobs#capture('bibparse ' . fnameescape(a:file))
 
   let l:current = {}
   let l:entries = []
@@ -154,7 +218,7 @@ endfunction
 function! s:parse_with_bibparse_init() abort " {{{1
   if exists('s:bibparse_init_done') | return | endif
 
-  " Check if bibtex is executable
+  " Check if bibparse is executable
   let s:bibparse_not_executable = !executable('bibparse')
   if s:bibparse_not_executable
     call vimtex#log#warning(
@@ -162,6 +226,26 @@ function! s:parse_with_bibparse_init() abort " {{{1
   endif
 
   let s:bibparse_init_done = 1
+endfunction
+
+" }}}1
+
+function! s:parse_with_bibtexparser(file) abort " {{{1
+py3 << END
+import vim
+from bibtexparser import load
+from bibtexparser.bparser import BibTexParser
+
+parser = BibTexParser(common_strings=True)
+parser.ignore_nonstandard_types = False
+
+entries = load(open(vim.eval("a:file")), parser).entries
+for e in entries:
+    e['key'] = e['ID']
+    e['type'] = e['ENTRYTYPE']
+END
+
+  return py3eval('entries')
 endfunction
 
 " }}}1
@@ -182,7 +266,7 @@ function! s:parse_with_vim(file) abort " {{{1
     let l:lnum += 1
 
     if empty(l:current)
-      if s:parse_type(a:file, l:lnum, l:line, l:current, l:strings)
+      if s:parse_type(a:file, l:lnum, l:line, l:current, l:strings, l:entries)
         let l:current = {}
       endif
       continue
@@ -204,7 +288,7 @@ endfunction
 
 " }}}1
 
-function! s:parse_type(file, lnum, line, current, strings) abort " {{{1
+function! s:parse_type(file, lnum, line, current, strings, entries) abort " {{{1
   let l:matches = matchlist(a:line, '\v^\@(\w+)\s*\{\s*(.*)')
   if empty(l:matches) | return 0 | endif
 
@@ -219,9 +303,13 @@ function! s:parse_type(file, lnum, line, current, strings) abort " {{{1
   if l:type ==# 'string'
     return s:parse_string(l:matches[2], a:current, a:strings)
   else
+    let l:matches = matchlist(l:matches[2], '\v^([^, ]*)\s*,\s*(.*)')
     let a:current.type = l:type
-    let a:current.key = matchstr(l:matches[2], '.*\ze,\s*')
-    return 0
+    let a:current.key = l:matches[1]
+
+    return empty(l:matches[2])
+          \ ? 0
+          \ : s:parse_entry(l:matches[2], a:current, a:entries)
   endif
 endfunction
 
@@ -284,7 +372,7 @@ function! s:get_key(body, head) abort " {{{1
   " Assumption: a:body is left trimmed and either empty or starts with a key.
   " Returns: The key and the remaining part of the entry body.
 
-  let l:matches = matchlist(a:body, '^\v(\w+)\s*\=\s*', a:head)
+  let l:matches = matchlist(a:body, '^\v([-_:0-9a-zA-Z]+)\s*\=\s*', a:head)
   return empty(l:matches)
         \ ? ['', -1]
         \ : [tolower(l:matches[1]), a:head + strlen(l:matches[0])]

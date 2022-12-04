@@ -1,7 +1,7 @@
 function! health#vimtex#check() abort
   call vimtex#options#init()
 
-  call health#report_start('vimtex')
+  call health#report_start('VimTeX')
 
   call s:check_general()
   call s:check_plugin_clash()
@@ -11,13 +11,19 @@ endfunction
 
 function! s:check_general() abort " {{{1
   if !has('nvim') || v:version < 800
-    call health#report_warn('vimtex works best with Vim 8 or neovim')
+    call health#report_warn('VimTeX works best with Vim 8 or neovim')
   else
     call health#report_ok('Vim version should have full support!')
   endif
 
   if !executable('bibtex')
-    call health#report_warn('bibtex is not executable, so bibtex completions are disabled.')
+    call health#report_warn('bibtex is not executable!',
+          \ 'bibtex is required for cite completions.')
+  endif
+  if !executable('biber')
+    call health#report_warn(
+          \ 'biber is not executable!',
+          \ 'Biber is often required so this may give unexpected problems.')
   endif
 endfunction
 
@@ -34,27 +40,7 @@ function! s:check_compiler() abort " {{{1
     return
   endif
 
-  let l:ok = 1
-  if !executable(g:vimtex_compiler_progname)
-    call health#report_warn(printf(
-          \ '|g:vimtex_compiler_progname| (`%s`) is not executable!',
-          \ g:vimtex_compiler_progname))
-    let l:ok = 0
-  endif
-
-  if has('nvim')
-        \ && fnamemodify(g:vimtex_compiler_progname, ':t') !=# 'nvr'
-    call health#report_warn('Compiler callbacks will not work!', [
-          \ '`neovim-remote` / `nvr` is required for callbacks to work with neovim',
-          \ "Please also set |g:vimtex_compiler_progname| = 'nvr'",
-          \ 'For more info, see :help |vimtex-faq-neovim|',
-          \])
-    let l:ok = 0
-  endif
-
-  if l:ok
-    call health#report_ok('Compiler should work!')
-  endif
+  call health#report_ok('Compiler should work!')
 endfunction
 
 " }}}1
@@ -66,8 +52,8 @@ function! s:check_plugin_clash() abort " {{{1
   let l:latexbox = !empty(filter(copy(l:scriptnames), "v:val =~# 'latex-box'"))
   if l:latexbox
     call health#report_warn('Conflicting plugin detected: LaTeX-Box')
-    call health#report_info('vimtex does not work as expected when LaTeX-Box is installed!')
-    call health#report_info('Please disable or remove it to use vimtex!')
+    call health#report_info('VimTeX does not work as expected when LaTeX-Box is installed!')
+    call health#report_info('Please disable or remove it to use VimTeX!')
   endif
 endfunction
 
@@ -78,7 +64,7 @@ function! s:check_view() abort " {{{1
 
   if executable('xdotool') && !executable('pstree')
     call health#report_warn('pstree is not available',
-          \ 'vimtex#view#reverse_goto is better if pstree is available.')
+          \ 'vimtex#view#inverse_search is better if pstree is available.')
   endif
 endfunction
 
@@ -138,17 +124,31 @@ function! s:check_view_mupdf() abort " {{{1
 endfunction
 
 " }}}1
+function! s:check_view_sioyek() abort " {{{1
+  let l:ok = 1
+
+  if !executable(g:vimtex_view_sioyek_exe)
+    call health#report_error('Sioyek is not executable!')
+    let l:ok = 0
+  endif
+
+  if l:ok
+    call health#report_ok('Sioyek should work properly!')
+  endif
+endfunction
+
+" }}}1
 function! s:check_view_skim() abort " {{{1
-  let l:cmd = join([
+  call vimtex#jobs#run(join([
         \ 'osascript -e ',
         \ '''tell application "Finder" to POSIX path of ',
         \ '(get application file id (id of application "Skim") as alias)''',
-        \])
+        \]))
 
-  if system(l:cmd)
-    call health#report_error('Skim is not installed!')
-  else
+  if v:shell_error == 0
     call health#report_ok('Skim viewer should work!')
+  else
+    call health#report_error('Skim is not installed!')
   endif
 endfunction
 

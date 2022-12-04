@@ -1,4 +1,4 @@
-" vimtex - LaTeX plugin for Vim
+" VimTeX - LaTeX plugin for Vim
 "
 " Maintainer: Karl Yngve Lervåg
 " Email:      karl.yngve@gmail.com
@@ -8,9 +8,11 @@ let g:vimtex#re#not_bslash =  '\v%(\\@<!%(\\\\)*)@<='
 let g:vimtex#re#not_comment = '\v%(' . g:vimtex#re#not_bslash . '\%.*)@<!'
 
 let g:vimtex#re#tex_input_root =
-      \ '\v^\s*\%\s*!?\s*[tT][eE][xX]\s+[rR][oO][oO][tT]\s*\=\s*\zs.*\ze\s*$'
+      \ '\v^\c\s*\%\s*!?\s*tex\s+root\s*[=:]\s*\zs.*\ze\s*$'
 let g:vimtex#re#tex_input_latex = '\v\\%('
-      \ . join(get(g:, 'vimtex_include_indicators', ['input', 'include']), '|')
+      \ . join(get(g:, 'vimtex_include_indicators',
+      \            ['input', 'include', 'includeonly']),
+      \        '|')
       \ . ')\s*\{'
 let g:vimtex#re#tex_input_import = '\v\\%('
       \ . 'subfile%(include)?'
@@ -38,8 +40,10 @@ let g:vimtex#re#neocomplete =
       \ . '|%(\a*cites|Cites)%(\s*\([^)]*\)){0,2}'
       \     . '%(%(\s*\[[^]]*\]){0,2}\s*\{[^}]*\})*'
       \     . '%(\s*\[[^]]*\]){0,2}\s*\{[^}]*'
+      \ . '|bibentry\s*\{[^}]*'
       \ . '|%(text|block)cquote\*?%(\s*\[[^]]*\]){0,2}\s*\{[^}]*'
       \ . '|%(for|hy)\w*cquote\*?\{[^}]*}%(\s*\[[^]]*\]){0,2}\s*\{[^}]*'
+      \ . '|defbibentryset\{[^}]*}\{[^}]*'
       \ . '|\a*ref%(\s*\{[^}]*|range\s*\{[^,}]*%(}\{)?)'
       \ . '|hyperref\s*\[[^]]*'
       \ . '|includegraphics\*?%(\s*\[[^]]*\]){0,2}\s*\{[^}]*'
@@ -60,8 +64,10 @@ let g:vimtex#re#deoplete = '\\(?:'
       \ . '|(?:\w*cites|Cites)(?:\s*\([^)]*\)){0,2}'
       \     . '(?:(?:\s*\[[^]]*\]){0,2}\s*\{[^}]*\})*'
       \     . '(?:\s*\[[^]]*\]){0,2}\s*\{[^}]*'
+      \ . '|bibentry\s*{[^}]*'
       \ . '|(text|block)cquote\*?(?:\s*\[[^]]*\]){0,2}\s*{[^}]*'
       \ . '|(for|hy)\w*cquote\*?{[^}]*}(?:\s*\[[^]]*\]){0,2}\s*{[^}]*'
+      \ . '|defbibentryset{[^}]*}{[^}]*'
       \ . '|\w*ref(?:\s*\{[^}]*|range\s*\{[^,}]*(?:}{)?)'
       \ . '|hyperref\s*\[[^]]*'
       \ . '|includegraphics\*?(?:\s*\[[^]]*\]){0,2}\s*\{[^}]*'
@@ -89,8 +95,10 @@ let g:vimtex#re#ncm2#bibtex = [
       \ '\\([A-Za-z]*cites|Cites)(\s*\([^)]*\)){0,2}'
       \     . '((\s*\[[^]]*\]){0,2}\s*\{[^}]*\})*'
       \     . '(\s*\[[^]]*\]){0,2}\s*\{[^}]*',
+      \ '\\bibentry\s*{[^}]*',
       \ '\\(text|block)cquote\*?(\[[^]]*\]){0,2}{[^}]*',
       \ '\\(for|hy)[A-Za-z]*cquote\*?{[^}]*}(\[[^]]*\]){0,2}{[^}]*',
+      \ '\\defbibentryset{[^}]*}{[^}]*',
       \]
 let g:vimtex#re#ncm2#labels = [
       \ '\\[A-Za-z]*ref({[^}]*|range{([^,{}]*(}{)?))',

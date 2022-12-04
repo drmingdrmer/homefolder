@@ -1,33 +1,48 @@
-" vimtex - LaTeX plugin for Vim
+" VimTeX - LaTeX plugin for Vim
 "
 " Maintainer: Karl Yngve Lervåg
 " Email:      karl.yngve@gmail.com
 "
 
-function! vimtex#test#assert(condition) abort " {{{1
-  if a:condition | return 1 | endif
+function! vimtex#test#finished() abort " {{{1
+  for l:error in v:errors
+    let l:match = matchlist(l:error, '\(.*\) line \(\d\+\): \(.*\)')
+    let l:file = fnamemodify(l:match[1], ':.')
+    let l:lnum = l:match[2]
+    let l:msg = l:match[3]
 
-  call s:fail()
-endfunction
+    if l:msg =~# 'Expected .*but got'
+      echo printf("%s:%d\n", l:file, l:lnum)
 
-" }}}1
-function! vimtex#test#assert_equal(expect, observe) abort " {{{1
-  if a:expect ==# a:observe | return 1 | endif
+      let l:intro = matchstr(l:msg, '.\{-}\ze\s*\(: \)\?Expected ')
+      if !empty(l:intro)
+        echo printf("  %s\n", l:intro)
+      endif
 
-  call s:fail([
-        \ 'expect:  ' . string(a:expect),
-        \ 'observe: ' . string(a:observe),
-        \])
-endfunction
+      let l:expect = matchstr(l:msg, 'Expected \zs.*\zebut got')
+      let l:observe = matchstr(l:msg, 'Expected .*but got \zs.*')
+      echo printf("  Expected: %s\n", l:expect)
+      echo printf("  Observed: %s\n\n", l:observe)
+    elseif l:msg =~# 'Pattern.*does\( not\)\? match'
+      echo printf("%s:%d\n", l:file, l:lnum)
 
-" }}}1
-function! vimtex#test#assert_match(x, regex) abort " {{{1
-  if a:x =~# a:regex | return 1 | endif
+      let l:intro = matchstr(l:msg, '.\{-}\ze\s*\(: \)\?Pattern ')
+      if !empty(l:intro)
+        echo printf("  %s\n", l:intro)
+      endif
 
-  call s:fail([
-        \ 'x = ' . string(a:x),
-        \ 'regex = ' . a:regex,
-        \])
+      let l:expect = matchstr(l:msg, 'Pattern.*does\( not\)\? match.*')
+      echo printf("  %s\n", l:expect)
+    else
+      echo printf("%s:%d: %s\n", l:file, l:lnum, l:msg)
+    endif
+  endfor
+
+  if len(v:errors) > 0
+    cquit
+  else
+    quitall!
+  endif
 endfunction
 
 " }}}1
@@ -39,67 +54,58 @@ function! vimtex#test#completion(context, ...) abort " {{{1
     silent execute 'normal GO' . a:context . "\<c-x>\<c-o>"
     silent normal! u
     return vimtex#complete#omnifunc(0, l:base)
-  catch /.*/
-    call s:fail(v:exception)
+  catch
+    call assert_report(
+          \ printf("\n  Context: %s\n  Base: %s\n%s",
+          \        a:context, l:base, v:exception))
+    return []
   endtry
 endfunction
 
 " }}}1
-function! vimtex#test#keys(keys, context, expected) abort " {{{1
-  normal! gg0dG
-  call append(1, a:context)
-  normal! ggdd
-
-  let l:fail_msg = ['keys: ' . a:keys]
-  let l:fail_msg += ['context:']
-  let l:fail_msg += map(copy(a:context), '"  " . v:val')
-  let l:fail_msg += ['expected:']
-  let l:fail_msg += map(copy(a:expected), '"  " . v:val')
+function! vimtex#test#keys(keys, context, expect) abort " {{{1
+  if type(a:context) == v:t_string
+    let l:ctx = [a:context]
+    let l:msg_context = printf("Context: %s", a:context)
+  else
+    let l:ctx = a:context
+    let l:msg_context = printf("Context:\n%s", join(a:context, "\n"))
+  endif
 
   try
+    normal! gg0dG
+    call append(1, l:ctx)
+    normal! ggdd
     silent execute 'normal' a:keys
   catch
-    let l:fail_msg += ['error:']
-    let l:fail_msg += ['  ' . v:exception]
-    call s:fail(l:fail_msg)
+    call assert_report(
+          \ printf("\n  Keys: %s\n  %s\n%s",
+          \        a:keys, l:msg_context, v:exception))
   endtry
 
-  let l:result = getline(1, line('$'))
-  if l:result ==# a:expected | return 1 | endif
+  let l:observe = getline(1, line('$'))
+  let l:observe = type(a:expect) == v:t_string
+        \ ? join(l:observe)
+        \ : l:observe
 
-  let l:fail_msg += ['result:']
-  let l:fail_msg += map(l:result, '"  " . v:val')
-  call s:fail(l:fail_msg)
+  call assert_equal(a:expect, l:observe,
+        \ printf("Keys: %s\n  %s", a:keys, l:msg_context))
 endfunction
 
 " }}}1
-function! vimtex#test#main(file, expected) abort " {{{1
+function! vimtex#test#main(file, expected, ...) abort " {{{1
   execute 'silent edit' fnameescape(a:file)
 
+  " ToggleMain if extra arg supplied
+  if a:0 > 0
+    VimtexToggleMain
+  endif
+
   let l:expected = empty(a:expected) ? '' : fnamemodify(a:expected, ':p')
-  call vimtex#test#assert(exists('b:vimtex'))
-  call vimtex#test#assert_equal(l:expected, b:vimtex.tex)
+  call assert_true(exists('b:vimtex'))
+  call assert_equal(fnamemodify(l:expected, ':.'), fnamemodify(b:vimtex.tex, ':.'))
 
   bwipeout!
-endfunction
-
-" }}}1
-
-function! s:fail(...) abort " {{{1
-  echo 'Assertion failed!'
-
-  if a:0 > 0 && !empty(a:1)
-    if type(a:1) == v:t_string
-      echo a:1
-    else
-      for line in a:1
-        echo line
-      endfor
-    endif
-  endif
-  echon "\n"
-
-  cquit
 endfunction
 
 " }}}1

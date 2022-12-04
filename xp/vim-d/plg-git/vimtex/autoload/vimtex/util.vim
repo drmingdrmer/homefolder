@@ -1,4 +1,4 @@
-" vimtex - LaTeX plugin for Vim
+" VimTeX - LaTeX plugin for Vim
 "
 " Maintainer: Karl Yngve Lervåg
 " Email:      karl.yngve@gmail.com
@@ -6,6 +6,66 @@
 
 function! vimtex#util#command(cmd) abort " {{{1
   return split(execute(a:cmd, 'silent!'), "\n")
+endfunction
+
+" }}}1
+function! vimtex#util#count(line, pattern) abort " {{{1
+  if empty(a:pattern) | return 0 | endif
+
+  let l:count = 1
+  while match(a:line, a:pattern, 0, l:count) >= 0
+    let l:count += 1
+  endwhile
+
+  return l:count - 1
+endfunction
+
+" }}}1
+function! vimtex#util#count_open(line, re_open, re_close) abort " {{{1
+  " Counts the number of unclosed opening patterns in the given line.
+  let l:i = match(a:line, a:re_open)
+  if l:i < 0 | return 0 | endif
+
+  let l:sum = 0
+  let l:imin_last = l:i
+  while l:i >= 0
+    let l:sum += 1
+    let l:i += len(matchstr(a:line, a:re_open, l:i))
+    let l:i = match(a:line, a:re_open, l:i)
+  endwhile
+
+  let l:i = match(a:line, a:re_close, l:imin_last)
+  while l:i >= 0
+    let l:sum -= 1
+    let l:i += len(matchstr(a:line, a:re_close, l:i))
+    let l:i = match(a:line, a:re_close, l:i)
+  endwhile
+
+  return max([l:sum, 0])
+endfunction
+
+" }}}1
+function! vimtex#util#count_close(line, re_open, re_close) abort " {{{1
+  " Counts the number of unopened closing patterns in the given line.
+  let l:i = match(a:line, a:re_close)
+  if l:i < 0 | return 0 | endif
+
+  let l:sum = 0
+  while l:i >= 0
+    let l:sum += 1
+    let l:imax_first = l:i
+    let l:i += len(matchstr(a:line, a:re_close, l:i))
+    let l:i = match(a:line, a:re_close, l:i)
+  endwhile
+
+  let l:i = match(a:line, a:re_open)
+  while l:i >= 0 && l:i < l:imax_first
+    let l:sum -= 1
+    let l:i += len(matchstr(a:line, a:re_open, l:i))
+    let l:i = match(a:line, a:re_open, l:i)
+  endwhile
+
+  return max([l:sum, 0])
 endfunction
 
 " }}}1
@@ -26,15 +86,20 @@ endfunction
 
 " }}}1
 function! vimtex#util#get_os() abort " {{{1
-  if has('win32') || has('win32unix')
+  if vimtex#util#is_win()
     return 'win'
   elseif has('unix')
-    if has('mac') || system('uname') =~# 'Darwin'
+    if has('mac') || has('ios') || vimtex#jobs#cached('uname')[0] =~# 'Darwin'
       return 'mac'
     else
       return 'linux'
     endif
   endif
+endfunction
+
+" }}}1
+function! vimtex#util#is_win() abort " {{{1
+  return has('win32') || has('win32unix')
 endfunction
 
 " }}}1
@@ -88,14 +153,14 @@ function! vimtex#util#tex2unicode(line) abort " {{{1
   endfor
 
   " Remove the \IeC macro
-  let l:line = substitute(l:line, '\\IeC\s*{\s*\([^}]\{-}\)\s*}', '\1', 'g')
+  let l:line = substitute(l:line, '\C\\IeC\s*{\s*\([^}]\{-}\)\s*}', '\1', 'g')
 
   return l:line
 endfunction
 
 "
 " Define list for converting compositions like \"u to unicode ű
-let s:tex2unicode_list = [
+let s:tex2unicode_list = map([
       \ ['\\''A', 'Á'],
       \ ['\\`A',  'À'],
       \ ['\\^A',  'À'],
@@ -154,7 +219,7 @@ let s:tex2unicode_list = [
       \ ['\\''n', 'ń'],
       \ ['\\`n',  'ǹ'],
       \ ['\\\~n', 'ñ'],
-      \]
+      \], {_, x -> ['\C' . x[0], x[1]]})
 
 " }}}1
 function! vimtex#util#tex2tree(str) abort " {{{1
@@ -189,6 +254,37 @@ function! vimtex#util#tex2tree(str) abort " {{{1
 endfunction
 
 " }}}1
+function! vimtex#util#texsplit(str) abort " {{{1
+  " Splits "str", but respect TeX groups ({...})
+  if empty(a:str) | return [] | endif
+
+  let parts = []
+  let i1 = 0
+  let i2 = -1
+  let depth = 0
+
+  while v:true
+    let i2 = match(a:str, '[,{}]', i2 + 1)
+
+    if i2 < 0
+      call add(parts, strpart(a:str, i1))
+      break
+    endif
+
+    if a:str[i2] ==# '{'
+      let depth += 1
+    elseif a:str[i2] ==# '}'
+      let depth -= 1
+    elseif depth == 0
+      call add(parts, strpart(a:str, i1, i2 - i1))
+      let i1 = i2 + 1
+    endif
+  endwhile
+
+  return parts
+endfunction
+
+" }}}1
 function! vimtex#util#trim(str) abort " {{{1
   if exists('*trim') | return trim(a:str) | endif
 
@@ -213,6 +309,28 @@ function! vimtex#util#uniq_unsorted(list) abort " {{{1
   endfor
 
   return l:result
+endfunction
+
+" }}}1
+function! vimtex#util#undostore() abort " {{{1
+  " This is a hack to make undo restore the correct position
+  if mode() !=# 'i'
+    normal! ix
+    normal! x
+  endif
+endfunction
+
+" }}}1
+function! vimtex#util#www(url) abort " {{{1
+  let l:os = vimtex#util#get_os()
+
+  silent execute (l:os ==# 'linux'
+        \         ? '!xdg-open'
+        \         : (l:os ==# 'mac'
+        \            ? '!open'
+        \            : '!start'))
+        \ . ' ' . a:url
+        \ . (l:os ==# 'win' ? '' : ' &')
 endfunction
 
 " }}}1

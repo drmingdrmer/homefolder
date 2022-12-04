@@ -1,4 +1,4 @@
-" vimtex - LaTeX plugin for Vim
+" VimTeX - LaTeX plugin for Vim
 "
 " Maintainer: Karl Yngve Lervåg
 " Email:      karl.yngve@gmail.com
@@ -20,12 +20,12 @@ set cpoptions&vim
 
 setlocal autoindent
 setlocal indentexpr=VimtexIndentExpr()
-setlocal indentkeys=!^F,o,O,(,),],},\&,=item,=else,=fi
+setlocal indentkeys=!^F,o,O,0(,0),],},\&,0=\\item\ ,0=\\item[,0=\\else,0=\\fi
 
 " Add standard closing math delimiters to indentkeys
 for s:delim in [
       \ 'rangle', 'rbrace', 'rvert', 'rVert', 'rfloor', 'rceil', 'urcorner']
-  let &l:indentkeys .= ',=' . s:delim
+  let &l:indentkeys .= ',0=\' . s:delim
 endfor
 
 
@@ -57,13 +57,18 @@ function! VimtexIndent(lnum) abort " {{{1
   let l:prev_lnum = s:indent_amps.prev_lnum
   let l:prev_line = s:indent_amps.prev_line
 
-  " Indent environments, delimiters, and tikz
+  " Indent environments, delimiters, and conditionals
   let l:ind += s:indent_envs(l:line, l:prev_line)
+  let l:ind += s:indent_items(l:line, a:lnum, l:prev_line, l:prev_lnum)
   let l:ind += s:indent_delims(l:line, a:lnum, l:prev_line, l:prev_lnum)
   let l:ind += s:indent_conditionals(l:line, a:lnum, l:prev_line, l:prev_lnum)
-  let l:ind += s:indent_tikz(l:prev_lnum, l:prev_line)
 
-  return l:ind
+  " Indent tikz commands
+  if g:vimtex_indent_tikz_commands
+    let l:ind += s:indent_tikz(l:prev_lnum, l:prev_line)
+  endif
+
+  return l:ind < 0 ? 0 : l:ind
 endfunction
 
 "}}}
@@ -102,8 +107,6 @@ let s:verbatim_re_envdelim = '\v\\%(begin|end)\{%('
 " }}}1
 
 let s:indent_amps = {}
-let s:indent_amps.re_amp = g:vimtex#re#not_bslash . '\&'
-let s:indent_amps.re_align = '^[ \t\\]*' . s:indent_amps.re_amp
 function! s:indent_amps.check(lnum, cline, plnum, pline) abort dict " {{{1
   let self.finished = 0
   let self.amp_ind = -1
@@ -113,22 +116,22 @@ function! s:indent_amps.check(lnum, cline, plnum, pline) abort dict " {{{1
   let self.prev_ind = a:plnum > 0 ? indent(a:plnum) : 0
   if !g:vimtex_indent_on_ampersands | return self.prev_ind | endif
 
-  if a:cline =~# self.re_align
-        \ || a:cline =~# self.re_amp
+  if a:cline =~# s:re_align
+        \ || a:cline =~# s:re_amp
         \ || a:cline =~# '^\v\s*\\%(end|])'
     call self.parse_context(a:lnum, a:cline)
   endif
 
-  if a:cline =~# self.re_align
+  if a:cline =~# s:re_align
     let self.finished = 1
     let l:ind_diff =
-          \   strdisplaywidth(strpart(a:cline, 0, match(a:cline, self.re_amp)))
+          \   strdisplaywidth(strpart(a:cline, 0, match(a:cline, s:re_amp)))
           \ - strdisplaywidth(strpart(a:cline, 0, match(a:cline, '\S')))
     return self.amp_ind - l:ind_diff
   endif
 
   if self.amp_ind >= 0
-        \ && (a:cline =~# '^\v\s*\\%(end|])' || a:cline =~# self.re_amp)
+        \ && (a:cline =~# '^\v\s*\\%(end|])' || a:cline =~# s:re_amp)
     let self.prev_lnum = self.init_lnum
     let self.prev_line = self.init_line
     return self.init_ind
@@ -137,22 +140,24 @@ function! s:indent_amps.check(lnum, cline, plnum, pline) abort dict " {{{1
   return self.prev_ind
 endfunction
 
+let s:re_amp = g:vimtex#re#not_bslash . '\&'
+let s:re_align = '^[ \t\\]*' . s:re_amp
+
 " }}}1
 function! s:indent_amps.parse_context(lnum, line) abort dict " {{{1
   let l:depth = 1
-  let l:init_depth = l:depth
   let l:lnum = prevnonblank(a:lnum - 1)
 
   while l:lnum >= 1
     let l:line = getline(l:lnum)
 
-    if l:line =~# '\v%(^\s*%(}|\\])|\\end\s*\{\w+\*?})'
+    if l:line =~# s:re_depth_end
       let l:depth += 1
     endif
 
-    if l:line =~# '\v\\begin\s*\{|\\[|\\\w+\{\s*$'
+    if l:line =~# s:re_depth_beg
       let l:depth -= 1
-      if l:depth == l:init_depth - 1
+      if l:depth == 0
         let self.init_lnum = l:lnum
         let self.init_line = l:line
         let self.init_ind = indent(l:lnum)
@@ -160,12 +165,12 @@ function! s:indent_amps.parse_context(lnum, line) abort dict " {{{1
       endif
     endif
 
-    if l:depth == 1 && l:line =~# self.re_amp
+    if l:depth == 1 && l:line =~# s:re_amp
       if self.amp_ind < 0
         let self.amp_ind = strdisplaywidth(
-              \ strpart(l:line, 0, match(l:line, self.re_amp)))
+              \ strpart(l:line, 0, match(l:line, s:re_amp)))
       endif
-      if l:line !~# self.re_align
+      if l:line !~# s:re_align
         let self.init_lnum = l:lnum
         let self.init_line = l:line
         let self.init_ind = indent(l:lnum)
@@ -177,35 +182,55 @@ function! s:indent_amps.parse_context(lnum, line) abort dict " {{{1
   endwhile
 endfunction
 
+let s:re_depth_beg = g:vimtex#re#not_bslash . '\\%(begin\s*\{|[|\w+\{\s*$)'
+let s:re_depth_end = g:vimtex#re#not_bslash . '\\end\s*\{\w+\*?}|^\s*%(}|\\])'
+
 " }}}1
 
-function! s:indent_envs(cur, prev) abort " {{{1
+function! s:indent_envs(line, prev_line) abort " {{{1
   let l:ind = 0
 
   " First for general environments
   let l:ind += s:sw*(
-        \    a:prev =~# s:envs_begin
-        \ && a:prev !~# s:envs_end
-        \ && a:prev !~# s:envs_ignored)
+        \    a:prev_line =~# s:envs_begin
+        \ && a:prev_line !~# s:envs_end
+        \ && a:prev_line !~# s:envs_ignored)
+  let l:xx = l:ind
   let l:ind -= s:sw*(
-        \    a:cur !~# s:envs_begin
-        \ && a:cur =~# s:envs_end
-        \ && a:cur !~# s:envs_ignored)
-
-  " Indentation for prolonged items in lists
-  let l:ind += s:sw*((a:prev =~# s:envs_item)    && (a:cur  !~# s:envs_enditem))
-  let l:ind -= s:sw*((a:cur  =~# s:envs_item)    && (a:prev !~# s:envs_begitem))
-  let l:ind -= s:sw*((a:cur  =~# s:envs_endlist) && (a:prev !~# s:envs_begitem))
+        \    a:line !~# s:envs_begin
+        \ && a:line =~# s:envs_end
+        \ && a:line !~# s:envs_ignored)
 
   return l:ind
 endfunction
 
 let s:envs_begin = '\\begin{.*}\|\\\@<!\\\['
 let s:envs_end = '\\end{.*}\|\\\]'
-let s:envs_ignored = '\v' . join(g:vimtex_indent_ignored_envs, '|')
+let s:envs_ignored = '\v<%(' . join(g:vimtex_indent_ignored_envs, '|') . ')>'
+
+" }}}1
+function! s:indent_items(line, lnum, prev_line, prev_lnum) abort " {{{1
+  if a:prev_line =~# s:envs_item && a:line !~# s:envs_enditem
+    return s:sw
+  elseif a:line =~# s:envs_endlist && a:prev_line !~# s:envs_begitem
+    return -s:sw
+  elseif a:line =~# s:envs_item && a:prev_line !~# s:envs_item
+    let l:prev_lnum = a:prev_lnum
+    let l:prev_line = a:prev_line
+    while l:prev_lnum >= 1
+      if l:prev_line =~# s:envs_begitem
+        return -s:sw*(l:prev_line =~# s:envs_item)
+      endif
+      let l:prev_lnum = prevnonblank(l:prev_lnum - 1)
+      let l:prev_line = getline(l:prev_lnum)
+    endwhile
+  endif
+
+  return 0
+endfunction
 
 let s:envs_lists = join(g:vimtex_indent_lists, '\|')
-let s:envs_item = '^\s*\\item'
+let s:envs_item = '^\s*\\item\>'
 let s:envs_beglist = '\\begin{\%(' . s:envs_lists . '\)'
 let s:envs_endlist =   '\\end{\%(' . s:envs_lists . '\)'
 let s:envs_begitem = s:envs_item . '\|' . s:envs_beglist
@@ -213,14 +238,14 @@ let s:envs_enditem = s:envs_item . '\|' . s:envs_endlist
 
 " }}}1
 function! s:indent_delims(line, lnum, prev_line, prev_lnum) abort " {{{1
+  if s:re_delim_trivial | return 0 | endif
+
   if s:re_opt.close_indented
-    return s:sw*(s:count(a:prev_line, s:re_open)
-          \ - s:count(a:prev_line, s:re_close))
+    return s:sw*(vimtex#util#count(a:prev_line, s:re_open)
+          \ - vimtex#util#count(a:prev_line, s:re_close))
   else
-    return s:sw*(  max([  s:count(a:prev_line, s:re_open)
-          \             - s:count(a:prev_line, s:re_close), 0])
-          \      - max([  s:count(a:line, s:re_close)
-          \             - s:count(a:line, s:re_open), 0]))
+    return s:sw*(vimtex#util#count_open(a:prev_line, s:re_open, s:re_close)
+          \      - vimtex#util#count_close(a:line, s:re_open, s:re_close))
   endif
 endfunction
 
@@ -236,6 +261,7 @@ if s:re_opt.include_modified_math
   let s:re_open .= (empty(s:re_open) ? '' : '\|') . g:vimtex#delim#re.delim_mod_math.open
   let s:re_close .= (empty(s:re_close) ? '' : '\|') . g:vimtex#delim#re.delim_mod_math.close
 endif
+let s:re_delim_trivial = empty(s:re_open) || empty(s:re_close)
 
 " }}}1
 function! s:indent_conditionals(line, lnum, prev_line, prev_lnum) abort " {{{1
@@ -299,22 +325,6 @@ let s:tikz_commands = '\v\\%(' . join([
         \ 'clip',
         \ 'add%(legendentry|plot)',
       \ ], '|') . ')'
-
-" }}}1
-
-function! s:count(line, pattern) abort " {{{1
-  if empty(a:pattern) | return 0 | endif
-
-  let l:sum = 0
-  let l:indx = match(a:line, a:pattern)
-  while l:indx >= 0
-    let l:sum += 1
-    let l:match = matchstr(a:line, a:pattern, l:indx)
-    let l:indx += len(l:match)
-    let l:indx = match(a:line, a:pattern, l:indx)
-  endwhile
-  return l:sum
-endfunction
 
 " }}}1
 

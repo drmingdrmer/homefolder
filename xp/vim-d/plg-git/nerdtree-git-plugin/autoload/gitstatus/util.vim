@@ -76,6 +76,10 @@ function! gitstatus#util#BuildGitStatusCommand(root, opts) abort
         let l:cmd += ['--ignore-submodules=' . a:opts['NERDTreeGitStatusIgnoreSubmodules']]
     endif
 
+    if has_key(a:opts, 'NERDTreeGitStatusCwdOnly')
+        let l:cmd += ['.']
+    endif
+
     return l:cmd
 endfunction
 
@@ -201,6 +205,9 @@ function! gitstatus#util#ParseGitStatusLine(statusLine, opts) abort
 endfunction
 
 function! gitstatus#util#UpdateParentDirsStatus(cache, root, pathStr, statusKey, opts) abort
+    if get(a:cache, a:pathStr, '') ==# 'Ignored'
+        return
+    endif
     let l:dirtyPath = fnamemodify(a:pathStr, ':h')
     let l:dir_dirty_only = get(a:opts, 'NERDTreeGitStatusDirDirtyOnly', 1)
     while l:dirtyPath !=# a:root

@@ -1,4 +1,4 @@
-" vimtex - LaTeX plugin for Vim
+" VimTeX - LaTeX plugin for Vim
 "
 " Maintainer: Karl Yngve Lervåg
 " Email:      karl.yngve@gmail.com
@@ -35,61 +35,67 @@ endfunction
 function! vimtex#compiler#init_state(state) abort " {{{1
   if !g:vimtex_compiler_enabled | return | endif
 
-  try
-    let l:options = {
-          \ 'root': a:state.root,
-          \ 'target' : a:state.base,
-          \ 'target_path' : a:state.tex,
-          \ 'tex_program' : a:state.tex_program,
-          \}
-    let a:state.compiler
-          \ = vimtex#compiler#{g:vimtex_compiler_method}#init(l:options)
-  catch /vimtex: Requirements not met/
-    call vimtex#log#error('Compiler was not initialized!')
-  catch /E117/
-    call vimtex#log#error(
-          \ 'Invalid compiler: ' . g:vimtex_compiler_method,
-          \ 'Please see :h g:vimtex_compiler_method')
-  endtry
+  let a:state.compiler = s:init_compiler({'state': a:state})
 endfunction
 
 " }}}1
 
 function! vimtex#compiler#callback(status) abort " {{{1
-  if exists('b:vimtex') && get(b:vimtex.compiler, 'silence_next_callback')
-    let b:vimtex.compiler.silence_next_callback = 0
+  " Status:
+  " 1: Compilation cycle has started
+  " 2: Compilation complete - Success
+  " 3: Compilation complete - Failed
+  if !exists('b:vimtex.compiler') | return | endif
+  silent! call s:output.pause()
+
+  if b:vimtex.compiler.silence_next_callback
+    if g:vimtex_compiler_silent
+      let b:vimtex.compiler.silence_next_callback = 0
+    else
+      call vimtex#log#set_silent()
+    endif
+  endif
+
+  let b:vimtex.compiler.status = a:status
+
+  if a:status == 1
+    if exists('#User#VimtexEventCompiling')
+      doautocmd <nomodeline> User VimtexEventCompiling
+    endif
+    silent! call s:output.resume()
     return
   endif
 
-  call vimtex#qf#open(0)
-  redraw
+  if a:status == 2
+    if !g:vimtex_compiler_silent
+      call vimtex#log#info('Compilation completed')
+    endif
 
-  if exists('s:output')
-    call s:output.update()
-  endif
+    if exists('b:vimtex')
+      call b:vimtex.update_packages()
+      call vimtex#syntax#packages#init()
+    endif
 
-  if a:status
-    call vimtex#log#info('Compilation completed')
-  else
-    call vimtex#log#warning('Compilation failed!')
-  endif
-
-  if a:status && exists('b:vimtex')
-    call b:vimtex.parse_packages()
-    call vimtex#syntax#load#packages()
-  endif
-
-  if a:status
     if exists('#User#VimtexEventCompileSuccess')
       doautocmd <nomodeline> User VimtexEventCompileSuccess
     endif
-  else
+  elseif a:status == 3
+    if !g:vimtex_compiler_silent
+      call vimtex#log#warning('Compilation failed!')
+    endif
+
     if exists('#User#VimtexEventCompileFailed')
       doautocmd <nomodeline> User VimtexEventCompileFailed
     endif
   endif
 
-  return ''
+  if b:vimtex.compiler.silence_next_callback
+    call vimtex#log#set_silent_restore()
+    let b:vimtex.compiler.silence_next_callback = 0
+  endif
+
+  call vimtex#qf#open(0)
+  silent! call s:output.resume()
 endfunction
 
 " }}}1
@@ -104,137 +110,126 @@ endfunction
 
 " }}}1
 function! vimtex#compiler#compile_ss() abort " {{{1
+  if b:vimtex.compiler.is_running()
+    call vimtex#log#info(
+          \ 'Compiler is already running, use :VimtexStop to stop it!')
+    return
+  endif
+
   call b:vimtex.compiler.start_single()
+
+  if g:vimtex_compiler_silent | return | endif
+  call vimtex#log#info('Compiler started in background!')
 endfunction
 
 " }}}1
 function! vimtex#compiler#compile_selected(type) abort range " {{{1
-  let l:file = vimtex#parser#selection_to_texfile(
-        \ {'type':  a:type =~# 'line\|char\|block' ? 'operator' : a:type})
+  " Values of a:firstline and a:lastline are not available in nested function
+  " calls, so we must handle them here.
+  let l:opts = a:type ==# 'command'
+        \ ? {'type': 'range', 'range': [a:firstline, a:lastline]}
+        \ : {'type':  a:type =~# 'line\|char\|block' ? 'operator' : a:type}
+
+  let l:file = vimtex#parser#selection_to_texfile(l:opts)
   if empty(l:file) | return | endif
+  let l:tex_program = b:vimtex.get_tex_program()
+  let l:file.get_tex_program = {-> l:tex_program}
 
   " Create and initialize temporary compiler
-  let l:options = {
-        \ 'root' : l:file.root,
-        \ 'target' : l:file.base,
-        \ 'target_path' : l:file.tex,
-        \ 'backend' : 'process',
-        \ 'tex_program' : b:vimtex.tex_program,
-        \ 'background' : 1,
-        \ 'continuous' : 0,
-        \ 'callback' : 0,
-        \}
-  let l:compiler = vimtex#compiler#{g:vimtex_compiler_method}#init(l:options)
+  let l:compiler = s:init_compiler({
+        \ 'state': l:file,
+        \ 'build_dir': '',
+        \ 'continuous': 0,
+        \ 'callback': 0,
+        \})
+  if empty(l:compiler) | return | endif
 
-  call vimtex#log#toggle_verbose()
+  call vimtex#log#info('Compiling selected lines ...')
+  call vimtex#log#set_silent()
   call l:compiler.start()
+  call l:compiler.wait()
 
   " Check if successful
-  if vimtex#qf#inquire(l:file.base)
-    call vimtex#log#toggle_verbose()
+  if vimtex#qf#inquire(l:file.tex)
+    call vimtex#log#set_silent_restore()
     call vimtex#log#warning('Compiling selected lines ... failed!')
     botright cwindow
     return
   else
     call l:compiler.clean(0)
     call b:vimtex.viewer.view(l:file.pdf)
-    call vimtex#log#toggle_verbose()
+    call vimtex#log#set_silent_restore()
     call vimtex#log#info('Compiling selected lines ... done')
   endif
 endfunction
 
 " }}}1
 function! vimtex#compiler#output() abort " {{{1
-  let l:file = get(b:vimtex.compiler, 'output', '')
-  if empty(l:file)
+  if !exists('b:vimtex.compiler.output')
+        \ || !filereadable(b:vimtex.compiler.output)
     call vimtex#log#warning('No output exists!')
     return
   endif
 
-  " If window already open, then go there
+  " If relevant output is open, then reuse it
   if exists('s:output')
-    if bufwinnr(l:file) == s:output.winnr
-      execute s:output.winnr . 'wincmd w'
+    if s:output.name ==# b:vimtex.compiler.output
+      if bufwinnr(b:vimtex.compiler.output) == s:output.winnr
+        execute s:output.winnr . 'wincmd w'
+      endif
       return
     else
       call s:output.destroy()
     endif
   endif
 
-  " Create new output window
-  silent execute 'split' l:file
-
-  " Create the output object
-  let s:output = {}
-  let s:output.name = l:file
-  let s:output.bufnr = bufnr('%')
-  let s:output.winnr = bufwinnr('%')
-  function! s:output.update() dict abort
-    if bufwinnr(self.name) != self.winnr
-      return
-    endif
-
-    if mode() ==? 'v' || mode() ==# "\<c-v>"
-      return
-    endif
-
-    " Go to last line of file if it is not the current window
-    if bufwinnr('%') != self.winnr
-      let l:return = bufwinnr('%')
-      execute 'keepalt' self.winnr . 'wincmd w'
-      edit
-      normal! Gzb
-      execute 'keepalt' l:return . 'wincmd w'
-      redraw
-    endif
-  endfunction
-  function! s:output.destroy() dict abort
-    autocmd! vimtex_output_window
-    augroup! vimtex_output_window
-    unlet s:output
-  endfunction
-
-  " Better automatic update
-  augroup vimtex_output_window
-    autocmd!
-    autocmd BufDelete <buffer> call s:output.destroy()
-    autocmd BufEnter     *     call s:output.update()
-    autocmd FocusGained  *     call s:output.update()
-    autocmd CursorHold   *     call s:output.update()
-    autocmd CursorHoldI  *     call s:output.update()
-    autocmd CursorMoved  *     call s:output.update()
-    autocmd CursorMovedI *     call s:output.update()
-  augroup END
-
-  " Set some mappings
-  nnoremap <silent><buffer><nowait> q :bwipeout<cr>
-  if has('nvim') || has('gui_running')
-    nnoremap <silent><buffer><nowait> <esc> :bwipeout<cr>
-  endif
-
-  " Set some buffer options
-  setlocal autoread
-  setlocal nomodifiable
-  setlocal bufhidden=wipe
+  call s:output_factory.create(b:vimtex.compiler.output)
 endfunction
 
 " }}}1
 function! vimtex#compiler#start() abort " {{{1
-  if b:vimtex.compiler.is_running() | return | endif
-
-  if !get(b:vimtex.compiler, 'continuous')
-    call b:vimtex.compiler.start_single()
+  if !b:vimtex.is_compileable()
+    call vimtex#log#error(
+          \ 'Compilation error due to failed mainfile detection!',
+          \ 'Please ensure that VimTeX can locate the proper main .tex file.',
+          \ 'Read ":help vimtex-multi-file" for more info.'
+          \)
+    return
+  endif
+  if b:vimtex.compiler.is_running()
+    call vimtex#log#warning(
+          \ 'Compiler is already running for `' . b:vimtex.base . "'")
     return
   endif
 
   call b:vimtex.compiler.start()
-  let b:vimtex.compiler.check_timer = s:check_if_running_start()
+
+  if g:vimtex_compiler_silent | return | endif
+
+  " We add a redraw here to clear messages (e.g. file written). This is useful
+  " to avoid the "Press ENTER" prompt in some cases, see e.g.
+  " https://github.com/lervag/vimtex/issues/2149
+  redraw
+
+  if b:vimtex.compiler.continuous
+    call vimtex#log#info('Compiler started in continuous mode')
+  else
+    call vimtex#log#info('Compiler started in background!')
+  endif
 endfunction
 
 " }}}1
 function! vimtex#compiler#stop() abort " {{{1
+  if !b:vimtex.compiler.is_running()
+    call vimtex#log#warning(
+          \ 'There is no process to stop (' . b:vimtex.base . ')')
+    return
+  endif
+
   call b:vimtex.compiler.stop()
-  silent! call timer_stop(b:vimtex.compiler.check_timer)
+
+  if g:vimtex_compiler_silent | return | endif
+  call vimtex#log#info('Compiler stopped (' . b:vimtex.base . ')')
 endfunction
 
 " }}}1
@@ -243,28 +238,29 @@ function! vimtex#compiler#stop_all() abort " {{{1
     if exists('l:state.compiler.is_running')
           \ && l:state.compiler.is_running()
       call l:state.compiler.stop()
+      call vimtex#log#info('Compiler stopped (' . l:state.compiler.state.base . ')')
     endif
   endfor
 endfunction
 
 " }}}1
 function! vimtex#compiler#clean(full) abort " {{{1
+  let l:restart = b:vimtex.compiler.is_running()
+  if l:restart
+    call b:vimtex.compiler.stop()
+  endif
+
+
   call b:vimtex.compiler.clean(a:full)
-
-  if empty(b:vimtex.compiler.build_dir) | return | endif
   sleep 100m
+  call b:vimtex.compiler.remove_build_dir()
+  call vimtex#log#info('Compiler clean finished' . (a:full ? ' (full)' : ''))
 
-  " Remove auxilliary output directories if they are empty
-  let l:build_dir = (vimtex#paths#is_abs(b:vimtex.compiler.build_dir)
-        \ ? '' : b:vimtex.root . '/')
-        \ . b:vimtex.compiler.build_dir
-  let l:tree = glob(l:build_dir . '/**/*', 0, 1)
-  let l:files = filter(copy(l:tree), 'filereadable(v:val)')
-  if !empty(l:files) | return | endif
 
-  for l:dir in sort(l:tree) + [l:build_dir]
-    call delete(l:dir, 'd')
-  endfor
+  if l:restart
+    let b:vimtex.compiler.silence_next_callback = 1
+    silent call b:vimtex.compiler.start()
+  endif
 endfunction
 
 " }}}1
@@ -283,15 +279,16 @@ function! vimtex#compiler#status(detailed) abort " {{{1
     endfor
 
     if empty(l:running)
-      call vimtex#log#warning('Compiler is not running!')
+      call vimtex#log#info('Compiler is not running!')
     else
       call vimtex#log#info('Compiler is running', l:running)
     endif
   else
-    if b:vimtex.compiler.is_running()
+    if exists('b:vimtex.compiler')
+          \ && b:vimtex.compiler.is_running()
       call vimtex#log#info('Compiler is running')
     else
-      call vimtex#log#warning('Compiler is not running!')
+      call vimtex#log#info('Compiler is not running!')
     endif
   endif
 endfunction
@@ -299,31 +296,115 @@ endfunction
 " }}}1
 
 
-let s:check_timers = {}
-function! s:check_if_running_start() abort " {{{1
-  let l:timer = timer_start(50, function('s:check_if_running'), {'repeat': 20})
+function! s:init_compiler(options) abort " {{{1
+  try
+    let l:options =
+          \ get(g:, 'vimtex_compiler_' . g:vimtex_compiler_method, {})
+    let l:options = extend(deepcopy(l:options), a:options)
+    let l:compiler
+          \ = vimtex#compiler#{g:vimtex_compiler_method}#init(l:options)
+    return l:compiler
+  catch /VimTeX: Requirements not met/
+    call vimtex#log#error('Compiler was not initialized!')
+  catch /E117/
+    call vimtex#log#error(
+          \ 'Invalid compiler: ' . g:vimtex_compiler_method,
+          \ 'Please see :h g:vimtex_compiler_method')
+  endtry
 
-  let s:check_timers[l:timer] = {
-        \ 'compiler' : b:vimtex.compiler,
-        \ 'vimtex_id' : b:vimtex_id,
-        \}
-
-  return l:timer
+  return {}
 endfunction
 
 " }}}1
-function! s:check_if_running(timer) abort " {{{1
-  if s:check_timers[a:timer].compiler.is_running() | return | endif
 
-  call timer_stop(a:timer)
 
-  if get(b:, 'vimtex_id', -1) == s:check_timers[a:timer].vimtex_id
-    call vimtex#compiler#output()
+let s:output_factory = {}
+function! s:output_factory.create(file) dict abort " {{{1
+  let l:vimtex = b:vimtex
+  silent execute 'split' a:file
+  let b:vimtex = l:vimtex
+
+  setlocal autoread
+  setlocal nomodifiable
+  setlocal bufhidden=wipe
+
+  nnoremap <silent><buffer><nowait> q :bwipeout<cr>
+  if has('nvim') || has('gui_running')
+    nnoremap <silent><buffer><nowait> <esc> :bwipeout<cr>
   endif
-  call vimtex#log#error('Compiler did not start successfully!')
 
-  unlet s:check_timers[a:timer].compiler.check_timer
-  unlet s:check_timers[a:timer]
+  let s:output = deepcopy(self)
+  unlet s:output.create
+
+  let s:output.name = a:file
+  let s:output.ftime = -1
+  let s:output.paused = v:false
+  let s:output.bufnr = bufnr('%')
+  let s:output.winnr = bufwinnr('%')
+  let s:output.timer = timer_start(100,
+        \ {_ -> s:output.update()},
+        \ {'repeat': -1})
+
+  augroup vimtex_output_window
+    autocmd!
+    autocmd BufDelete <buffer> call s:output.destroy()
+    autocmd BufEnter     *     call s:output.update()
+    autocmd FocusGained  *     call s:output.update()
+    autocmd CursorHold   *     call s:output.update()
+    autocmd CursorHoldI  *     call s:output.update()
+    autocmd CursorMoved  *     call s:output.update()
+    autocmd CursorMovedI *     call s:output.update()
+  augroup END
+endfunction
+
+" }}}1
+function! s:output_factory.pause() dict abort " {{{1
+  let self.paused = v:true
+endfunction
+
+" }}}1
+function! s:output_factory.resume() dict abort " {{{1
+  let self.paused = v:false
+endfunction
+
+" }}}1
+function! s:output_factory.update() dict abort " {{{1
+  if self.paused | return | endif
+
+  let l:ftime = getftime(self.name)
+  if self.ftime >= l:ftime
+        \ || mode() ==? 'v' || mode() ==# "\<c-v>"
+    return
+  endif
+  let self.ftime = getftime(self.name)
+
+  if bufwinnr(self.name) != self.winnr
+    let self.winnr = bufwinnr(self.name)
+  endif
+
+  let l:swap = bufwinnr('%') != self.winnr
+  if l:swap
+    let l:return = bufwinnr('%')
+    execute 'keepalt' self.winnr . 'wincmd w'
+  endif
+
+  " Force reload file content
+  silent edit
+
+  if l:swap
+    " Go to last line of file if it is not the current window
+    normal! Gzb
+    execute 'keepalt' l:return . 'wincmd w'
+    redraw
+  endif
+endfunction
+
+" }}}1
+function! s:output_factory.destroy() dict abort " {{{1
+  call timer_stop(self.timer)
+  autocmd! vimtex_output_window
+  augroup! vimtex_output_window
+  unlet s:output
 endfunction
 
 " }}}1
@@ -331,7 +412,7 @@ endfunction
 
 " {{{1 Initialize module
 
-if !g:vimtex_compiler_enabled | finish | endif
+if !get(g:, 'vimtex_compiler_enabled') | finish | endif
 
 augroup vimtex_compiler
   autocmd!

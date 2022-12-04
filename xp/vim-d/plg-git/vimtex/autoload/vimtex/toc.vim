@@ -1,4 +1,4 @@
-" vimtex - LaTeX plugin for Vim
+" VimTeX - LaTeX plugin for Vim
 "
 " Maintainer: Karl Yngve Lervåg
 " Email:      karl.yngve@gmail.com
@@ -97,8 +97,8 @@ function! s:toc.toggle() abort dict " {{{1
     call self.close()
   else
     call self.open()
-    if has_key(self, 'prev_winid')
-      call win_gotoid(self.prev_winid)
+    if has_key(self, 'winid_prev')
+      call win_gotoid(self.winid_prev)
     endif
   endif
 endfunction
@@ -112,18 +112,22 @@ function! s:toc.close() abort dict " {{{1
   endif
 
   if self.split_pos ==# 'full'
-    silent execute 'buffer' self.prev_bufnr
+    silent execute 'buffer' self.bufnr_prev
   else
     silent execute 'bwipeout' bufnr(self.name)
+  endif
+
+  if self.bufnr_alternate >= 0
+    let @# = self.bufnr_alternate
   endif
 endfunction
 
 " }}}1
 function! s:toc.goto() abort dict " {{{1
   if self.is_open()
-    let l:prev_winid = win_getid()
+    let l:winid_prev = win_getid()
     silent execute bufwinnr(bufnr(self.name)) . 'wincmd w'
-    let b:toc.prev_winid = l:prev_winid
+    let b:toc.winid_prev = l:winid_prev
   endif
 endfunction
 
@@ -205,6 +209,7 @@ endfunction
 "
 function! s:toc.create() abort dict " {{{1
   let l:bufnr = bufnr('')
+  let l:bufnr_alternate = bufnr('#')
   let l:winid = win_getid()
   let l:vimtex = get(b:, 'vimtex', {})
   let l:vimtex_syntax = get(b:, 'vimtex_syntax', {})
@@ -220,14 +225,17 @@ function! s:toc.create() abort dict " {{{1
           \ 'new' escape(self.name, ' ')
   endif
 
-  let self.prev_bufnr = l:bufnr
-  let self.prev_winid = l:winid
+  let self.bufnr_prev = l:bufnr
+  let self.bufnr_alternate = l:bufnr_alternate
+  let self.winid_prev = l:winid
   let b:toc = self
   let b:vimtex = l:vimtex
   let b:vimtex_syntax = l:vimtex_syntax
 
+  setlocal noreadonly
   setlocal bufhidden=wipe
   setlocal buftype=nofile
+  setlocal filetype=vimtex-toc
   setlocal concealcursor=nvic
   setlocal conceallevel=2
   setlocal cursorline
@@ -237,6 +245,8 @@ function! s:toc.create() abort dict " {{{1
   setlocal noswapfile
   setlocal nowrap
   setlocal tabstop=8
+  setlocal winfixwidth
+  setlocal winfixheight
 
   if self.hide_line_numbers
     setlocal nonumber
@@ -276,6 +286,8 @@ function! s:toc.create() abort dict " {{{1
   nnoremap <silent><buffer><nowait> r             :call b:toc.get_entries(1)<cr>
   nnoremap <silent><buffer><nowait> -             :call b:toc.decrease_depth()<cr>
   nnoremap <silent><buffer><nowait> +             :call b:toc.increase_depth()<cr>
+
+  command! -buffer VimtexTocToggle call b:toc.close()
 
   for [type, key] in items(self.layer_keys)
     execute printf(
@@ -332,11 +344,11 @@ endfunction
 function! s:toc.set_syntax() abort dict "{{{1
   syntax clear
 
-  if self.show_help
-    execute 'syntax match VimtexTocHelp'
-          \ '/^\%<' . self.help_nlines . 'l.*/'
-          \ 'contains=VimtexTocHelpKey,VimtexTocHelpLayerOn,VimtexTocHelpLayerOff'
+  execute 'syntax match VimtexTocHelp'
+        \ '/^\%<' . self.help_nlines . 'l.*/'
+        \ 'contains=VimtexTocHelpKey,VimtexTocHelpLayerOn,VimtexTocHelpLayerOff'
 
+  if self.show_help
     syntax match VimtexTocHelpKey /<\S*>/ contained
     syntax match VimtexTocHelpKey /^\s*[-+<>a-zA-Z\/]\+\ze\s/ contained
           \ contains=VimtexTocHelpKeySeparator
@@ -351,24 +363,33 @@ function! s:toc.set_syntax() abort dict "{{{1
     syntax match VimtexTocHelpConceal /[+-]/ contained conceal
 
     highlight link VimtexTocHelpKeySeparator VimtexTocHelp
+  else
+    syntax match VimtexTocHelpKey / h / contained
   endif
 
   execute 'syntax match VimtexTocTodo'
-        \ '/\v\s\zs%('
-        \   . toupper(join(keys(g:vimtex_toc_todo_labels), '|')) . '): /'
+        \ '"\v\zs%('
+        \   . toupper(join(keys(g:vimtex_toc_todo_labels), '|')) . '):\ze "'
         \ 'contained'
+  syntax match VimtexTocTodo "\v\zs%(an)?fxnote:\ze " contained
+  syntax match VimtexTocWarning "\v\zs%(an)?fxwarning:\ze " contained
+  syntax match VimtexTocError "\v\zs%(an)?fxerror:\ze " contained
+  syntax match VimtexTocFatal "\v\zs%(an)?fxfatal:\ze " contained
 
   syntax match VimtexTocInclPath /.*/ contained
   syntax match VimtexTocIncl /\w\+ incl:/ contained
         \ nextgroup=VimtexTocInclPath
 
-  syntax match VimtexTocLabelsSecs /\v(chap|sec):.*$/ contained
+  syntax match VimtexTocLabelsSecs /\v(chap|(sub)*sec):.*$/ contained
   syntax match VimtexTocLabelsEq   /eq:.*$/ contained
   syntax match VimtexTocLabelsFig  /fig:.*$/ contained
   syntax match VimtexTocLabelsTab  /tab:.*$/ contained
 
   syntax cluster VimtexTocTitleStuff add=VimtexTocIncl
   syntax cluster VimtexTocTitleStuff add=VimtexTocTodo
+  syntax cluster VimtexTocTitleStuff add=VimtexTocWarning
+  syntax cluster VimtexTocTitleStuff add=VimtexTocError
+  syntax cluster VimtexTocTitleStuff add=VimtexTocFatal
   syntax cluster VimtexTocTitleStuff add=VimtexTocLabelsSecs
   syntax cluster VimtexTocTitleStuff add=VimtexTocLabelsEq
   syntax cluster VimtexTocTitleStuff add=VimtexTocLabelsFig
@@ -397,10 +418,14 @@ endfunction
 " Print the TOC entries
 "
 function! s:toc.print_help() abort dict " {{{1
-  let self.help_nlines = 0
-  if !self.show_help | return | endif
+  if !self.show_help
+    call append('$', ['Press h to toggle help text.', ''])
+    let self.help_nlines = 2
+    return
+  endif
 
   let help_text = [
+        \ '      h  Toggle help text',
         \ '<Esc>/q  Close',
         \ '<Space>  Jump',
         \ '<Enter>  Jump and close',
@@ -430,7 +455,7 @@ function! s:toc.print_help() abort dict " {{{1
   call append('$', help_text)
   call append('$', '')
 
-  let self.help_nlines += len(help_text) + 1
+  let self.help_nlines = len(help_text) + 1
 endfunction
 
 " }}}1
@@ -555,7 +580,7 @@ function! s:toc.activate_entry(entry, close_after) abort dict "{{{1
   let toc_winnr = winnr()
 
   " Return to calling window
-  call win_gotoid(self.prev_winid)
+  call win_gotoid(self.winid_prev)
 
   " Get buffer number, add buffer if necessary
   let bnr = bufnr(a:entry.file)
@@ -589,7 +614,7 @@ function! s:toc.activate_entry(entry, close_after) abort dict "{{{1
     call vimtex#pos#set_cursor(a:entry.line, 0)
   endif
 
-  " If relevant, enable vimtex stuff
+  " If relevant, enable VimTeX stuff
   if get(a:entry, 'link', 0) && !empty(l:vimtex_main)
     let b:vimtex_main = l:vimtex_main
     call vimtex#init()
@@ -599,11 +624,11 @@ function! s:toc.activate_entry(entry, close_after) abort dict "{{{1
   normal! zv
 
   " Keep or close toc window (based on options)
+  " Note: Ensure alternate buffer is restored
   if a:close_after && self.split_pos !=# 'full'
     call self.close()
-  else
-    " Return to toc window
-    execute toc_winnr . 'wincmd w'
+  elseif self.bufnr_alternate >= 0
+    let @# = self.bufnr_alternate
   endif
 
   " Allow user entry points through autocmd events
@@ -615,19 +640,14 @@ endfunction
 " }}}1
 function! s:toc.toggle_help() abort dict "{{{1
   let l:pos = vimtex#pos#get_cursor()
-  if self.show_help
-    let l:pos[1] = max([l:pos[1] - self.help_nlines, 1])
-    call vimtex#pos#set_cursor(l:pos)
-  endif
+  let l:pos[1] = max([l:pos[1] - self.help_nlines, 1])
 
-  let self.show_help = self.show_help ? 0 : 1
+  let self.show_help = !self.show_help
   call self.refresh()
   call self.set_syntax()
 
-  if self.show_help
-    let l:pos[1] += self.help_nlines
-    call vimtex#pos#set_cursor(l:pos)
-  endif
+  let l:pos[1] += self.help_nlines
+  call vimtex#pos#set_cursor(l:pos)
 endfunction
 
 " }}}1

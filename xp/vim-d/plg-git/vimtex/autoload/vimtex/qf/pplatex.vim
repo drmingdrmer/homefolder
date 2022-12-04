@@ -1,4 +1,4 @@
-" vimtex - LaTeX plugin for Vim
+" VimTeX - LaTeX plugin for Vim
 "
 " CreatedBy:    Johannes Wienke (languitar@semipol.de)
 " Maintainer:   Karl Yngve Lervåg
@@ -19,7 +19,7 @@ let s:qf = {
 function! s:qf.init(state) abort dict "{{{1
   if !executable('pplatex')
     call vimtex#log#error('pplatex is not executable!')
-    throw 'vimtex: Requirements not met'
+    throw 'VimTeX: Requirements not met'
   endif
 
   " Automatically remove the -file-line-error option if we use the latexmk
@@ -58,37 +58,39 @@ function! s:qf.set_errorformat() abort dict "{{{1
   setlocal errorformat+=%E**\ Error\ in\ %f:%m
   setlocal errorformat+=%W**\ Warning\ in\ %f:%m
 
+  " Undefined reference warnings
+  setlocal errorformat+=%W**\ Warning:\ %m\ on\ input\ line\ %#%l.
+  setlocal errorformat+=%W**\ Warning:\ 
+
   " Some errors are difficult even for pplatex
   setlocal errorformat+=%E**\ Error\ \ :%m
 
   " Anything that starts with three spaces is part of the message from a
   " previously started multiline error item.
-  setlocal errorformat+=%C\ \ \ %m\ on\ input\ line\ %l.
-  setlocal errorformat+=%C\ \ \ %m
+  setlocal errorformat+=%C\ %#%m\ on\ input\ line\ %#%l.
+  setlocal errorformat+=%C\ %#%m
 
   " Items are terminated with two newlines.
   setlocal errorformat+=%-Z
 
   " Skip statistical results at the bottom of the output.
   setlocal errorformat+=%-GResult%.%#
-  setlocal errorformat+=%-G
+  setlocal errorformat+=%-G%.%#
 endfunction
 
 " }}}1
 function! s:qf.addqflist(tex, log) abort dict " {{{1
   if empty(a:log) || !filereadable(a:log)
-    throw 'Vimtex: No log file found'
+    throw 'VimTeX: No log file found'
   endif
 
-  let l:tmp = fnameescape(fnamemodify(a:log, ':r') . '.pplatex')
-  let l:log = fnameescape(a:log)
+  let l:tmp = fnamemodify(a:log, ':r') . '.pplatex'
 
-  silent call system(printf('pplatex -i %s >%s', l:log, l:tmp))
-  let self.errorformat_saved = &l:errorformat
-  call self.set_errorformat()
-  execute 'caddfile' l:tmp
-  let &l:errorformat = self.errorformat_saved
-  silent call system('rm ' . l:tmp)
+  call vimtex#jobs#run(printf('pplatex -i "%s" >"%s"', a:log, l:tmp))
+  call vimtex#paths#pushd(b:vimtex.root)
+  call vimtex#qf#u#caddfile(self, l:tmp)
+  call vimtex#paths#popd()
+  call delete(l:tmp)
 endfunction
 
 " }}}1

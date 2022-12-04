@@ -1,4 +1,4 @@
-" vimtex - LaTeX plugin for Vim
+" VimTeX - LaTeX plugin for Vim
 "
 " Maintainer: Karl Yngve Lervåg
 " Email:      karl.yngve@gmail.com
@@ -16,9 +16,8 @@ function! vimtex#profile#stop() abort " {{{1
 endfunction
 
 " }}}1
-"
+
 function! vimtex#profile#open() abort " {{{1
-  source ~/.vim/vimrc
   silent edit prof.log
 endfunction
 
@@ -63,6 +62,20 @@ function! vimtex#profile#filter(sections) abort " {{{1
   endfor
 
   call writefile(l:new, 'prof.log')
+endfunction
+
+" }}}1
+
+function! vimtex#profile#time(...) abort " {{{1
+  let l:t1 = reltimefloat(reltime())
+
+  if a:0 > 0
+    echo printf(
+          \ "%s: %8.5f\n",
+          \ a:0 > 1 ? a:2 : 'Time elapsed', l:t1 - a:1)
+  endif
+
+  return l:t1
 endfunction
 
 " }}}1

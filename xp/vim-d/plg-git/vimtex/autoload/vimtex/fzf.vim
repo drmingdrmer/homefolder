@@ -1,4 +1,4 @@
-" vimtex - LaTeX plugin for Vim
+" VimTeX - LaTeX plugin for Vim
 "
 " Maintainer: Karl Yngve Lervåg
 " Email:      karl.yngve@gmail.com
@@ -21,27 +21,31 @@ function! vimtex#fzf#run(...) abort " {{{1
   " Note: The '--with-nth 3..' option hides the first two words from the fzf
   "       window. These words are the file name and line number and are used by
   "       the sink.
+  "
+  " Note: Using '#####' as delimiter allows spaces in the file path, while
+  "       keeping the visuals in fzf window unaffected.
   let l:opts = extend({
       \ 'source': <sid>parse_toc(a:0 == 0 ? 'ctli' : a:1),
       \ 'sink': function('vimtex#fzf#open_selection'),
-      \ 'options': '--ansi --with-nth 3..',
+      \ 'options': '--ansi --with-nth 3.. --delimiter "#####"',
       \}, a:0 > 1 ? a:2 : {})
 
   call fzf#run(l:opts)
 endfunction
 
 " }}}1
-function! vimtex#fzf#open_selection(sel) abort " {{{1
-  let line = split(a:sel)[0]
-  let file = split(a:sel)[1]
-  let curr_file = expand('%:p')
+" {{{1 function! vimtex#fzf#open_selection(sel) abort
+if !exists('*vimtex#fzf#open_selection')
+  function! vimtex#fzf#open_selection(sel) abort
+    let [l:line, l:file; _] = split(a:sel, '#####')
 
-  if curr_file == file
-    execute 'normal! ' . line . 'gg'
-  else
-    execute printf('edit +%s %s', line, file)
-  endif
-endfunction
+    if expand('%:p') == l:file
+      execute 'normal! ' . l:line . 'gg'
+    else
+      execute printf('edit +%s %s', l:line, l:file)
+    endif
+  endfunction
+endif
 
 " }}}1
 
@@ -91,7 +95,9 @@ def colorize(e):
 
 def create_candidate(e, depth):
   number = format_number(dict(e['number']))
-  return f"{e.get('line', 0)} {e['file']} {colorize(e)} {number}"
+  return (
+    f"{e.get('line', 0)}#####{e['file']}#####{colorize(e)} {number}"
+  )
 
 entries = vim.eval('vimtex#parser#toc()')
 depth = max([int(e['level']) for e in entries])

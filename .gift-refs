@@ -1,14 +1,16 @@
+- - xp/tmux-d/plugin/tmux-copycat
+  - d7f7e6c1de0bc0d6915f4beea5be6a8a42045c09
 - - xp/vim-d/plg-git/nerdcommenter
-  - fade3d4b26f5a0d58f256a06ba7b0a04d9fb4f3b
+  - 6d30ebcd428eb5a244229a125420a1e044b42b52
 - - xp/vim-d/plg-git/nerdtree
-  - f8aa749985754091e980c1dc93ec3206ee3dec1f
+  - fc85a6f07c2cd694be93496ffad75be126240068
 - - xp/vim-d/plg-git/nerdtree-git-plugin
-  - 97eeaee46308a39cadfd2273280fcc4906988dd0
+  - e1fe727127a813095854a5b063c15e955a77eafb
 - - xp/vim-d/plg-git/vim-flatbuffers
   - 95c828bcc7dd83627f732bbb1d78888a3a870d6e
 - - xp/vim-d/plg-git/vim-toml
-  - a4ec206052aa347d7df90dc4b6697b7f2b7929bc
+  - d36caa6b1cf508a4df1c691f915572fc02143258
 - - xp/vim-d/plg-git/vimtex
-  - 6ba6a35edadd53d20ef53d8fc981ae31b294a544
+  - 6e6e865371a3ea358abada2736ba04ab6fbb8068
 - - xp/vim-d/plg-git/xptemplate
-  - 79d650bad58b9c896ec47785f8a0c7b603105c2d
+  - a97a9ee7226bab25df03d1b7df8209a0d1946beb
