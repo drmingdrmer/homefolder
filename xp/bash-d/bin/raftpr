@@ -28,15 +28,6 @@ map_label()
 
 
 labels=""
-case $1 in
-    -l)
-        shift
-        lb="$(map_label "$1")"
-        labels="--label $lb"
-        shift
-    ;;
-
-esac
 
 upstream_branch=main
 upstream="ups/$upstream_branch"
@@ -45,6 +36,20 @@ branch=$(git symbolic-ref --short HEAD)
 echo "($branch)"
 title="$(git log -n1 --format='%s')"
 body="$(git log $upstream..HEAD --format='##### %s%n%+b%n')"
+
+case $1 in
+    -l)
+        shift
+        lb="$(map_label "$1")"
+        labels="--label $lb"
+        shift
+        ;;
+    -t)
+        shift
+        title="$1"
+        shift
+    ;;
+esac
 
 c_feat=''
 c_fix=''
