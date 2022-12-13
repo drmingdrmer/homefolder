@@ -55,6 +55,7 @@ lf  format=fuller
 lm  format=medium
 lo  format=oneline
 lr  format=pullrequest
+lt  format=time
 n   name-only
 oM  no-merges
 om  merges
@@ -90,14 +91,23 @@ git_comma_make_option_expr()
 
 export git_comma_option_expr="$(git_comma_make_option_expr)"
 
+
 fmt_hash='%C(dim yellow)%h%C(reset)'
-fmt_time='%C(bold cyan)%ar%C(reset)'
 fmt_subject='%C(bold green)%s%C(reset)'
 fmt_author='%C(yellow)%an%C(reset)'
 fmt_ref='%C(dim yellow)%d%C(reset)'
 fmt_body='%C(white)%+b%C(reset)'
 
-# git_comma_format_for_diff="format:'%<(8)$fmt_hash%<(8,trunc)$fmt_author %<(7,trunc)$fmt_time $fmt_subject $fmt_ref%>(1,ltrunc)%b$fmt_body'"
-# git_comma_format_for_diff="format:'$fmt_subject - $fmt_author $fmt_time $fmt_hash$fmt_ref%>(1,ltrunc)%b$fmt_body'"
-# git_comma_format_for_diff="format:'$fmt_hash $fmt_subject - $fmt_author $fmt_time $fmt_ref%>(1,ltrunc)%b$fmt_body'"
+# author time, relative
+fmt_time='%C(bold cyan)%ar%C(reset)'
+# author time, YYYY-MM-DD
+fmt_time='%C(bold cyan)%as%C(reset)'
+
+# export git_comma_format_for_diff="format:'$fmt_subject - $fmt_author $fmt_time $fmt_hash$fmt_ref%>(1,ltrunc)%b$fmt_body'"
+# export git_comma_format_for_diff="format:'$fmt_hash $fmt_subject - $fmt_author $fmt_time $fmt_ref%>(1,ltrunc)%b$fmt_body'"
+
+# 08d396aff 张炎泼   2022-12-10 A  xp/bash-d/bin/ghpr  (HEAD -> master, origin/master)
+# export git_comma_format_for_time="format:'%<(8)$fmt_hash %<(8,trunc)$fmt_author %<(10,trunc)$fmt_time $fmt_subject $fmt_ref%>(1,ltrunc)%b$fmt_body'"
+export git_comma_format_for_time="format:'%<(8)$fmt_hash %<(8,trunc)$fmt_author %<(10,trunc)$fmt_time $fmt_subject $fmt_ref'"
+
 export git_comma_format_for_diff="format:'$fmt_hash %C(bold green)%s%C(reset) - $fmt_author $fmt_time %C(bold red)% D%C(reset) %>(1,ltrunc)%b$fmt_body'"

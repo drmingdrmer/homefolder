@@ -220,6 +220,10 @@ if [ "$opt_format" = " --format=diff " ]; then
     opt_format=" --format=$git_comma_format_for_diff "
 fi
 
+if [ "$opt_format" = " --format=time " ]; then
+    opt_format=" --format=$git_comma_format_for_time "
+fi
+
 if [ "$opt_format" = " --format=pullrequest " ]; then
     opt_format=" --format='### %s%+b%n' "
     opt_graph=""
