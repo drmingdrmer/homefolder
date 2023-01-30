@@ -233,4 +233,16 @@ tmsh()
     # to detach:
     # tmux detach
 }
+
+dtdir()
+{
+    local msg=${1-x}
+    local d="$(date "+%Y-%m-%d-%H-%M-$msg")"
+
+    mkdir $d
+    cd $d
+}
+
 . "$HOME/.cargo/env"
+
+
