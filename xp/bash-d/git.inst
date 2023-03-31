@@ -16,6 +16,11 @@ gconf="git config --global"
 
 $gconf core.excludesfile ~/xp/git-d/gitignore
 
+
+# Use ';' instead of the default '#' as comment starting char,
+# so that we can use markdown syntax '##' as header
+$gconf core.commentchar ';'
+
 # git older than 1.8 has no option --no-edit
 git_arg_no_edit="--no-edit"
 if [ "$git_version_1" = "1" ] && [ "$git_version_2" -lt "8" ]; then
