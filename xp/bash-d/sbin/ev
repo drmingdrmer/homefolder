@@ -11,4 +11,6 @@ if [ ".$SECPASS" = "." ]; then
     read -s SECPASS
 fi
 
-SECPASS="$SECPASS" openssl des3 -d -pass env:SECPASS -in $fn
+# -md md5 is required:
+# https://unix.stackexchange.com/questions/606493/cannot-decrypt-files-on-a-mac-using-openssl
+SECPASS="$SECPASS" openssl des3 -d  -md md5 -pass env:SECPASS -in $fn

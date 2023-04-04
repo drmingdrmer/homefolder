@@ -11,7 +11,9 @@ if [ ".$SECPASS" = "." ]; then
     read -s SECPASS
 fi
 
-content="$(cat "$fn" | SECPASS="$SECPASS" openssl des3 -d -pass env:SECPASS)"
+# -md md5 is required:
+# https://unix.stackexchange.com/questions/606493/cannot-decrypt-files-on-a-mac-using-openssl
+content="$(cat "$fn" | SECPASS="$SECPASS" openssl des3 -d  -md md5 -pass env:SECPASS)"
 
 SECPASS="$SECPASS" CONTENT="$content" vim \
     -c 'put=$CONTENT' \
