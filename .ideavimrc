@@ -14,7 +14,7 @@ nmap <S-J> <Action>(EditorJoinLines)
 " sethandler <C-2> a:vim
 " sethandler <C-A> a:vim
 " sethandler <C-B> a:vim
-" sethandler <C-D> a:vim
+sethandler <C-D> a:vim
 sethandler <C-E> a:vim
 " sethandler <C-F> a:vim
 " sethandler <C-H> a:vim
