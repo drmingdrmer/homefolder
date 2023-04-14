@@ -8,6 +8,7 @@
 
 !/.astylerc
 !/.bashrc
+!/.ideavimrc
 !/.cargo/
 /.cargo/*
 !/.cargo/config
