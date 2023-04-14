@@ -5,6 +5,9 @@
 " Find aciotn id:
 " https://github.com/JetBrains/ideavim#finding-action-ids
 
+" Set ide/vim handler:
+" https://github.com/JetBrains/ideavim/blob/master/doc/sethandler.md
+
 nmap <S-J> <Action>(EditorJoinLines)
 
 
