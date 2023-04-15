@@ -8,8 +8,11 @@
 " Set ide/vim handler:
 " https://github.com/JetBrains/ideavim/blob/master/doc/sethandler.md
 
-nmap <S-J> <Action>(EditorJoinLines)
+nmap <C-J> <Action>(MoveLineDown)
+nmap <C-K> <Action>(MoveLineUp)
 
+nmap <S-J> <Action>(EditorJoinLines)
+imap <C-L> <Action>(EditorLineEnd)
 
 " sethandler <C-2> a:vim
 " sethandler <C-A> a:vim
