@@ -19,4 +19,4 @@ SECPASS="$SECPASS" CONTENT="$content" vim \
     -c 'put=$CONTENT' \
     -c 'file des3-b64://des3-content' \
     -c 'set buftype=acwrite' \
-    -c 'au BufWriteCmd * exec "silent w !cat | openssl des3 -pass env:SECPASS > '"$fn"'"'
+    -c 'au BufWriteCmd * exec "silent w !cat | openssl des3 -md md5 -pass env:SECPASS > '"$fn"'"'
