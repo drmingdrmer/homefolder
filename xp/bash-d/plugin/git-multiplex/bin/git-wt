@@ -636,10 +636,13 @@ fn_match()
 usage()
 {
     cat <<-END
-Add worktree
+Add/Goto worktree
     $0 <branch>|<remote>/<branch>|<new_branch>
 Delete worktree
-    $0 <branch>
+    $0 -d|-D <branch>
+List all worktree
+    $0 -l
+    $0
 END
 }
 
@@ -656,6 +659,11 @@ main()
 
     cd "$root";
 
+    if [ "$rbranch" = "-l" ]; then
+        git worktree list
+        return
+    fi
+
     if [ "$rbranch" = "-d" ] || [ "$rbranch" = "-D" ]; then
 
         local flg="$rbranch"
@@ -671,6 +679,7 @@ main()
     fi
 
     if [ "$rbranch" = "" ]; then
+        git worktree list
         return
     fi
 
