@@ -72,7 +72,8 @@ fun! s:Put() "{{{
         if !has( 'gui_running' )
             redraw!
         endif
-        normal! zM
+        " do not collapse
+        " normal! zM
     endif
 
 endfunction "}}}
