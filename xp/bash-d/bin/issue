@@ -22,15 +22,25 @@ get_repo()
     echo "$remote"
 }
 
+set -o errexit
+
+git_root=$(git rev-parse --show-toplevel)
+
 repo="$(get_repo ups)" || repo="$(get_repo origin)"
 echo "=== Create issue in repo: $repo"
 
 title="$@"
 
+echo "; $title" > "$git_root/.git-xp-issue"
+echo "" >> "$git_root/.git-xp-issue"
+vim "$git_root/.git-xp-issue"
+
+body="$(cat $git_root/.git-xp-issue | grep -v '^;')"
+
 gh issue create \
     --title "$title" \
     --repo $repo \
-    
-    # --body "$body" \
+    --body "$body"
+    # --body-file "$git_root/.git-xp-issue"
 
 

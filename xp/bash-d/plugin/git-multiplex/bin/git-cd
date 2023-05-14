@@ -1,0 +1,47 @@
+#!/bin/sh
+
+# Change branch:
+#   git cd <some_branch>
+# Change back to previous branch:
+#   git cd -
+
+
+set -o errexit
+
+target="$1"
+
+root="$(git rev-parse --show-toplevel)"
+stack_fn="$root/.git-cd-stack"
+touch "$stack_fn"
+
+if [ ".$target" = '.-' ]; then
+    # pop and go back
+
+    # skip the first line with `tail -n +2`
+    previous="$(cat "$stack_fn" | head -n 1)"
+    if [ ".$previous" = "." ]; then
+        echo "no more item in cd-stack"
+        exit 0
+    fi
+
+
+    content="$(cat "$stack_fn" | tail -n +2)"
+    echo "$content" > "$stack_fn"
+
+    git checkout "$previous"
+else
+    current=$(git symbolic-ref --short HEAD)
+
+    git checkout "$target"
+
+    content="$(cat "$stack_fn")"
+
+    {
+        echo "$current"
+        echo "$content"
+    } > "$stack_fn"
+
+fi
+
+
+

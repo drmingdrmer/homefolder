@@ -8,6 +8,7 @@ _git_bci()           { _git_commit; }
 _git_bgrep()         { _git_checkout; }
 _git_binb()          { _git_checkout; }
 _git_cat()           { _git_checkout; }
+_git_cd()            { _git_checkout; }
 _git_cmv()           { _git_log; }
 _git_dep_push()      { _git_push; }
 _git_discard()       { _git_log; }
