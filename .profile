@@ -53,7 +53,7 @@ export PATH="/opt/homebrew/opt/mysql-client/bin:$PATH"
 
 # python virtual env
 # . $HOME/xp/py3virtual/dev/bin/activate
-. $HOME/xp/py3virtual/p38-13/bin/activate
+. $HOME/xp/py3virtual/p3-11-3/bin/activate
 
 
 export PATH="$HOME/xp/vcs/github.com/drmingdrmer/gift:$PATH"
