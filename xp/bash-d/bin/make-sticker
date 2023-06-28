@@ -142,4 +142,4 @@ convert tmp.gif \
     -draw "gravity north fill $color text $((so*1)),$((t+so*1)) '$text'" \
     tmp2.gif
 
-limit-img-size tmp2.gif "$output_path" 800000
+limit-img-size tmp2.gif "$output_path" 1600000
