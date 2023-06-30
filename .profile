@@ -7,6 +7,9 @@ XPBASE=$HOME/xp/bash-d
 
 export XPBASE
 
+# evaluate secrets
+. "$HOME/xp/wiki/sec/rc/profile"
+
 . $HOME/xp/bash-d/inc/util.sh
 env_init_path
 
