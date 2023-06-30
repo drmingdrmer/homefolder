@@ -23,7 +23,6 @@ clang           # python binding for clang
 scapy           # network tool: Manipulate packets
 
 nose
-requirements-parser
 
 scikit-image    # image processing
 
@@ -43,6 +42,8 @@ pandas                   # python data analysis
 yapf                        # python formatter
 boto3                       # aws lib
 moto                        # mock aws services
+poe-api                     # API to access poe.com
+
 
 k3git
 k3handy
