@@ -18,7 +18,7 @@ example_summarize_all_open_pr()
     # https://docs.github.com/en/search-github/searching-on-github/searching-issues-and-pull-requests#search-for-draft-pull-requests
     gh pr list --search "draft:false" | while read a b; do
         echo $a;
-        summarize-pr.sh $a;
+        pr-summarize.sh $a;
     done
 }
 
