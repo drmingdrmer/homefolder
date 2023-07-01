@@ -3,33 +3,25 @@
 
 usage()
 {
-    echo "Create a comment that summarizes the changes of a pull-request"
+    echo "Summarizes diff between <base> and current work tree"
     echo "Usage:"
     echo "    # run in a github repo working tree"
-    echo "    $0 <pr-number>"
+    echo "    $0 <base>"
     echo "Dependency:"
-    echo "    gh # github CLI"
     echo "    pip install poe-api"
     echo "    # Poe token, see: https://github.com/ading2210/poe-api#finding-your-token"
 }
 
-example_summarize_all_open_pr()
-{
-    # https://docs.github.com/en/search-github/searching-on-github/searching-issues-and-pull-requests#search-for-draft-pull-requests
-    gh pr list --search "draft:false" | while read a b; do
-        echo $a;
-        pr-summarize.sh $a;
-    done
-}
-
 set -o errexit
 
-pr=$1
 
-# echo 'write summary for the following changes:';
-# echo 'write git commit message for the following patch in detail:';
-# echo '```diff';
-# echo '```';
+base=${1-HEAD}
+
+echo "$base"
+
+git_dir=$(git rev-parse --git-dir)
+# root="$(git rev-parse --show-toplevel)"
+
 
 # BohuTang's prompt to generate PR summary
 prompt="$(
@@ -40,16 +32,15 @@ echo '3. Remove the similar points.',
 echo '4. Summarize a title for each point, format is `* **Title**`, describing what the point mainly did, as a new title for the pull request changelog, no more than 30 words.',
 echo '5. Make an understandable summary for each point with in 50 words, mainly for the background of this change.',
 echo '--------',
-gh pr diff $1;
+git diff --no-ext-diff $base
 )"
 
 summary="$(echo "$prompt" | call-poe.py "$XP_SEC_POE_TOKEN")"
 
-echo "Summary of PR $pr"
-echo "$summary"
-echo ""
+{
+    echo "$summary"
+    echo ""
+} > "$git_dir/xp-diff-summary"
 
-gh pr comment $pr --body "
-### PR summary(by Claude):
-
-$summary"
+echo "=== Diff summary between $base and current working tree ==="
+cat "$git_dir/xp-diff-summary"
