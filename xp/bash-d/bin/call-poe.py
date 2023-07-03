@@ -11,7 +11,7 @@ def usage():
     #  https://github.com/ading2210/poe-api
     print("Call poe.com")
     print("Usage:")
-    print("    echo '<prompt>' | $0 <token>")
+    print("    echo '<prompt>' | $0 [-b bot_name] <token>")
 
     #  Install:
     #   pip install poe-api
@@ -44,6 +44,24 @@ def eprint(*args, **kwargs):
 
 #  poe.logger.setLevel(logging.INFO)
 
+bot_names = {
+        "claude100k": "a2_100k",
+        "gpt4": "beaver",
+        "gpt": "chinchilla",
+}
+
+bot_name = "claude100k"
+
+eprint("argv:", sys.argv)
+
+if sys.argv[1] == "-b":
+    sys.argv.pop(1)
+    bot_name = sys.argv.pop(1)
+
+bot_name = bot_names[bot_name]
+
+eprint("argv:", sys.argv)
+
 token = sys.argv[1]
 
 input_lines = []
@@ -62,7 +80,7 @@ eprint("prompt end   ---")
 client = poe.Client(token, proxy="http://127.0.0.1:58591")
 
 
-for chunk in client.send_message("a2_100k", message, with_chat_break=True, timeout=120):
+for chunk in client.send_message(bot_name, message, with_chat_break=True, timeout=120):
     print(chunk["text_new"], end="", flush=True)
 
 #  #delete the 3 latest messages, including the chat break

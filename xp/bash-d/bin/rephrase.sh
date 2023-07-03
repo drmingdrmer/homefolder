@@ -5,14 +5,13 @@ src="$(</dev/stdin)"
 
 
 prompt="$(
-echo 'rephrase:'
-echo '```'
+echo 'rephrase the following markdown:'
+echo '---'
 echo "$src"
-echo '```'
 )"
 
 
-summary="$(echo "$prompt" | call-poe.py "$XP_SEC_POE_TOKEN")"
+summary="$(echo "$prompt" | call-poe.py -b gpt4  "$XP_SEC_POE_TOKEN")"
 
 echo "$summary" | set-clipboard
 
