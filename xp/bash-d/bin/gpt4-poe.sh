@@ -1,6 +1,6 @@
 #!/bin/sh
 
-echo "Enter prompt, followed with ^D"
+echo "Enter prompt, followed by ^D"
 prompt="$(</dev/stdin)"
 
 

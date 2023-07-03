@@ -1,6 +1,6 @@
 #!/bin/sh
 
-echo "Enter text to rephrase, followed with ^D"
+echo "Enter text to rephrase, followed by ^D"
 src="$(</dev/stdin)"
 
 
