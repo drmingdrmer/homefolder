@@ -1,14 +1,13 @@
 #!/bin/sh
 
 echo "Enter text to rephrase, followed with ^D"
-x="$(</dev/stdin)"
-# read -d '' x <<EOF
+src="$(</dev/stdin)"
 
 
 prompt="$(
 echo 'rephrase:'
 echo '```'
-echo "$x"
+echo "$src"
 echo '```'
 )"
 
