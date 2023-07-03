@@ -60,8 +60,6 @@ if sys.argv[1] == "-b":
 
 bot_name = bot_names[bot_name]
 
-eprint("argv:", sys.argv)
-
 token = sys.argv[1]
 
 input_lines = []
