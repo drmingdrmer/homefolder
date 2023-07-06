@@ -11,11 +11,4 @@ echo "$src"
 )"
 
 
-summary="$(echo "$prompt" | call-poe.py -b gpt4  "$XP_SEC_POE_TOKEN")"
-
-echo "$summary" | set-clipboard
-
-echo "--------- output(has been stored in clipboard) ---------"
-echo "$summary"
-echo ""
-
+echo "$prompt" | non-interactive-gpt4-poe.sh
