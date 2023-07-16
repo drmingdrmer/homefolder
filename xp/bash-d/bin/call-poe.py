@@ -29,25 +29,32 @@ def usage():
 def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
 
-#  Find out the engine code name:
+#  token = sys.argv[1]
+#  client = poe.Client(token, proxy="http://127.0.0.1:58591")
 #  print(json.dumps(client.bot_names, indent=2))
-#  """
+#  raise
 #  {
-#    "capybara": "Sage",
-#    "a2": "Claude-instant",
-#    "nutria": "Dragonfly",
-#    "a2_100k": "Claude-instant-100k",
-#    "beaver": "GPT-4",
+#    "beaver":     "GPT-4",
+#    "a2":         "Claude-instant",
+#    "capybara":   "Sage",
+#    "agouti":     "ChatGPT-16k",
+#    "grade2math": "grade2math",
+#    "acouchy":    "Google-PaLM",
 #    "chinchilla": "ChatGPT",
-#    "a2_2": "Claude+"
+#    "vizcacha":   "GPT-4-32k",
+#    "a2_100k":    "Claude-instant-100k",
+#    "a2_2":       "Claude-2-100k"
 #  }
 
 #  poe.logger.setLevel(logging.INFO)
 
 bot_names = {
-        "claude100k": "a2_100k",
-        "gpt4": "beaver",
-        "gpt": "chinchilla",
+        "claude-100k":  "a2_100k",
+        "claude100k":   "a2_100k",
+        "claude2-100k": "a2_2",
+        "gpt4":         "beaver",
+        "gpt4-32k":     "vizcacha",
+        "gpt":          "chinchilla",
 }
 
 bot_name = "claude100k"

@@ -1,0 +1,21 @@
+#!/bin/sh
+
+fn="$1"
+if [ ".$fn" = "." ]; then
+    echo "Rephrase markdown file in place"
+    echo "$0 <fn>.md"
+    exit 1
+fi
+
+
+# echo 'You are an programming expert. Please help me fix grammar mistake in the following markdown, improve sentences, try not to modify the text if possible:'
+# echo "Polish the writing to meet the tech document style, improve the spelling, grammar, clarity, concision and overall readability. When necessary, rewrite the whole sentence:"
+# echo "Polish the writing, improve the spelling, grammar, clarity, concision and overall readability. When necessary, rewrite the whole sentence:"
+prompt="$(
+echo "Polish the writing, improve the spelling, grammar, clarity, concision and overall readability. Do not modify if possible:"
+cat "$fn"
+)"
+
+output="$(echo "$prompt" | call-poe.py -b gpt4-32k  "$XP_SEC_POE_TOKEN")"
+
+echo "$output" > $fn
