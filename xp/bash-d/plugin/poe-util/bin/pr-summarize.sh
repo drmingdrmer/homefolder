@@ -43,7 +43,7 @@ echo '--------',
 gh pr diff $1;
 )"
 
-summary="$(echo "$prompt" | call-poe.py -b claude100k "$XP_SEC_POE_TOKEN")"
+summary="$(echo "$prompt" | call-poe.py -b claude2-100k "$XP_SEC_POE_TOKEN")"
 
 echo "Summary of PR $pr"
 echo "$summary"

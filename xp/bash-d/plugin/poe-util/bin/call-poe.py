@@ -84,6 +84,9 @@ eprint("prompt end   ---")
 #  client = poe.Client(token, proxy="socks5h://127.0.0.1:51837")
 client = poe.Client(token, proxy="http://127.0.0.1:58591")
 
+# 
+#  client = poe.Client(token, proxy="socks5://127.0.0.1:9001")
+
 
 for chunk in client.send_message(bot_name, message, with_chat_break=True, timeout=120):
     print(chunk["text_new"], end="", flush=True)
