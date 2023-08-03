@@ -81,6 +81,7 @@ other:
 - - f github.com/drmingdrmer/dashmap
 - - f github.com/drmingdrmer/databend-cloud-platform
 - - f github.com/drmingdrmer/databend-perf
+- - f github.com/drmingdrmer/databend-scripts
 - - . github.com/drmingdrmer/databend2
 - - . github.com/drmingdrmer/drmingdrmer
 - - f github.com/drmingdrmer/erasure-code-py
@@ -100,6 +101,7 @@ other:
 - - . github.com/drmingdrmer/mdbook-full
 - - f github.com/drmingdrmer/mdbook-katex
 - - . github.com/drmingdrmer/mdbook-svgbob
+- - f github.com/drmingdrmer/minimeili-raft
 - - f github.com/drmingdrmer/mj-prompts
 - - f github.com/drmingdrmer/more-iter
 - - f github.com/drmingdrmer/nuclei
