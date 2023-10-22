@@ -4,6 +4,7 @@ fi
 __XP_PROFILE__=1
 
 XPBASE=$HOME/xp/bash-d
+XP_DIR="$HOME/xp"
 
 export XPBASE
 

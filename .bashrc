@@ -57,9 +57,6 @@ init_prompt()
 }
 init_plugin()
 {
-    source_dir "$XPBASE/rc/bash-plugin-rc"
-    d end rc
-
     shname=bash
 
     for plg in $(ls $XPBASE/plugin/); do
@@ -86,9 +83,41 @@ init_plugin()
         fi
 
     done
+}
 
-    source_dir "$XPBASE/rc/bash-plugin-init"
-    d end plug-init
+init_v2_plugin()
+{
+    shname=bash
+
+    for plg in $(ls $XP_DIR/plugin/); do
+
+        plgpath="$XP_DIR/plugin/$plg"
+
+        # rc
+
+        if [ -d "$plgpath/rc" ]; then
+            cwd=$(pwd)
+            cd $plgpath
+            . $plgpath/rc/${shname}rc
+            cd $cwd
+        fi
+
+        # bin
+
+        if [ -d "$plgpath/bin" ]; then
+            export PATH=$plgpath/bin:$PATH
+        fi
+
+        # complete
+
+        cmplpath="$plgpath/complete"
+        if [ -d "$cmplpath" ]; then
+            for cmpl in $(ls $cmplpath/*.$shname); do
+                . $cmpl
+            done
+        fi
+
+    done
 }
 source_dir()
 {
@@ -145,7 +174,16 @@ fi
 d end os
 
 init_prompt
+
+source_dir "$XPBASE/rc/bash-plugin-rc"
+d end rc
+
 init_plugin
+
+init_v2_plugin
+
+source_dir "$XPBASE/rc/bash-plugin-init"
+d end plug-init
 
 if which brew >/dev/null 2>/dev/null && [ -f $(brew --prefix)/etc/bash_completion ]; then
     . $(brew --prefix)/etc/bash_completion
@@ -197,6 +235,12 @@ tj_sock5="socks5://127.0.0.1:1080"
 enable_proxy()
 {
     export HTTP_PROXY=http://127.0.0.1:58591; export HTTPS_PROXY=http://127.0.0.1:58591; export ALL_PROXY=socks5://127.0.0.1:51837
+}
+
+proxy_sh()
+{
+
+    HTTP_PROXY=http://127.0.0.1:58591 HTTPS_PROXY=http://127.0.0.1:58591 ALL_PROXY=socks5://127.0.0.1:51837 bash
 }
 
 p3venv()

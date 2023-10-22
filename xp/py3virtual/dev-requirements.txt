@@ -45,6 +45,9 @@ moto                        # mock aws services
 poe-api                     # API to access poe.com
 
 
+azure-cognitiveservices-speech
+
+
 k3git
 k3handy
 k3jobq
