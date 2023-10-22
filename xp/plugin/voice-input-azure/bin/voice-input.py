@@ -48,16 +48,16 @@ def add_phrases(reco, lang):
                     'RPC',
                     'RTT',
 
-                    'vim', 
+                    'vim',
                     'python',
                     'azure',
 
                     'stdout',
-                    'stderr', 
+                    'stderr',
 
                     'git',
-                    'repo', 
-            ], 
+                    'repo',
+            ],
             'en': [
             ]
 
@@ -71,8 +71,8 @@ def add_phrases(reco, lang):
 def recognize(lang):
 
     languages = {
-            'cn': 'zh-cn', 
-            'en': 'en-US', 
+            'cn': 'zh-cn',
+            'en': 'en-US',
     }
 
     speech_key, region = load_keys()
