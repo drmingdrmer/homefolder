@@ -21,7 +21,7 @@
 #
 # Use in vim:
 #  - Put `voice-input.py` to a dir defined in $PATH
-#  - Add the following line to .vimrc to convert chinese or english to text:
+#  - Add the following line to .vimrc to convert Chinese or English to text:
 #    ```
 #    inoremap <C-d><C-d> <C-r>=system('voice-input.py cn')<CR>
 #    inoremap <C-d><C-e> <C-r>=system('voice-input.py en')<CR>
