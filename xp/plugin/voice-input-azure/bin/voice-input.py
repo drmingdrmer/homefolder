@@ -1,26 +1,35 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+# Enable azure speech service:
+#  https://docs.azure.cn/zh-cn/ai-services/speech-service/get-started-speech-to-text?tabs=macos%2Cterminal&pivots=programming-language-python
+#
+# Setup environement variables key and region that are found at page
+#  https://portal.azure.com
+#  Home -> Azure AI Service | Speech service -> <your_service_name>
+#
+#  export XP_SEC_AZURE_SPEECH_KEY=***
+#  export XP_SEC_AZURE_SERVICE_REGION=***
+
+# Install Dependentcy:
+#  pip install azure-cognitiveservices-speech
+
 # Use in CLI:
-#  > ./voice-input.py
+#  > ./voice-input.py <cn|en>
 #    # start speaking...
 #    # text will be printed to stdout
 #
 # Use in vim:
 #  - Put `voice-input.py` to a dir defined in $PATH
-#  - Add the following line to .vimrc:
+#  - Add the following line to .vimrc to convert chinese or english to text:
 #    ```
-#    inoremap <M-d> <C-r>=system('voice-input.py')<CR>
+#    inoremap <C-d><C-d> <C-r>=system('voice-input.py cn')<CR>
+#    inoremap <C-d><C-e> <C-r>=system('voice-input.py en')<CR>
 #    ```
-#  - In vim **insert** mode: press Alt-d, then start speaking.
+#  - In vim **insert** mode: press Ctrl-d Ctrl-d, then start speaking.
 #    The recognized text will be inserted.
 #    The max speech time is 30 seconds.
 
-# Enable azure speech service:
-#  https://docs.azure.cn/zh-cn/ai-services/speech-service/get-started-speech-to-text?tabs=macos%2Cterminal&pivots=programming-language-python
-#
-# Dependentcy:
-#  pip install azure-cognitiveservices-speech
 
 import os
 import sys
@@ -35,8 +44,6 @@ def load_keys():
     assert region is not None
 
     return speech_key, region
-
-
 
 
 def add_phrases(reco, lang):
@@ -64,6 +71,7 @@ def add_phrases(reco, lang):
     }
 
     phrases = speechsdk.PhraseListGrammar.from_recognizer(reco)
+
     for p in my_phrases[lang]:
         phrases.addPhrase(p)
 
