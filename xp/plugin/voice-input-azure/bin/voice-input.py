@@ -47,6 +47,12 @@ def load_keys():
 
 
 def add_phrases(reco, lang):
+
+    projects = [
+        'databend',
+        'openraft',
+    ]
+
     my_phrases = {
             'cn': [
                     'Raft',
@@ -64,9 +70,10 @@ def add_phrases(reco, lang):
 
                     'git',
                     'repo',
-            ],
+
+            ] + projects,
             'en': [
-            ]
+            ] + projects,
 
     }
 
@@ -80,7 +87,7 @@ def recognize(lang):
 
     languages = {
             'cn': 'zh-cn',
-            'en': 'en-US',
+            'en': 'en-us',
     }
 
     speech_key, region = load_keys()
