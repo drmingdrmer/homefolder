@@ -49,14 +49,17 @@ def load_keys():
 def add_phrases(reco, lang):
 
     projects = [
+        'Raft',
+        'Paxos',
+
         'databend',
         'openraft',
+
+        'rocks DB', 
     ]
 
     my_phrases = {
             'cn': [
-                    'Raft',
-                    'Paxos',
                     'KV',
                     'RPC',
                     'RTT',
@@ -68,10 +71,12 @@ def add_phrases(reco, lang):
                     'stdout',
                     'stderr',
 
+
                     'git',
                     'repo',
 
             ] + projects,
+
             'en': [
             ] + projects,
 
