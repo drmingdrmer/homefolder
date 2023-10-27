@@ -51,15 +51,30 @@ def add_phrases(reco, lang):
     projects = [
         'Raft',
         'Paxos',
+        'Abstract Paxos',
+
+        'pull-request',
+        'PR',
 
         'databend',
-        'openraft',
+        'open-raft',
+        'LevelDB',
 
-        'rocks DB', 
+        'git',
+        'github', 
+
+        'RESTful', 
+        'BTree', 
+        'SkipList', 
+
+        'MemTable',
+
+
     ]
 
     my_phrases = {
             'cn': [
+
                     'KV',
                     'RPC',
                     'RTT',
