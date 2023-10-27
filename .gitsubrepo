@@ -20,6 +20,7 @@ flamegraph/bin                     brendangregg/FlameGraph        master
 vim-autoformat                  Chiel92/                     master
 ansible-vim                     DavidWittman/                master
 clang_complete                  Rip-Rip/                     master
+denops-gh.vim                   skanehira/                   main
 gv.vim                          junegunn/                    master
 unite.vim                       Shougo/                      master
 ultisnips                       SirVer/                      master
