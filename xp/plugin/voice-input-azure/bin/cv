@@ -1,0 +1,6 @@
+#!/bin/sh
+
+
+# Chinese voice input to clipboard
+
+voice-input.py cn | set-clipboard
