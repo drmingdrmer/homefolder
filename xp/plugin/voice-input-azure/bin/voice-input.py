@@ -90,6 +90,18 @@ def add_phrases(reco, lang):
                     'git',
                     'repo',
 
+                    # paxos/raft related
+                    'proposer',
+                    'acceptor', 
+                    'follower',
+                    'leader',
+                    'voter',
+                    'learner',
+
+                    'quorum',
+                    'majority', 
+
+
             ] + projects,
 
             'en': [
@@ -124,6 +136,7 @@ def recognize(lang):
 
 
     result = reco.recognize_once()
+    #  print(result)
     return result.text
 
 if __name__ == "__main__":
