@@ -90,16 +90,19 @@ def add_phrases(reco, lang):
                     'git',
                     'repo',
 
-                    # paxos/raft related
+                    # consensus related
+                    'quorum',
+                    'majority',
+                    # paxos
                     'proposer',
                     'acceptor', 
+                    # raft
                     'follower',
                     'leader',
                     'voter',
                     'learner',
+                    'snapshot',
 
-                    'quorum',
-                    'majority', 
 
 
             ] + projects,
