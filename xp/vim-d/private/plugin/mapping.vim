@@ -34,6 +34,11 @@ xmap ]<space> ]%
 nmap <unique> <Leader>s <Plug>view:switchSetting
 nmap <unique> ^         <Plug>(edit:case:switch)
 
+" make a line of text valid fn string
+" - replace non word char with "-"
+" - convert to lower case
+nmap <unique> <Leader><Leader>fn :s/\W\W*/-/g<CR>Vgu
+
 " TODO only on mac it uses open
 " it also redraw to update vim display.
 nnoremap <Plug>(buffer:open:with-external-editor) :silent! !open "%"<CR>:redraw!<CR>
