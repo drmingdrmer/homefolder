@@ -38,7 +38,8 @@ rr   ,          rebase
 RH   ,          reset --hard
 RS   ,          reset --soft
 sb   ,          status --short --branch                                   # status with branch info
-sf   ,          diff --name-only --relative HEAD                          # status about file changes
+sf   ,          diff --name-only --relative HEAD                          # status about file changes, comparing with HEAD
+sm   ,          diff --name-only                                          # status about Modified files
 st   ,          status
 xI   ,          clean -dXf                                                # remove all ignored files
 xi   ,          clean -dXfn                                               # remove all ignored files; dry run
