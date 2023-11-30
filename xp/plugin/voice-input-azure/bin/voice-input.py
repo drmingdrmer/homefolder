@@ -65,6 +65,9 @@ def add_phrases(reco, lang):
         'git',
         'github', 
 
+        'gRPC',
+        'seq', 
+
         'RESTful', 
         'BTree', 
         'SkipList', 
