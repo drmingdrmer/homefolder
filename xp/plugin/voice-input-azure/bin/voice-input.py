@@ -53,6 +53,8 @@ def add_phrases(reco, lang):
         'Paxos',
         'Abstract Paxos',
 
+        'CRDT', 
+
         'pull-request',
         'PR',
 
