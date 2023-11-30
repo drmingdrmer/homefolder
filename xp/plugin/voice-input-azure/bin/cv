@@ -3,4 +3,6 @@
 
 # Chinese Voice input to clipboard
 
-voice-input.py cn | set-clipboard
+fn="$HOME/chinese-voice-input-tmp"
+voice-input.py cn | tee "$fn" | set-clipboard
+cat "$fn"

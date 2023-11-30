@@ -76,6 +76,7 @@ def add_phrases(reco, lang):
 
     my_phrases = {
             'cn': [
+                    'ascii',
 
                     'KV',
                     'RPC',
