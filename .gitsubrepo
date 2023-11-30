@@ -23,7 +23,7 @@ clang_complete                  Rip-Rip/                     master
 gv.vim                          junegunn/                    master
 unite.vim                       Shougo/                      master
 ultisnips                       SirVer/                      master
-vim-gitgutter                   airblade/                    master
+vim-gitgutter                   airblade/                    main
 ctrlp                           ctrlpvim/ctrlp.vim           master
 vim-color-edit                  drmingdrmer/                 master
 vim-fuzzyjumpto                 drmingdrmer/                 master
