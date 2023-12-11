@@ -18,6 +18,7 @@
 !/.gdbinit.d
 !/.gdbrc
 !/.git-transfer.conf
+!/.gitbox.conf
 !/.gitshrc
 !/.gnomerc
 !/.grc
