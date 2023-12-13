@@ -43,6 +43,7 @@ yapf                        # python formatter
 boto3                       # aws lib
 moto                        # mock aws services
 poe-api                     # API to access poe.com
+pypinyin                    # chinese pinyin
 
 
 azure-cognitiveservices-speech
