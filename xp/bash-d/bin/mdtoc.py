@@ -27,7 +27,7 @@ config = {
 toc_start = u'<!-- mdtoc start -->'
 toc_end   = u'<!-- mdtoc end   -->'
 
-def add_md_toc(path):
+def add_md_toc(path, engine):
 
     with open(path, 'r') as f:
         cont = f.read()
@@ -118,7 +118,6 @@ def find_headers(lines):
 
         header_id = text
 
-        engine = 'jekyll'
         for reg, repl in config[engine]['regex']:
             header_id = re.sub(reg, repl, header_id)
 
@@ -138,6 +137,7 @@ if __name__ == "__main__":
 
     parser.add_argument('fns', type=str, nargs='+', help='file names')
     parser.add_argument('-i', action="store_true", dest="inplace", help="in-place")
+    parser.add_argument('-e', '--engine' action="store", dest="markdown engine", default="jekyll", help="markdown engine: jekyll, gitbook")
 
     args = parser.parse_args()
 
@@ -147,7 +147,9 @@ if __name__ == "__main__":
     else:
         dst = args.fns[1]
 
-    cont = add_md_toc(path)
+    engine = args.engine
+
+    cont = add_md_toc(path, engine)
 
     with open(dst, 'w') as f:
         f.write(cont)
