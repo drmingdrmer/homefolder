@@ -32,6 +32,8 @@ bindkey -t "\033l" next
 bindkey -t "\033H"
 bindkey -t "\033L"
 
+# ctrl-e, ctrl-h/l
+# move window left and right
 bind ^h exec bash -c 'screen -X msgwait 0; n=$(screen -Q number | grep -o "^[0-9]*"); let n=n-1; screen -X number "$n"; screen -X msgwait 1;'
 bind ^l exec bash -c 'screen -X msgwait 0; n=$(screen -Q number | grep -o "^[0-9]*"); let n=n+1; screen -X number "$n"; screen -X msgwait 1;'
 
