@@ -29,6 +29,7 @@ scikit-image    # image processing
 semantic_version
 psutil
 netifaces
+termcolor
 tzlocal
 pytz
 docker-py
