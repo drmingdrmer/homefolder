@@ -8,9 +8,13 @@ usage()
     echo ' - convert to lower case'
 }
 
-normalized=$(echo "$*" | awk '{
+# join lines:
+# awk '{printf "%s ", $0}'
+normalized=$(echo "$*" | awk '{printf "%s ", $0}' | awk '{
     gsub(/[^a-zA-Z0-9]/, "-", $0);
     gsub(/--*/, "-", $0);
+    gsub(/^--*/, "", $0);
+    gsub(/--*$/, "", $0);
     print tolower($0);
 }')
 
