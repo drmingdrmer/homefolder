@@ -147,7 +147,7 @@ nmap <unique> <Leader><Leader>sd  	 <Plug>search:word_in_cwd
 nmap <unique> <Leader><Leader>sr  	 <Plug>search:word_ref
 " nmap <unique> <M-J>               	 <Plug>view:highlight_focus_next
 " nmap <unique> <M-K>               	 <Plug>view:highlight_focus_prev
-" nmap <unique> <Leader><Leader>th  	 <Plug>view:highlight_focus_toggle
+nmap <unique> <Leader><Leader>th  	 <Plug>view:highlight_focus_toggle
 nmap <unique> <M-3>               	 <Plug>window:quickfix:loop
 nmap <unique> <Leader>ccm         	 V<Plug>case:camelize
 
