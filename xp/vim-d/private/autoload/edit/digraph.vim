@@ -39,6 +39,7 @@ let s:digraphs = {
     \ "My"  :  [  "µ",       "micro sign"],
     \ "PI"  :  [  "¶",       "pilcrow sign"],
     \ ".M"  :  [  "·",       "middle dot"],
+    \ "·M"  :  [  "•",       "middle big dot", "xps"],
     \ "',"  :  [  "¸",       "cedilla"],
     \ ">>"  :  [  "»",       "right-pointing double angle quotation mark"],
     \ "14"  :  [  "¼",       "vulgar fraction one quarter"],
