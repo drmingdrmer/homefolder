@@ -244,6 +244,7 @@ let s:digraphs = {
     \ "r,"  :  [  "ŗ",       "latin small letter r with cedilla"],
     \ "R<"  :  [  "Ř",       "latin capital letter r with caron"],
     \ "r<"  :  [  "ř",       "latin small letter r with caron"],
+    \ "r-"  :  [  "ɍ",       "latin small letter r with stroke", "xps"],
     \ "S'"  :  [  "Ś",       "latin capital letter s with acute"],
     \ "s'"  :  [  "ś",       "latin small letter s with acute"],
     \ "S>"  :  [  "Ŝ",       "latin capital letter s with circumflex"],
