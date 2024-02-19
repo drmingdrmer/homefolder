@@ -297,8 +297,14 @@ class WorkSpace(object):
 
     def subcmd_stat(self, path, g, ctx):
 
-        head_branch = g.head_branch(flag='x')
+        head_branch = g.head_branch(flag='')
+        if head_branch is None:
+            self.output(path, "no branch is found for HEAD")
+            return
         upstream = g.branch_default_upstream(head_branch)
+        if upstream is None:
+            self.output(path, "no upstream branch is found for", head_branch)
+            return
         diver = g.branch_divergency(head_branch)
 
         self.output(path,
