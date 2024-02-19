@@ -13,11 +13,11 @@ fuse:
 - - f github.com/datafuselabs/weekly
 - - . github.com/drmingdrmer/arrow-rs
 - - . github.com/drmingdrmer/clickhouse-svr
+- - f github.com/drmingdrmer/databend
+  - ups github.com/datafuselabs/databend
 - - . github.com/drmingdrmer/datafuse-presentations
 - - . github.com/drmingdrmer/datafuse-shop
   - ups github.com/datafuselabs/datafuse-shop
-- - f github.com/drmingdrmer/databend
-  - ups github.com/datafuselabs/databend
 - - f github.com/drmingdrmer/openraft
   - ups github.com/datafuselabs/openraft
 openacid:
@@ -62,6 +62,7 @@ other:
 - - f github.com/drmingdrmer/MadRaft
 - - f github.com/drmingdrmer/OI-wiki
 - - f github.com/drmingdrmer/RunKV
+- - f github.com/drmingdrmer/Xline
 - - f github.com/drmingdrmer/abstract-paxos
 - - f github.com/drmingdrmer/anyerror
 - - . github.com/drmingdrmer/anyhow
@@ -90,6 +91,7 @@ other:
 - - . github.com/drmingdrmer/drmingdrmer
 - - f github.com/drmingdrmer/english-learning
 - - f github.com/drmingdrmer/erasure-code-py
+- - f github.com/drmingdrmer/feature-set
 - - . github.com/drmingdrmer/futures-rs
 - - f github.com/drmingdrmer/generator-rs
 - - . github.com/drmingdrmer/go-typegraph
@@ -116,6 +118,7 @@ other:
 - - f github.com/drmingdrmer/mj-prompts
 - - f github.com/drmingdrmer/more-iter
 - - f github.com/drmingdrmer/nuclei
+- - f github.com/drmingdrmer/one_file_raft
 - - f github.com/drmingdrmer/opencache
 - - f github.com/drmingdrmer/opendal
 - - f github.com/drmingdrmer/openkv
@@ -124,6 +127,7 @@ other:
 - - . github.com/drmingdrmer/openraft-bkp
 - - f github.com/drmingdrmer/openraft-example
 - - f github.com/drmingdrmer/opensrv
+- - f github.com/drmingdrmer/openstudy
 - - f github.com/drmingdrmer/phi-detector
 - - f github.com/drmingdrmer/python-paxos-jepsen
 - - f github.com/drmingdrmer/rangemap
@@ -162,16 +166,23 @@ other:
 - - f github.com/drmingdrmer/toydb
 - - f github.com/drmingdrmer/tracing
 - - f github.com/drmingdrmer/tremor.jepsen
+- - f github.com/drmingdrmer/try_mlua
+- - f github.com/drmingdrmer/try_rhai
 - - f github.com/drmingdrmer/uluru
+- - f github.com/drmingdrmer/validit
+- - . github.com/drmingdrmer/vbox
 - - f github.com/drmingdrmer/wal
 - - f github.com/drmingdrmer/want
 - - f github.com/drmingdrmer/weibot
+- - f github.com/drmingdrmer/wizard
 - - f github.com/drmingdrmer/xorfilter
+- - f github.com/drmingdrmer/xp-md2html
 - - f github.com/drmingdrmer/xptemplate
 - - f github.com/dtolnay/anyhow
 - - f github.com/ejoffe/spr
 - - f github.com/etcd-io/bbolt
 - - f github.com/etcd-io/etcd
+- - . github.com/etcd-io/raft
 - - . github.com/facebook/rocksdb
 - - . github.com/gmarik/go-erd
 - - . github.com/gnzlbg/jemallocator
@@ -179,6 +190,7 @@ other:
 - - . github.com/google/leveldb
 - - . github.com/gryadka/js
 - - . github.com/happyfish100/FastCFS
+- - f github.com/hashicorp/raft
 - - . github.com/huandu/skiplist
 - - . github.com/hyperium/h2
 - - . github.com/hyperium/hyper
