@@ -1,0 +1,3 @@
+#!/bin/sh
+
+decode-url.py "$*" | set-clipboard
