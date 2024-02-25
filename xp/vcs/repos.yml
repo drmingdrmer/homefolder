@@ -106,6 +106,7 @@ other:
 - - f github.com/drmingdrmer/lru-cache
 - - f github.com/drmingdrmer/lru-rs
 - - f github.com/drmingdrmer/madsim
+- - f github.com/drmingdrmer/math-in-rust-doc
 - - f github.com/drmingdrmer/may
 - - f github.com/drmingdrmer/md2zhihu
 - - f github.com/drmingdrmer/mdBook
