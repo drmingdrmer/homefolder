@@ -49,20 +49,25 @@ c_doc=''
 c_refine=''
 c_test=''
 
+# Not included:
+# - [x] Breaking Change (fix or feature that could cause existing functionality not to work as expected)
+# - [x] Performance Improvement
+
+
 if git log $upstream..HEAD --format='%s' | grep 'feature:\|feat:'; then
-    c_feat="- New Feature"
+    c_feat="- [x] New Feature (non-breaking change which adds functionality)"
 fi
 if git log $upstream..HEAD --format='%s' | grep 'fix:'; then
-    c_fix="- Bug Fix"
+    c_fix="- [x] Bug Fix (non-breaking change which fixes an issue)"
 fi
 if git log $upstream..HEAD --format='%s' | grep 'doc:'; then
-    c_doc="- Documentation"
+    c_doc="- [x] Documentation Update"
 fi
 if git log $upstream..HEAD --format='%s' | grep 'refine:\|refactor:\|test:'; then
-    c_refine="- Improvement"
+    c_refine="- [x] Refactoring"
 fi
 if git log $upstream..HEAD --format='%s' | grep 'ci:\|test:'; then
-    c_test="- Build/Testing/CI"
+    c_test="- [x] Other"
 fi
 
 body="$(
@@ -75,7 +80,14 @@ I hereby agree to the terms of the CLA available at: https://docs.databend.com/d
 
 $body
 
-## Changelog
+## Tests
+
+- [x] Unit Test
+- [ ] Logic Test
+- [ ] Benchmark Test
+- [ ] No Test  - _Explain why_
+
+## Type of change
 
 $c_feat
 $c_fix

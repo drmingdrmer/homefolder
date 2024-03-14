@@ -1,6 +1,12 @@
 #!/bin/sh
 
-export HTTP_PROXY=http://127.0.0.1:58591; export HTTPS_PROXY=http://127.0.0.1:58591; export ALL_PROXY=socks5://127.0.0.1:51837
+# trojan
+# port=58591
+# export HTTP_PROXY=http://127.0.0.1:$port; export HTTPS_PROXY=http://127.0.0.1:$port; export ALL_PROXY=socks5://127.0.0.1:51837
+
+
+# clash:
+export https_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 all_proxy=socks5://127.0.0.1:7890
 
 yt-dlp "$1"
 # you-get "$1"
