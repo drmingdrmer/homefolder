@@ -145,12 +145,12 @@ git push origin $branch || exit 1
 
 
     # --draft \
+    # --reviewer lichuang \
+    # --reviewer ariesdevil \
 gh pr create \
     --repo datafuselabs/openraft \
     --base $upstream_branch \
     --head drmingdrmer:$branch \
-    --reviewer lichuang \
-    --reviewer ariesdevil \
     $labels \
     --title "$title" \
     --body "$body" \
