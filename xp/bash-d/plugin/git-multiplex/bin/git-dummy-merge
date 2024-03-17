@@ -1,0 +1,20 @@
+#!/bin/sh
+
+
+set -o errexit
+
+usage()
+{
+    cat <<-END
+$0 another_parent
+Create a new commit that has two parents: current branch and the specified one.
+But do not modify the tree.
+END
+}
+
+head_branch="$(git symbolic-ref HEAD)"
+another_parent="$1"
+
+git rev-parse $another_parent
+
+git update-ref "$head_branch" $(echo "commit_message" | git commit-tree "HEAD"^{tree} -p HEAD -p $another_parent)
