@@ -48,6 +48,7 @@ c_fix=''
 c_doc=''
 c_refine=''
 c_test=''
+c_other=''
 
 # Not included:
 # - [x] Breaking Change (fix or feature that could cause existing functionality not to work as expected)
@@ -68,6 +69,12 @@ if git log $upstream..HEAD --format='%s' | grep 'refine:\|refactor:\|test:'; the
 fi
 if git log $upstream..HEAD --format='%s' | grep 'ci:\|test:'; then
     c_test="- [x] Other"
+fi
+
+if echo "$c_feat$c_fix$c_doc$c_refine$c_test" | grep 'x'; then
+    :
+else
+    c_other="- [x] Other"
 fi
 
 body="$(
@@ -94,6 +101,7 @@ $c_fix
 $c_doc
 $c_refine
 $c_test
+$c_other
 
 ## Related Issues
 
