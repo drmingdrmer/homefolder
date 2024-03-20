@@ -1,0 +1,59 @@
+#!/bin/sh
+
+set -o errexit
+
+usage()
+{
+    cat <<-END
+rebase head1 onto base, then head2 to head1...
+    $0 base head1 head2...
+
+or
+
+Rebase in alphabetic order for all branch found by pattern
+    $0 -p pattern1
+
+For example:
+    $0 -p 4.*
+is equivalent to
+    $0 41-aa 42-bb 43-cc ...
+END
+}
+
+base="$1"
+shift
+
+head="$1"
+if [ ".$head" = "." ]; then
+    exit
+fi
+shift
+
+if [ ".$head" = ".-p" ]; then
+    pat="$1"
+    shift
+
+    branches="$(
+    git branch \
+        | awk '{print $NF}' \
+        | grep "$pat" \
+        | sort
+    )"
+    echo "Found branches for pattern: $pat"
+    echo "$branches"
+
+    $0 $base $branches "$@"
+    exit 
+fi
+
+
+
+echo "=== rebase:"
+echo "            $head"
+echo "      onto: $base"
+echo ""
+
+git rebase "$base" "$head"
+
+# Recursive call this script
+$0 $head "$@"
