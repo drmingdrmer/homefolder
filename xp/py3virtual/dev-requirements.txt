@@ -45,6 +45,7 @@ boto3                       # aws lib
 moto                        # mock aws services
 poe-api                     # API to access poe.com
 pypinyin                    # chinese pinyin
+BeautifulSoup4              # scrape information from web pages
 
 
 azure-cognitiveservices-speech
