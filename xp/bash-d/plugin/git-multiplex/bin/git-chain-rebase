@@ -5,8 +5,10 @@ set -o errexit
 usage()
 {
     cat <<-END
-rebase head1 onto base, then head2 to head1...
-    $0 base head1 head2...
+rebase <base>..<head1> onto <onto>,
+then  <head1>..<head2> onto new-<head1>
+...
+    $0 <onto> <base> <head1> <head2>...
 
 or
 
@@ -20,8 +22,28 @@ is equivalent to
 END
 }
 
+onto="$1"
+shift
+
 base="$1"
 shift
+
+if [ ".$base" = ".-p" ]; then
+    pat="$1"
+    shift
+
+    branches="$(
+    git branch \
+        | awk '{print $NF}' \
+        | grep "$pat" \
+        | sort
+    )"
+    echo "Found branches for pattern: $pat"
+    echo "$branches"
+
+    $0 $onto $branches "$@"
+    exit
+fi
 
 head="$1"
 if [ ".$head" = "." ]; then
@@ -42,18 +64,19 @@ if [ ".$head" = ".-p" ]; then
     echo "Found branches for pattern: $pat"
     echo "$branches"
 
-    $0 $base $branches "$@"
-    exit 
+    $0 $onto $base $branches "$@"
+    exit
 fi
 
+head_hash=$(git rev-parse $head)
 
 
 echo "=== rebase:"
-echo "            $head"
-echo "      onto: $base"
+echo "      onto: $onto"
+echo "   commits: $base..$head"
 echo ""
 
-git rebase "$base" "$head"
+git rebase --onto=$onto "$base" "$head"
 
 # Recursive call this script
-$0 $head "$@"
+$0 $head $head_hash "$@"

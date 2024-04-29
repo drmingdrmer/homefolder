@@ -35,3 +35,13 @@ sethandler <C-P> a:vim
 " sethandler <C-S> a:vim
 " sethandler <C-V> a:vim
 " sethandler <C-W> a:vim
+
+
+" Show a few lines of context around the cursor. Note that this makes the
+" text scroll if you mouse-click near the start or end of the window.
+set scrolloff=5
+
+" Do incremental searching.
+set incsearch
+
+set hlsearch
