@@ -80,3 +80,4 @@ aliases:
     im: issue list --label A-meta
     il: issue list
     iw: issue view --web
+version: "1"
