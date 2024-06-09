@@ -6,6 +6,7 @@
 __author__ = 'qyh'
 __date__ = '2018/10/16 9:22'
 
+import sys
 import binascii
 import struct
 import base64
@@ -83,7 +84,5 @@ def dump(file_path):
 
 
 if __name__ == '__main__':
-    file_list = ['陈芳语 - 爱你.ncm', '李翊君 - 雨蝶.ncm']
-    for file in file_list:
-        filepath = "F:\CloudMusic\\"+file
-        dump(filepath)
+    f = sys.argv[1]
+    dump(f)
