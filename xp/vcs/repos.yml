@@ -95,6 +95,7 @@ other:
 - - f github.com/drmingdrmer/feature-set
 - - . github.com/drmingdrmer/futures-rs
 - - f github.com/drmingdrmer/generator-rs
+- - f github.com/drmingdrmer/get-size
 - - . github.com/drmingdrmer/go-typegraph
 - - f github.com/drmingdrmer/gpt-translate
 - - f github.com/drmingdrmer/h2
