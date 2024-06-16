@@ -34,6 +34,7 @@ other:
 - - . github.com/BryanCutler/SparkArrowFlight
 - - . github.com/ClickHouse/ClickHouse
 - - . github.com/EDDYCJY/go-grpc-example
+- - f github.com/Fanghua-Yu/SUPIR
 - - f github.com/Kerollmops/heed
 - - . github.com/Kethku/neovide
 - - . github.com/MauriceGit/skiplist
@@ -102,6 +103,7 @@ other:
 - - f github.com/drmingdrmer/itertools
 - - f github.com/drmingdrmer/leveldb
 - - f github.com/drmingdrmer/linked-hash-map
+- - f github.com/drmingdrmer/log
 - - f github.com/drmingdrmer/lol
 - - f github.com/drmingdrmer/lru-cache
 - - f github.com/drmingdrmer/lru-rs
@@ -129,9 +131,11 @@ other:
 - - f github.com/drmingdrmer/openraft-example
 - - f github.com/drmingdrmer/opensrv
 - - f github.com/drmingdrmer/openstudy
+- - f github.com/drmingdrmer/ordq
 - - f github.com/drmingdrmer/phi-detector
 - - f github.com/drmingdrmer/python-paxos-jepsen
 - - f github.com/drmingdrmer/rangemap
+- - . github.com/drmingdrmer/raxos
 - - f github.com/drmingdrmer/reader
 - - f github.com/drmingdrmer/reqwest
 - - f github.com/drmingdrmer/risingwave
@@ -176,6 +180,7 @@ other:
 - - f github.com/drmingdrmer/want
 - - f github.com/drmingdrmer/weibot
 - - f github.com/drmingdrmer/wizard
+- - f github.com/drmingdrmer/writing
 - - f github.com/drmingdrmer/xorfilter
 - - f github.com/drmingdrmer/xp-md2html
 - - f github.com/drmingdrmer/xptemplate
@@ -190,6 +195,7 @@ other:
 - - . github.com/google/flatbuffers
 - - . github.com/google/leveldb
 - - . github.com/gryadka/js
+- - f github.com/hankinghu/literature-books
 - - . github.com/happyfish100/FastCFS
 - - f github.com/hashicorp/raft
 - - . github.com/huandu/skiplist
@@ -226,7 +232,7 @@ other:
 - - . github.com/rust-lang/rust
 - - f github.com/rust-rocksdb/rust-rocksdb
 - - . github.com/sean-public/fast-skiplist
-- - f github.com/skanehira/github-tui
+- - . github.com/skanehira/github-tui
 - - f github.com/soimort/you-get
 - - f github.com/spacejam/sled
 - - . github.com/sunnysid3up/python-linter
