@@ -20,6 +20,10 @@ fuse:
   - ups github.com/datafuselabs/datafuse-shop
 - - f github.com/drmingdrmer/openraft
   - ups github.com/datafuselabs/openraft
+ai:
+- - f github.com/drmingdrmer/poe-app
+markdown:
+- - f github.com/drmingdrmer/mdformat
 openacid:
 - - f github.com/openacid/celeritasdb
 - - . github.com/openacid/gh-config
@@ -30,8 +34,6 @@ openacid:
 - - f github.com/openacid/slim
 - - . github.com/openacid/succinct
 - - f github.com/openacid/testkeys
-markdown:
-- - f github.com/drmingdrmer/mdformat
 other:
 - - . github.com/BryanCutler/SparkArrowFlight
 - - . github.com/ClickHouse/ClickHouse
