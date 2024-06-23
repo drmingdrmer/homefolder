@@ -102,9 +102,11 @@ other:
 - - f github.com/drmingdrmer/hashlink
 - - f github.com/drmingdrmer/hyper
 - - f github.com/drmingdrmer/itertools
+- - f github.com/drmingdrmer/latex-template
 - - f github.com/drmingdrmer/leveldb
 - - f github.com/drmingdrmer/linked-hash-map
 - - f github.com/drmingdrmer/log
+- - f github.com/drmingdrmer/logcall
 - - f github.com/drmingdrmer/lol
 - - f github.com/drmingdrmer/lru-cache
 - - f github.com/drmingdrmer/lru-rs
@@ -116,6 +118,7 @@ other:
 - - . github.com/drmingdrmer/mdbook-full
 - - f github.com/drmingdrmer/mdbook-katex
 - - . github.com/drmingdrmer/mdbook-svgbob
+- - f github.com/drmingdrmer/mdformat
 - - f github.com/drmingdrmer/mini-lsm
 - - f github.com/drmingdrmer/minimeili-raft
 - - f github.com/drmingdrmer/minitrace-rust
