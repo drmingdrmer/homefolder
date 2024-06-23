@@ -30,6 +30,8 @@ openacid:
 - - f github.com/openacid/slim
 - - . github.com/openacid/succinct
 - - f github.com/openacid/testkeys
+markdown:
+- - f github.com/drmingdrmer/mdformat
 other:
 - - . github.com/BryanCutler/SparkArrowFlight
 - - . github.com/ClickHouse/ClickHouse
@@ -118,7 +120,6 @@ other:
 - - . github.com/drmingdrmer/mdbook-full
 - - f github.com/drmingdrmer/mdbook-katex
 - - . github.com/drmingdrmer/mdbook-svgbob
-- - f github.com/drmingdrmer/mdformat
 - - f github.com/drmingdrmer/mini-lsm
 - - f github.com/drmingdrmer/minimeili-raft
 - - f github.com/drmingdrmer/minitrace-rust
