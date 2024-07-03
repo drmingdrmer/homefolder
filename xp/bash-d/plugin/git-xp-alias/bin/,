@@ -41,6 +41,7 @@ sb   ,          status --short --branch                                   # stat
 sf   ,          diff --name-only --relative HEAD                          # status about file changes, comparing with HEAD
 sm   ,          diff --name-only                                          # status about Modified files
 st   ,          status
+su   ,          diff --name-only --diff-filter=U                          # status of unmerged files; conflict files;
 xI   ,          clean -dXf                                                # remove all ignored files
 xi   ,          clean -dXfn                                               # remove all ignored files; dry run
 xU   ,          clean -df                                                 # remove all untracked files
