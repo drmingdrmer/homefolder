@@ -14,6 +14,10 @@ nmap <C-K> <Action>(MoveLineUp)
 nmap <S-J> <Action>(EditorJoinLines)
 imap <C-L> <Action>(EditorLineEnd)
 
+" Complete by word
+imap <C-N> <Action>(HippieCompletion)
+imap <C-P> <Action>(HippieBackwardCompletion)
+
 vmap Q     <Action>(Grazie.Pro.Structural.Wrap)
 
 " sethandler <C-2> a:vim
