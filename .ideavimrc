@@ -50,4 +50,6 @@ set incsearch
 
 set hlsearch
 
+set visualbell
+
 set noerrorbells
