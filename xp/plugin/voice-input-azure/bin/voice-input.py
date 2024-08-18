@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+# Input by voice in CLI environment
+
 # Enable azure speech service:
 #  https://docs.azure.cn/zh-cn/ai-services/speech-service/get-started-speech-to-text?tabs=macos%2Cterminal&pivots=programming-language-python
 #
