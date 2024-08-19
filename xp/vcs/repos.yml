@@ -1,4 +1,6 @@
 #!/usr/bin/env xp-workspace.py
+ai:
+- - f github.com/drmingdrmer/poe-app
 fastcfs:
 - - . github.com/happyfish100/fastDIR
 - - . github.com/happyfish100/faststore
@@ -20,8 +22,6 @@ fuse:
   - ups github.com/datafuselabs/datafuse-shop
 - - f github.com/drmingdrmer/openraft
   - ups github.com/datafuselabs/openraft
-ai:
-- - f github.com/drmingdrmer/poe-app
 markdown:
 - - f github.com/drmingdrmer/mdformat
 openacid:
@@ -64,6 +64,7 @@ other:
 - - . github.com/datafuselabs/openraft
 - - . github.com/dgryski/go-tsz
 - - f github.com/diem/diem
+- - f github.com/drmingdrmer/AlJabr-1
 - - f github.com/drmingdrmer/MadRaft
 - - f github.com/drmingdrmer/OI-wiki
 - - f github.com/drmingdrmer/RunKV
@@ -87,6 +88,8 @@ other:
 - - . github.com/drmingdrmer/consensus-essence
 - - f github.com/drmingdrmer/crossbeam
 - - f github.com/drmingdrmer/dashmap
+- - . github.com/drmingdrmer/databend-0
+- - . github.com/drmingdrmer/databend-1
 - - f github.com/drmingdrmer/databend-cloud-platform
 - - f github.com/drmingdrmer/databend-docs
 - - f github.com/drmingdrmer/databend-perf
@@ -122,12 +125,14 @@ other:
 - - . github.com/drmingdrmer/mdbook-full
 - - f github.com/drmingdrmer/mdbook-katex
 - - . github.com/drmingdrmer/mdbook-svgbob
+- - f github.com/drmingdrmer/mdutil
 - - f github.com/drmingdrmer/mini-lsm
 - - f github.com/drmingdrmer/minimeili-raft
 - - f github.com/drmingdrmer/minitrace-rust
 - - f github.com/drmingdrmer/mj-prompts
 - - f github.com/drmingdrmer/more-iter
 - - f github.com/drmingdrmer/nuclei
+- - f github.com/drmingdrmer/omnipaxos
 - - f github.com/drmingdrmer/one_file_raft
 - - f github.com/drmingdrmer/opencache
 - - f github.com/drmingdrmer/opendal
@@ -141,6 +146,7 @@ other:
 - - f github.com/drmingdrmer/ordq
 - - f github.com/drmingdrmer/phi-detector
 - - f github.com/drmingdrmer/python-paxos-jepsen
+- - . github.com/drmingdrmer/raft-rs
 - - f github.com/drmingdrmer/rangemap
 - - . github.com/drmingdrmer/raxos
 - - f github.com/drmingdrmer/reader
@@ -166,6 +172,7 @@ other:
 - - f github.com/drmingdrmer/stream-more
 - - f github.com/drmingdrmer/succinct-rs
 - - . github.com/drmingdrmer/svgbob
+- - f github.com/drmingdrmer/t-deepseek
 - - f github.com/drmingdrmer/t-pro-cognito
 - - f github.com/drmingdrmer/test-native-tls-rs
 - - f github.com/drmingdrmer/thiserror
