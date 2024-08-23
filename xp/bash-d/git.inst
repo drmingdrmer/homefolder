@@ -47,6 +47,7 @@ $gconf diff.noprefix            true
 $gconf diff.context             10
 $gconf diff.algorithm           histogram
 $gconf diff.compactionHeuristic true
+$gconf rerere.enabled           true
 
 $gconf color.diff-highlight.oldhighlight    'bold   red   cyan'
 $gconf color.diff-highlight.newhighlight    'bold   green cyan'
