@@ -234,7 +234,8 @@ tj_sock5="socks5://127.0.0.1:1080"
 
 enable_proxy()
 {
-    export HTTP_PROXY=http://127.0.0.1:58591; export HTTPS_PROXY=http://127.0.0.1:58591; export ALL_PROXY=socks5://127.0.0.1:51837
+    local port=7890
+    export HTTP_PROXY=http://127.0.0.1:$port; export HTTPS_PROXY=http://127.0.0.1:$port; export ALL_PROXY=socks5://127.0.0.1:$port
 }
 
 proxy_sh()
