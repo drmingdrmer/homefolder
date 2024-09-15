@@ -20,6 +20,9 @@ imap <C-L> <Action>(EditorLineEnd)
 
 vmap Q     <Action>(Grazie.Pro.Structural.Wrap)
 
+" nmap K     <Action>(QuickJavaDoc)
+
+
 " sethandler <C-2> a:vim
 " sethandler <C-A> a:vim
 " sethandler <C-B> a:vim
