@@ -126,6 +126,7 @@ other:
 - - f github.com/drmingdrmer/mdbook-katex
 - - . github.com/drmingdrmer/mdbook-svgbob
 - - f github.com/drmingdrmer/mdutil
+- - f github.com/drmingdrmer/memoir
 - - f github.com/drmingdrmer/mini-lsm
 - - f github.com/drmingdrmer/minimeili-raft
 - - f github.com/drmingdrmer/minitrace-rust
