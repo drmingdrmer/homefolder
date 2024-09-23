@@ -10,6 +10,23 @@ let s:f = g:XPTfuncs()
 XPTinclude
       \ _common/common
 
+XPT sb " rust as script shebang
+#!/bin/sh
+#![allow(unused_attributes)] /*
+OUT=/tmp/tmp && rustc "$0" -o ${OUT} && exec ${OUT} $@ || exit $? #*/
+
+// use std::process::Command;
+// use std::io::Result;
+// use std::path::PathBuf;
+// use std::fs;
+//
+// fn mkdir(dir_name: &str) -> Result<()> {
+//     fs::create_dir(dir_name)
+// }
+
+fn main() {
+    `cursor^
+}
 
 XPT main " fn main
 fn main() {
@@ -59,7 +76,7 @@ else {
 
 XPT while " while {
 while `^ {
-    
+
 }
 
 
