@@ -1,6 +1,6 @@
 " For Wikipeida
 
 " Remove useless \, 
-:%s/\\,//g
+%s/\\,//g
 " Remove blank padding in wikipeida math
 %s/[$] *\(.\{-}\) *[$]/$\1$/g
