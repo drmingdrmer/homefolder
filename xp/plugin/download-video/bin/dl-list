@@ -1,0 +1,8 @@
+#!/bin/sh
+
+# list available format for video from bilibili.com
+
+url="$1"
+yt-dlp  --cookies-from-browser chrome \
+    -F \
+    "$url"

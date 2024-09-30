@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# download movie from bilibili.com
+
+url="$1"
+yt-dlp  --cookies-from-browser chrome \
+    -f "100026+ba.2/b" \
+    -o "%(playlist_title)s.%(ext)s" \
+    "$url"
