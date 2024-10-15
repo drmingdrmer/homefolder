@@ -38,6 +38,8 @@ kazoo
 gevent
 redis
 PyYAML
+toml
+
 astunparse           # convert ast back to source code
 pandas                   # python data analysis
 yapf                        # python formatter
