@@ -39,6 +39,7 @@ gevent
 redis
 PyYAML
 toml
+tomli
 
 astunparse           # convert ast back to source code
 pandas                   # python data analysis
