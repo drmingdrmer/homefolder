@@ -68,3 +68,11 @@ alias git='gift --exec-path='"$(git --exec-path)"
 # go proxy:
 # https://arslan.io/2019/08/02/why-you-should-use-a-go-module-proxy/
 export GOPROXY=https://goproxy.cn
+
+
+# To fix brew error:
+#  failed to fetch attestations;
+#  failed to verify attestation;
+#  has an invalid build provenance attestation;
+# See: https://github.com/orgs/Homebrew/discussions/5495#discussioncomment-10076835
+export HOMEBREW_NO_VERIFY_ATTESTATIONS=1
