@@ -59,6 +59,7 @@ other:
 - - f github.com/clap-rs/clap
 - - f github.com/cssivision/mpool
 - - f github.com/databendcloud/databend-go
+- - f github.com/datafuse-extras/datafusion-orc
 - - . github.com/datafuse-extras/thrift
 - - f github.com/datafuselabs/fusebots
 - - . github.com/datafuselabs/openraft
@@ -72,9 +73,11 @@ other:
 - - f github.com/drmingdrmer/abstract-paxos
 - - f github.com/drmingdrmer/anyerror
 - - . github.com/drmingdrmer/anyhow
+- - f github.com/drmingdrmer/arrow-format
 - - f github.com/drmingdrmer/arrow2
 - - f github.com/drmingdrmer/askbend
 - - f github.com/drmingdrmer/async-entry
+- - f github.com/drmingdrmer/async-rt
 - - f github.com/drmingdrmer/async-trait
 - - f github.com/drmingdrmer/atty
 - - f github.com/drmingdrmer/awesome-consensus
@@ -83,6 +86,7 @@ other:
 - - f github.com/drmingdrmer/binary-heap-plus-rs
 - - f github.com/drmingdrmer/bionic-reading.user.js
 - - f github.com/drmingdrmer/cnosdb
+- - . github.com/drmingdrmer/codeq
 - - f github.com/drmingdrmer/compact_str
 - - . github.com/drmingdrmer/consensus-bugs
 - - . github.com/drmingdrmer/consensus-essence
@@ -97,6 +101,7 @@ other:
 - - . github.com/drmingdrmer/databend2
 - - f github.com/drmingdrmer/datacake
 - - . github.com/drmingdrmer/drmingdrmer
+- - . github.com/drmingdrmer/dupit
 - - f github.com/drmingdrmer/english-learning
 - - f github.com/drmingdrmer/erasure-code-py
 - - f github.com/drmingdrmer/feature-set
@@ -116,6 +121,7 @@ other:
 - - f github.com/drmingdrmer/logcall
 - - f github.com/drmingdrmer/lol
 - - f github.com/drmingdrmer/lru-cache
+- - . github.com/drmingdrmer/lru-cache-map
 - - f github.com/drmingdrmer/lru-rs
 - - f github.com/drmingdrmer/madsim
 - - f github.com/drmingdrmer/math-in-rust-doc
@@ -146,7 +152,9 @@ other:
 - - f github.com/drmingdrmer/openstudy
 - - f github.com/drmingdrmer/ordq
 - - f github.com/drmingdrmer/phi-detector
+- - f github.com/drmingdrmer/prost
 - - f github.com/drmingdrmer/python-paxos-jepsen
+- - f github.com/drmingdrmer/raft-log
 - - . github.com/drmingdrmer/raft-rs
 - - f github.com/drmingdrmer/rangemap
 - - . github.com/drmingdrmer/raxos
@@ -176,6 +184,7 @@ other:
 - - f github.com/drmingdrmer/t-ai
 - - f github.com/drmingdrmer/t-deepseek
 - - f github.com/drmingdrmer/t-pro-cognito
+- - f github.com/drmingdrmer/t-tts
 - - f github.com/drmingdrmer/test-native-tls-rs
 - - f github.com/drmingdrmer/thiserror
 - - f github.com/drmingdrmer/thrift
