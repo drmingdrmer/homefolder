@@ -1,0 +1,153 @@
+#!/bin/sh
+
+# Create pr from CLI
+# Deps:
+# brew install gh
+
+usage()
+{
+    cat <<-END
+    $0 [-l <label>]
+    
+END
+
+}
+
+map_label()
+{
+    case $1 in
+        meta)
+            echo 'A-databend-meta'
+            ;;
+        *)
+            echo "$1"
+            ;;
+
+    esac
+}
+
+map_base_branch()
+{
+    case $1 in
+        *7)
+            echo 'release-0.7'
+            ;;
+        *8)
+            echo 'release-0.8'
+            ;;
+        *9)
+            echo 'release-0.9'
+            ;;
+        *)
+            echo "invalid base branch: $1"
+            exit 1
+            ;;
+
+    esac
+}
+
+
+labels=""
+
+upstream_branch=main
+
+branch=$(git symbolic-ref --short HEAD)
+echo "($branch)"
+title="$(git log -n1 --format='%s')"
+
+case $1 in
+    -l)
+        shift
+        lb="$(map_label "$1")"
+        labels="--label $lb"
+        shift
+        ;;
+    -b)
+        shift
+        upstream_branch="$(map_base_branch "$1")"
+        shift
+        ;;
+    -t)
+        shift
+        title="$1"
+        shift
+    ;;
+esac
+
+upstream="ups/$upstream_branch"
+body="$(git log $upstream..HEAD --format='##### %s%n%+b%n')"
+
+c_feat=''
+c_fix=''
+c_doc=''
+c_refine=''
+c_test=''
+
+if git log $upstream..HEAD --format='%s' | grep 'feat:'; then
+    c_feat="- New Feature"
+fi
+if git log $upstream..HEAD --format='%s' | grep 'fix:'; then
+    c_fix="- Bug Fix"
+fi
+if git log $upstream..HEAD --format='%s' | grep 'docs:'; then
+    c_doc="- Documentation"
+fi
+if git log $upstream..HEAD --format='%s' | grep 'refactor:\|test:'; then
+    c_refine="- Improvement"
+fi
+if git log $upstream..HEAD --format='%s' | grep 'ci:\|test:'; then
+    c_test="- Build/Testing/CI"
+fi
+
+body="$(
+cat <<-END
+
+## Changelog
+
+$body
+
+END
+)"
+
+
+# - New Feature
+# - Bug Fix
+# - Improvement
+# - Performance Improvement
+# - Build/Testing/CI
+# - Documentation
+# - Website
+# - Other
+
+echo "=== Merge to $upstream_branch"
+echo ""
+echo "=== Title:"
+echo "$title"
+echo ""
+echo "=== Body:"
+echo "$body"
+
+read -p "Continue? [y/n]" a
+if [ ".$a" == ".y" ]; then
+    :
+else
+    echo "Exit"
+    exit 0
+fi
+
+git push origin $branch || exit 1
+
+
+    # --draft \
+    # --reviewer lichuang \
+    # --reviewer ariesdevil \
+gh pr create \
+    --repo suraft/suraft \
+    --base $upstream_branch \
+    --head drmingdrmer:$branch \
+    $labels \
+    --title "$title" \
+    --body "$body" \
+    "$@"
+
+
