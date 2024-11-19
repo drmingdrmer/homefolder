@@ -1,0 +1,20 @@
+schema: schema.docs.graphql
+generates:
+  operations.ts:
+    documents:
+      - ../issue.ts
+      - ../repository.ts
+      - ../user.ts
+    plugins:
+      - typescript-operations
+    config:
+      skipTypename: true
+      maybeValue: T
+      mergeFragmentTypes: true
+      inlineFragmentTypes: "combine"
+    preset: import-types
+    presetConfig:
+      typesPath: ./types.ts
+  types.ts:
+    plugins:
+      - typescript
