@@ -1,0 +1,159 @@
+*pangu.txt*
+
+                      盘古之白，中文排版规范化。
+                             by @hotoo
+                  https://github.com/hotoo/pangu.vim
+
+
+1. 安装                                       |pangu-install|
+2. 命令                                       |pangu-command|
+3. 配置                                       |pangu-config|
+4. 规则                                       |pangu-rules|
+5. 标点                                       |pangu-punctuation|
+6. 技巧                                       |pangu-tricks|
+
+
+==============================================================================
+INSTALL                                                     *pangu-install*
+
+via vim-plug: >
+  Plug "hotoo/pangu.vim"
+<
+
+via Vundle: >
+  Plugin "hotoo/pangu.vim"
+<
+
+==============================================================================
+COMMANDS                                                    *pangu-command*
+
+                                                            *:[range]Pangu*
+手动执行命令，对指定范围的中文进行规范化。 >
+  :Pangu
+<
+
+                                                                *:PanguAll*
+手动执行命令，对当前 Buffer 的所有中文进行规范化。 >
+  :PanguAll
+<
+
+                                                            *:PanguDisable*
+关闭 Pangu 插件。 >
+  :PanguDisable
+<
+
+持久化禁用：
+
+在文档中任何位置注明 `PANGU_DISABLE`，则整个文档不自动规范化。
+
+
+                                                             *:PanguEnable*
+打开 Pangu 插件。 >
+  :PanguEnable
+<
+
+==============================================================================
+CONFIGURATION                                                *pangu-config*
+
+                                                            *pangu_enabled*
+启用盘古之白规范化。，默认开启，如需关闭可以设置： >
+  let g:pangu_enabled = 0
+<
+
+==============================================================================
+RULES                                                *pangu-rules*
+
+                                       *g:pangu_rule_fullwidth_punctuation*
+
+全角标点符号规则。默认开启，
+自动将 `() [] <>` 替换为 `（）「」＜＞.`
+将字母 `ＡＢＣ` 替换为 `ABC`.
+将字符 `＠` 替换为 `@`.
+
+如需关闭可以设置： >
+  let g:pangu_rule_fullwidth_punctuation = 0
+<
+
+                                       *g:pangu_rule_duplicate_punctuation*
+
+连续重复的标点符号规则。根据中华人民共和国国家标准：标点符号用法 GB/T 15834-2011
+http://www.moe.gov.cn/ewebeditor/uploadfile/2015/01/13/20150113091548267.pdf
+规范，感叹号、句号最多可以连续重复 3 个，其他标点符号都不允许连续重复出现。 >
+  let g:pangu_rule_duplicate_punctuation = 0
+<
+
+                                          *g:pangu_rule_fullwidth_alphabet*
+
+全角英文字符处理规则，默认按标准规范化。如需关闭可以设置： >
+  let g:pangu_rule_fullwidth_alphabet = 0
+<
+
+                                                     *g:pangu_rule_spacing*
+
+汉字和英文字符间增加一个空白，提升美感、可读性。默认开启，需要关闭可以设置： >
+  let g:pangu_rule_spacing = 0
+<
+
+                                         *g:pangu_rule_spacing_punctuation*
+
+汉字和英文标点间增加一个空白，提升美感、可读性。
+并不推荐，所以这里是不兼容修改。默认关闭，需要开启可以设置： >
+  let g:pangu_rule_spacing_punctuation = 1
+<
+
+                                                     *g:pangu_rule_date*
+
+“年月日”之间的数字，默认通过 `g:pangu_rule_spacing` 规则会被空格隔开。
+如果你希望“年月日”之间的数字不以空白隔开，可以使用这个新增的这个设置： >
+  let g:pangu_rule_date = 0 " 年月日两头不留白
+  " eg: 今天是2022年1月21日星期五。
+
+  let g:pangu_rule_date = 1 " 年月日两头留白
+  " eg: 今天是 2022年1月21日 星期五。
+<
+默认值 `2`，为了和之前默认行为兼容。
+
+                                         *g:pangu_rule_trailing_whitespace*
+
+删除前置空白和尾空白。默认开启，如需关闭可以设置： >
+  let g:pangu_rule_trailing_whitespace = 0
+<
+                                 *g:pangu_rule_remove_zero_width_whitespace*
+
+删除不可见的零宽空白字符。默认开启，如需关闭，可以设置： >
+  let g:pangu_rule_remove_zero_width_whitespace = 0
+<
+
+==============================================================================
+PUNCTUATION                                          *pangu-punctuation*
+
+                                         *g:pangu_punctuation_brackets*
+
+默认的方括号标点是 `["【", "】"]`，可以设置为你的偏好，例如： >
+  let g:pangu_punctuation_brackets = ["『", "』"]
+  let g:pangu_punctuation_brackets = ["「", "」"]
+  let g:pangu_punctuation_brackets = ["〔", "〕"]
+  let g:pangu_punctuation_brackets = ["［", "］"]
+  let g:pangu_punctuation_brackets = ["〚", "〛"]
+<
+
+                                         *g:pangu_punctuation_ellipsis*
+
+默认的省略号是 `"......"`，可以设置为你的偏好，例如： >
+  let g:pangu_punctuation_ellipsis = "⋯⋯"
+  let g:pangu_punctuation_ellipsis = "……"
+  let g:pangu_punctuation_ellipsis = "......"
+<
+
+==============================================================================
+TRICKS                                                    *pangu-tricks*
+
+批量规范化多个文档。 >
+  $ vim a.md b.md c.md
+
+  :argdo PanguAll | update
+  :wq
+<
+
+==============================================================================
+vim:tw=78:fo=tcroq2mM:et:sts=2:sw=2:ft=help:norl:

@@ -8,6 +8,8 @@
   - fc85a6f07c2cd694be93496ffad75be126240068
 - - xp/vim-d/plg-git/nerdtree-git-plugin
   - e1fe727127a813095854a5b063c15e955a77eafb
+- - xp/vim-d/plg-git/pangu.vim
+  - b7210117695dca05d94de1ac2108401f8eff0a2d
 - - xp/vim-d/plg-git/vim-flatbuffers
   - 95c828bcc7dd83627f732bbb1d78888a3a870d6e
 - - xp/vim-d/plg-git/vim-toml
