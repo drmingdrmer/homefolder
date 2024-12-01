@@ -1,0 +1,8 @@
+#!/bin/sh
+
+# download tv serias from bilibili.com
+
+url="$1"
+yt-dlp  --cookies-from-browser chrome \
+    -f "100023+ba.2/b" \
+    "$url"
