@@ -17,7 +17,7 @@ curl  "https://zh.wikipedia.org/w/api.php?format=json&action=parse&format=json&p
 
 wikipedia-math-to-latex.py "$title-tmp.html" "$title.html"
 
-rm "$title.html"
+rm "$title-tmp.html"
 
 open "$title.html"
 
