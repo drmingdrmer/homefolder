@@ -5,20 +5,33 @@ import sys
 import re
 from urllib.parse import unquote
 
+def parse_url(url: str):
+
+    g = re.search(r'https://(.*?).wikipedia.org/wiki/(.*)', url)
+    if g:
+        lang = g.group(1)
+        escaped_title = g.group(2)
+        title = unquote(escaped_title)
+    else:
+        raise ValueError("invalid wikipedia url: " + url)
+
+    return {"lang": lang,
+            "title": title,
+            "escaped_title": escaped_title,
+    }
+
+
+
 if __name__ == "__main__":
     cmd = sys.argv[1]
     if cmd == 'extract-title':
         url = sys.argv[2]
-        g = re.search(r'https://(.*?).wikipedia.org/wiki/(.*)', url)
-        if g:
-            lang = g.group(1)
-            title = g.group(2)
+        parsed = parse_url(url)
+        print(parsed["escaped_title"])
+    elif cmd == 'extract-lang':
+        url = sys.argv[2]
+        parsed = parse_url(url)
+        print(parsed["lang"])
 
-            print(title)
-        else:
-            raise ValueError("invalid wikipedia url: " + url)
-
-#  https://zh.wikipedia.org/wiki/%E5%8F%AF%E5%88%86%E6%89%A9%E5%BC%A0
-#  title="%E5%8F%AF%E5%88%86%E6%89%A9%E5%BC%A0"
-#  curl  "https://zh.wikipedia.org/w/api.php?format=json&action=parse&format=json&prop=text&page=$title" | jq -r '.parse.text["*"]' > src.html
-    
+    else:
+        raise ValueError("invalid command: " + cmd)
