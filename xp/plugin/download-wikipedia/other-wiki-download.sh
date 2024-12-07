@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# 公式是渲染好的:
+# curl  "https://$lang.wikipedia.org/w/api.php?format=json&action=parse&format=json&prop=text&page=$escaped_title" | jq -r '.parse.text["*"]' > "$title-tmp.html"
 
 # curl  "https://zh.wikipedia.org/w/api.php?format=json&action=query&prop=revisions&rvprop=content&rvformat=latex&titles=$title" | jq > src
 #
