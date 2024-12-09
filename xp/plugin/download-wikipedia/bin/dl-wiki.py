@@ -115,7 +115,7 @@ def convert_math_to_latex(html_content):
     # Return converted text
     return soup.prettify(formatter='html5')
 
-def xx(url: str):
+def download_wiki_page(url: str):
     unescaped_url = unquote(url)
     parsed = parse_url(url)
 
@@ -136,9 +136,10 @@ def xx(url: str):
         f.write("\n")
         f.write(html_latex_text)
 
-    print(output_fn)
+    return output_fn
 
 # Usage example
 if __name__ == "__main__":
     escaped_url = sys.argv[1]
-    xx(escaped_url)
+    output_fn = download_wiki_page(escaped_url)
+    print(output_fn)
