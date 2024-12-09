@@ -2,33 +2,9 @@
 
 set -o errexit
 
-url="$1"
-unescaped_url="$(py-decode-url.py "$url")"
-lang="$(wikipedia-util.py extract-lang "$url")"
-escaped_title="$(wikipedia-util.py extract-title "$url")"
-title="$(py-decode-url.py "$escaped_title")"
-
 source proxy-enable
 
-display_title="$(curl "https://$lang.wikipedia.org/w/api.php?format=json&action=parse&format=json&prop=displaytitle&variant=zh-hans&page=$escaped_title" | jq -r '.parse.title')"
+url="$1"
+fn="$(dl-wiki.py "$url")"
 
-# 公式是渲染好的:
-curl  "https://$lang.wikipedia.org/w/api.php?format=json&action=parse&format=json&prop=text&variant=zh-hans&page=$escaped_title" | jq -r '.parse.text["*"]' > "$title-tmp.html"
-
-wikipedia-math-to-latex.py "$title-tmp.html" "$title-tmp.html"
-
-# add url and title
-{
-    echo "$url"
-    echo '<br/>'
-    echo "$unescaped_url"
-    echo ''
-    echo '<h1>'"$display_title"'</h1>'
-    echo ''
-    cat "$title-tmp.html"
-} > "$title.html"
-
-# rm "$title-tmp.html"
-
-open "$title.html"
-
+open "$fn"
