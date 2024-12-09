@@ -14,14 +14,13 @@ from bs4 import Comment
 def get_wiki_content(parsed_url):
     url = "https://{lang}.wikipedia.org/w/api.php?format=json&action=parse&format=json&prop=displaytitle|text&variant=zh-hans&page={escaped_title}".format(**parsed_url)
 
-    # requests 会自动使用环境变量中的代理设置
-    # 包括 http_proxy, https_proxy, all_proxy
+    # requests will automatically use proxy settings from environment variables
+    # including http_proxy, https_proxy, all_proxy
     response = requests.get(url, timeout=30)
-    response.raise_for_status()  # 检查响应状态
+    response.raise_for_status()  # Check response status
     return response.json()
 
 def parse_url(url: str):
-
     g = re.search(r'https://(.*?).wikipedia.org/wiki/(.*)', url)
     if g:
         lang = g.group(1)
@@ -38,17 +37,17 @@ def parse_url(url: str):
 def convert_math_to_latex(html_content):
     soup = BeautifulSoup(html_content, 'html.parser')
 
-    # 删除HTML注释
+    # Remove HTML comments
     comments = soup.find_all(string=lambda text: isinstance(text, Comment))
     for comment in comments:
         comment.extract()
 
-    # 删除display: none的span标签
+    # Remove span tags with display: none
     hidden_spans = soup.find_all('span', style=lambda value: value and 'display: none' in value)
     for span in hidden_spans:
         span.decompose()
 
-    # 删除navbox div
+    # Remove navbox divs
     navboxes = soup.find_all('div', class_='navbox')
     for navbox in navboxes:
         navbox.decompose()
@@ -57,65 +56,63 @@ def convert_math_to_latex(html_content):
     for navbox in navboxes:
         navbox.decompose()
 
-    # 删除 编辑 按钮
+    # Remove edit buttons
     edit_links = soup.find_all('span', class_='mw-editsection')
     for navbox in edit_links:
         navbox.decompose()
 
-    # 处理texhtml的span标签
+    # Process texhtml span tags
     texhtml_spans = soup.find_all('span', class_='texhtml')
     for span in texhtml_spans:
         text = span.get_text().strip()
         span.replace_with(f'`{text}`')
 
-    # 去掉i标签
+    # Remove i tags
     i_spans = soup.find_all('i')
     for span in i_spans:
         text = span.get_text().strip()
         span.replace_with(f'{text}')
 
-    # 替换站内链接
+    # Replace internal links
     links = soup.find_all('a')
     for link in links:
         href = link.get('href', '')
-        # 检查是否是站内链接 (/wiki/ 开头)
-        # 页面不存在链接: /w/index.php?***
+        # Check if it's an internal link (starts with /wiki/)
+        # Non-existent page links: /w/index.php?***
         if href.startswith('/wiki/') or href.startswith('/w/index.php'):
-            # 获取链接文本
+            # Get link text
             link_text = link.get_text()
-            # 替换链接为[[text]]格式
+            # Replace link with [[text]] format
             link.replace_with(f'[[{link_text}]]')
 
-    # 找到所有img标签
+    # Find all img tags
     img_elements = soup.find_all('img')
 
-    # 替换每个img标签
+    # Replace each img tag
     for img in img_elements:
         alttext = img.get('alt', '')
-        #  print(alttext)
-        # 提取LaTeX表达式，使用转义的花括号
+        # Extract LaTeX expression using escaped braces
         latex = re.search(r'\{\\displaystyle (.*)\}', alttext)
-        #  print(latex)
         if latex:
-            # 用$包围LaTeX表达式
+            # Surround LaTeX expression with $
             text = latex.group(1).strip()
             latex_text = f'${text}$'
-            # 替换原始的img标签
+            # Replace original img tag
             img.replace_with(latex_text)
 
     html_content_2 = soup.prettify()
     soup = BeautifulSoup(html_content_2, 'html.parser')
 
-    # 自定义格式化函数
+    # Custom formatter function
     def formatter(text, **kwargs):
         if text:
-            # 移除文本中的换行符，但保留前后的空白
+            # Remove newlines from text while preserving leading/trailing whitespace
             return text.strip('\n')
         return text
 
-    # 返回转换后的文本，使用自定义formatter
+    # Return converted text using custom formatter
     return soup.prettify(formatter=formatter)
-    # 返回转换后的文本
+    # Return converted text
     return soup.prettify(formatter='html5')
 
 def xx(url: str):
@@ -141,8 +138,7 @@ def xx(url: str):
 
     print(output_fn)
 
-# 使用示例
+# Usage example
 if __name__ == "__main__":
     escaped_url = sys.argv[1]
     xx(escaped_url)
-
