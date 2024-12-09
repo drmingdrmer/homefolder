@@ -28,12 +28,30 @@ def convert_math_to_latex(html_content):
     for navbox in navboxes:
         navbox.decompose()
 
+    # 删除 编辑 按钮
+    edit_links = soup.find_all('span', class_='mw-editsection')
+    for navbox in edit_links:
+        navbox.decompose()
+
+    # 处理texhtml的span标签
+    texhtml_spans = soup.find_all('span', class_='texhtml')
+    for span in texhtml_spans:
+        text = span.get_text().strip()
+        span.replace_with(f'`{text}`')
+
+    # 去掉i标签
+    i_spans = soup.find_all('i')
+    for span in i_spans:
+        text = span.get_text().strip()
+        span.replace_with(f'{text}')
+
     # 替换站内链接
     links = soup.find_all('a')
     for link in links:
         href = link.get('href', '')
         # 检查是否是站内链接 (/wiki/ 开头)
-        if href.startswith('/wiki/'):
+        # 页面不存在链接: /w/index.php?***
+        if href.startswith('/wiki/') or href.startswith('/w/index.php'):
             # 获取链接文本
             link_text = link.get_text()
             # 替换链接为[[text]]格式
@@ -56,8 +74,20 @@ def convert_math_to_latex(html_content):
             # 替换原始的img标签
             img.replace_with(latex_text)
 
+    html_content_2 = soup.prettify()
+    soup = BeautifulSoup(html_content_2, 'html.parser')
+
+    # 自定义格式化函数
+    def formatter(text, **kwargs):
+        if text:
+            # 移除文本中的换行符，但保留前后的空白
+            return text.strip('\n')
+        return text
+
+    # 返回转换后的文本，使用自定义formatter
+    return soup.prettify(formatter=formatter)
     # 返回转换后的文本
-    return str(soup)
+    return soup.prettify(formatter='html5')
 
 fn = sys.argv[1]
 with open(fn, 'r') as f:
