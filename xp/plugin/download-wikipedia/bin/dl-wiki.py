@@ -9,6 +9,20 @@ from urllib.parse import quote
 from urllib.parse import unquote
 from bs4 import BeautifulSoup
 from bs4 import Comment
+from markdownify import markdownify
+
+# Less better approach:
+#
+#  import html2text
+#  def html_to_markdown(html_content):
+#      converter = html2text.HTML2Text()
+#      converter.body_width = 0  # 禁用自动换行
+#      converter.ignore_links = False
+#      converter.ignore_images = False
+#      converter.ignore_emphasis = False
+#      converter.ignore_tables = False
+#      markdown = converter.handle(html_content)
+#      return markdown
 
 
 def get_wiki_content(parsed_url):
@@ -47,6 +61,17 @@ def convert_math_to_latex(html_content):
     for span in hidden_spans:
         span.decompose()
 
+    # Remove <style>
+    navboxes = soup.find_all('style')
+    for navbox in navboxes:
+        navbox.decompose()
+
+    # Remove reference such as ¹
+    #  <sup class="reference" id="cite_ref-1">
+    navboxes = soup.find_all('sup', class_='reference')
+    for navbox in navboxes:
+        navbox.decompose()
+
     # Remove navbox divs
     navboxes = soup.find_all('div', class_='navbox')
     for navbox in navboxes:
@@ -66,6 +91,7 @@ def convert_math_to_latex(html_content):
     for span in texhtml_spans:
         text = span.get_text().strip()
         span.replace_with(f'`{text}`')
+
 
     # Remove i tags
     i_spans = soup.find_all('i')
@@ -100,6 +126,24 @@ def convert_math_to_latex(html_content):
             # Replace original img tag
             img.replace_with(latex_text)
 
+    # After converting to latex within `$`:
+    # <span class="mwe-math-element"> $R$ </span>
+    texhtml_spans = soup.find_all('span', class_='mwe-math-element')
+    for span in texhtml_spans:
+        text = span.get_text().strip()
+        span.replace_with(f'{text}')
+
+    # <span class="serif"> `L` </span>
+    texhtml_spans = soup.find_all('span', class_='serif')
+    for span in texhtml_spans:
+        text = span.get_text().strip()
+        span.replace_with(f'{text}')
+
+    #  <link href="mw-data:TemplateStyles:r58896141" rel="mw-deduplicated-inline-style"/>
+    texhtml_spans = soup.find_all('link')
+    for span in texhtml_spans:
+        span.decompose()
+
     html_content_2 = soup.prettify()
     soup = BeautifulSoup(html_content_2, 'html.parser')
 
@@ -112,8 +156,37 @@ def convert_math_to_latex(html_content):
 
     # Return converted text using custom formatter
     return soup.prettify(formatter=formatter)
-    # Return converted text
-    return soup.prettify(formatter='html5')
+
+def html_to_markdown2(html_content):
+    # 配置选项
+    markdown = markdownify(html_content,
+                         heading_style="ATX",  # 使用 # 样式的标题
+                         bullets="-",          # 列表符号使用 -
+                         strip=['script', 'style'],  # 删除这些标签的内容
+                         code_language="python", # 代码块的默认语言
+                         escape_underscores=False,
+    )
+
+    #  # 合并行，保留段落之间的空行
+    #  # 1. 将多个空行替换为两个换行符
+    #  markdown = re.sub(r'\n\s*\n', '\n\n', markdown)
+    #  # 2. 将段落内的换行替换为空格
+    #  markdown = re.sub(r'(?<!\n)\n(?!\n)', ' ', markdown)
+    #  # 3. 删除多余的空格
+    #  markdown = re.sub(r' +', ' ', markdown)
+
+    # 合并行，保留段落之间的空行
+    # 1. 将多个空行替换为两个换行符
+    markdown = re.sub(r'\n\s*\n', '\n\n', markdown, flags=re.UNICODE)
+
+    # 2. 将段落内的换行替换为空格
+    markdown = re.sub(r'(?<!\n)\n(?!\n)', ' ', markdown, flags=re.UNICODE)
+
+    # 3. 删除多余的空格
+    #  markdown = re.sub(r'[\s\u3000]+', ' ', markdown, flags=re.UNICODE)
+    markdown = re.sub(r' +', ' ', markdown)
+
+    return markdown
 
 def download_wiki_page(url: str):
     unescaped_url = unquote(url)
@@ -123,11 +196,12 @@ def download_wiki_page(url: str):
     display_title = j["parse"]["title"]
     html_text = j["parse"]["text"]["*"]
 
+    output_fn = parsed["title"]
+
     html_latex_text = convert_math_to_latex(html_text)
 
-    output_fn = parsed["title"] + '.html'
-
-    with open(output_fn, 'w') as f:
+    # output html
+    with open(output_fn + '.html', 'w') as f:
         f.write(url)
         f.write("<br/>")
         f.write(unescaped_url)
@@ -136,10 +210,23 @@ def download_wiki_page(url: str):
         f.write("\n")
         f.write(html_latex_text)
 
+    md_text = html_to_markdown2(html_latex_text)
+
+    # output md
+    with open(output_fn + '.md', 'w') as f:
+        #  f.write(url)
+        #  f.write("\n\n")
+        f.write(unescaped_url)
+        f.write("\n\n")
+        f.write("# {}".format(display_title))
+        f.write("\n")
+        f.write(md_text)
+
     return output_fn
 
 # Usage example
 if __name__ == "__main__":
     escaped_url = sys.argv[1]
     output_fn = download_wiki_page(escaped_url)
-    print(output_fn)
+    #  print(output_fn + '.html')
+    print(output_fn + '.md')
