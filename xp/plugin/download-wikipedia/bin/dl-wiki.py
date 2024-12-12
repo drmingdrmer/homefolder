@@ -167,14 +167,6 @@ def html_to_markdown2(html_content):
                          escape_underscores=False,
     )
 
-    #  # 合并行，保留段落之间的空行
-    #  # 1. 将多个空行替换为两个换行符
-    #  markdown = re.sub(r'\n\s*\n', '\n\n', markdown)
-    #  # 2. 将段落内的换行替换为空格
-    #  markdown = re.sub(r'(?<!\n)\n(?!\n)', ' ', markdown)
-    #  # 3. 删除多余的空格
-    #  markdown = re.sub(r' +', ' ', markdown)
-
     # 合并行，保留段落之间的空行
     # 1. 将多个空行替换为两个换行符
     markdown = re.sub(r'\n\s*\n', '\n\n', markdown, flags=re.UNICODE)
@@ -183,7 +175,6 @@ def html_to_markdown2(html_content):
     markdown = re.sub(r'(?<!\n)\n(?!\n)', ' ', markdown, flags=re.UNICODE)
 
     # 3. 删除多余的空格
-    #  markdown = re.sub(r'[\s\u3000]+', ' ', markdown, flags=re.UNICODE)
     markdown = re.sub(r' +', ' ', markdown)
 
     return markdown
@@ -200,15 +191,15 @@ def download_wiki_page(url: str):
 
     html_latex_text = convert_math_to_latex(html_text)
 
-    # output html
-    with open(output_fn + '.html', 'w') as f:
-        f.write(url)
-        f.write("<br/>")
-        f.write(unescaped_url)
-        f.write("\n")
-        f.write("<h1>{}</h1>".format(display_title))
-        f.write("\n")
-        f.write(html_latex_text)
+    #  # output html
+    #  with open(output_fn + '.html', 'w') as f:
+    #      f.write(url)
+    #      f.write("<br/>")
+    #      f.write(unescaped_url)
+    #      f.write("\n")
+    #      f.write("<h1>{}</h1>".format(display_title))
+    #      f.write("\n")
+    #      f.write(html_latex_text)
 
     md_text = html_to_markdown2(html_latex_text)
 
