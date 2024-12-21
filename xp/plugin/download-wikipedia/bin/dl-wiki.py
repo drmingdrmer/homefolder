@@ -1,6 +1,12 @@
 #!/usr/bin/env python3
 # coding: utf-8
 
+
+# Requirements:
+#  pip3 install bs4 markdownify requests
+# Usage:
+#  dl-wiki.py https://en.wikipedia.org/wiki/Formal_derivative
+
 import sys
 import os
 import re
@@ -35,7 +41,9 @@ def get_wiki_content(parsed_url):
     return response.json()
 
 def parse_url(url: str):
-    g = re.search(r'https://(.*?).wikipedia.org/wiki/(.*)', url)
+    # https://zh.wikipedia.org/wiki/马丁·布伯
+    # https://zh.wikipedia.org/zh-hans/马丁·布伯
+    g = re.search(r'https://(.*?).wikipedia.org/zh-hans/(.*)', url)
     if g:
         lang = g.group(1)
         escaped_title = g.group(2)
@@ -171,8 +179,8 @@ def html_to_markdown2(html_content):
     # 1. 将多个空行替换为两个换行符
     markdown = re.sub(r'\n\s*\n', '\n\n', markdown, flags=re.UNICODE)
 
-    # 2. 将段落内的换行替换为空格
-    markdown = re.sub(r'(?<!\n)\n(?!\n)', ' ', markdown, flags=re.UNICODE)
+    # 2. 将段落内的换行替换为空格, table `|` 后面的换行不处理
+    markdown = re.sub(r'(?<!\n)(?<!\|)\n(?!\n)', ' ', markdown, flags=re.UNICODE)
 
     # 3. 删除多余的空格
     markdown = re.sub(r' +', ' ', markdown)
@@ -191,15 +199,15 @@ def download_wiki_page(url: str):
 
     html_latex_text = convert_math_to_latex(html_text)
 
-    #  # output html
-    #  with open(output_fn + '.html', 'w') as f:
-    #      f.write(url)
-    #      f.write("<br/>")
-    #      f.write(unescaped_url)
-    #      f.write("\n")
-    #      f.write("<h1>{}</h1>".format(display_title))
-    #      f.write("\n")
-    #      f.write(html_latex_text)
+    # output html
+    with open(output_fn + '.html', 'w') as f:
+        f.write(url)
+        f.write("<br/>")
+        f.write(unescaped_url)
+        f.write("\n")
+        f.write("<h1>{}</h1>".format(display_title))
+        f.write("\n")
+        f.write(html_latex_text)
 
     md_text = html_to_markdown2(html_latex_text)
 
