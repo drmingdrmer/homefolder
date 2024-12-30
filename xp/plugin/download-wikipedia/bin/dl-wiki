@@ -8,4 +8,4 @@ url="$1"
 fn="$(dl-wiki.py "$url")"
 
 echo "$fn"
-open "$fn"
+# open "$fn"

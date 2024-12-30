@@ -925,7 +925,7 @@ let s:digraphs = {
     \ "!⊂"  :  [  "⊄",       "not subset of", "xps"],
     \ "(_"  :  [  "⊆",       "subset of or equal to"],
     \ ")_"  :  [  "⊇",       "superset of or equal to"],
-    \ "-T"  :  [  "⊥",       "up tack"],
+    \ "-T"  :  [  "⊥",       "up tack", "xps", "root"],
     \ ".P"  :  [  "⋅",       "dot operator"],
     \ ":3"  :  [  "⋮",       "vertical ellipsis"],
     \ ".3"  :  [  "⋯",       "midline horizontal ellipsis"],

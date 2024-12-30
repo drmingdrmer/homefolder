@@ -43,7 +43,7 @@ def get_wiki_content(parsed_url):
 def parse_url(url: str):
     # https://zh.wikipedia.org/wiki/马丁·布伯
     # https://zh.wikipedia.org/zh-hans/马丁·布伯
-    g = re.search(r'https://(.*?).wikipedia.org/zh-hans/(.*)', url)
+    g = re.search(r'https://(.*?).wikipedia.org/(?:zh-hans|wiki)/(.*)', url)
     if g:
         lang = g.group(1)
         escaped_title = g.group(2)
@@ -179,8 +179,9 @@ def html_to_markdown2(html_content):
     # 1. 将多个空行替换为两个换行符
     markdown = re.sub(r'\n\s*\n', '\n\n', markdown, flags=re.UNICODE)
 
-    # 2. 将段落内的换行替换为空格, table `|` 后面的换行不处理
-    markdown = re.sub(r'(?<!\n)(?<!\|)\n(?!\n)', ' ', markdown, flags=re.UNICODE)
+    # 2. 将段落内的换行替换为空格, table `|` 后面的换行不处理;
+    #    下一行是 列表的不处理: 例如 `1.` `- `
+    markdown = re.sub(r'(?<!\n)(?<!\|)\n(?!\n)(?!\d+[.])(?!- )', ' ', markdown, flags=re.UNICODE)
 
     # 3. 删除多余的空格
     markdown = re.sub(r' +', ' ', markdown)
