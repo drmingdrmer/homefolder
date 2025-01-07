@@ -213,15 +213,15 @@ def download_wiki_page(url: str):
 
     html_latex_text = convert_math_to_latex(html_text)
 
-    # output html
-    with open(output_fn + '.html', 'w') as f:
-        f.write(url)
-        f.write("<br/>")
-        f.write(unescaped_url)
-        f.write("\n")
-        f.write("<h1>{}</h1>".format(display_title))
-        f.write("\n")
-        f.write(html_latex_text)
+    #  # output html
+    #  with open(output_fn + '.html', 'w') as f:
+    #      f.write(url)
+    #      f.write("<br/>")
+    #      f.write(unescaped_url)
+    #      f.write("\n")
+    #      f.write("<h1>{}</h1>".format(display_title))
+    #      f.write("\n")
+    #      f.write(html_latex_text)
 
     md_text = html_to_markdown2(html_latex_text)
 
