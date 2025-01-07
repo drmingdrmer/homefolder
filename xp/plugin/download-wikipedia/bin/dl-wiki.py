@@ -100,6 +100,18 @@ def convert_math_to_latex(html_content):
         text = span.get_text().strip()
         span.replace_with(f'`{text}`')
 
+    # Remove span class=nowrap
+    texhtml_spans = soup.find_all('span', class_='nowrap')
+    for span in texhtml_spans:
+        text = span.get_text().strip()
+        span.replace_with(f'`{text}`')
+
+    # Remove span for colorizing text
+    colored_spans = soup.find_all('span', style=lambda value: value and 'color:' in value.lower())
+    for span in colored_spans:
+        text = span.get_text().strip()
+        span.replace_with(text)
+
 
     # Remove i tags
     i_spans = soup.find_all('i')
