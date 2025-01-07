@@ -208,7 +208,8 @@ def download_wiki_page(url: str):
     display_title = j["parse"]["title"]
     html_text = j["parse"]["text"]["*"]
 
-    output_fn = parsed["title"]
+    #  output_fn = parsed["title"]
+    output_fn = display_title
 
     html_latex_text = convert_math_to_latex(html_text)
 
