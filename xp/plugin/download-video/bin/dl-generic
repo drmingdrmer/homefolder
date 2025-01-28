@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# Download video, save to date named file
+
+output=""
+if [ ".$1" = ".-d" ]; then
+    output="-o $(date +'%Y-%m-%d-%H-%M-%S').mp4"
+    shift
+fi
+
+yt-dlp --cookies-from-browser chrome \
+    $output \
+    "$@"
