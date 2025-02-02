@@ -75,3 +75,4 @@ gevent-websocket~=0.10.1
 msgpack~=0.6.1
 
 openai
+azure-ai-inference
