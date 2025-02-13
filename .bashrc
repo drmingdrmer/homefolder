@@ -290,4 +290,5 @@ dtdir()
 
 . "$HOME/.cargo/env"
 
-
+# add this or git commit with signing does not work
+export GPG_TTY=$(tty)
