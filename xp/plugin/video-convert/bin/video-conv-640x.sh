@@ -4,19 +4,18 @@ set -o errexit
 
 input="${1}"
 
-output="$(_video_conv_output_name.sh "output-854x480" "$input" $2)"
+output="$(_video_conv_output_name.sh "output-640x" "$input" $2)"
 
 echo "$input ===> $output"
 
-    # -vf scale=854:480,fps=24 \
 ffmpeg \
     -i "$input" \
-    -vf scale=854:-2,fps=24 \
+    -vf scale=640:-2,fps=24 \
     -c:v h264_videotoolbox \
-    -b:v 1M \
+    -b:v 0.7M \
     -c:a aac \
     -b:a 64k \
-    -preset slow \
+    -preset slower \
     -threads 0 \
     "$output"
 
