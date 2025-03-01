@@ -4,7 +4,7 @@ set -o errexit
 
 input="${1}"
 
-output="$(_video_conv_output_name.sh "output-1280x" "$input" $2)"
+output="$(_video_conv_output_name.sh "output-1280x" "$input" "$2")"
 
 echo "$input ===> $output"
 
