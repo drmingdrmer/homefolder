@@ -14,7 +14,7 @@ ffmpeg \
     -c:v h264_videotoolbox \
     -b:v 1M \
     -c:a aac \
-    -b:a 64k \
+    -b:a 96k \
     -preset slower \
     -threads 0 \
     "$output"
