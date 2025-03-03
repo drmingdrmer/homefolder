@@ -1,5 +1,8 @@
 #!/bin/sh
 
+echo 'This is only kept as a sample of using h264_videotoolbox encoding'
+exit 1
+
 set -o errexit
 
 input="${1}"
