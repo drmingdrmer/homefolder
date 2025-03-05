@@ -4,16 +4,19 @@
 import os
 import sys
 import subprocess
+import json
+import argparse
 
 
 class FFmpegParams:
     """
     Class to store and manage ffmpeg parameters
     """
-    def __init__(self, video_bitrate="149k", video_width=854, fps=24):
+    def __init__(self, video_bitrate="149k", video_width=854, fps=24, audio_stream=None):
         self.video_bitrate = video_bitrate
         self.video_width = video_width
         self.fps = fps
+        self.audio_stream = audio_stream
 
     def get_scale_filter(self):
         return f"scale={self.video_width}:-2,fps={self.fps}"
@@ -28,7 +31,7 @@ PRESET_PARAMS = {
     640: FFmpegParams(video_bitrate="120k", video_width=640, fps=24),
 
     # Standard quality (720p)
-    720: FFmpegParams(video_bitrate="140k", video_width=720, fps=24),
+    720: FFmpegParams(video_bitrate="150k", video_width=720, fps=24),
 
     # High quality (854p)
     854: FFmpegParams(video_bitrate="200k", video_width=854, fps=24),
@@ -85,7 +88,16 @@ def get_ffmpeg_template(params):
     """
     Return ffmpeg command template with parameters from FFmpegParams
     """
-    return [
+    template = []
+    
+    # Add mapping options if audio stream is specified
+    if params.audio_stream is not None:
+        # Map video stream (always the first one, 0:0)
+        template.extend(["-map", "0:0"])
+        # Map the specified audio stream
+        template.extend(["-map", f"0:{params.audio_stream}"])
+    
+    template.extend([
         "-c:v",             "libaom-av1",
         "-b:v",             params.video_bitrate,
         "-vf",              params.get_scale_filter(),
@@ -100,15 +112,65 @@ def get_ffmpeg_template(params):
         "-preset",          "slower",
         "-cpu-used",        "3",
         "-threads",         "0",
-    ]
+    ])
+    
+    return template
 
 
-def convert_video(width, input_file, output_file=None):
+def detect_audio_streams(input_file):
+    """
+    Detect audio streams in the input file using ffprobe
+    
+    Args:
+        input_file: Input video file path
+        
+    Returns:
+        A list of audio stream indices
+    """
+    try:
+        # Run ffprobe to get stream information in JSON format
+        cmd = [
+            "ffprobe", 
+            "-v", "quiet", 
+            "-print_format", "json", 
+            "-show_streams", 
+            input_file
+        ]
+        result = subprocess.run(cmd, check=True, capture_output=True, text=True)
+        data = json.loads(result.stdout)
+        
+        # Find all audio streams
+        audio_streams = []
+        for i, stream in enumerate(data.get("streams", [])):
+            if stream.get("codec_type") == "audio":
+                # Store the stream index as it appears in ffmpeg (0:0, 0:1, etc.)
+                audio_streams.append(i)
+                
+                # Print stream info if available
+                language = stream.get("tags", {}).get("language", "unknown")
+                handler = stream.get("tags", {}).get("handler_name", "")
+                print(f"Found audio stream #{i}: {handler} ({language})")
+        
+        return audio_streams
+    
+    except subprocess.CalledProcessError as e:
+        print(f"Error detecting audio streams: {e}", file=sys.stderr)
+        return []
+    except json.JSONDecodeError:
+        print("Error parsing ffprobe output", file=sys.stderr)
+        return []
+    except Exception as e:
+        print(f"Unexpected error detecting audio streams: {e}", file=sys.stderr)
+        return []
+
+
+def convert_video(width, audio_stream, input_file, output_file=None):
     """
     Convert video files using ffmpeg
 
     Args:
         width: Width to select from predefined parameter sets
+        audio_stream: Audio stream index to select (e.g., 1 for Stream #0:1)
         input_file: Input video file path
         output_file: Output file path or directory
     """
@@ -119,6 +181,10 @@ def convert_video(width, input_file, output_file=None):
         sys.exit(1)
 
     params = PRESET_PARAMS[width]
+    
+    # Set audio stream
+    params.audio_stream = audio_stream
+    print(f"Using audio stream: {audio_stream}")
 
     # Determine output filename
     output_dir = f"output-{width}x"
@@ -143,25 +209,43 @@ def convert_video(width, input_file, output_file=None):
 
 
 def main():
-    if len(sys.argv) < 3:
-        print("Usage: python video_converter.py width input_file [output_file/directory]")
-        print("Available width presets:", ", ".join(str(w) for w in sorted(PRESET_PARAMS.keys())))
+    # Create argument parser
+    parser = argparse.ArgumentParser(description='Convert video files using ffmpeg with customizable parameters.')
+    
+    # Add arguments
+    parser.add_argument('width', type=int, choices=sorted(PRESET_PARAMS.keys()),
+                        help=f'Video width preset. Available presets: {", ".join(str(w) for w in sorted(PRESET_PARAMS.keys()))}')
+    parser.add_argument('input_file', help='Input video file path')
+    parser.add_argument('output_file', nargs='?', default=None, 
+                        help='Output file path or directory. If not specified, a default output directory will be used.')
+    parser.add_argument('--audio-stream', '-a', type=int, dest='audio_stream', 
+                        help='Audio stream index to select (e.g., 1 for Stream #0:1)')
+    
+    # Parse arguments
+    args = parser.parse_args()
+    
+    # Detect audio streams
+    audio_streams = detect_audio_streams(args.input_file)
+    
+    if not audio_streams:
+        print("No audio streams detected in the input file.")
+        sys.exit(1)
+    
+    # Handle audio stream selection
+    audio_stream = args.audio_stream
+    
+    # If audio_stream is not provided, use the first one
+    if audio_stream is None:
+        audio_stream = audio_streams[0]
+        print(f"Using default audio stream: {audio_stream}")
+    # If audio_stream is specified but not in the detected streams, report error
+    elif audio_stream not in audio_streams:
+        print(f"Error: Specified audio stream {audio_stream} not found in the input file.")
+        print(f"Available audio streams: {', '.join(map(str, audio_streams))}")
         sys.exit(1)
 
-    # Width is now the first parameter
-    try:
-        width = int(sys.argv[1])
-    except ValueError:
-        print(f"Error: Invalid width: {sys.argv[1]}")
-        print("Available width presets:", ", ".join(str(w) for w in sorted(PRESET_PARAMS.keys())))
-        sys.exit(1)
-
-    input_file = sys.argv[2]
-
-    # Output file is the third parameter (optional)
-    output_file = sys.argv[3] if len(sys.argv) > 3 else None
-
-    convert_video(width, input_file, output_file)
+    # Convert video
+    convert_video(args.width, audio_stream, args.input_file, args.output_file)
 
 
 if __name__ == "__main__":
