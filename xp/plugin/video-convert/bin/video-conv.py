@@ -125,7 +125,7 @@ def detect_audio_streams(input_file):
         input_file: Input video file path
         
     Returns:
-        A list of audio stream indices
+        A list of dictionaries containing audio stream information
     """
     try:
         # Run ffprobe to get stream information in JSON format
@@ -143,12 +143,22 @@ def detect_audio_streams(input_file):
         audio_streams = []
         for i, stream in enumerate(data.get("streams", [])):
             if stream.get("codec_type") == "audio":
-                # Store the stream index as it appears in ffmpeg (0:0, 0:1, etc.)
-                audio_streams.append(i)
+                # Get stream metadata
+                tags = stream.get("tags", {})
+                language = tags.get("language", "unknown")
+                title = tags.get("title", "")
+                handler = tags.get("handler_name", "")
                 
-                # Print stream info if available
-                language = stream.get("tags", {}).get("language", "unknown")
-                handler = stream.get("tags", {}).get("handler_name", "")
+                # Store stream info
+                stream_info = {
+                    "index": i,
+                    "language": language,
+                    "title": title,
+                    "handler": handler
+                }
+                audio_streams.append(stream_info)
+                
+                # Print stream info
                 print(f"Found audio stream #{i}: {handler} ({language})")
         
         return audio_streams
@@ -162,6 +172,27 @@ def detect_audio_streams(input_file):
     except Exception as e:
         print(f"Unexpected error detecting audio streams: {e}", file=sys.stderr)
         return []
+
+
+def format_stream_info(stream):
+    """
+    Format audio stream information into a readable string
+    
+    Args:
+        stream: Dictionary containing stream information
+        
+    Returns:
+        Formatted string with stream details
+    """
+    language = stream["language"]
+    info = f"language: {language}"
+    
+    if stream["title"]:
+        info += f", title: {stream['title']}"
+    if stream["handler"]:
+        info += f", handler: {stream['handler']}"
+        
+    return info
 
 
 def convert_video(width, audio_stream, input_file, output_file=None):
@@ -232,17 +263,33 @@ def main():
         sys.exit(1)
     
     # Handle audio stream selection
-    audio_stream = args.audio_stream
+    requested_audio_stream = args.audio_stream
+    
+    # Extract just the indices for easier comparison
+    audio_stream_indices = [stream["index"] for stream in audio_streams]
     
     # If audio_stream is not provided, use the first one
-    if audio_stream is None:
-        audio_stream = audio_streams[0]
-        print(f"Using default audio stream: {audio_stream}")
+    if requested_audio_stream is None:
+        if len(audio_streams) == 1:
+            audio_stream = audio_streams[0]["index"]
+            print(f"Using default audio stream: {audio_stream}")
+        else:
+            print("Multiple audio streams detected. Please specify one with --audio-stream/-a option:")
+            for stream in audio_streams:
+                index = stream["index"]
+                info = format_stream_info(stream)
+                print(f"  [{index}] {info}")
+            
+            print("\nExample usage:")
+            print(f"  {sys.argv[0]} {args.width} \"{args.input_file}\" --audio-stream <STREAM_NUMBER>")
+            sys.exit(1)
     # If audio_stream is specified but not in the detected streams, report error
-    elif audio_stream not in audio_streams:
-        print(f"Error: Specified audio stream {audio_stream} not found in the input file.")
-        print(f"Available audio streams: {', '.join(map(str, audio_streams))}")
+    elif requested_audio_stream not in audio_stream_indices:
+        print(f"Error: Specified audio stream {requested_audio_stream} not found in the input file.")
+        print(f"Available audio streams: {', '.join(map(str, audio_stream_indices))}")
         sys.exit(1)
+    else:
+        audio_stream = requested_audio_stream
 
     # Convert video
     convert_video(args.width, audio_stream, args.input_file, args.output_file)
