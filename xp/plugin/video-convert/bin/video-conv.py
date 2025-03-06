@@ -195,7 +195,7 @@ def format_stream_info(stream):
     return info
 
 
-def convert_video(width, audio_stream, input_file, output_file=None):
+def convert_video(width, audio_stream, input_file, output_file=None, custom_bitrate=None):
     """
     Convert video files using ffmpeg
 
@@ -204,6 +204,7 @@ def convert_video(width, audio_stream, input_file, output_file=None):
         audio_stream: Audio stream index to select (e.g., 1 for Stream #0:1)
         input_file: Input video file path
         output_file: Output file path or directory
+        custom_bitrate: Optional custom video bitrate to override preset
     """
     # Get parameters based on width
     if width not in PRESET_PARAMS:
@@ -216,6 +217,11 @@ def convert_video(width, audio_stream, input_file, output_file=None):
     # Set audio stream
     params.audio_stream = audio_stream
     print(f"Using audio stream: {audio_stream}")
+
+    # Override bitrate if custom value is provided
+    if custom_bitrate:
+        params.video_bitrate = custom_bitrate
+        print(f"Overriding video bitrate to: {custom_bitrate}")
 
     # Determine output filename
     output_dir = f"output-{width}x"
@@ -251,6 +257,8 @@ def main():
                         help='Output file path or directory. If not specified, a default output directory will be used.')
     parser.add_argument('--audio-stream', '-a', type=int, dest='audio_stream',
                         help='Audio stream index to select (e.g., 1 for Stream #0:1)')
+    parser.add_argument('--bitrate', '-b', dest='video_bitrate',
+                        help='Override video bitrate (e.g., "200k", "1M")')
 
     # Parse arguments
     args = parser.parse_args()
@@ -292,7 +300,7 @@ def main():
         audio_stream = requested_audio_stream
 
     # Convert video
-    convert_video(args.width, audio_stream, args.input_file, args.output_file)
+    convert_video(args.width, audio_stream, args.input_file, args.output_file, args.video_bitrate)
 
 
 if __name__ == "__main__":
