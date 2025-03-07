@@ -34,7 +34,7 @@ fi
 # https://help.github.com/en/articles/caching-your-github-password-in-git
 # git config --global credential.helper osxkeychain
 
-$gconf user.name                "drdr xp"
+$gconf user.name                "Zhang Yanpo"
 $gconf user.email               drdr.xp@gmail.com
 $gconf push.default             current
 $gconf merge.defaultToUpstream  true
