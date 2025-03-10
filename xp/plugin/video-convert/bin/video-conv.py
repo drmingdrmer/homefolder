@@ -34,13 +34,13 @@ PRESET_PARAMS = {
     720: FFmpegParams(video_bitrate="150k", video_width=720, fps=24),
 
     # High quality (854p)
-    854: FFmpegParams(video_bitrate="200k", video_width=854, fps=24),
+    854: FFmpegParams(video_bitrate="220k", video_width=854, fps=24),
 
     # HD quality (1280p)
-    1280: FFmpegParams(video_bitrate="320k", video_width=1280, fps=24),
+    1280: FFmpegParams(video_bitrate="480k", video_width=1280, fps=24),
 
     # Full HD quality (1920p)
-    1920: FFmpegParams(video_bitrate="400k", video_width=1920, fps=24),
+    1920: FFmpegParams(video_bitrate="1000k", video_width=1920, fps=24),
 }
 
 
