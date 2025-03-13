@@ -14,14 +14,6 @@ export XPBASE
 . $HOME/xp/bash-d/inc/util.sh
 env_init_path
 
-if [ "$BASH" ]; then
-    for rcfn in ~/.bashrc; do
-        if [ -f $rcfn ]; then
-            . $rcfn
-        fi
-    done
-fi
-
 
 [ -t 1 ] && mesg y
 
@@ -51,14 +43,6 @@ export CPPFLAGS="-I/usr/local/opt/llvm/include"
 
 # mysql
 export PATH="/opt/homebrew/opt/mysql-client/bin:$PATH"
-
-
-
-
-# python virtual env
-# . $HOME/xp/py3virtual/dev/bin/activate
-# . $HOME/xp/py3virtual/p3-11-3/bin/activate
-. $HOME/xp/py3virtual/p3-12-4/bin/activate
 
 
 export PATH="$HOME/xp/vcs/github.com/drmingdrmer/gift:$PATH"

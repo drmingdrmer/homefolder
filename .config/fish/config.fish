@@ -8,3 +8,17 @@ set -q XDG_DATA_HOME
 
 # Load oh-my-fish configuration.
 source $OMF_PATH/init.fish
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+if test -f /Users/drdrxp/miniconda3/bin/conda
+    eval /Users/drdrxp/miniconda3/bin/conda "shell.fish" "hook" $argv | source
+else
+    if test -f "/Users/drdrxp/miniconda3/etc/fish/conf.d/conda.fish"
+        . "/Users/drdrxp/miniconda3/etc/fish/conf.d/conda.fish"
+    else
+        set -x PATH "/Users/drdrxp/miniconda3/bin" $PATH
+    end
+end
+# <<< conda initialize <<<
+
