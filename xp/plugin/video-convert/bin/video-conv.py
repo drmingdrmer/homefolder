@@ -12,11 +12,14 @@ class FFmpegParams:
     """
     Class to store and manage ffmpeg parameters
     """
-    def __init__(self, video_bitrate="149k", video_width=854, fps=24, audio_stream=None):
+    def __init__(self, video_bitrate="149k", video_width=854, fps=24, audio_stream=None, subtitle_stream=None, start_time=None, end_time=None):
         self.video_bitrate = video_bitrate
         self.video_width = video_width
         self.fps = fps
         self.audio_stream = audio_stream
+        self.subtitle_stream = subtitle_stream
+        self.start_time = start_time  # Start time in seconds or HH:MM:SS format
+        self.end_time = end_time      # End time in seconds or HH:MM:SS format
 
     def get_scale_filter(self):
         return f"scale={self.video_width}:-2,fps={self.fps}"
@@ -79,7 +82,20 @@ def get_output_name(params, default_output_dir, input_file, output_arg=None):
 
     # Add width and bitrate to the output name
     output_name_without_ext, ext = os.path.splitext(output_name)
-    output_name = f"{output_name_without_ext}-{params.video_width}x-{params.video_bitrate}{ext}"
+    output_name = f"{output_name_without_ext}-{params.video_width}x-{params.video_bitrate}"
+    
+    # Add time range info if specified
+    if params.start_time is not None or params.end_time is not None:
+        time_info = ""
+        if params.start_time is not None:
+            # Replace colons with underscores for filename compatibility
+            time_info += f"-from_{params.start_time.replace(':', '_')}"
+        if params.end_time is not None:
+            # Replace colons with underscores for filename compatibility
+            time_info += f"-to_{params.end_time.replace(':', '_')}"
+        output_name += time_info
+    
+    output_name += ext
 
     return output_name
 
@@ -90,17 +106,31 @@ def get_ffmpeg_template(params):
     """
     template = []
 
-    # Add mapping options if audio stream is specified
+    # Add time range options if specified
+    if params.start_time is not None:
+        template.extend(["-ss", params.start_time])
+    
+    if params.end_time is not None:
+        template.extend(["-to", params.end_time])
+
+    # Add mapping options for video and audio streams
     if params.audio_stream is not None:
         # Map video stream (always the first one, 0:0)
         template.extend(["-map", "0:0"])
         # Map the specified audio stream
         template.extend(["-map", f"0:{params.audio_stream}"])
+    
+    # Add subtitle mapping if specified
+    if params.subtitle_stream is not None:
+        # Map the specified subtitle stream
+        template.extend(["-map", f"0:{params.subtitle_stream}"])
+        # Burn subtitles into the video
+        template.extend(["-c:s", "mov_text"])
 
     template.extend([
         "-c:v",             "libaom-av1",
         "-b:v",             params.video_bitrate,
-        "-vf",              params.get_scale_filter(),
+        "-vf",              params.get_scale_filter() + (f",subtitles='{os.path.abspath(params.input_file)}':stream_index={params.subtitle_stream}" if params.subtitle_stream is not None else ""),
         "-pix_fmt",         "yuv420p",
         "-color_primaries", "bt709",
         "-color_trc",       "bt709",
@@ -174,6 +204,68 @@ def detect_audio_streams(input_file):
         return []
 
 
+def detect_subtitle_streams(input_file):
+    """
+    Detect subtitle streams in the input file using ffprobe
+
+    Args:
+        input_file: Input video file path
+
+    Returns:
+        A list of dictionaries containing subtitle stream information
+    """
+    try:
+        # Run ffprobe to get stream information in JSON format
+        cmd = [
+            "ffprobe",
+            "-v", "quiet",
+            "-print_format", "json",
+            "-show_streams",
+            input_file
+        ]
+        result = subprocess.run(cmd, check=True, capture_output=True, text=True)
+        data = json.loads(result.stdout)
+
+        # Find all subtitle streams
+        subtitle_streams = []
+        for i, stream in enumerate(data.get("streams", [])):
+            if stream.get("codec_type") == "subtitle":
+                # Get stream metadata
+                tags = stream.get("tags", {})
+                language = tags.get("language", "unknown")
+                title = tags.get("title", "")
+                disposition = stream.get("disposition", {})
+                is_default = disposition.get("default", 0) == 1
+                is_forced = disposition.get("forced", 0) == 1
+
+                # Store stream info
+                stream_info = {
+                    "index": i,
+                    "language": language,
+                    "title": title,
+                    "default": is_default,
+                    "forced": is_forced
+                }
+                subtitle_streams.append(stream_info)
+
+                # Print stream info
+                default_str = " (default)" if is_default else ""
+                forced_str = " (forced)" if is_forced else ""
+                print(f"Found subtitle stream #{i}: {title} ({language}){default_str}{forced_str}")
+
+        return subtitle_streams
+
+    except subprocess.CalledProcessError as e:
+        print(f"Error detecting subtitle streams: {e}", file=sys.stderr)
+        return []
+    except json.JSONDecodeError:
+        print("Error parsing ffprobe output", file=sys.stderr)
+        return []
+    except Exception as e:
+        print(f"Unexpected error detecting subtitle streams: {e}", file=sys.stderr)
+        return []
+
+
 def format_stream_info(stream):
     """
     Format audio stream information into a readable string
@@ -189,13 +281,17 @@ def format_stream_info(stream):
 
     if stream["title"]:
         info += f", title: {stream['title']}"
-    if stream["handler"]:
+    if stream.get("handler", ""):
         info += f", handler: {stream['handler']}"
+    if stream.get("default", False):
+        info += ", default"
+    if stream.get("forced", False):
+        info += ", forced"
 
     return info
 
 
-def convert_video(width, audio_stream, input_file, output_file=None, custom_bitrate=None):
+def convert_video(width, audio_stream, input_file, output_file=None, custom_bitrate=None, subtitle_stream=None, start_time=None, end_time=None):
     """
     Convert video files using ffmpeg
 
@@ -205,6 +301,9 @@ def convert_video(width, audio_stream, input_file, output_file=None, custom_bitr
         input_file: Input video file path
         output_file: Output file path or directory
         custom_bitrate: Optional custom video bitrate to override preset
+        subtitle_stream: Subtitle stream index to embed
+        start_time: Optional start time for conversion (format: HH:MM:SS or seconds)
+        end_time: Optional end time for conversion (format: HH:MM:SS or seconds)
     """
     # Get parameters based on width
     if width not in PRESET_PARAMS:
@@ -217,6 +316,22 @@ def convert_video(width, audio_stream, input_file, output_file=None, custom_bitr
     # Set audio stream
     params.audio_stream = audio_stream
     print(f"Using audio stream: {audio_stream}")
+
+    # Set subtitle stream if provided
+    params.subtitle_stream = subtitle_stream
+    if subtitle_stream is not None:
+        print(f"Embedding subtitle stream: {subtitle_stream}")
+
+    # Set time range if provided
+    params.start_time = start_time
+    params.end_time = end_time
+    if start_time is not None:
+        print(f"Start time: {start_time}")
+    if end_time is not None:
+        print(f"End time: {end_time}")
+
+    # Store input file path for subtitle filter
+    params.input_file = input_file
 
     # Override bitrate if custom value is provided
     if custom_bitrate:
@@ -257,8 +372,14 @@ def main():
                         help='Output file path or directory. If not specified, a default output directory will be used.')
     parser.add_argument('--audio-stream', '-a', type=int, dest='audio_stream',
                         help='Audio stream index to select (e.g., 1 for Stream #0:1)')
+    parser.add_argument('--subtitle-stream', '-s', type=int, dest='subtitle_stream',
+                        help='Subtitle stream index to embed (e.g., 2 for Stream #0:2)')
     parser.add_argument('--bitrate', '-b', dest='video_bitrate',
                         help='Override video bitrate (e.g., "200k", "1M")')
+    parser.add_argument('--start-time', '-ss', dest='start_time',
+                        help='Start time for conversion (format: HH:MM:SS or seconds, e.g., "00:01:30" or "90")')
+    parser.add_argument('--end-time', '-to', dest='end_time',
+                        help='End time for conversion (format: HH:MM:SS or seconds, e.g., "00:05:00" or "300")')
 
     # Parse arguments
     args = parser.parse_args()
@@ -299,8 +420,42 @@ def main():
     else:
         audio_stream = requested_audio_stream
 
+    # Detect subtitle streams
+    subtitle_streams = detect_subtitle_streams(args.input_file)
+    subtitle_stream = None
+
+    # Handle subtitle stream selection
+    if subtitle_streams:
+        requested_subtitle_stream = args.subtitle_stream
+        subtitle_stream_indices = [stream["index"] for stream in subtitle_streams]
+
+        # If only one subtitle stream and no specific stream requested, use it automatically
+        if len(subtitle_streams) == 1 and requested_subtitle_stream is None:
+            subtitle_stream = subtitle_streams[0]["index"]
+            print(f"Automatically using the only available subtitle stream: {subtitle_stream}")
+        # If multiple subtitle streams and no specific stream requested, ask user to specify
+        elif len(subtitle_streams) > 1 and requested_subtitle_stream is None:
+            print("Multiple subtitle streams detected. Please specify one with --subtitle-stream/-s option:")
+            for stream in subtitle_streams:
+                index = stream["index"]
+                info = format_stream_info(stream)
+                print(f"  [{index}] {info}")
+
+            print("\nExample usage:")
+            print(f"  {sys.argv[0]} {args.width} \"{args.input_file}\" --subtitle-stream <STREAM_NUMBER>")
+            sys.exit(1)
+        # If specific stream requested, check if it exists
+        elif requested_subtitle_stream is not None:
+            if requested_subtitle_stream not in subtitle_stream_indices:
+                print(f"Error: Specified subtitle stream {requested_subtitle_stream} not found in the input file.")
+                print(f"Available subtitle streams: {', '.join(map(str, subtitle_stream_indices))}")
+                sys.exit(1)
+            else:
+                subtitle_stream = requested_subtitle_stream
+                print(f"Using specified subtitle stream: {subtitle_stream}")
+
     # Convert video
-    convert_video(args.width, audio_stream, args.input_file, args.output_file, args.video_bitrate)
+    convert_video(args.width, audio_stream, args.input_file, args.output_file, args.video_bitrate, subtitle_stream, args.start_time, args.end_time)
 
 
 if __name__ == "__main__":
