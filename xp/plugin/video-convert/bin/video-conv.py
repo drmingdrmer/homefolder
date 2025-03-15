@@ -402,6 +402,10 @@ def convert_video(args, audio_stream, subtitle_stream=None):
     ffmpeg_template = get_ffmpeg_template(params)
     ffmpeg_cmd = ["ffmpeg", "-i", args.input_file] + ffmpeg_template + [output]
 
+    # Print the complete command for debugging
+    print("\nDebug: Full command to be executed:")
+    print(" ".join([f'"{arg}"' if ' ' in arg else arg for arg in ffmpeg_cmd]))
+
     # Execute ffmpeg command
     try:
         subprocess.run(ffmpeg_cmd, check=True)
