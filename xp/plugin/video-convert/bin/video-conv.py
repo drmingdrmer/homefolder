@@ -20,6 +20,7 @@ class FFmpegParams:
         self.subtitle_stream = subtitle_stream
         self.start_time = start_time  # Start time in seconds or HH:MM:SS format
         self.end_time = end_time      # End time in seconds or HH:MM:SS format
+        self.input_file = None
 
     def get_scale_filter(self):
         return f"scale={self.video_width}:-2,fps={self.fps}"
@@ -27,15 +28,10 @@ class FFmpegParams:
 
 PRESET_PARAMS = {
     480: FFmpegParams(video_bitrate="80k", video_width=480, fps=24),
-
     640: FFmpegParams(video_bitrate="120k", video_width=640, fps=24),
-
     720: FFmpegParams(video_bitrate="150k", video_width=720, fps=24),
-
     854: FFmpegParams(video_bitrate="220k", video_width=854, fps=24),
-
     1280: FFmpegParams(video_bitrate="480k", video_width=1280, fps=24),
-
     1920: FFmpegParams(video_bitrate="1000k", video_width=1920, fps=24),
 }
 
@@ -49,14 +45,11 @@ def get_output_name(params: FFmpegParams, default_output_dir: str, input_file: s
     if output_arg is None:
         os.makedirs(default_output_dir, exist_ok=True)
         output_name = os.path.join(default_output_dir, input_fn)
-
     elif '*' in output_arg:
         output_name = output_arg.replace('*', input_name_without_ext)
-
     elif output_arg.endswith('/'):
         os.makedirs(output_arg, exist_ok=True)
         output_name = os.path.join(output_arg, input_fn)
-
     else:
         return output_arg
 
@@ -144,9 +137,6 @@ def format_stream_info(stream):
 def print_audio_stream_info(stream):
     """
     Print audio stream information
-    
-    Args:
-        stream: Audio stream object
     """
     print(f"Audio Stream: #{stream['index']}")
     if stream.get("language") and stream["language"] != "unknown":
@@ -160,9 +150,6 @@ def print_audio_stream_info(stream):
 def print_subtitle_stream_info(stream):
     """
     Print subtitle stream information
-    
-    Args:
-        stream: Subtitle stream object
     """
     print(f"Subtitle Stream: #{stream['index']}")
     if stream.get("language") and stream["language"] != "unknown":
@@ -180,12 +167,6 @@ class VideoConverter:
     Class to handle video conversion process
     """
     def __init__(self, args):
-        """
-        Initialize converter with command line arguments
-        
-        Args:
-            args: Parsed command line arguments
-        """
         self.args = args
         self.all_streams = []
         self.audio_streams = []
@@ -201,7 +182,6 @@ class VideoConverter:
         Detect all streams in the input file
         """
         self.all_streams = detect_all_streams(self.args.input_file)
-        
         self.audio_streams = [s for s in self.all_streams if s.get("codec_type") == "audio"]
         self.subtitle_streams = [s for s in self.all_streams if s.get("codec_type") == "subtitle"]
         
@@ -242,9 +222,6 @@ class VideoConverter:
     def select_subtitle_stream(self):
         """
         Select the subtitle stream to use based on command line arguments
-        
-        Returns:
-            True if processing should continue, False if it should stop
         """
         self.selected_subtitle_stream = None
         
@@ -390,9 +367,6 @@ class VideoConverter:
     def _get_ffmpeg_template(self):
         """
         Return ffmpeg command template with parameters from FFmpegParams
-        
-        Returns:
-            List of ffmpeg command arguments
         """
         template = []
         
