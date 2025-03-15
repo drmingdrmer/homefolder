@@ -47,16 +47,7 @@ PRESET_PARAMS = {
 }
 
 
-def get_output_name(params, default_output_dir, input_file, output_arg=None):
-    """
-    Determine the output file path based on input file and output argument
-
-    Args:
-        params: FFmpegParams object containing encoding parameters
-        default_output_dir: Default output directory if no output_arg is provided
-        input_file: Input video file path
-        output_arg: Optional output path specification
-    """
+def get_output_name(params: FFmpegParams, default_output_dir: str, input_file: str, output_arg: str = None):
     input_fn = os.path.basename(input_file)
     input_name_without_ext = os.path.splitext(input_fn)[0]
 
@@ -100,10 +91,7 @@ def get_output_name(params, default_output_dir, input_file, output_arg=None):
     return output_name
 
 
-def get_ffmpeg_template(params):
-    """
-    Return ffmpeg command template with parameters from FFmpegParams
-    """
+def get_ffmpeg_template(params: FFmpegParams, subtitle_streams=None):
     template = []
 
     # Add time range options if specified
@@ -123,7 +111,13 @@ def get_ffmpeg_template(params):
     # Prepare subtitle filter if needed
     subtitle_filter = ""
     if params.subtitle_stream is not None:
-        subtitle_filter = f",subtitles='{os.path.abspath(params.input_file)}':stream_index={params.subtitle_stream}"
+        # Calculate the relative subtitle index
+        if subtitle_streams:
+            relative_subtitle_index = calculate_subtitle_relative_index(subtitle_streams, params.subtitle_stream)
+        else:
+            # Fallback to the old method if subtitle_streams is not provided
+            relative_subtitle_index = get_subtitle_relative_index(params.input_file, params.subtitle_stream)
+        subtitle_filter = f",subtitles='{os.path.abspath(params.input_file)}':stream_index={relative_subtitle_index}"
     
     template.extend([
         "-c:v",             "libaom-av1",
@@ -145,121 +139,56 @@ def get_ffmpeg_template(params):
     return template
 
 
-def detect_audio_streams(input_file):
-    """
-    Detect audio streams in the input file using ffprobe
-
-    Args:
-        input_file: Input video file path
-
-    Returns:
-        A list of dictionaries containing audio stream information
-    """
-    try:
-        # Run ffprobe to get stream information in JSON format
-        cmd = [
-            "ffprobe",
-            "-v", "quiet",
-            "-print_format", "json",
-            "-show_streams",
-            input_file
-        ]
-        result = subprocess.run(cmd, check=True, capture_output=True, text=True)
-        data = json.loads(result.stdout)
-
-        # Find all audio streams
-        audio_streams = []
-        for stream in data.get("streams", []):
-            if stream.get("codec_type") == "audio":
-                # Get stream index
-                stream_index = stream.get("index")
-                
-                # Get stream metadata
-                tags = stream.get("tags", {})
-                language = tags.get("language", "unknown")
-                title = tags.get("title", "")
-                handler = tags.get("handler_name", "")
-
-                # Store stream info
-                stream_info = {
-                    "index": stream_index,
-                    "language": language,
-                    "title": title,
-                    "handler": handler
-                }
-                audio_streams.append(stream_info)
-
-        return audio_streams
-
-    except subprocess.CalledProcessError as e:
-        print(f"Error detecting audio streams: {e}", file=sys.stderr)
-        return []
-    except json.JSONDecodeError:
-        print("Error parsing ffprobe output", file=sys.stderr)
-        return []
-    except Exception as e:
-        print(f"Unexpected error detecting audio streams: {e}", file=sys.stderr)
-        return []
+def detect_all_streams(input_file: str):
+    # Run ffprobe to get stream information in JSON format
+    cmd = [
+        "ffprobe",
+        "-v", "quiet",
+        "-print_format", "json",
+        "-show_streams",
+        input_file
+    ]
+    result = subprocess.run(cmd, check=True, capture_output=True, text=True)
+    data = json.loads(result.stdout)
+    
+    # Process all streams with their full information
+    streams = []
+    for stream in data.get("streams", []):
+        stream_type = stream.get("codec_type")
+        stream_index = stream.get("index")
+        tags = stream.get("tags", {})
+        
+        # Basic stream info common to all types
+        stream_info = {
+            "index": stream_index,
+            "codec_type": stream_type,
+            "language": tags.get("language", "unknown"),
+            "title": tags.get("title", "")
+        }
+        
+        # Add type-specific information
+        if stream_type == "audio":
+            stream_info["handler"] = tags.get("handler_name", "")
+        elif stream_type == "subtitle":
+            disposition = stream.get("disposition", {})
+            stream_info["default"] = disposition.get("default", 0) == 1
+            stream_info["forced"] = disposition.get("forced", 0) == 1
+        
+        streams.append(stream_info)
+    
+    return streams
 
 
-def detect_subtitle_streams(input_file):
-    """
-    Detect subtitle streams in the input file using ffprobe
+def detect_audio_streams(input_file: str):
+    # Get all streams and filter for audio streams
+    all_streams = detect_all_streams(input_file)
+    return [stream for stream in all_streams if stream.get("codec_type") == "audio"]
 
-    Args:
-        input_file: Input video file path
 
-    Returns:
-        A list of dictionaries containing subtitle stream information
-    """
-    try:
-        # Run ffprobe to get stream information in JSON format
-        cmd = [
-            "ffprobe",
-            "-v", "quiet",
-            "-print_format", "json",
-            "-show_streams",
-            input_file
-        ]
-        result = subprocess.run(cmd, check=True, capture_output=True, text=True)
-        data = json.loads(result.stdout)
-
-        # Find all subtitle streams
-        subtitle_streams = []
-        for stream in data.get("streams", []):
-            if stream.get("codec_type") == "subtitle":
-                # Get stream index
-                stream_index = stream.get("index")
-                
-                # Get stream metadata
-                tags = stream.get("tags", {})
-                language = tags.get("language", "unknown")
-                title = tags.get("title", "")
-                disposition = stream.get("disposition", {})
-                is_default = disposition.get("default", 0) == 1
-                is_forced = disposition.get("forced", 0) == 1
-
-                # Store stream info
-                stream_info = {
-                    "index": stream_index,
-                    "language": language,
-                    "title": title,
-                    "default": is_default,
-                    "forced": is_forced
-                }
-                subtitle_streams.append(stream_info)
-
-        return subtitle_streams
-
-    except subprocess.CalledProcessError as e:
-        print(f"Error detecting subtitle streams: {e}", file=sys.stderr)
-        return []
-    except json.JSONDecodeError:
-        print("Error parsing ffprobe output", file=sys.stderr)
-        return []
-    except Exception as e:
-        print(f"Unexpected error detecting subtitle streams: {e}", file=sys.stderr)
-        return []
+def detect_subtitle_streams(input_file: str):
+    # Get all streams and filter for subtitle streams
+    all_streams = detect_all_streams(input_file)
+    return [stream for stream in all_streams if stream.get("codec_type") == "subtitle"]
 
 
 def format_stream_info(stream):
@@ -334,7 +263,7 @@ def print_subtitle_stream_info(stream):
         print(f"  Forced: Yes")
 
 
-def convert_video(args, audio_stream, subtitle_stream=None):
+def convert_video(args, audio_stream, subtitle_stream=None, subtitle_streams=None):
     """
     Convert video files using ffmpeg
 
@@ -342,6 +271,7 @@ def convert_video(args, audio_stream, subtitle_stream=None):
         args: Parsed command line arguments
         audio_stream: Selected audio stream object
         subtitle_stream: Selected subtitle stream object (optional)
+        subtitle_streams: List of all subtitle streams (optional)
     """
     # Get parameters based on width
     if args.width not in PRESET_PARAMS:
@@ -362,6 +292,12 @@ def convert_video(args, audio_stream, subtitle_stream=None):
     if subtitle_stream is not None:
         params.subtitle_stream = subtitle_stream["index"]
         print_subtitle_stream_info(subtitle_stream)
+        
+        # Calculate and show the relative subtitle index
+        if subtitle_streams:
+            relative_index = calculate_subtitle_relative_index(subtitle_streams, subtitle_stream["index"])
+            print(f"  Absolute Stream Index: {subtitle_stream['index']}")
+            print(f"  Relative Subtitle Index: {relative_index} (used in filter)")
     else:
         print("Subtitles: None (not included in output)")
 
@@ -397,12 +333,16 @@ def convert_video(args, audio_stream, subtitle_stream=None):
     print("\nStarting conversion...")
 
     # Get ffmpeg command template and build the final command
-    ffmpeg_template = get_ffmpeg_template(params)
+    ffmpeg_template = get_ffmpeg_template(params, subtitle_streams)
     ffmpeg_cmd = ["ffmpeg", "-i", args.input_file] + ffmpeg_template + [output]
 
     # Print the complete command for debugging
     print("\nDebug: Full command to be executed:")
     print(" ".join([f'"{arg}"' if ' ' in arg else arg for arg in ffmpeg_cmd]))
+    
+    if params.subtitle_stream is not None:
+        print("\nNote: Using relative subtitle index in the filter. The subtitles filter uses")
+        print("a 0-based index that counts only subtitle streams, not all streams.")
 
     # Execute ffmpeg command
     try:
@@ -412,6 +352,34 @@ def convert_video(args, audio_stream, subtitle_stream=None):
         print(f"Conversion failed: {e}", file=sys.stderr)
         sys.exit(1)
 
+
+def get_subtitle_relative_index(input_file: str, absolute_index: int) -> int:
+    # Get all streams
+    all_streams = detect_all_streams(input_file)
+    
+    # Count subtitle streams before the target stream
+    subtitle_count = 0
+    for stream in all_streams:
+        if stream["index"] == absolute_index:
+            return subtitle_count
+        if stream["codec_type"] == "subtitle":
+            subtitle_count += 1
+    
+    # If we get here, the stream wasn't found
+    return 0
+
+
+def calculate_subtitle_relative_index(subtitle_streams: list, absolute_index: int) -> int:
+    # Sort subtitle streams by their absolute index
+    sorted_streams = sorted(subtitle_streams, key=lambda s: s["index"])
+    
+    # Find the position of the target stream in the sorted list
+    for i, stream in enumerate(sorted_streams):
+        if stream["index"] == absolute_index:
+            return i
+    
+    # If we get here, the stream wasn't found
+    return 0
 
 def main():
     # Create argument parser
@@ -562,7 +530,7 @@ def main():
         print("No subtitle streams found in the input file.")
 
     # Convert video
-    convert_video(args, selected_audio_stream, selected_subtitle_stream)
+    convert_video(args, selected_audio_stream, selected_subtitle_stream, subtitle_streams)
 
 
 if __name__ == "__main__":
