@@ -266,7 +266,7 @@ def detect_subtitle_streams(input_file):
 
 def format_stream_info(stream):
     """
-    Format audio stream information into a readable string
+    Format stream information into a readable string
 
     Args:
         stream: Dictionary containing stream information
@@ -274,19 +274,32 @@ def format_stream_info(stream):
     Returns:
         Formatted string with stream details
     """
-    language = stream["language"]
-    info = f"language: {language}"
-
-    if stream["title"]:
-        info += f", title: {stream['title']}"
-    if stream.get("handler", ""):
-        info += f", handler: {stream['handler']}"
-    if stream.get("default", False):
-        info += ", default"
-    if stream.get("forced", False):
-        info += ", forced"
-
-    return info
+    info = ""
+    
+    if "language" in stream and stream["language"] != "unknown":
+        info += f"language: {stream['language']}"
+    
+    if "title" in stream and stream["title"]:
+        if info:
+            info += ", "
+        info += f"title: {stream['title']}"
+    
+    if "handler" in stream and stream["handler"]:
+        if info:
+            info += ", "
+        info += f"handler: {stream['handler']}"
+    
+    if "default" in stream and stream["default"]:
+        if info:
+            info += ", "
+        info += "default"
+    
+    if "forced" in stream and stream["forced"]:
+        if info:
+            info += ", "
+        info += "forced"
+    
+    return info or "unknown"
 
 
 def print_audio_stream_info(stream):
@@ -412,6 +425,12 @@ def main():
                         help='Audio stream index to select (e.g., 1 for Stream #0:1)')
     parser.add_argument('--subtitle-stream', '-s', type=int, dest='subtitle_stream',
                         help='Optional subtitle stream index to embed (e.g., 2 for Stream #0:2). If not specified, no subtitles will be included.')
+    parser.add_argument('--subtitle-language', '-sl', dest='subtitle_language',
+                        help='Select subtitle by language code (e.g., "chi" for Chinese, "eng" for English)')
+    parser.add_argument('--subtitle-title', '-st', dest='subtitle_title',
+                        help='Select subtitle by title (e.g., "中文（简体）")')
+    parser.add_argument('--list-subtitles', '-ls', action='store_true', dest='list_subtitles',
+                        help='List all available subtitle streams and exit')
     parser.add_argument('--bitrate', '-b', dest='video_bitrate',
                         help='Override video bitrate (e.g., "200k", "1M")')
     parser.add_argument('--start-time', '-ss', dest='start_time',
@@ -435,6 +454,26 @@ def main():
             info = format_stream_info(stream)
             print(f"  [{index}] {info}")
 
+    # Detect subtitle streams
+    subtitle_streams = detect_subtitle_streams(args.input_file)
+    
+    # If --list-subtitles is specified, just list the subtitles and exit
+    if args.list_subtitles:
+        if subtitle_streams:
+            print(f"\nAvailable subtitle streams in '{args.input_file}':")
+            print("Index | Language | Title | Default | Forced")
+            print("-" * 60)
+            for stream in subtitle_streams:
+                index = stream["index"]
+                language = stream.get("language", "unknown")
+                title = stream.get("title", "")
+                default = "Yes" if stream.get("default", False) else "No"
+                forced = "Yes" if stream.get("forced", False) else "No"
+                print(f"{index:5} | {language:8} | {title:20} | {default:7} | {forced}")
+        else:
+            print("No subtitle streams found in the input file.")
+        sys.exit(0)
+    
     # Handle audio stream selection
     requested_audio_stream = args.audio_stream
 
@@ -467,9 +506,7 @@ def main():
         selected_audio_stream = next(stream for stream in audio_streams if stream["index"] == requested_audio_stream)
         print(f"Using specified audio stream:")
         print_audio_stream_info(selected_audio_stream)
-
-    # Detect subtitle streams
-    subtitle_streams = detect_subtitle_streams(args.input_file)
+        
     selected_subtitle_stream = None
 
     # Handle subtitle stream selection
@@ -483,20 +520,41 @@ def main():
         requested_subtitle_stream = args.subtitle_stream
         subtitle_stream_indices = [stream["index"] for stream in subtitle_streams]
 
-        # Only use a subtitle stream if explicitly requested
-        if requested_subtitle_stream is not None:
+        # Check if subtitle selection by language or title is requested
+        if args.subtitle_language is not None:
+            language_matches = [s for s in subtitle_streams if s.get("language", "").lower() == args.subtitle_language.lower()]
+            if language_matches:
+                selected_subtitle_stream = language_matches[0]
+                print(f"Selected subtitle stream by language '{args.subtitle_language}':")
+                print_subtitle_stream_info(selected_subtitle_stream)
+            else:
+                print(f"Error: No subtitle stream with language '{args.subtitle_language}' found.")
+                print(f"Available subtitle languages: {', '.join(set(s.get('language', 'unknown') for s in subtitle_streams))}")
+                sys.exit(1)
+        elif args.subtitle_title is not None:
+            title_matches = [s for s in subtitle_streams if args.subtitle_title.lower() in s.get("title", "").lower()]
+            if title_matches:
+                selected_subtitle_stream = title_matches[0]
+                print(f"Selected subtitle stream by title '{args.subtitle_title}':")
+                print_subtitle_stream_info(selected_subtitle_stream)
+            else:
+                print(f"Error: No subtitle stream with title containing '{args.subtitle_title}' found.")
+                print(f"Available subtitle titles: {', '.join(s.get('title', 'unknown') for s in subtitle_streams)}")
+                sys.exit(1)
+        # Only use a subtitle stream if explicitly requested by index
+        elif requested_subtitle_stream is not None:
             if requested_subtitle_stream not in subtitle_stream_indices:
                 print(f"Error: Specified subtitle stream {requested_subtitle_stream} not found in the input file.")
                 print(f"Available subtitle streams: {', '.join(map(str, subtitle_stream_indices))}")
                 sys.exit(1)
             else:
                 selected_subtitle_stream = next(stream for stream in subtitle_streams if stream["index"] == requested_subtitle_stream)
-                print(f"Using specified subtitle stream:")
+                print(f"Using specified subtitle stream #{requested_subtitle_stream}:")
                 print_subtitle_stream_info(selected_subtitle_stream)
         else:
             print("No subtitle stream specified. Subtitles will not be included.")
-    elif args.subtitle_stream is not None:
-        print("Error: No subtitle streams found in the input file, but --subtitle-stream was specified.")
+    elif args.subtitle_stream is not None or args.subtitle_language is not None or args.subtitle_title is not None:
+        print("Error: No subtitle streams found in the input file, but subtitle selection was requested.")
         sys.exit(1)
     else:
         print("No subtitle streams found in the input file.")
