@@ -119,18 +119,16 @@ def get_ffmpeg_template(params):
         template.extend(["-map", "0:0"])
         # Map the specified audio stream
         template.extend(["-map", f"0:{params.audio_stream}"])
-    
-    # Add subtitle mapping if specified
-    if params.subtitle_stream is not None:
-        # Map the specified subtitle stream
-        template.extend(["-map", f"0:{params.subtitle_stream}"])
-        # Burn subtitles into the video
-        template.extend(["-c:s", "mov_text"])
 
+    # Prepare subtitle filter if needed
+    subtitle_filter = ""
+    if params.subtitle_stream is not None:
+        subtitle_filter = f",subtitles='{os.path.abspath(params.input_file)}':stream_index={params.subtitle_stream}"
+    
     template.extend([
         "-c:v",             "libaom-av1",
         "-b:v",             params.video_bitrate,
-        "-vf",              params.get_scale_filter() + (f",subtitles='{os.path.abspath(params.input_file)}':stream_index={params.subtitle_stream}" if params.subtitle_stream is not None else ""),
+        "-vf",              params.get_scale_filter() + subtitle_filter,
         "-pix_fmt",         "yuv420p",
         "-color_primaries", "bt709",
         "-color_trc",       "bt709",
