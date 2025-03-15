@@ -76,47 +76,6 @@ def get_output_name(params: FFmpegParams, default_output_dir: str, input_file: s
     return output_name
 
 
-def get_ffmpeg_template(params: FFmpegParams, subtitle_streams=None):
-    template = []
-
-    if params.start_time is not None:
-        template.extend(["-ss", params.start_time])
-    
-    if params.end_time is not None:
-        template.extend(["-to", params.end_time])
-
-    if params.audio_stream is not None:
-        template.extend(["-map", "0:0"])
-        template.extend(["-map", f"0:{params.audio_stream}"])
-
-    subtitle_filter = ""
-    if params.subtitle_stream is not None:
-        if subtitle_streams:
-            relative_subtitle_index = calculate_subtitle_relative_index(subtitle_streams, params.subtitle_stream)
-        else:
-            relative_subtitle_index = get_subtitle_relative_index(params.input_file, params.subtitle_stream)
-        subtitle_filter = f",subtitles='{os.path.abspath(params.input_file)}':stream_index={relative_subtitle_index}"
-    
-    template.extend([
-        "-c:v",             "libaom-av1",
-        "-b:v",             params.video_bitrate,
-        "-vf",              params.get_scale_filter() + subtitle_filter,
-        "-pix_fmt",         "yuv420p",
-        "-color_primaries", "bt709",
-        "-color_trc",       "bt709",
-        "-colorspace",      "bt709",
-        "-c:a",             "aac",
-        "-b:a",             "116k",
-        "-ar",              "48000",
-        "-ac",              "2",
-        "-preset",          "slower",
-        "-cpu-used",        "3",
-        "-threads",         "0",
-    ])
-
-    return template
-
-
 def detect_all_streams(input_file: str):
     cmd = [
         "ffprobe",
@@ -153,26 +112,7 @@ def detect_all_streams(input_file: str):
     return streams
 
 
-def detect_audio_streams(input_file: str):
-    all_streams = detect_all_streams(input_file)
-    return [stream for stream in all_streams if stream.get("codec_type") == "audio"]
-
-
-def detect_subtitle_streams(input_file: str):
-    all_streams = detect_all_streams(input_file)
-    return [stream for stream in all_streams if stream.get("codec_type") == "subtitle"]
-
-
 def format_stream_info(stream):
-    """
-    Format stream information into a readable string
-
-    Args:
-        stream: Dictionary containing stream information
-
-    Returns:
-        Formatted string with stream details
-    """
     info = ""
     
     if "language" in stream and stream["language"] != "unknown":
@@ -235,105 +175,6 @@ def print_subtitle_stream_info(stream):
         print(f"  Forced: Yes")
 
 
-def convert_video(args, audio_stream, subtitle_stream=None, subtitle_streams=None):
-    """
-    Convert video files using ffmpeg
-
-    Args:
-        args: Parsed command line arguments
-        audio_stream: Selected audio stream object
-        subtitle_stream: Selected subtitle stream object (optional)
-        subtitle_streams: List of all subtitle streams (optional)
-    """
-    if args.width not in PRESET_PARAMS:
-        print(f"Error: Width {args.width} not found in presets")
-        print("Available width presets:", ", ".join(str(w) for w in sorted(PRESET_PARAMS.keys())))
-        sys.exit(1)
-
-    params = PRESET_PARAMS[args.width]
-
-    print("\n=== Conversion Summary ===")
-    
-    params.audio_stream = audio_stream["index"]
-    print_audio_stream_info(audio_stream)
-
-    if subtitle_stream is not None:
-        params.subtitle_stream = subtitle_stream["index"]
-        print_subtitle_stream_info(subtitle_stream)
-        
-        if subtitle_streams:
-            relative_index = calculate_subtitle_relative_index(subtitle_streams, subtitle_stream["index"])
-            print(f"  Absolute Stream Index: {subtitle_stream['index']}")
-            print(f"  Relative Subtitle Index: {relative_index} (used in filter)")
-    else:
-        print("Subtitles: None (not included in output)")
-
-    params.start_time = args.start_time
-    params.end_time = args.end_time
-    if args.start_time is not None or args.end_time is not None:
-        print("Time Range:")
-        if args.start_time is not None:
-            print(f"  Start: {args.start_time}")
-        if args.end_time is not None:
-            print(f"  End: {args.end_time}")
-
-    params.input_file = args.input_file
-
-    if args.video_bitrate:
-        params.video_bitrate = args.video_bitrate
-        print(f"Custom Bitrate: {args.video_bitrate}")
-
-    print(f"Video Parameters: width={params.video_width}, bitrate={params.video_bitrate}, fps={params.fps}")
-
-    output_dir = f"output-{args.width}x"
-    output = get_output_name(params, output_dir, args.input_file, args.output_file)
-    os.makedirs(os.path.dirname(output), exist_ok=True)
-
-    print(f"\nInput: {args.input_file}")
-    print(f"Output: {output}")
-    print("\nStarting conversion...")
-
-    ffmpeg_template = get_ffmpeg_template(params, subtitle_streams)
-    ffmpeg_cmd = ["ffmpeg", "-i", args.input_file] + ffmpeg_template + [output]
-
-    print("\nDebug: Full command to be executed:")
-    print(" ".join([f'"{arg}"' if ' ' in arg else arg for arg in ffmpeg_cmd]))
-    
-    if params.subtitle_stream is not None:
-        print("\nNote: Using relative subtitle index in the filter. The subtitles filter uses")
-        print("a 0-based index that counts only subtitle streams, not all streams.")
-
-    try:
-        subprocess.run(ffmpeg_cmd, check=True)
-        print(f"Conversion completed: {output}")
-    except subprocess.CalledProcessError as e:
-        print(f"Conversion failed: {e}", file=sys.stderr)
-        sys.exit(1)
-
-
-def get_subtitle_relative_index(input_file: str, absolute_index: int) -> int:
-    all_streams = detect_all_streams(input_file)
-    
-    subtitle_count = 0
-    for stream in all_streams:
-        if stream["index"] == absolute_index:
-            return subtitle_count
-        if stream["codec_type"] == "subtitle":
-            subtitle_count += 1
-    
-    return 0
-
-
-def calculate_subtitle_relative_index(subtitle_streams: list, absolute_index: int) -> int:
-    sorted_streams = sorted(subtitle_streams, key=lambda s: s["index"])
-    
-    for i, stream in enumerate(sorted_streams):
-        if stream["index"] == absolute_index:
-            return i
-    
-    return 0
-
-
 class VideoConverter:
     """
     Class to handle video conversion process
@@ -365,12 +206,6 @@ class VideoConverter:
         self.subtitle_streams = [s for s in self.all_streams if s.get("codec_type") == "subtitle"]
         
     def select_audio_stream(self):
-        """
-        Select the audio stream to use based on command line arguments
-        
-        Returns:
-            True if a valid audio stream was selected, False otherwise
-        """
         requested_audio_stream = self.args.audio_stream
         audio_stream_indices = [stream["index"] for stream in self.audio_streams]
         
@@ -478,15 +313,6 @@ class VideoConverter:
         return True
     
     def calculate_subtitle_relative_index(self, absolute_index):
-        """
-        Calculate the relative subtitle index for the subtitles filter
-        
-        Args:
-            absolute_index: The absolute stream index of the subtitle
-            
-        Returns:
-            The relative subtitle index (0-based among subtitle streams)
-        """
         sorted_streams = sorted(self.subtitle_streams, key=lambda s: s["index"])
         
         for i, stream in enumerate(sorted_streams):
@@ -496,9 +322,6 @@ class VideoConverter:
         return 0
     
     def convert(self):
-        """
-        Convert the video using the selected streams and parameters
-        """
         if self.args.width not in PRESET_PARAMS:
             print(f"Error: Width {self.args.width} not found in presets")
             print("Available width presets:", ", ".join(str(w) for w in sorted(PRESET_PARAMS.keys())))
