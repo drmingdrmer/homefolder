@@ -174,6 +174,9 @@ class VideoConverter:
         self.selected_audio_stream = None
         self.selected_subtitle_stream = None
         self.params = None
+        self.subtitle_languages = set()
+        self.subtitle_titles = set()
+        self.subtitle_indices = []
         
         self._detect_streams()
         
@@ -184,6 +187,11 @@ class VideoConverter:
         self.all_streams = detect_all_streams(self.args.input_file)
         self.audio_streams = [s for s in self.all_streams if s.get("codec_type") == "audio"]
         self.subtitle_streams = [s for s in self.all_streams if s.get("codec_type") == "subtitle"]
+        
+        # 提取字幕语言和标题到成员变量
+        self.subtitle_languages = set(s.get("language", "unknown") for s in self.subtitle_streams)
+        self.subtitle_titles = set(s.get("title", "unknown") for s in self.subtitle_streams)
+        self.subtitle_indices = [stream["index"] for stream in self.subtitle_streams]
         
     def select_audio_stream(self):
         requested_audio_stream = self.args.audio_stream
@@ -253,7 +261,6 @@ class VideoConverter:
             print(f"  [{index}] {info}")
         
         requested_subtitle_stream = self.args.subtitle_stream
-        subtitle_stream_indices = [stream["index"] for stream in self.subtitle_streams]
         
         if self.args.subtitle_language is not None:
             language_matches = [s for s in self.subtitle_streams if s.get("language", "").lower() == self.args.subtitle_language.lower()]
@@ -263,7 +270,7 @@ class VideoConverter:
                 print_subtitle_stream_info(self.selected_subtitle_stream)
             else:
                 print(f"Error: No subtitle stream with language '{self.args.subtitle_language}' found.")
-                print(f"Available subtitle languages: {', '.join(set(s.get('language', 'unknown') for s in self.subtitle_streams))}")
+                print(f"Available subtitle languages: {', '.join(self.subtitle_languages)}")
                 return False
         elif self.args.subtitle_title is not None:
             title_matches = [s for s in self.subtitle_streams if self.args.subtitle_title.lower() in s.get("title", "").lower()]
@@ -273,12 +280,12 @@ class VideoConverter:
                 print_subtitle_stream_info(self.selected_subtitle_stream)
             else:
                 print(f"Error: No subtitle stream with title containing '{self.args.subtitle_title}' found.")
-                print(f"Available subtitle titles: {', '.join(s.get('title', 'unknown') for s in self.subtitle_streams)}")
+                print(f"Available subtitle titles: {', '.join(self.subtitle_titles)}")
                 return False
         elif requested_subtitle_stream is not None:
-            if requested_subtitle_stream not in subtitle_stream_indices:
+            if requested_subtitle_stream not in self.subtitle_indices:
                 print(f"Error: Specified subtitle stream {requested_subtitle_stream} not found in the input file.")
-                print(f"Available subtitle streams: {', '.join(map(str, subtitle_stream_indices))}")
+                print(f"Available subtitle streams: {', '.join(map(str, self.subtitle_indices))}")
                 return False
             else:
                 self.selected_subtitle_stream = next(stream for stream in self.subtitle_streams if stream["index"] == requested_subtitle_stream)
