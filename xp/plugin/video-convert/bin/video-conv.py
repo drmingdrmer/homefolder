@@ -351,6 +351,8 @@ def convert_video(args, audio_stream, subtitle_stream=None):
     if subtitle_stream is not None:
         params.subtitle_stream = subtitle_stream["index"]
         print_subtitle_stream_info(subtitle_stream)
+    else:
+        print("Subtitles: None (not included in output)")
 
     # Set and print time range if provided
     params.start_time = args.start_time
@@ -409,7 +411,7 @@ def main():
     parser.add_argument('--audio-stream', '-a', type=int, dest='audio_stream',
                         help='Audio stream index to select (e.g., 1 for Stream #0:1)')
     parser.add_argument('--subtitle-stream', '-s', type=int, dest='subtitle_stream',
-                        help='Subtitle stream index to embed (e.g., 2 for Stream #0:2)')
+                        help='Optional subtitle stream index to embed (e.g., 2 for Stream #0:2). If not specified, no subtitles will be included.')
     parser.add_argument('--bitrate', '-b', dest='video_bitrate',
                         help='Override video bitrate (e.g., "200k", "1M")')
     parser.add_argument('--start-time', '-ss', dest='start_time',
@@ -481,46 +483,23 @@ def main():
         requested_subtitle_stream = args.subtitle_stream
         subtitle_stream_indices = [stream["index"] for stream in subtitle_streams]
 
-        # Check if there's only one subtitle stream
-        if len(subtitle_streams) == 1:
-            # If no specific stream requested, use the only available one
-            if requested_subtitle_stream is None:
-                selected_subtitle_stream = subtitle_streams[0]
-                print(f"Automatically using the only available subtitle stream:")
-                print_subtitle_stream_info(selected_subtitle_stream)
-            # If specific stream requested, check if it exists
-            else:
-                if requested_subtitle_stream not in subtitle_stream_indices:
-                    print(f"Error: Specified subtitle stream {requested_subtitle_stream} not found in the input file.")
-                    print(f"Available subtitle streams: {', '.join(map(str, subtitle_stream_indices))}")
-                    sys.exit(1)
-                else:
-                    selected_subtitle_stream = next(stream for stream in subtitle_streams if stream["index"] == requested_subtitle_stream)
-                    print(f"Using specified subtitle stream:")
-                    print_subtitle_stream_info(selected_subtitle_stream)
-        # Handle multiple subtitle streams
-        else:
-            # If no specific stream requested, ask user to specify
-            if requested_subtitle_stream is None:
-                print("Multiple subtitle streams detected. Please specify one with --subtitle-stream/-s option:")
-                for stream in subtitle_streams:
-                    index = stream["index"]
-                    info = format_stream_info(stream)
-                    print(f"  [{index}] {info}")
-
-                print("\nExample usage:")
-                print(f"  {sys.argv[0]} {args.width} \"{args.input_file}\" --subtitle-stream <STREAM_NUMBER>")
+        # Only use a subtitle stream if explicitly requested
+        if requested_subtitle_stream is not None:
+            if requested_subtitle_stream not in subtitle_stream_indices:
+                print(f"Error: Specified subtitle stream {requested_subtitle_stream} not found in the input file.")
+                print(f"Available subtitle streams: {', '.join(map(str, subtitle_stream_indices))}")
                 sys.exit(1)
-            # If specific stream requested, check if it exists
             else:
-                if requested_subtitle_stream not in subtitle_stream_indices:
-                    print(f"Error: Specified subtitle stream {requested_subtitle_stream} not found in the input file.")
-                    print(f"Available subtitle streams: {', '.join(map(str, subtitle_stream_indices))}")
-                    sys.exit(1)
-                else:
-                    selected_subtitle_stream = next(stream for stream in subtitle_streams if stream["index"] == requested_subtitle_stream)
-                    print(f"Using specified subtitle stream:")
-                    print_subtitle_stream_info(selected_subtitle_stream)
+                selected_subtitle_stream = next(stream for stream in subtitle_streams if stream["index"] == requested_subtitle_stream)
+                print(f"Using specified subtitle stream:")
+                print_subtitle_stream_info(selected_subtitle_stream)
+        else:
+            print("No subtitle stream specified. Subtitles will not be included.")
+    elif args.subtitle_stream is not None:
+        print("Error: No subtitle streams found in the input file, but --subtitle-stream was specified.")
+        sys.exit(1)
+    else:
+        print("No subtitle streams found in the input file.")
 
     # Convert video
     convert_video(args, selected_audio_stream, selected_subtitle_stream)
