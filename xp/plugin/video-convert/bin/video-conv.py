@@ -188,7 +188,6 @@ class VideoConverter:
         self.audio_streams = [s for s in self.all_streams if s.get("codec_type") == "audio"]
         self.subtitle_streams = [s for s in self.all_streams if s.get("codec_type") == "subtitle"]
         
-        # 提取字幕语言和标题到成员变量
         self.subtitle_languages = set(s.get("language", "unknown") for s in self.subtitle_streams)
         self.subtitle_titles = set(s.get("title", "unknown") for s in self.subtitle_streams)
         self.subtitle_indices = [stream["index"] for stream in self.subtitle_streams]
