@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 # coding: utf-8
 
 import os
@@ -25,24 +25,17 @@ class FFmpegParams:
         return f"scale={self.video_width}:-2,fps={self.fps}"
 
 
-# Predefined parameter sets indexed by video width
 PRESET_PARAMS = {
-    # Low quality / small size (480p)
     480: FFmpegParams(video_bitrate="80k", video_width=480, fps=24),
 
-    # Medium quality (640p)
     640: FFmpegParams(video_bitrate="120k", video_width=640, fps=24),
 
-    # Standard quality (720p)
     720: FFmpegParams(video_bitrate="150k", video_width=720, fps=24),
 
-    # High quality (854p)
     854: FFmpegParams(video_bitrate="220k", video_width=854, fps=24),
 
-    # HD quality (1280p)
     1280: FFmpegParams(video_bitrate="480k", video_width=1280, fps=24),
 
-    # Full HD quality (1920p)
     1920: FFmpegParams(video_bitrate="1000k", video_width=1920, fps=24),
 }
 
@@ -54,35 +47,27 @@ def get_output_name(params: FFmpegParams, default_output_dir: str, input_file: s
     output_name = None
 
     if output_arg is None:
-        # Default output directory
         os.makedirs(default_output_dir, exist_ok=True)
         output_name = os.path.join(default_output_dir, input_fn)
 
     elif '*' in output_arg:
-        # Replace wildcard with filename (without extension)
         output_name = output_arg.replace('*', input_name_without_ext)
 
     elif output_arg.endswith('/'):
-        # Directory path - ensure it exists and append filename
         os.makedirs(output_arg, exist_ok=True)
         output_name = os.path.join(output_arg, input_fn)
 
     else:
-        # Direct output path
         return output_arg
 
-    # Add width and bitrate to the output name
     output_name_without_ext, ext = os.path.splitext(output_name)
     output_name = f"{output_name_without_ext}-{params.video_width}x-{params.video_bitrate}"
     
-    # Add time range info if specified
     if params.start_time is not None or params.end_time is not None:
         time_info = ""
         if params.start_time is not None:
-            # Replace colons with underscores for filename compatibility
             time_info += f"-from_{params.start_time.replace(':', '_')}"
         if params.end_time is not None:
-            # Replace colons with underscores for filename compatibility
             time_info += f"-to_{params.end_time.replace(':', '_')}"
         output_name += time_info
     
@@ -94,28 +79,21 @@ def get_output_name(params: FFmpegParams, default_output_dir: str, input_file: s
 def get_ffmpeg_template(params: FFmpegParams, subtitle_streams=None):
     template = []
 
-    # Add time range options if specified
     if params.start_time is not None:
         template.extend(["-ss", params.start_time])
     
     if params.end_time is not None:
         template.extend(["-to", params.end_time])
 
-    # Add mapping options for video and audio streams
     if params.audio_stream is not None:
-        # Map video stream (always the first one, 0:0)
         template.extend(["-map", "0:0"])
-        # Map the specified audio stream
         template.extend(["-map", f"0:{params.audio_stream}"])
 
-    # Prepare subtitle filter if needed
     subtitle_filter = ""
     if params.subtitle_stream is not None:
-        # Calculate the relative subtitle index
         if subtitle_streams:
             relative_subtitle_index = calculate_subtitle_relative_index(subtitle_streams, params.subtitle_stream)
         else:
-            # Fallback to the old method if subtitle_streams is not provided
             relative_subtitle_index = get_subtitle_relative_index(params.input_file, params.subtitle_stream)
         subtitle_filter = f",subtitles='{os.path.abspath(params.input_file)}':stream_index={relative_subtitle_index}"
     
@@ -140,7 +118,6 @@ def get_ffmpeg_template(params: FFmpegParams, subtitle_streams=None):
 
 
 def detect_all_streams(input_file: str):
-    # Run ffprobe to get stream information in JSON format
     cmd = [
         "ffprobe",
         "-v", "quiet",
@@ -151,14 +128,12 @@ def detect_all_streams(input_file: str):
     result = subprocess.run(cmd, check=True, capture_output=True, text=True)
     data = json.loads(result.stdout)
     
-    # Process all streams with their full information
     streams = []
     for stream in data.get("streams", []):
         stream_type = stream.get("codec_type")
         stream_index = stream.get("index")
         tags = stream.get("tags", {})
         
-        # Basic stream info common to all types
         stream_info = {
             "index": stream_index,
             "codec_type": stream_type,
@@ -166,7 +141,6 @@ def detect_all_streams(input_file: str):
             "title": tags.get("title", "")
         }
         
-        # Add type-specific information
         if stream_type == "audio":
             stream_info["handler"] = tags.get("handler_name", "")
         elif stream_type == "subtitle":
@@ -180,13 +154,11 @@ def detect_all_streams(input_file: str):
 
 
 def detect_audio_streams(input_file: str):
-    # Get all streams and filter for audio streams
     all_streams = detect_all_streams(input_file)
     return [stream for stream in all_streams if stream.get("codec_type") == "audio"]
 
 
 def detect_subtitle_streams(input_file: str):
-    # Get all streams and filter for subtitle streams
     all_streams = detect_all_streams(input_file)
     return [stream for stream in all_streams if stream.get("codec_type") == "subtitle"]
 
@@ -273,7 +245,6 @@ def convert_video(args, audio_stream, subtitle_stream=None, subtitle_streams=Non
         subtitle_stream: Selected subtitle stream object (optional)
         subtitle_streams: List of all subtitle streams (optional)
     """
-    # Get parameters based on width
     if args.width not in PRESET_PARAMS:
         print(f"Error: Width {args.width} not found in presets")
         print("Available width presets:", ", ".join(str(w) for w in sorted(PRESET_PARAMS.keys())))
@@ -281,19 +252,15 @@ def convert_video(args, audio_stream, subtitle_stream=None, subtitle_streams=Non
 
     params = PRESET_PARAMS[args.width]
 
-    # Print conversion summary
     print("\n=== Conversion Summary ===")
     
-    # Set and print audio stream information
     params.audio_stream = audio_stream["index"]
     print_audio_stream_info(audio_stream)
 
-    # Set and print subtitle stream information if provided
     if subtitle_stream is not None:
         params.subtitle_stream = subtitle_stream["index"]
         print_subtitle_stream_info(subtitle_stream)
         
-        # Calculate and show the relative subtitle index
         if subtitle_streams:
             relative_index = calculate_subtitle_relative_index(subtitle_streams, subtitle_stream["index"])
             print(f"  Absolute Stream Index: {subtitle_stream['index']}")
@@ -301,7 +268,6 @@ def convert_video(args, audio_stream, subtitle_stream=None, subtitle_streams=Non
     else:
         print("Subtitles: None (not included in output)")
 
-    # Set and print time range if provided
     params.start_time = args.start_time
     params.end_time = args.end_time
     if args.start_time is not None or args.end_time is not None:
@@ -311,32 +277,25 @@ def convert_video(args, audio_stream, subtitle_stream=None, subtitle_streams=Non
         if args.end_time is not None:
             print(f"  End: {args.end_time}")
 
-    # Store input file path for subtitle filter
     params.input_file = args.input_file
 
-    # Override and print bitrate if custom value is provided
     if args.video_bitrate:
         params.video_bitrate = args.video_bitrate
         print(f"Custom Bitrate: {args.video_bitrate}")
 
-    # Print video parameters
     print(f"Video Parameters: width={params.video_width}, bitrate={params.video_bitrate}, fps={params.fps}")
 
-    # Determine output filename
     output_dir = f"output-{args.width}x"
     output = get_output_name(params, output_dir, args.input_file, args.output_file)
-    # mkdir for the output_file if it doesn't exist
     os.makedirs(os.path.dirname(output), exist_ok=True)
 
     print(f"\nInput: {args.input_file}")
     print(f"Output: {output}")
     print("\nStarting conversion...")
 
-    # Get ffmpeg command template and build the final command
     ffmpeg_template = get_ffmpeg_template(params, subtitle_streams)
     ffmpeg_cmd = ["ffmpeg", "-i", args.input_file] + ffmpeg_template + [output]
 
-    # Print the complete command for debugging
     print("\nDebug: Full command to be executed:")
     print(" ".join([f'"{arg}"' if ' ' in arg else arg for arg in ffmpeg_cmd]))
     
@@ -344,7 +303,6 @@ def convert_video(args, audio_stream, subtitle_stream=None, subtitle_streams=Non
         print("\nNote: Using relative subtitle index in the filter. The subtitles filter uses")
         print("a 0-based index that counts only subtitle streams, not all streams.")
 
-    # Execute ffmpeg command
     try:
         subprocess.run(ffmpeg_cmd, check=True)
         print(f"Conversion completed: {output}")
@@ -354,10 +312,8 @@ def convert_video(args, audio_stream, subtitle_stream=None, subtitle_streams=Non
 
 
 def get_subtitle_relative_index(input_file: str, absolute_index: int) -> int:
-    # Get all streams
     all_streams = detect_all_streams(input_file)
     
-    # Count subtitle streams before the target stream
     subtitle_count = 0
     for stream in all_streams:
         if stream["index"] == absolute_index:
@@ -365,27 +321,296 @@ def get_subtitle_relative_index(input_file: str, absolute_index: int) -> int:
         if stream["codec_type"] == "subtitle":
             subtitle_count += 1
     
-    # If we get here, the stream wasn't found
     return 0
 
 
 def calculate_subtitle_relative_index(subtitle_streams: list, absolute_index: int) -> int:
-    # Sort subtitle streams by their absolute index
     sorted_streams = sorted(subtitle_streams, key=lambda s: s["index"])
     
-    # Find the position of the target stream in the sorted list
     for i, stream in enumerate(sorted_streams):
         if stream["index"] == absolute_index:
             return i
     
-    # If we get here, the stream wasn't found
     return 0
 
+
+class VideoConverter:
+    """
+    Class to handle video conversion process
+    """
+    def __init__(self, args):
+        """
+        Initialize converter with command line arguments
+        
+        Args:
+            args: Parsed command line arguments
+        """
+        self.args = args
+        self.all_streams = []
+        self.audio_streams = []
+        self.subtitle_streams = []
+        self.selected_audio_stream = None
+        self.selected_subtitle_stream = None
+        self.params = None
+        
+        self._detect_streams()
+        
+    def _detect_streams(self):
+        """
+        Detect all streams in the input file
+        """
+        self.all_streams = detect_all_streams(self.args.input_file)
+        
+        self.audio_streams = [s for s in self.all_streams if s.get("codec_type") == "audio"]
+        self.subtitle_streams = [s for s in self.all_streams if s.get("codec_type") == "subtitle"]
+        
+    def select_audio_stream(self):
+        """
+        Select the audio stream to use based on command line arguments
+        
+        Returns:
+            True if a valid audio stream was selected, False otherwise
+        """
+        requested_audio_stream = self.args.audio_stream
+        audio_stream_indices = [stream["index"] for stream in self.audio_streams]
+        
+        if not self.audio_streams:
+            print("No audio streams detected in the input file.")
+            return False
+            
+        if requested_audio_stream is None:
+            if len(self.audio_streams) == 1:
+                self.selected_audio_stream = self.audio_streams[0]
+                print(f"Using default audio stream:")
+                print_audio_stream_info(self.selected_audio_stream)
+                return True
+            else:
+                print("Multiple audio streams detected. Please specify one with --audio-stream/-a option:")
+                for stream in self.audio_streams:
+                    index = stream["index"]
+                    info = format_stream_info(stream)
+                    print(f"  [{index}] {info}")
+
+                print("\nExample usage:")
+                print(f"  {sys.argv[0]} {self.args.width} \"{self.args.input_file}\" --audio-stream <STREAM_NUMBER>")
+                return False
+        elif requested_audio_stream not in audio_stream_indices:
+            print(f"Error: Specified audio stream {requested_audio_stream} not found in the input file.")
+            print(f"Available audio streams: {', '.join(map(str, audio_stream_indices))}")
+            return False
+        else:
+            self.selected_audio_stream = next(stream for stream in self.audio_streams if stream["index"] == requested_audio_stream)
+            print(f"Using specified audio stream:")
+            print_audio_stream_info(self.selected_audio_stream)
+            return True
+    
+    def select_subtitle_stream(self):
+        """
+        Select the subtitle stream to use based on command line arguments
+        
+        Returns:
+            True if processing should continue, False if it should stop
+        """
+        self.selected_subtitle_stream = None
+        
+        if not self.subtitle_streams:
+            if self.args.subtitle_stream is not None or self.args.subtitle_language is not None or self.args.subtitle_title is not None:
+                print("Error: No subtitle streams found in the input file, but subtitle selection was requested.")
+                return False
+            else:
+                print("No subtitle streams found in the input file.")
+                return True
+        
+        if self.args.list_subtitles:
+            print(f"\nAvailable subtitle streams in '{self.args.input_file}':")
+            print("Index | Language | Title | Default | Forced")
+            print("-" * 60)
+            for stream in self.subtitle_streams:
+                index = stream["index"]
+                language = stream.get("language", "unknown")
+                title = stream.get("title", "")
+                default = "Yes" if stream.get("default", False) else "No"
+                forced = "Yes" if stream.get("forced", False) else "No"
+                print(f"{index:5} | {language:8} | {title:20} | {default:7} | {forced}")
+            return False
+        
+        print(f"\nFound {len(self.subtitle_streams)} subtitle stream(s):")
+        for stream in self.subtitle_streams:
+            index = stream["index"]
+            info = format_stream_info(stream)
+            print(f"  [{index}] {info}")
+        
+        requested_subtitle_stream = self.args.subtitle_stream
+        subtitle_stream_indices = [stream["index"] for stream in self.subtitle_streams]
+        
+        if self.args.subtitle_language is not None:
+            language_matches = [s for s in self.subtitle_streams if s.get("language", "").lower() == self.args.subtitle_language.lower()]
+            if language_matches:
+                self.selected_subtitle_stream = language_matches[0]
+                print(f"Selected subtitle stream by language '{self.args.subtitle_language}':")
+                print_subtitle_stream_info(self.selected_subtitle_stream)
+            else:
+                print(f"Error: No subtitle stream with language '{self.args.subtitle_language}' found.")
+                print(f"Available subtitle languages: {', '.join(set(s.get('language', 'unknown') for s in self.subtitle_streams))}")
+                return False
+        elif self.args.subtitle_title is not None:
+            title_matches = [s for s in self.subtitle_streams if self.args.subtitle_title.lower() in s.get("title", "").lower()]
+            if title_matches:
+                self.selected_subtitle_stream = title_matches[0]
+                print(f"Selected subtitle stream by title '{self.args.subtitle_title}':")
+                print_subtitle_stream_info(self.selected_subtitle_stream)
+            else:
+                print(f"Error: No subtitle stream with title containing '{self.args.subtitle_title}' found.")
+                print(f"Available subtitle titles: {', '.join(s.get('title', 'unknown') for s in self.subtitle_streams)}")
+                return False
+        elif requested_subtitle_stream is not None:
+            if requested_subtitle_stream not in subtitle_stream_indices:
+                print(f"Error: Specified subtitle stream {requested_subtitle_stream} not found in the input file.")
+                print(f"Available subtitle streams: {', '.join(map(str, subtitle_stream_indices))}")
+                return False
+            else:
+                self.selected_subtitle_stream = next(stream for stream in self.subtitle_streams if stream["index"] == requested_subtitle_stream)
+                print(f"Using specified subtitle stream #{requested_subtitle_stream}:")
+                print_subtitle_stream_info(self.selected_subtitle_stream)
+        else:
+            print("No subtitle stream specified. Subtitles will not be included.")
+        
+        return True
+    
+    def calculate_subtitle_relative_index(self, absolute_index):
+        """
+        Calculate the relative subtitle index for the subtitles filter
+        
+        Args:
+            absolute_index: The absolute stream index of the subtitle
+            
+        Returns:
+            The relative subtitle index (0-based among subtitle streams)
+        """
+        sorted_streams = sorted(self.subtitle_streams, key=lambda s: s["index"])
+        
+        for i, stream in enumerate(sorted_streams):
+            if stream["index"] == absolute_index:
+                return i
+        
+        return 0
+    
+    def convert(self):
+        """
+        Convert the video using the selected streams and parameters
+        """
+        if self.args.width not in PRESET_PARAMS:
+            print(f"Error: Width {self.args.width} not found in presets")
+            print("Available width presets:", ", ".join(str(w) for w in sorted(PRESET_PARAMS.keys())))
+            return False
+        
+        self.params = PRESET_PARAMS[self.args.width]
+        
+        print("\n=== Conversion Summary ===")
+        
+        self.params.audio_stream = self.selected_audio_stream["index"]
+        print_audio_stream_info(self.selected_audio_stream)
+        
+        if self.selected_subtitle_stream is not None:
+            self.params.subtitle_stream = self.selected_subtitle_stream["index"]
+            print_subtitle_stream_info(self.selected_subtitle_stream)
+            
+            relative_index = self.calculate_subtitle_relative_index(self.selected_subtitle_stream["index"])
+            print(f"  Absolute Stream Index: {self.selected_subtitle_stream['index']}")
+            print(f"  Relative Subtitle Index: {relative_index} (used in filter)")
+        else:
+            print("Subtitles: None (not included in output)")
+        
+        self.params.start_time = self.args.start_time
+        self.params.end_time = self.args.end_time
+        if self.args.start_time is not None or self.args.end_time is not None:
+            print("Time Range:")
+            if self.args.start_time is not None:
+                print(f"  Start: {self.args.start_time}")
+            if self.args.end_time is not None:
+                print(f"  End: {self.args.end_time}")
+        
+        self.params.input_file = self.args.input_file
+        
+        if self.args.video_bitrate:
+            self.params.video_bitrate = self.args.video_bitrate
+            print(f"Custom Bitrate: {self.args.video_bitrate}")
+        
+        print(f"Video Parameters: width={self.params.video_width}, bitrate={self.params.video_bitrate}, fps={self.params.fps}")
+        
+        output_dir = f"output-{self.args.width}x"
+        output = get_output_name(self.params, output_dir, self.args.input_file, self.args.output_file)
+        os.makedirs(os.path.dirname(output), exist_ok=True)
+        
+        print(f"\nInput: {self.args.input_file}")
+        print(f"Output: {output}")
+        print("\nStarting conversion...")
+        
+        ffmpeg_template = self._get_ffmpeg_template()
+        ffmpeg_cmd = ["ffmpeg", "-i", self.args.input_file] + ffmpeg_template + [output]
+        
+        print("\nDebug: Full command to be executed:")
+        print(" ".join([f'"{arg}"' if ' ' in arg else arg for arg in ffmpeg_cmd]))
+        
+        if self.params.subtitle_stream is not None:
+            print("\nNote: Using relative subtitle index in the filter. The subtitles filter uses")
+            print("a 0-based index that counts only subtitle streams, not all streams.")
+        
+        try:
+            subprocess.run(ffmpeg_cmd, check=True)
+            print(f"Conversion completed: {output}")
+            return True
+        except subprocess.CalledProcessError as e:
+            print(f"Conversion failed: {e}", file=sys.stderr)
+            return False
+    
+    def _get_ffmpeg_template(self):
+        """
+        Return ffmpeg command template with parameters from FFmpegParams
+        
+        Returns:
+            List of ffmpeg command arguments
+        """
+        template = []
+        
+        if self.params.start_time is not None:
+            template.extend(["-ss", self.params.start_time])
+        
+        if self.params.end_time is not None:
+            template.extend(["-to", self.params.end_time])
+        
+        if self.params.audio_stream is not None:
+            template.extend(["-map", "0:0"])
+            template.extend(["-map", f"0:{self.params.audio_stream}"])
+        
+        subtitle_filter = ""
+        if self.params.subtitle_stream is not None:
+            relative_subtitle_index = self.calculate_subtitle_relative_index(self.params.subtitle_stream)
+            subtitle_filter = f",subtitles='{os.path.abspath(self.params.input_file)}':stream_index={relative_subtitle_index}"
+        
+        template.extend([
+            "-c:v",             "libaom-av1",
+            "-b:v",             self.params.video_bitrate,
+            "-vf",              self.params.get_scale_filter() + subtitle_filter,
+            "-pix_fmt",         "yuv420p",
+            "-color_primaries", "bt709",
+            "-color_trc",       "bt709",
+            "-colorspace",      "bt709",
+            "-c:a",             "aac",
+            "-b:a",             "116k",
+            "-ar",              "48000",
+            "-ac",              "2",
+            "-preset",          "slower",
+            "-cpu-used",        "3",
+            "-threads",         "0",
+        ])
+        
+        return template
+
+
 def main():
-    # Create argument parser
     parser = argparse.ArgumentParser(description='Convert video files using ffmpeg with customizable parameters.')
 
-    # Add arguments
     parser.add_argument('width', type=int, choices=sorted(PRESET_PARAMS.keys()),
                         help=f'Video width preset. Available presets: {", ".join(str(w) for w in sorted(PRESET_PARAMS.keys()))}')
     parser.add_argument('input_file', help='Input video file path')
@@ -408,129 +633,18 @@ def main():
     parser.add_argument('--end-time', '-to', dest='end_time',
                         help='End time for conversion (format: HH:MM:SS or seconds, e.g., "00:05:00" or "300")')
 
-    # Parse arguments
     args = parser.parse_args()
-
-    # Detect audio streams
-    audio_streams = detect_audio_streams(args.input_file)
-
-    if not audio_streams:
-        print("No audio streams detected in the input file.")
-        sys.exit(1)
-    else:
-        print(f"Found {len(audio_streams)} audio stream(s):")
-        for stream in audio_streams:
-            index = stream["index"]
-            info = format_stream_info(stream)
-            print(f"  [{index}] {info}")
-
-    # Detect subtitle streams
-    subtitle_streams = detect_subtitle_streams(args.input_file)
     
-    # If --list-subtitles is specified, just list the subtitles and exit
-    if args.list_subtitles:
-        if subtitle_streams:
-            print(f"\nAvailable subtitle streams in '{args.input_file}':")
-            print("Index | Language | Title | Default | Forced")
-            print("-" * 60)
-            for stream in subtitle_streams:
-                index = stream["index"]
-                language = stream.get("language", "unknown")
-                title = stream.get("title", "")
-                default = "Yes" if stream.get("default", False) else "No"
-                forced = "Yes" if stream.get("forced", False) else "No"
-                print(f"{index:5} | {language:8} | {title:20} | {default:7} | {forced}")
-        else:
-            print("No subtitle streams found in the input file.")
-        sys.exit(0)
+    converter = VideoConverter(args)
     
-    # Handle audio stream selection
-    requested_audio_stream = args.audio_stream
-
-    # Extract just the indices for easier comparison
-    audio_stream_indices = [stream["index"] for stream in audio_streams]
-
-    # If audio_stream is not provided, use the first one
-    if requested_audio_stream is None:
-        if len(audio_streams) == 1:
-            selected_audio_stream = audio_streams[0]
-            print(f"Using default audio stream:")
-            print_audio_stream_info(selected_audio_stream)
-        else:
-            print("Multiple audio streams detected. Please specify one with --audio-stream/-a option:")
-            for stream in audio_streams:
-                index = stream["index"]
-                info = format_stream_info(stream)
-                print(f"  [{index}] {info}")
-
-            print("\nExample usage:")
-            print(f"  {sys.argv[0]} {args.width} \"{args.input_file}\" --audio-stream <STREAM_NUMBER>")
-            sys.exit(1)
-    # If audio_stream is specified but not in the detected streams, report error
-    elif requested_audio_stream not in audio_stream_indices:
-        print(f"Error: Specified audio stream {requested_audio_stream} not found in the input file.")
-        print(f"Available audio streams: {', '.join(map(str, audio_stream_indices))}")
+    if not converter.select_audio_stream():
         sys.exit(1)
-    else:
-        # Find the audio stream object with the requested index
-        selected_audio_stream = next(stream for stream in audio_streams if stream["index"] == requested_audio_stream)
-        print(f"Using specified audio stream:")
-        print_audio_stream_info(selected_audio_stream)
-        
-    selected_subtitle_stream = None
-
-    # Handle subtitle stream selection
-    if subtitle_streams:
-        print(f"\nFound {len(subtitle_streams)} subtitle stream(s):")
-        for stream in subtitle_streams:
-            index = stream["index"]
-            info = format_stream_info(stream)
-            print(f"  [{index}] {info}")
-            
-        requested_subtitle_stream = args.subtitle_stream
-        subtitle_stream_indices = [stream["index"] for stream in subtitle_streams]
-
-        # Check if subtitle selection by language or title is requested
-        if args.subtitle_language is not None:
-            language_matches = [s for s in subtitle_streams if s.get("language", "").lower() == args.subtitle_language.lower()]
-            if language_matches:
-                selected_subtitle_stream = language_matches[0]
-                print(f"Selected subtitle stream by language '{args.subtitle_language}':")
-                print_subtitle_stream_info(selected_subtitle_stream)
-            else:
-                print(f"Error: No subtitle stream with language '{args.subtitle_language}' found.")
-                print(f"Available subtitle languages: {', '.join(set(s.get('language', 'unknown') for s in subtitle_streams))}")
-                sys.exit(1)
-        elif args.subtitle_title is not None:
-            title_matches = [s for s in subtitle_streams if args.subtitle_title.lower() in s.get("title", "").lower()]
-            if title_matches:
-                selected_subtitle_stream = title_matches[0]
-                print(f"Selected subtitle stream by title '{args.subtitle_title}':")
-                print_subtitle_stream_info(selected_subtitle_stream)
-            else:
-                print(f"Error: No subtitle stream with title containing '{args.subtitle_title}' found.")
-                print(f"Available subtitle titles: {', '.join(s.get('title', 'unknown') for s in subtitle_streams)}")
-                sys.exit(1)
-        # Only use a subtitle stream if explicitly requested by index
-        elif requested_subtitle_stream is not None:
-            if requested_subtitle_stream not in subtitle_stream_indices:
-                print(f"Error: Specified subtitle stream {requested_subtitle_stream} not found in the input file.")
-                print(f"Available subtitle streams: {', '.join(map(str, subtitle_stream_indices))}")
-                sys.exit(1)
-            else:
-                selected_subtitle_stream = next(stream for stream in subtitle_streams if stream["index"] == requested_subtitle_stream)
-                print(f"Using specified subtitle stream #{requested_subtitle_stream}:")
-                print_subtitle_stream_info(selected_subtitle_stream)
-        else:
-            print("No subtitle stream specified. Subtitles will not be included.")
-    elif args.subtitle_stream is not None or args.subtitle_language is not None or args.subtitle_title is not None:
-        print("Error: No subtitle streams found in the input file, but subtitle selection was requested.")
+    
+    if not converter.select_subtitle_stream():
+        sys.exit(0 if args.list_subtitles else 1)
+    
+    if not converter.convert():
         sys.exit(1)
-    else:
-        print("No subtitle streams found in the input file.")
-
-    # Convert video
-    convert_video(args, selected_audio_stream, selected_subtitle_stream, subtitle_streams)
 
 
 if __name__ == "__main__":
