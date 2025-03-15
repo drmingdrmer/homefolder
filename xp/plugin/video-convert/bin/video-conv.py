@@ -171,8 +171,11 @@ def detect_audio_streams(input_file):
 
         # Find all audio streams
         audio_streams = []
-        for i, stream in enumerate(data.get("streams", [])):
+        for stream in data.get("streams", []):
             if stream.get("codec_type") == "audio":
+                # Get stream index
+                stream_index = stream.get("index")
+                
                 # Get stream metadata
                 tags = stream.get("tags", {})
                 language = tags.get("language", "unknown")
@@ -181,15 +184,12 @@ def detect_audio_streams(input_file):
 
                 # Store stream info
                 stream_info = {
-                    "index": i,
+                    "index": stream_index,
                     "language": language,
                     "title": title,
                     "handler": handler
                 }
                 audio_streams.append(stream_info)
-
-                # Print stream info
-                print(f"Found audio stream #{i}: {handler} ({language})")
 
         return audio_streams
 
@@ -228,8 +228,11 @@ def detect_subtitle_streams(input_file):
 
         # Find all subtitle streams
         subtitle_streams = []
-        for i, stream in enumerate(data.get("streams", [])):
+        for stream in data.get("streams", []):
             if stream.get("codec_type") == "subtitle":
+                # Get stream index
+                stream_index = stream.get("index")
+                
                 # Get stream metadata
                 tags = stream.get("tags", {})
                 language = tags.get("language", "unknown")
@@ -240,18 +243,13 @@ def detect_subtitle_streams(input_file):
 
                 # Store stream info
                 stream_info = {
-                    "index": i,
+                    "index": stream_index,
                     "language": language,
                     "title": title,
                     "default": is_default,
                     "forced": is_forced
                 }
                 subtitle_streams.append(stream_info)
-
-                # Print stream info
-                default_str = " (default)" if is_default else ""
-                forced_str = " (forced)" if is_forced else ""
-                print(f"Found subtitle stream #{i}: {title} ({language}){default_str}{forced_str}")
 
         return subtitle_streams
 
@@ -291,65 +289,103 @@ def format_stream_info(stream):
     return info
 
 
-def convert_video(width, audio_stream, input_file, output_file=None, custom_bitrate=None, subtitle_stream=None, start_time=None, end_time=None):
+def print_audio_stream_info(stream):
+    """
+    Print audio stream information
+    
+    Args:
+        stream: Audio stream object
+    """
+    print(f"Audio Stream: #{stream['index']}")
+    if stream.get("language") and stream["language"] != "unknown":
+        print(f"  Language: {stream['language']}")
+    if stream.get("title"):
+        print(f"  Title: {stream['title']}")
+    if stream.get("handler"):
+        print(f"  Handler: {stream['handler']}")
+
+
+def print_subtitle_stream_info(stream):
+    """
+    Print subtitle stream information
+    
+    Args:
+        stream: Subtitle stream object
+    """
+    print(f"Subtitle Stream: #{stream['index']}")
+    if stream.get("language") and stream["language"] != "unknown":
+        print(f"  Language: {stream['language']}")
+    if stream.get("title"):
+        print(f"  Title: {stream['title']}")
+    if stream.get("default"):
+        print(f"  Default: Yes")
+    if stream.get("forced"):
+        print(f"  Forced: Yes")
+
+
+def convert_video(args, audio_stream, subtitle_stream=None):
     """
     Convert video files using ffmpeg
 
     Args:
-        width: Width to select from predefined parameter sets
-        audio_stream: Audio stream index to select (e.g., 1 for Stream #0:1)
-        input_file: Input video file path
-        output_file: Output file path or directory
-        custom_bitrate: Optional custom video bitrate to override preset
-        subtitle_stream: Subtitle stream index to embed
-        start_time: Optional start time for conversion (format: HH:MM:SS or seconds)
-        end_time: Optional end time for conversion (format: HH:MM:SS or seconds)
+        args: Parsed command line arguments
+        audio_stream: Selected audio stream object
+        subtitle_stream: Selected subtitle stream object (optional)
     """
     # Get parameters based on width
-    if width not in PRESET_PARAMS:
-        print(f"Error: Width {width} not found in presets")
+    if args.width not in PRESET_PARAMS:
+        print(f"Error: Width {args.width} not found in presets")
         print("Available width presets:", ", ".join(str(w) for w in sorted(PRESET_PARAMS.keys())))
         sys.exit(1)
 
-    params = PRESET_PARAMS[width]
+    params = PRESET_PARAMS[args.width]
 
-    # Set audio stream
-    params.audio_stream = audio_stream
-    print(f"Using audio stream: {audio_stream}")
+    # Print conversion summary
+    print("\n=== Conversion Summary ===")
+    
+    # Set and print audio stream information
+    params.audio_stream = audio_stream["index"]
+    print_audio_stream_info(audio_stream)
 
-    # Set subtitle stream if provided
-    params.subtitle_stream = subtitle_stream
+    # Set and print subtitle stream information if provided
     if subtitle_stream is not None:
-        print(f"Embedding subtitle stream: {subtitle_stream}")
+        params.subtitle_stream = subtitle_stream["index"]
+        print_subtitle_stream_info(subtitle_stream)
 
-    # Set time range if provided
-    params.start_time = start_time
-    params.end_time = end_time
-    if start_time is not None:
-        print(f"Start time: {start_time}")
-    if end_time is not None:
-        print(f"End time: {end_time}")
+    # Set and print time range if provided
+    params.start_time = args.start_time
+    params.end_time = args.end_time
+    if args.start_time is not None or args.end_time is not None:
+        print("Time Range:")
+        if args.start_time is not None:
+            print(f"  Start: {args.start_time}")
+        if args.end_time is not None:
+            print(f"  End: {args.end_time}")
 
     # Store input file path for subtitle filter
-    params.input_file = input_file
+    params.input_file = args.input_file
 
-    # Override bitrate if custom value is provided
-    if custom_bitrate:
-        params.video_bitrate = custom_bitrate
-        print(f"Overriding video bitrate to: {custom_bitrate}")
+    # Override and print bitrate if custom value is provided
+    if args.video_bitrate:
+        params.video_bitrate = args.video_bitrate
+        print(f"Custom Bitrate: {args.video_bitrate}")
+
+    # Print video parameters
+    print(f"Video Parameters: width={params.video_width}, bitrate={params.video_bitrate}, fps={params.fps}")
 
     # Determine output filename
-    output_dir = f"output-{width}x"
-    output = get_output_name(params, output_dir, input_file, output_file)
+    output_dir = f"output-{args.width}x"
+    output = get_output_name(params, output_dir, args.input_file, args.output_file)
     # mkdir for the output_file if it doesn't exist
     os.makedirs(os.path.dirname(output), exist_ok=True)
 
-    print(f"{input_file} ===> {output}")
-    print(f"Using parameters: width={params.video_width}, bitrate={params.video_bitrate}, fps={params.fps}")
+    print(f"\nInput: {args.input_file}")
+    print(f"Output: {output}")
+    print("\nStarting conversion...")
 
     # Get ffmpeg command template and build the final command
     ffmpeg_template = get_ffmpeg_template(params)
-    ffmpeg_cmd = ["ffmpeg", "-i", input_file] + ffmpeg_template + [output]
+    ffmpeg_cmd = ["ffmpeg", "-i", args.input_file] + ffmpeg_template + [output]
 
     # Execute ffmpeg command
     try:
@@ -390,6 +426,12 @@ def main():
     if not audio_streams:
         print("No audio streams detected in the input file.")
         sys.exit(1)
+    else:
+        print(f"Found {len(audio_streams)} audio stream(s):")
+        for stream in audio_streams:
+            index = stream["index"]
+            info = format_stream_info(stream)
+            print(f"  [{index}] {info}")
 
     # Handle audio stream selection
     requested_audio_stream = args.audio_stream
@@ -400,8 +442,9 @@ def main():
     # If audio_stream is not provided, use the first one
     if requested_audio_stream is None:
         if len(audio_streams) == 1:
-            audio_stream = audio_streams[0]["index"]
-            print(f"Using default audio stream: {audio_stream}")
+            selected_audio_stream = audio_streams[0]
+            print(f"Using default audio stream:")
+            print_audio_stream_info(selected_audio_stream)
         else:
             print("Multiple audio streams detected. Please specify one with --audio-stream/-a option:")
             for stream in audio_streams:
@@ -418,44 +461,69 @@ def main():
         print(f"Available audio streams: {', '.join(map(str, audio_stream_indices))}")
         sys.exit(1)
     else:
-        audio_stream = requested_audio_stream
+        # Find the audio stream object with the requested index
+        selected_audio_stream = next(stream for stream in audio_streams if stream["index"] == requested_audio_stream)
+        print(f"Using specified audio stream:")
+        print_audio_stream_info(selected_audio_stream)
 
     # Detect subtitle streams
     subtitle_streams = detect_subtitle_streams(args.input_file)
-    subtitle_stream = None
+    selected_subtitle_stream = None
 
     # Handle subtitle stream selection
     if subtitle_streams:
+        print(f"\nFound {len(subtitle_streams)} subtitle stream(s):")
+        for stream in subtitle_streams:
+            index = stream["index"]
+            info = format_stream_info(stream)
+            print(f"  [{index}] {info}")
+            
         requested_subtitle_stream = args.subtitle_stream
         subtitle_stream_indices = [stream["index"] for stream in subtitle_streams]
 
-        # If only one subtitle stream and no specific stream requested, use it automatically
-        if len(subtitle_streams) == 1 and requested_subtitle_stream is None:
-            subtitle_stream = subtitle_streams[0]["index"]
-            print(f"Automatically using the only available subtitle stream: {subtitle_stream}")
-        # If multiple subtitle streams and no specific stream requested, ask user to specify
-        elif len(subtitle_streams) > 1 and requested_subtitle_stream is None:
-            print("Multiple subtitle streams detected. Please specify one with --subtitle-stream/-s option:")
-            for stream in subtitle_streams:
-                index = stream["index"]
-                info = format_stream_info(stream)
-                print(f"  [{index}] {info}")
-
-            print("\nExample usage:")
-            print(f"  {sys.argv[0]} {args.width} \"{args.input_file}\" --subtitle-stream <STREAM_NUMBER>")
-            sys.exit(1)
-        # If specific stream requested, check if it exists
-        elif requested_subtitle_stream is not None:
-            if requested_subtitle_stream not in subtitle_stream_indices:
-                print(f"Error: Specified subtitle stream {requested_subtitle_stream} not found in the input file.")
-                print(f"Available subtitle streams: {', '.join(map(str, subtitle_stream_indices))}")
-                sys.exit(1)
+        # Check if there's only one subtitle stream
+        if len(subtitle_streams) == 1:
+            # If no specific stream requested, use the only available one
+            if requested_subtitle_stream is None:
+                selected_subtitle_stream = subtitle_streams[0]
+                print(f"Automatically using the only available subtitle stream:")
+                print_subtitle_stream_info(selected_subtitle_stream)
+            # If specific stream requested, check if it exists
             else:
-                subtitle_stream = requested_subtitle_stream
-                print(f"Using specified subtitle stream: {subtitle_stream}")
+                if requested_subtitle_stream not in subtitle_stream_indices:
+                    print(f"Error: Specified subtitle stream {requested_subtitle_stream} not found in the input file.")
+                    print(f"Available subtitle streams: {', '.join(map(str, subtitle_stream_indices))}")
+                    sys.exit(1)
+                else:
+                    selected_subtitle_stream = next(stream for stream in subtitle_streams if stream["index"] == requested_subtitle_stream)
+                    print(f"Using specified subtitle stream:")
+                    print_subtitle_stream_info(selected_subtitle_stream)
+        # Handle multiple subtitle streams
+        else:
+            # If no specific stream requested, ask user to specify
+            if requested_subtitle_stream is None:
+                print("Multiple subtitle streams detected. Please specify one with --subtitle-stream/-s option:")
+                for stream in subtitle_streams:
+                    index = stream["index"]
+                    info = format_stream_info(stream)
+                    print(f"  [{index}] {info}")
+
+                print("\nExample usage:")
+                print(f"  {sys.argv[0]} {args.width} \"{args.input_file}\" --subtitle-stream <STREAM_NUMBER>")
+                sys.exit(1)
+            # If specific stream requested, check if it exists
+            else:
+                if requested_subtitle_stream not in subtitle_stream_indices:
+                    print(f"Error: Specified subtitle stream {requested_subtitle_stream} not found in the input file.")
+                    print(f"Available subtitle streams: {', '.join(map(str, subtitle_stream_indices))}")
+                    sys.exit(1)
+                else:
+                    selected_subtitle_stream = next(stream for stream in subtitle_streams if stream["index"] == requested_subtitle_stream)
+                    print(f"Using specified subtitle stream:")
+                    print_subtitle_stream_info(selected_subtitle_stream)
 
     # Convert video
-    convert_video(args.width, audio_stream, args.input_file, args.output_file, args.video_bitrate, subtitle_stream, args.start_time, args.end_time)
+    convert_video(args, selected_audio_stream, selected_subtitle_stream)
 
 
 if __name__ == "__main__":
