@@ -133,8 +133,12 @@ def analyze_logs(log_lines: Iterator[str]) -> None:
 
 def main() -> None:
     """主函数"""
-    parser = argparse.ArgumentParser(description='分析日志文件并计算QPS')
-    parser.add_argument('log_file', nargs='?', help='输入日志文件路径')
+    parser = argparse.ArgumentParser(
+        description='分析Databend元数据日志文件并计算每分钟的请求QPS和平均响应时间，'
+                    '支持普通日志文件和tar.gz压缩文件')
+    parser.add_argument('log_file', nargs='?', 
+                        help='输入日志文件路径，支持普通文本文件或.tar.gz压缩文件，'
+                             '不提供则从标准输入读取')
     args = parser.parse_args()
     
     if args.log_file:
