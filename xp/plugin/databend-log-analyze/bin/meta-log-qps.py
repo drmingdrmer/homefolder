@@ -17,7 +17,11 @@
 
 import re
 import sys
+import os
 import argparse
+import tarfile
+import tempfile
+import io
 from collections import defaultdict
 from datetime import datetime, timedelta
 
@@ -53,6 +57,29 @@ def parse_log_line(line):
     
     return timestamp, request_type, total_time
 
+def read_tar_gz_lines(tar_gz_path):
+    """打开tar.gz文件并返回一个生成器，每次生成一行日志内容"""
+    with tarfile.open(tar_gz_path, 'r:gz') as tar:
+        for member in tar:
+            # 跳过目录
+            if not member.isfile():
+                continue
+                
+            # 读取文件内容
+            f = tar.extractfile(member)
+            if f is None:
+                print(f"错误: 无法提取文件 {member.name}", file=sys.stderr)
+                sys.exit(1)
+                
+            # 逐行生成文件内容
+            for line in f:
+                try:
+                    line_str = line.decode('utf-8')
+                    yield line_str
+                except UnicodeDecodeError:
+                    print(f"错误: 无法解码文件 {member.name} 中的内容", file=sys.stderr)
+                    sys.exit(1)
+
 def analyze_logs(log_lines):
     """流式分析日志，按分钟统计各类请求的QPS，假定日志时间戳递增"""
     # 按分钟和请求类型记录请求数
@@ -66,6 +93,14 @@ def analyze_logs(log_lines):
     current_minute = None
     
     for line in log_lines:
+        # 处理字节类型的行
+        if isinstance(line, bytes):
+            try:
+                line = line.decode('utf-8')
+            except UnicodeDecodeError:
+                print("错误: 无法解码日志内容", file=sys.stderr)
+                sys.exit(1)
+                
         # 只处理包含 Elapsed: 的行
         if 'Elapsed:' not in line:
             continue
@@ -124,19 +159,28 @@ def main():
     
     # 从文件或标准输入读取日志
     if args.log_file:
-        try:
-            with open(args.log_file, 'r') as f:
-                log_lines = f.readlines()
-        except FileNotFoundError:
+        # 检查文件是否存在
+        if not os.path.exists(args.log_file):
             print(f"错误: 找不到文件 '{args.log_file}'", file=sys.stderr)
             sys.exit(1)
-        except IOError as e:
-            print(f"错误: 无法读取文件 '{args.log_file}': {e}", file=sys.stderr)
-            sys.exit(1)
+            
+        # 检查是否是tar.gz文件
+        if args.log_file.endswith('.tar.gz'):
+            print(f"正在流式处理压缩文件: {args.log_file}", file=sys.stderr)
+            # 使用生成器处理tar.gz文件
+            log_lines = read_tar_gz_lines(args.log_file)
+            analyze_logs(log_lines)
+        else:
+            try:
+                with open(args.log_file, 'r') as f:
+                    log_lines = f.readlines()
+            except IOError as e:
+                print(f"错误: 无法读取文件 '{args.log_file}': {e}", file=sys.stderr)
+                sys.exit(1)
+            analyze_logs(log_lines)
     else:
         log_lines = sys.stdin.readlines()
-    
-    analyze_logs(log_lines)
+        analyze_logs(log_lines)
 
 if __name__ == "__main__":
     main()
