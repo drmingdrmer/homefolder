@@ -24,10 +24,10 @@ import tempfile
 import io
 from collections import defaultdict
 from datetime import datetime, timedelta
+from typing import Optional, Tuple, Iterator, Dict, List, Any, Generator
 
-def parse_log_line(line):
+def parse_log_line(line: str) -> Optional[Tuple[datetime, str, float]]:
     """解析单行日志，提取时间、请求类型和耗时"""
-    # 提取时间戳
     timestamp_match = re.search(r'(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})', line)
     if not timestamp_match:
         return None
@@ -35,20 +35,17 @@ def parse_log_line(line):
     timestamp_str = timestamp_match.group(1)
     timestamp = datetime.strptime(timestamp_str, '%Y-%m-%dT%H:%M:%S')
     
-    # 提取total耗时
     total_match = re.search(r'total: ([\d.]+)([µm]?)s', line)
     if not total_match:
         return None
     
     total_time = float(total_match.group(1))
     unit = total_match.group(2)
-    # 将微秒(µs)或毫秒(ms)转换为秒
     if unit == 'µ':
         total_time *= 1e-6
     elif unit == 'm':
         total_time *= 1e-3
     
-    # 提取请求类型 - 分号后第一段，如 "ReadRequest:"
     semicolon_match = re.search(r';([^:]+):', line)
     if semicolon_match:
         request_type = semicolon_match.group(1).strip()
@@ -57,21 +54,18 @@ def parse_log_line(line):
     
     return timestamp, request_type, total_time
 
-def read_tar_gz_lines(tar_gz_path):
+def read_tar_gz_lines(tar_gz_path: str) -> Generator[str, None, None]:
     """打开tar.gz文件并返回一个生成器，每次生成一行日志内容"""
     with tarfile.open(tar_gz_path, 'r:gz') as tar:
         for member in tar:
-            # 跳过目录
             if not member.isfile():
                 continue
                 
-            # 读取文件内容
             f = tar.extractfile(member)
             if f is None:
                 print(f"错误: 无法提取文件 {member.name}", file=sys.stderr)
                 sys.exit(1)
                 
-            # 逐行生成文件内容
             for line in f:
                 try:
                     line_str = line.decode('utf-8')
@@ -80,28 +74,27 @@ def read_tar_gz_lines(tar_gz_path):
                     print(f"错误: 无法解码文件 {member.name} 中的内容", file=sys.stderr)
                     sys.exit(1)
 
-def analyze_logs(log_lines):
+def read_file_lines(file_path: str) -> Generator[str, None, None]:
+    """读取普通文件并返回一个生成器，每次生成一行内容"""
+    try:
+        with open(file_path, 'r') as f:
+            for line in f:
+                yield line
+    except IOError as e:
+        print(f"错误: 无法读取文件 '{file_path}': {e}", file=sys.stderr)
+        sys.exit(1)
+
+def analyze_logs(log_lines: Iterator[str]) -> None:
     """流式分析日志，按分钟统计各类请求的QPS，假定日志时间戳递增"""
-    # 按分钟和请求类型记录请求数
-    current_minute_counts = defaultdict(int)
-    current_minute_times = defaultdict(list)
+    current_minute_counts: Dict[str, int] = defaultdict(int)
+    current_minute_times: Dict[str, List[float]] = defaultdict(list)
     
-    # 打印表头，使用固定宽度格式
     print(f"{'时间':<20}{'请求类型':<20}{'QPS':>10}{'平均耗时(ms)':>15}")
     print("-" * 65)
     
-    current_minute = None
+    current_minute: Optional[str] = None
     
     for line in log_lines:
-        # 处理字节类型的行
-        if isinstance(line, bytes):
-            try:
-                line = line.decode('utf-8')
-            except UnicodeDecodeError:
-                print("错误: 无法解码日志内容", file=sys.stderr)
-                sys.exit(1)
-                
-        # 只处理包含 Elapsed: 的行
         if 'Elapsed:' not in line:
             continue
             
@@ -111,75 +104,53 @@ def analyze_logs(log_lines):
             
         timestamp, request_type, total_time = parsed_data
         
-        # 以分钟为粒度
         minute_key = timestamp.strftime('%Y-%m-%d %H:%M')
         
-        # 如果是新的一分钟，输出上一分钟的统计结果
         if current_minute is not None and minute_key != current_minute:
-            # 输出上一分钟的统计结果
             for req_type, count in sorted(current_minute_counts.items()):
-                # 计算QPS（每秒查询数）
                 qps = count / 60.0  # 每分钟的请求除以60秒
                 
-                # 计算平均耗时（转换为毫秒）
                 avg_time = sum(current_minute_times[req_type]) / count * 1000
                 
                 print(f"{current_minute:<20}{req_type:<20}{qps:>10.2f}{avg_time:>15.2f}")
             
-            # 重置计数器
             current_minute_counts = defaultdict(int)
             current_minute_times = defaultdict(list)
         
-        # 更新当前分钟
         current_minute = minute_key
         
-        # 增加请求计数
         current_minute_counts[request_type] += 1
         
-        # 记录耗时
         current_minute_times[request_type].append(total_time)
     
-    # 处理最后一分钟的数据
     if current_minute is not None:
         for req_type, count in sorted(current_minute_counts.items()):
-            # 计算QPS（每秒查询数）
             qps = count / 60.0  # 每分钟的请求除以60秒
             
-            # 计算平均耗时（转换为毫秒）
             avg_time = sum(current_minute_times[req_type]) / count * 1000
             
             print(f"{current_minute:<20}{req_type:<20}{qps:>10.2f}{avg_time:>15.2f}")
 
-def main():
+def main() -> None:
     """主函数"""
-    # 设置命令行参数解析
     parser = argparse.ArgumentParser(description='分析日志文件并计算QPS')
     parser.add_argument('log_file', nargs='?', help='输入日志文件路径')
     args = parser.parse_args()
     
-    # 从文件或标准输入读取日志
     if args.log_file:
-        # 检查文件是否存在
         if not os.path.exists(args.log_file):
             print(f"错误: 找不到文件 '{args.log_file}'", file=sys.stderr)
             sys.exit(1)
             
-        # 检查是否是tar.gz文件
         if args.log_file.endswith('.tar.gz'):
             print(f"正在流式处理压缩文件: {args.log_file}", file=sys.stderr)
-            # 使用生成器处理tar.gz文件
             log_lines = read_tar_gz_lines(args.log_file)
             analyze_logs(log_lines)
         else:
-            try:
-                with open(args.log_file, 'r') as f:
-                    log_lines = f.readlines()
-            except IOError as e:
-                print(f"错误: 无法读取文件 '{args.log_file}': {e}", file=sys.stderr)
-                sys.exit(1)
+            log_lines = read_file_lines(args.log_file)
             analyze_logs(log_lines)
     else:
-        log_lines = sys.stdin.readlines()
+        log_lines = (line for line in sys.stdin)
         analyze_logs(log_lines)
 
 if __name__ == "__main__":
