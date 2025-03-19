@@ -427,7 +427,7 @@ def main():
 
     parser.add_argument('width', type=int, choices=sorted(PRESET_PARAMS.keys()),
                         help=f'Video width preset. Available presets: {", ".join(str(w) for w in sorted(PRESET_PARAMS.keys()))}')
-    parser.add_argument('input_file', help='Input video file path')
+    parser.add_argument('input_file', help='Input video file path. If path contains "./" (e.g., "foo/./videos/file.mp4"), the output filename will be split at this point.')
     parser.add_argument('output_file', nargs='?', default=None,
                         help='Output file path or directory. If not specified, a default output directory will be used.')
     parser.add_argument('--audio-stream', '-a', type=int, dest='audio_stream',
