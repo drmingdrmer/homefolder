@@ -37,7 +37,13 @@ PRESET_PARAMS = {
 
 
 def get_output_name(params: FFmpegParams, default_output_dir: str, input_file: str, output_arg: str = None):
-    input_fn = os.path.basename(input_file)
+    input_fn = input_file
+
+    # get the part since "./", if not found, use the whole input_fn
+    if input_file.find("./") != -1:
+        input_fn = input_file[input_file.find("./") + 2:]
+
+    # strip the extension
     input_name_without_ext = os.path.splitext(input_fn)[0]
 
     output_name = None
@@ -350,17 +356,22 @@ class VideoConverter:
         
         print(f"\nInput: {self.args.input_file}")
         print(f"Output: {output}")
-        print("\nStarting conversion...")
         
         ffmpeg_template = self._get_ffmpeg_template()
         ffmpeg_cmd = ["ffmpeg", "-i", self.args.input_file] + ffmpeg_template + [output]
         
-        print("\nDebug: Full command to be executed:")
+        print("\nCommand to be executed:")
         print(" ".join([f'"{arg}"' if ' ' in arg else arg for arg in ffmpeg_cmd]))
         
         if self.params.subtitle_stream is not None:
             print("\nNote: Using relative subtitle index in the filter. The subtitles filter uses")
             print("a 0-based index that counts only subtitle streams, not all streams.")
+        
+        if self.args.dry_run:
+            print("\nDry run mode - command not executed.")
+            return True
+            
+        print("\nStarting conversion...")
         
         try:
             subprocess.run(ffmpeg_cmd, check=True)
@@ -435,6 +446,8 @@ def main():
                         help='Start time for conversion (format: HH:MM:SS or seconds, e.g., "00:01:30" or "90")')
     parser.add_argument('--end-time', '-to', dest='end_time',
                         help='End time for conversion (format: HH:MM:SS or seconds, e.g., "00:05:00" or "300")')
+    parser.add_argument('--dry-run', '-n', action='store_true', dest='dry_run',
+                        help='Print information and conversion command without executing it')
 
     args = parser.parse_args()
     
