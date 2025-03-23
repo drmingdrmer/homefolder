@@ -357,6 +357,16 @@ class VideoConverter:
         print(f"\nInput: {self.args.input_file}")
         print(f"Output: {output}")
         
+        # Check if output file already exists
+        if os.path.exists(output):
+            if self.args.skip_exists:
+                print(f"\nOutput file already exists. Skipping conversion (--skip-exists is set).")
+                return True
+            else:
+                print(f"\nError: Output file already exists: {output}")
+                print("Use --skip-exists or -se to skip with normal exit when file exists.")
+                return False
+        
         ffmpeg_template = self._get_ffmpeg_template()
         ffmpeg_cmd = ["ffmpeg", "-i", self.args.input_file] + ffmpeg_template + [output]
         
@@ -448,6 +458,8 @@ def main():
                         help='End time for conversion (format: HH:MM:SS or seconds, e.g., "00:05:00" or "300")')
     parser.add_argument('--dry-run', '-n', action='store_true', dest='dry_run',
                         help='Print information and conversion command without executing it')
+    parser.add_argument('--skip-exists', '-se', action='store_true', dest='skip_exists',
+                        help='Skip with normal exit if output file already exists (default: exit with error)')
 
     args = parser.parse_args()
     
