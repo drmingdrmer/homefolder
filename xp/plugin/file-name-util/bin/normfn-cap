@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Same as normfn.sh but capitalize the words.
+# Same as normfn but capitalize the words.
 
 
 # BEGIN{FS=OFS="-"}: Sets both the input and output field separator to "-".
@@ -10,7 +10,7 @@
 # substr($i,2): Returns the rest of the characters in the field (from the second character onward).
 # The 1 at the end of the awk command is a common idiom that means "print the line" after processing.
 
-cap=$(normfn.sh "$*" | awk 'BEGIN{FS=OFS="-"} {for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) substr($i,2)} 1')
+cap=$(normfn "$*" | awk 'BEGIN{FS=OFS="-"} {for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) substr($i,2)} 1')
 
 echo "$cap"
 printf "%s" "$cap" | set-clipboard
