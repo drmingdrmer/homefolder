@@ -12,7 +12,7 @@ class FFmpegParams:
     """
     Class to store and manage ffmpeg parameters
     """
-    def __init__(self, video_bitrate="149k", video_width=854, fps=24, audio_stream=None, subtitle_stream=None, start_time=None, end_time=None):
+    def __init__(self, video_bitrate="149k", video_width=854, fps=24, audio_stream=None, subtitle_stream=None, start_time=None, end_time=None, external_subtitle_file=None):
         self.video_bitrate = video_bitrate
         self.video_width = video_width
         self.fps = fps
@@ -21,6 +21,7 @@ class FFmpegParams:
         self.start_time = start_time  # Start time in seconds or HH:MM:SS format
         self.end_time = end_time      # End time in seconds or HH:MM:SS format
         self.input_file = None
+        self.external_subtitle_file = external_subtitle_file  # Path to external subtitle file
 
     def get_scale_filter(self):
         return f"scale={self.video_width}:-2,fps={self.fps}"
@@ -69,6 +70,12 @@ def get_output_name(params: FFmpegParams, default_output_dir: str, input_file: s
         if params.end_time is not None:
             time_info += f"-to_{params.end_time.replace(':', '_')}"
         output_name += time_info
+    
+    if params.external_subtitle_file is not None:
+        # Add suffix to indicate external subtitles were used
+        subtitle_base = os.path.basename(params.external_subtitle_file)
+        subtitle_name = os.path.splitext(subtitle_base)[0]
+        output_name += f"-with_sub_{subtitle_name}"
     
     output_name += ext
 
@@ -183,6 +190,7 @@ class VideoConverter:
         self.subtitle_languages = set()
         self.subtitle_titles = set()
         self.subtitle_indices = []
+        self.external_subtitle_file = args.external_subtitle_file
         
         self._detect_streams()
         
@@ -237,6 +245,12 @@ class VideoConverter:
         Select the subtitle stream to use based on command line arguments
         """
         self.selected_subtitle_stream = None
+        
+        # Check if both embedded and external subtitles were specified
+        if (self.args.subtitle_stream is not None or self.args.subtitle_language is not None or self.args.subtitle_title is not None) and self.external_subtitle_file is not None:
+            print("\nWarning: Both embedded and external subtitles were specified.")
+            print("Embedded subtitles will be used. External subtitle file will be ignored.")
+            self.external_subtitle_file = None
         
         if not self.subtitle_streams:
             if self.args.subtitle_stream is not None or self.args.subtitle_language is not None or self.args.subtitle_title is not None:
@@ -330,6 +344,14 @@ class VideoConverter:
             relative_index = self.calculate_subtitle_relative_index(self.selected_subtitle_stream["index"])
             print(f"  Absolute Stream Index: {self.selected_subtitle_stream['index']}")
             print(f"  Relative Subtitle Index: {relative_index} (used in filter)")
+        elif self.external_subtitle_file is not None:
+            # Validate external subtitle file
+            if not os.path.exists(self.external_subtitle_file):
+                print(f"Error: External subtitle file not found: {self.external_subtitle_file}")
+                return False
+                
+            self.params.external_subtitle_file = self.external_subtitle_file
+            print(f"External Subtitle File: {self.external_subtitle_file}")
         else:
             print("Subtitles: None (not included in output)")
         
@@ -368,7 +390,13 @@ class VideoConverter:
                 return False
         
         ffmpeg_template = self._get_ffmpeg_template()
-        ffmpeg_cmd = ["ffmpeg", "-i", self.args.input_file] + ffmpeg_template + [output]
+        ffmpeg_cmd = ["ffmpeg", "-i", self.args.input_file]
+        
+        # Add external subtitle file as input if specified
+        if self.params.external_subtitle_file is not None:
+            ffmpeg_cmd.extend(["-i", self.params.external_subtitle_file])
+        
+        ffmpeg_cmd.extend(ffmpeg_template + [output])
         
         print("\nCommand to be executed:")
         print(" ".join([f'"{arg}"' if ' ' in arg else arg for arg in ffmpeg_cmd]))
@@ -404,13 +432,17 @@ class VideoConverter:
             template.extend(["-to", self.params.end_time])
         
         if self.params.audio_stream is not None:
-            template.extend(["-map", "0:0"])
-            template.extend(["-map", f"0:{self.params.audio_stream}"])
+            template.extend(["-map", "0:0"])  # Map video stream
+            template.extend(["-map", f"0:{self.params.audio_stream}"])  # Map audio stream
         
         subtitle_filter = ""
         if self.params.subtitle_stream is not None:
+            # Handle embedded subtitle
             relative_subtitle_index = self.calculate_subtitle_relative_index(self.params.subtitle_stream)
             subtitle_filter = f",subtitles='{os.path.abspath(self.params.input_file)}':stream_index={relative_subtitle_index}"
+        elif self.params.external_subtitle_file is not None:
+            # Handle external subtitle
+            subtitle_filter = f",subtitles='{os.path.abspath(self.params.external_subtitle_file)}'"
         
         template.extend([
             "-c:v",             "libaom-av1",
@@ -448,6 +480,8 @@ def main():
                         help='Select subtitle by language code (e.g., "chi" for Chinese, "eng" for English)')
     parser.add_argument('--subtitle-title', '-st', dest='subtitle_title',
                         help='Select subtitle by title (e.g., "中文（简体）")')
+    parser.add_argument('--external-subtitle', '-es', dest='external_subtitle_file',
+                        help='Path to external subtitle file to embed (e.g., "subtitle.srt")')
     parser.add_argument('--list-subtitles', '-ls', action='store_true', dest='list_subtitles',
                         help='List all available subtitle streams and exit')
     parser.add_argument('--bitrate', '-b', dest='video_bitrate',
