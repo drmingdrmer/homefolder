@@ -82,6 +82,88 @@ def get_output_name(params: FFmpegParams, default_output_dir: str, input_file: s
     return output_name
 
 
+class StreamInfo:
+    """
+    Class to store and manage stream information
+    """
+    def __init__(self, stream_data):
+        """
+        Initialize StreamInfo from ffprobe stream data
+        """
+        self.index = stream_data.get("index")
+        self.codec_type = stream_data.get("codec_type")
+        
+        # Get tags
+        tags = stream_data.get("tags", {})
+        self.language = tags.get("language", "unknown")
+        self.title = tags.get("title", "")
+        
+        # Initialize optional fields
+        self.handler = None
+        self.default = False
+        self.forced = False
+        self.fps = None
+        
+        # Set type-specific fields
+        if self.codec_type == "audio":
+            self.handler = tags.get("handler_name", "")
+        elif self.codec_type == "subtitle":
+            disposition = stream_data.get("disposition", {})
+            self.default = disposition.get("default", 0) == 1
+            self.forced = disposition.get("forced", 0) == 1
+        elif self.codec_type == "video":
+            # Get FPS from video stream
+            r_frame_rate = stream_data.get("r_frame_rate", "")
+            if r_frame_rate:
+                try:
+                    num, den = map(int, r_frame_rate.split("/"))
+                    self.fps = round(num / den, 3)
+                except (ValueError, ZeroDivisionError):
+                    self.fps = None
+
+    def __str__(self):
+        info_parts = []
+        if self.language != "unknown":
+            info_parts.append(f"language: {self.language}")
+        if self.title:
+            info_parts.append(f"title: {self.title}")
+        if self.handler:
+            info_parts.append(f"handler: {self.handler}")
+        if self.default:
+            info_parts.append("default")
+        if self.forced:
+            info_parts.append("forced")
+        return ", ".join(info_parts) if info_parts else "unknown"
+
+    def get_audio_info(self):
+        """
+        Get formatted audio stream information
+        """
+        lines = [f"Audio Stream: #{self.index}"]
+        if self.language != "unknown":
+            lines.append(f"  Language: {self.language}")
+        if self.title:
+            lines.append(f"  Title: {self.title}")
+        if self.handler:
+            lines.append(f"  Handler: {self.handler}")
+        return "\n".join(lines)
+
+    def get_subtitle_info(self):
+        """
+        Get formatted subtitle stream information
+        """
+        lines = [f"Subtitle Stream: #{self.index}"]
+        if self.language != "unknown":
+            lines.append(f"  Language: {self.language}")
+        if self.title:
+            lines.append(f"  Title: {self.title}")
+        if self.default:
+            lines.append("  Default: Yes")
+        if self.forced:
+            lines.append("  Forced: Yes")
+        return "\n".join(lines)
+
+
 def detect_all_streams(input_file: str):
     cmd = [
         "ffprobe",
@@ -93,95 +175,7 @@ def detect_all_streams(input_file: str):
     result = subprocess.run(cmd, check=True, capture_output=True, text=True)
     data = json.loads(result.stdout)
     
-    streams = []
-    for stream in data.get("streams", []):
-        stream_type = stream.get("codec_type")
-        stream_index = stream.get("index")
-        tags = stream.get("tags", {})
-        
-        stream_info = {
-            "index": stream_index,
-            "codec_type": stream_type,
-            "language": tags.get("language", "unknown"),
-            "title": tags.get("title", "")
-        }
-        
-        if stream_type == "audio":
-            stream_info["handler"] = tags.get("handler_name", "")
-        elif stream_type == "subtitle":
-            disposition = stream.get("disposition", {})
-            stream_info["default"] = disposition.get("default", 0) == 1
-            stream_info["forced"] = disposition.get("forced", 0) == 1
-        elif stream_type == "video":
-            # Get FPS from video stream
-            r_frame_rate = stream.get("r_frame_rate", "")
-            if r_frame_rate:
-                try:
-                    num, den = map(int, r_frame_rate.split("/"))
-                    stream_info["fps"] = round(num / den, 3)
-                except (ValueError, ZeroDivisionError):
-                    stream_info["fps"] = None
-        
-        streams.append(stream_info)
-    
-    return streams
-
-
-def format_stream_info(stream):
-    info = ""
-    
-    if "language" in stream and stream["language"] != "unknown":
-        info += f"language: {stream['language']}"
-    
-    if "title" in stream and stream["title"]:
-        if info:
-            info += ", "
-        info += f"title: {stream['title']}"
-    
-    if "handler" in stream and stream["handler"]:
-        if info:
-            info += ", "
-        info += f"handler: {stream['handler']}"
-    
-    if "default" in stream and stream["default"]:
-        if info:
-            info += ", "
-        info += "default"
-    
-    if "forced" in stream and stream["forced"]:
-        if info:
-            info += ", "
-        info += "forced"
-    
-    return info or "unknown"
-
-
-def print_audio_stream_info(stream):
-    """
-    Print audio stream information
-    """
-    print(f"Audio Stream: #{stream['index']}")
-    if stream.get("language") and stream["language"] != "unknown":
-        print(f"  Language: {stream['language']}")
-    if stream.get("title"):
-        print(f"  Title: {stream['title']}")
-    if stream.get("handler"):
-        print(f"  Handler: {stream['handler']}")
-
-
-def print_subtitle_stream_info(stream):
-    """
-    Print subtitle stream information
-    """
-    print(f"Subtitle Stream: #{stream['index']}")
-    if stream.get("language") and stream["language"] != "unknown":
-        print(f"  Language: {stream['language']}")
-    if stream.get("title"):
-        print(f"  Title: {stream['title']}")
-    if stream.get("default"):
-        print(f"  Default: Yes")
-    if stream.get("forced"):
-        print(f"  Forced: Yes")
+    return [StreamInfo(stream_data) for stream_data in data.get("streams", [])]
 
 
 class VideoConverter:
@@ -209,22 +203,22 @@ class VideoConverter:
         Detect all streams in the input file
         """
         self.all_streams = detect_all_streams(self.args.input_file)
-        self.audio_streams = [s for s in self.all_streams if s.get("codec_type") == "audio"]
-        self.subtitle_streams = [s for s in self.all_streams if s.get("codec_type") == "subtitle"]
+        self.audio_streams = [s for s in self.all_streams if s.codec_type == "audio"]
+        self.subtitle_streams = [s for s in self.all_streams if s.codec_type == "subtitle"]
         
         # Get original FPS from video stream
-        video_streams = [s for s in self.all_streams if s.get("codec_type") == "video"]
-        if video_streams and "fps" in video_streams[0]:
-            self.original_fps = video_streams[0]["fps"]
+        video_streams = [s for s in self.all_streams if s.codec_type == "video"]
+        if video_streams and video_streams[0].fps is not None:
+            self.original_fps = video_streams[0].fps
             print(f"Original video FPS: {self.original_fps}")
         
-        self.subtitle_languages = set(s.get("language", "unknown") for s in self.subtitle_streams)
-        self.subtitle_titles = set(s.get("title", "unknown") for s in self.subtitle_streams)
-        self.subtitle_indices = [stream["index"] for stream in self.subtitle_streams]
+        self.subtitle_languages = set(s.language for s in self.subtitle_streams)
+        self.subtitle_titles = set(s.title for s in self.subtitle_streams)
+        self.subtitle_indices = [stream.index for stream in self.subtitle_streams]
         
     def select_audio_stream(self):
         requested_audio_stream = self.args.audio_stream
-        audio_stream_indices = [stream["index"] for stream in self.audio_streams]
+        audio_stream_indices = [stream.index for stream in self.audio_streams]
         
         if not self.audio_streams:
             print("No audio streams detected in the input file.")
@@ -234,14 +228,12 @@ class VideoConverter:
             if len(self.audio_streams) == 1:
                 self.selected_audio_stream = self.audio_streams[0]
                 print(f"Using default audio stream:")
-                print_audio_stream_info(self.selected_audio_stream)
+                print(self.selected_audio_stream.get_audio_info())
                 return True
             else:
                 print("Multiple audio streams detected. Please specify one with --audio-stream/-a option:")
                 for stream in self.audio_streams:
-                    index = stream["index"]
-                    info = format_stream_info(stream)
-                    print(f"  [{index}] {info}")
+                    print(f"  [{stream.index}] {stream}")
 
                 print("\nExample usage:")
                 print(f"  {sys.argv[0]} {self.args.width} \"{self.args.input_file}\" --audio-stream <STREAM_NUMBER>")
@@ -251,9 +243,9 @@ class VideoConverter:
             print(f"Available audio streams: {', '.join(map(str, audio_stream_indices))}")
             return False
         else:
-            self.selected_audio_stream = next(stream for stream in self.audio_streams if stream["index"] == requested_audio_stream)
+            self.selected_audio_stream = next(stream for stream in self.audio_streams if stream.index == requested_audio_stream)
             print(f"Using specified audio stream:")
-            print_audio_stream_info(self.selected_audio_stream)
+            print(self.selected_audio_stream.get_audio_info())
             return True
     
     def select_subtitle_stream(self):
@@ -281,38 +273,33 @@ class VideoConverter:
             print("Index | Language | Title | Default | Forced")
             print("-" * 60)
             for stream in self.subtitle_streams:
-                index = stream["index"]
-                language = stream.get("language", "unknown")
-                title = stream.get("title", "")
-                default = "Yes" if stream.get("default", False) else "No"
-                forced = "Yes" if stream.get("forced", False) else "No"
-                print(f"{index:5} | {language:8} | {title:20} | {default:7} | {forced}")
+                default = "Yes" if stream.default else "No"
+                forced = "Yes" if stream.forced else "No"
+                print(f"{stream.index:5} | {stream.language:8} | {stream.title:20} | {default:7} | {forced}")
             return False
         
         print(f"\nFound {len(self.subtitle_streams)} subtitle stream(s):")
         for stream in self.subtitle_streams:
-            index = stream["index"]
-            info = format_stream_info(stream)
-            print(f"  [{index}] {info}")
+            print(f"  [{stream.index}] {stream}")
         
         requested_subtitle_stream = self.args.subtitle_stream
         
         if self.args.subtitle_language is not None:
-            language_matches = [s for s in self.subtitle_streams if s.get("language", "").lower() == self.args.subtitle_language.lower()]
+            language_matches = [s for s in self.subtitle_streams if s.language.lower() == self.args.subtitle_language.lower()]
             if language_matches:
                 self.selected_subtitle_stream = language_matches[0]
                 print(f"Selected subtitle stream by language '{self.args.subtitle_language}':")
-                print_subtitle_stream_info(self.selected_subtitle_stream)
+                print(self.selected_subtitle_stream.get_subtitle_info())
             else:
                 print(f"Error: No subtitle stream with language '{self.args.subtitle_language}' found.")
                 print(f"Available subtitle languages: {', '.join(self.subtitle_languages)}")
                 return False
         elif self.args.subtitle_title is not None:
-            title_matches = [s for s in self.subtitle_streams if self.args.subtitle_title.lower() in s.get("title", "").lower()]
+            title_matches = [s for s in self.subtitle_streams if self.args.subtitle_title.lower() in s.title.lower()]
             if title_matches:
                 self.selected_subtitle_stream = title_matches[0]
                 print(f"Selected subtitle stream by title '{self.args.subtitle_title}':")
-                print_subtitle_stream_info(self.selected_subtitle_stream)
+                print(self.selected_subtitle_stream.get_subtitle_info())
             else:
                 print(f"Error: No subtitle stream with title containing '{self.args.subtitle_title}' found.")
                 print(f"Available subtitle titles: {', '.join(self.subtitle_titles)}")
@@ -323,19 +310,19 @@ class VideoConverter:
                 print(f"Available subtitle streams: {', '.join(map(str, self.subtitle_indices))}")
                 return False
             else:
-                self.selected_subtitle_stream = next(stream for stream in self.subtitle_streams if stream["index"] == requested_subtitle_stream)
+                self.selected_subtitle_stream = next(stream for stream in self.subtitle_streams if stream.index == requested_subtitle_stream)
                 print(f"Using specified subtitle stream #{requested_subtitle_stream}:")
-                print_subtitle_stream_info(self.selected_subtitle_stream)
+                print(self.selected_subtitle_stream.get_subtitle_info())
         else:
             print("No subtitle stream specified. Subtitles will not be included.")
         
         return True
     
     def calculate_subtitle_relative_index(self, absolute_index):
-        sorted_streams = sorted(self.subtitle_streams, key=lambda s: s["index"])
+        sorted_streams = sorted(self.subtitle_streams, key=lambda s: s.index)
         
         for i, stream in enumerate(sorted_streams):
-            if stream["index"] == absolute_index:
+            if stream.index == absolute_index:
                 return i
         
         return 0
@@ -355,15 +342,15 @@ class VideoConverter:
         
         print("\n=== Conversion Summary ===")
         
-        self.params.audio_stream = self.selected_audio_stream["index"]
-        print_audio_stream_info(self.selected_audio_stream)
+        self.params.audio_stream = self.selected_audio_stream.index
+        print(self.selected_audio_stream.get_audio_info())
         
         if self.selected_subtitle_stream is not None:
-            self.params.subtitle_stream = self.selected_subtitle_stream["index"]
-            print_subtitle_stream_info(self.selected_subtitle_stream)
+            self.params.subtitle_stream = self.selected_subtitle_stream.index
+            print(self.selected_subtitle_stream.get_subtitle_info())
             
-            relative_index = self.calculate_subtitle_relative_index(self.selected_subtitle_stream["index"])
-            print(f"  Absolute Stream Index: {self.selected_subtitle_stream['index']}")
+            relative_index = self.calculate_subtitle_relative_index(self.selected_subtitle_stream.index)
+            print(f"  Absolute Stream Index: {self.selected_subtitle_stream.index}")
             print(f"  Relative Subtitle Index: {relative_index} (used in filter)")
         elif self.external_subtitle_file is not None:
             # Validate external subtitle file
