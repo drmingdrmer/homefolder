@@ -112,6 +112,15 @@ def detect_all_streams(input_file: str):
             disposition = stream.get("disposition", {})
             stream_info["default"] = disposition.get("default", 0) == 1
             stream_info["forced"] = disposition.get("forced", 0) == 1
+        elif stream_type == "video":
+            # Get FPS from video stream
+            r_frame_rate = stream.get("r_frame_rate", "")
+            if r_frame_rate:
+                try:
+                    num, den = map(int, r_frame_rate.split("/"))
+                    stream_info["fps"] = round(num / den, 3)
+                except (ValueError, ZeroDivisionError):
+                    stream_info["fps"] = None
         
         streams.append(stream_info)
     
@@ -191,6 +200,7 @@ class VideoConverter:
         self.subtitle_titles = set()
         self.subtitle_indices = []
         self.external_subtitle_file = args.external_subtitle_file
+        self.original_fps = None
         
         self._detect_streams()
         
@@ -201,6 +211,12 @@ class VideoConverter:
         self.all_streams = detect_all_streams(self.args.input_file)
         self.audio_streams = [s for s in self.all_streams if s.get("codec_type") == "audio"]
         self.subtitle_streams = [s for s in self.all_streams if s.get("codec_type") == "subtitle"]
+        
+        # Get original FPS from video stream
+        video_streams = [s for s in self.all_streams if s.get("codec_type") == "video"]
+        if video_streams and "fps" in video_streams[0]:
+            self.original_fps = video_streams[0]["fps"]
+            print(f"Original video FPS: {self.original_fps}")
         
         self.subtitle_languages = set(s.get("language", "unknown") for s in self.subtitle_streams)
         self.subtitle_titles = set(s.get("title", "unknown") for s in self.subtitle_streams)
@@ -331,6 +347,11 @@ class VideoConverter:
             return False
         
         self.params = PRESET_PARAMS[self.args.width]
+        
+        # Use original FPS if available
+        if self.original_fps is not None:
+            self.params.fps = self.original_fps
+            print(f"Using original video FPS: {self.original_fps}")
         
         print("\n=== Conversion Summary ===")
         
