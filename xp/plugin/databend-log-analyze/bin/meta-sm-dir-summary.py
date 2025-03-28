@@ -1,3 +1,7 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+
 # read the user specified file, parse the ndjson format.
 # the file format is like this:
 # ```
@@ -25,9 +29,9 @@ import json
 import sys
 from collections import defaultdict
 
-def process_file(filename):
-    # Dictionary to count occurrences of each directory
+def process_file(filename) -> iter:
     dir_counts = defaultdict(int)
+    last_parts  = []
     
     with open(filename, 'r') as file:
         for line in file:
@@ -45,25 +49,40 @@ def process_file(filename):
                 data[1]["GenericKV"]["key"].startswith("__fd")):
                 continue
                 
-            # Extract the key
             key = data[1]["GenericKV"]["key"]
             
-            # Split by slashes
             parts = key.split('/')
-            
-            # Create and count each directory level
-            for i in range(1, len(parts)):
-                dir_path = '/'.join(parts[:i]) + '/'
+            parts.pop(-1)
+
+            c = 0
+            while len(parts) > c and len(last_parts) > c and parts[c] == last_parts[c]:
+                c += 1
+
+            common_prefix_count = c
+
+            while len(last_parts) > common_prefix_count:
+                s = '/'.join(last_parts)
+                yield (s, dir_counts[s])
+                del dir_counts[s]
+                last_parts.pop(-1)
+
+            for i in range(0, len(parts)):
+                dir_path = '/'.join(parts[:i+1])
                 dir_counts[dir_path] += 1
+
+            last_parts = parts
+
+        while len(last_parts) > 0:
+            s = '/'.join(last_parts)
+            yield (s, dir_counts[s])
+            last_parts.pop(-1)
     
-    # Print the results
-    for dir_path, count in sorted(dir_counts.items()):
-        print(f"  {dir_path}: {count}")
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
         print("Usage: python meta-sm-dir-summary.py <filename>")
         sys.exit(1)
     
-    process_file(sys.argv[1])
-
+    # Print the results from the iterator
+    for dir_path, count in process_file(sys.argv[1]):
+        print(f"  {dir_path}: {count}")
