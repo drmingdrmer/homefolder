@@ -1,4 +1,3 @@
-
 # read the user specified file, parse the ndjson format.
 # the file format is like this:
 # ```
@@ -21,4 +20,50 @@
 #   __fd_object_owners/zdcyc/table-by-id/: 10
 #   __fd_object_owners/zdcyc/: 10
 #   __fd_object_owners/: 10
+
+import json
+import sys
+from collections import defaultdict
+
+def process_file(filename):
+    # Dictionary to count occurrences of each directory
+    dir_counts = defaultdict(int)
+    
+    with open(filename, 'r') as file:
+        for line in file:
+            line = line.strip()
+            if not line:
+                continue
+                
+            # Parse the JSON line
+            data = json.loads(line)
+            
+            # Check if it's a state_machine/0 line with GenericKV
+            if not (data[0] == "state_machine/0" and 
+                "GenericKV" in data[1] and 
+                "key" in data[1]["GenericKV"] and
+                data[1]["GenericKV"]["key"].startswith("__fd")):
+                continue
+                
+            # Extract the key
+            key = data[1]["GenericKV"]["key"]
+            
+            # Split by slashes
+            parts = key.split('/')
+            
+            # Create and count each directory level
+            for i in range(1, len(parts)):
+                dir_path = '/'.join(parts[:i]) + '/'
+                dir_counts[dir_path] += 1
+    
+    # Print the results
+    for dir_path, count in sorted(dir_counts.items()):
+        print(f"  {dir_path}: {count}")
+
+if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        print("Usage: python meta-sm-dir-summary.py <filename>")
+        sys.exit(1)
+    
+    process_file(sys.argv[1])
 
