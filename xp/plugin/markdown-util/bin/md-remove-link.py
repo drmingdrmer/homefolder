@@ -3,6 +3,7 @@
 
 import sys
 import re
+import argparse
 
 def remove_links(content):
     # Remove inline links [text](url) but not images ![alt](url)
@@ -14,19 +15,19 @@ def remove_links(content):
     return content
 
 def main():
-    if len(sys.argv) != 2:
-        print("Usage: remove-link.py <markdown_file>", file=sys.stderr)
-        sys.exit(1)
+    parser = argparse.ArgumentParser(description='Remove links from markdown file')
+    parser.add_argument('file', help='Input markdown file')
+    args = parser.parse_args()
     
     try:
-        with open(sys.argv[1], 'r', encoding='utf-8') as f:
+        with open(args.file, 'r', encoding='utf-8') as f:
             content = f.read()
         
         result = remove_links(content)
         print(result, end='')
         
     except FileNotFoundError:
-        print(f"Error: File '{sys.argv[1]}' not found", file=sys.stderr)
+        print(f"Error: File '{args.file}' not found", file=sys.stderr)
         sys.exit(1)
     except Exception as e:
         print(f"Error: {str(e)}", file=sys.stderr)
