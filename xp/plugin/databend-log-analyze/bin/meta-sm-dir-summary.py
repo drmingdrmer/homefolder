@@ -29,60 +29,66 @@ import json
 import sys
 from collections import defaultdict
 
-def process_file(filename) -> iter:
-    dir_counts = defaultdict(int)
-    last_parts  = []
-    
+def read_ndjson(filename) -> iter:
     with open(filename, 'r') as file:
         for line in file:
             line = line.strip()
             if not line:
                 continue
-                
-            # Parse the JSON line
-            data = json.loads(line)
-            
-            # Check if it's a state_machine/0 line with GenericKV
-            if not (data[0] == "state_machine/0" and 
-                "GenericKV" in data[1] and 
-                "key" in data[1]["GenericKV"] and
-                data[1]["GenericKV"]["key"].startswith("__fd")):
-                continue
-                
-            key = data[1]["GenericKV"]["key"]
-            
-            parts = key.split('/')
-            parts.pop(-1)
+            yield json.loads(line)
 
-            c = 0
-            while len(parts) > c and len(last_parts) > c and parts[c] == last_parts[c]:
-                c += 1
+def filter_lines(lines) -> iter:
+    for line in lines:
+        if not (line[0] == "state_machine/0" and 
+                "GenericKV" in line[1] and 
+                "key" in line[1]["GenericKV"] and
+                line[1]["GenericKV"]["key"].startswith("__fd")):
+            continue
+        yield line
 
-            common_prefix_count = c
+def count_prefix(lines) -> iter:
+    dir_counts = defaultdict(int)
+    last_parts  = []
+    
+    for line in lines:
+        key = line[1]["GenericKV"]["key"]
+        
+        parts = key.split('/')
+        parts.pop(-1)
 
-            while len(last_parts) > common_prefix_count:
-                s = '/'.join(last_parts)
-                yield (s, dir_counts[s])
-                del dir_counts[s]
-                last_parts.pop(-1)
+        c = 0
+        while len(parts) > c and len(last_parts) > c and parts[c] == last_parts[c]:
+            c += 1
 
-            for i in range(0, len(parts)):
-                dir_path = '/'.join(parts[:i+1])
-                dir_counts[dir_path] += 1
+        common_prefix_count = c
 
-            last_parts = parts
-
-        while len(last_parts) > 0:
+        while len(last_parts) > common_prefix_count:
             s = '/'.join(last_parts)
             yield (s, dir_counts[s])
+            del dir_counts[s]
             last_parts.pop(-1)
+
+        for i in range(0, len(parts)):
+            dir_path = '/'.join(parts[:i+1])
+            dir_counts[dir_path] += 1
+
+        last_parts = parts
+
+    while len(last_parts) > 0:
+        s = '/'.join(last_parts)
+        yield (s, dir_counts[s])
+        del dir_counts[s]
+        last_parts.pop(-1)
     
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
         print("Usage: python meta-sm-dir-summary.py <filename>")
         sys.exit(1)
-    
-    # Print the results from the iterator
-    for dir_path, count in process_file(sys.argv[1]):
+
+    ndjson_lines = read_ndjson(sys.argv[1])
+    filtered_lines = filter_lines(ndjson_lines) 
+    results = count_prefix(filtered_lines)
+
+    for dir_path, count in results:
         print(f"  {dir_path}: {count}")
