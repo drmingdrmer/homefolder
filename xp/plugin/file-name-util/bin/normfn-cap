@@ -3,12 +3,10 @@
 # Same as normfn but capitalize the words.
 
 
-# BEGIN{FS=OFS="-"}: Sets both the input and output field separator to "-".
-# for(i=1;i<=NF;i++): Loops through each field (word) in the input.
-# $i=toupper(substr($i,1,1)) substr($i,2): For each field, it capitalizes the first character and keeps the rest unchanged.
-# toupper(substr($i,1,1)): Capitalizes the first character of the field.
-# substr($i,2): Returns the rest of the characters in the field (from the second character onward).
-# The 1 at the end of the awk command is a common idiom that means "print the line" after processing.
+# BEGIN{FS=OFS="-"} - 设置输入和输出的字段分隔符为连字符
+# for(i=1;i<=NF;i++) - 循环处理每个字段
+# $i=toupper(substr($i,1,1)) substr($i,2) - 将每个字段的第一个字符转为大写，然后与剩余部分拼接
+# 最后的 1 是 awk 的简写方式，表示输出当前处理的行
 
 cap=$(normfn "$*" | awk 'BEGIN{FS=OFS="-"} {for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) substr($i,2)} 1')
 
