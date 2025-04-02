@@ -6,52 +6,24 @@ let config = {
 let bookmarkToDelete = null;
 // Map to store folder colors
 let folderColors = {};
-// Import colorPalette and createElement from ui.js
-import { colorPalette, createElement } from './ui.js';
+// Import colorPalette and helper functions from ui.js
+import { colorPalette, createElement, createTextDiv } from './ui.js';
 
-// Function to get a unique key for folder coloring
-function getFolderColorKey(folder) {
-    // For root-level folders, use the folder title to ensure consistent coloring
-    if (folder.parentId === '0' || folder.parentId === '1') {
-        return folder.title;
-    }
-
-    // For direct children of the root folders (like direct links, util, etc.)
-    // use the folder's title to ensure they get unique colors
-    const parentFolder = allBookmarks[folder.parentId];
-    if (parentFolder && (parentFolder.parentId === '0' || parentFolder.parentId === '1')) {
-        return folder.title; // Use the actual folder title for direct bookmarks bar children
-    }
-
-    // For deeper nested folders, use a combination
-    return folder.title;
-}
 
 // Function to get color for a folder
 function getFolderColor(folderId) {
     const folder = allBookmarks[folderId];
     if (!folder) return colorPalette[0];
 
-    // For the splitFolderIntoColumns case, we need to consider both the parent folder 
-    // and the specific subfolder to distinguish "Direct links" from "util"
-    let colorKey;
+    // Get the color key based on the folder title
+    const colorKey = folder.title;
 
-    // If this is a direct child of the root folders, use its title
-    const parentFolder = folder.parentId ? allBookmarks[folder.parentId] : null;
-    if (parentFolder && (parentFolder.parentId === '0' || parentFolder.parentId === '1')) {
-        // For direct children of Bookmarks Bar, we want to use the complete title
-        colorKey = folder.title;
-    } else {
-        // For other cases, use the folder's own title for consistency
-        colorKey = getFolderColorKey(folder);
-    }
-
-    // If we already assigned a color to this key, return it
+    // Return existing color if already assigned
     if (folderColors[colorKey]) {
         return folderColors[colorKey];
     }
 
-    // Otherwise, assign a new color from our palette
+    // Assign a new color from the palette
     const colorIndex = Object.keys(folderColors).length % colorPalette.length;
     folderColors[colorKey] = colorPalette[colorIndex];
     return folderColors[colorKey];
@@ -98,12 +70,7 @@ function createBookmarkElement(bookmark, isSearchMode = false) {
 }
 
 function createSubfolderHeader(title) {
-    return createElement('div',
-        {
-            className: 'subfolder',
-            textContent: title
-        }
-    );
+    return createTextDiv('subfolder', title);
 }
 
 function collectAllBookmarks(nodes, parentFolder = null) {
@@ -198,7 +165,7 @@ function createFolderColumn(title, subtitle = null, folderId = null) {
         folderColumn.style.backgroundColor = color;
     }
 
-    const folderHeader = createElement('div', { className: 'folder-header', textContent: title });
+    const folderHeader = createTextDiv('folder-header', title);
 
     if (subtitle) {
         const subheader = createElement('span',
@@ -326,7 +293,7 @@ function processBookmarksInFolder(childIds, container) {
 
         if (item.isFolder) {
             // This is a subfolder, add a header
-            const subfolderHeader = createSubfolderHeader(item.title);
+            const subfolderHeader = createTextDiv('subfolder', item.title);
             container.appendChild(subfolderHeader);
             currentSubfolder = item;
 
@@ -710,7 +677,7 @@ function showFolderContents(folderId) {
 
             if (item.isFolder) {
                 // This is a subfolder, add a header
-                const subfolderHeader = createSubfolderHeader(item.title);
+                const subfolderHeader = createTextDiv('subfolder', item.title);
                 container.appendChild(subfolderHeader);
                 currentSubfolder = item;
 

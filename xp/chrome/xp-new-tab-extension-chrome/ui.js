@@ -51,5 +51,20 @@ function createElement(tag, attributes = {}, children = []) {
     return element;
 }
 
-// Export the colorPalette and createElement function for use in other files
-export { colorPalette, createElement }; 
+/**
+ * Helper function to create a div element with text content
+ * @param {string} className - CSS class name for the div
+ * @param {string} text - Text content for the div
+ * @param {Object} additionalAttributes - Additional attributes to set on the div
+ * @returns {HTMLElement} The created div element
+ */
+function createTextDiv(className, text, additionalAttributes = {}) {
+    return createElement('div', {
+        className,
+        textContent: text,
+        ...additionalAttributes
+    });
+}
+
+// Export the colorPalette and helper functions for use in other files
+export { colorPalette, createElement, createTextDiv }; 
