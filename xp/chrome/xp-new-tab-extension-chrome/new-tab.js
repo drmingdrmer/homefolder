@@ -6,21 +6,8 @@ let config = {
 let bookmarkToDelete = null;
 // Map to store folder colors
 let folderColors = {};
-// Seed colors for directories (stronger pastel colors with better contrast on dark backgrounds)
-const colorPalette = [
-    'rgba(255, 179, 186, 0.15)', // Pink
-    'rgba(255, 223, 186, 0.15)', // Peach
-    'rgba(255, 255, 186, 0.15)', // Light Yellow
-    'rgba(186, 255, 201, 0.15)', // Light Green
-    'rgba(186, 225, 255, 0.15)', // Light Blue
-    'rgba(186, 200, 255, 0.15)', // Lavender
-    'rgba(228, 186, 255, 0.15)', // Light Purple
-    'rgba(255, 186, 255, 0.15)', // Light Magenta
-    'rgba(200, 255, 248, 0.15)', // Mint
-    'rgba(255, 213, 145, 0.15)', // Light Orange
-    'rgba(173, 216, 230, 0.15)', // Light Sky Blue
-    'rgba(144, 238, 144, 0.15)'  // Light Green
-];
+// Import colorPalette and createElement from ui.js
+import { colorPalette, createElement } from './ui.js';
 
 // Function to get a unique key for folder coloring
 function getFolderColorKey(folder) {
@@ -72,41 +59,49 @@ function getFolderColor(folderId) {
 
 function createBookmarkElement(bookmark, isSearchMode = false) {
     // Create container for the bookmark item and delete button
-    const container = document.createElement('div');
-    container.className = 'bookmark-item';
+    const container = createElement('div', { className: 'bookmark-item' });
 
     // Create wrapper for bookmark content (title and URL)
-    const contentWrapper = document.createElement('div');
-    contentWrapper.className = 'bookmark-content';
+    const contentWrapper = createElement('div', { className: 'bookmark-content' });
     container.appendChild(contentWrapper);
 
     // Create the bookmark link
-    const link = document.createElement('a');
-    link.href = bookmark.url;
-    link.textContent = bookmark.title || bookmark.url;
-    link.className = 'bookmark-link';
+    const link = createElement('a',
+        {
+            href: bookmark.url,
+            className: 'bookmark-link',
+            textContent: bookmark.title || bookmark.url
+        }
+    );
     contentWrapper.appendChild(link);
 
     // Create URL display
-    const urlDisplay = document.createElement('div');
-    urlDisplay.className = 'bookmark-url';
-    urlDisplay.textContent = bookmark.url;
+    const urlDisplay = createElement('div',
+        {
+            className: 'bookmark-url',
+            textContent: bookmark.url
+        }
+    );
     contentWrapper.appendChild(urlDisplay);
 
     // Only create delete button if not in search mode
     if (!isSearchMode) {
         // Create delete button
-        const deleteBtn = document.createElement('button');
-        deleteBtn.className = 'delete-button';
-        deleteBtn.textContent = '×';
-        deleteBtn.setAttribute('aria-label', 'Delete bookmark');
+        const deleteBtn = createElement('button',
+            {
+                className: 'delete-button',
+                'aria-label': 'Delete bookmark',
+                textContent: '×'
+            }
+        );
+
         deleteBtn.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
             showDeleteConfirmation(bookmark, e);
         });
-        // Add delete button to the container, not the content wrapper
-        // This allows it to be positioned absolutely relative to the container
+
+        // Add delete button to the container
         container.appendChild(deleteBtn);
     }
 
@@ -114,10 +109,12 @@ function createBookmarkElement(bookmark, isSearchMode = false) {
 }
 
 function createSubfolderHeader(title) {
-    const header = document.createElement('div');
-    header.className = 'subfolder';
-    header.textContent = title;
-    return header;
+    return createElement('div',
+        {
+            className: 'subfolder',
+            textContent: title
+        }
+    );
 }
 
 function collectAllBookmarks(nodes, parentFolder = null) {
@@ -204,8 +201,7 @@ function countItemsInFolder(folder) {
 }
 
 function createFolderColumn(title, subtitle = null, folderId = null) {
-    const folderColumn = document.createElement('div');
-    folderColumn.className = 'folder-column';
+    const folderColumn = createElement('div', { className: 'folder-column' });
 
     // Apply color if folderId is provided
     if (folderId) {
@@ -213,21 +209,21 @@ function createFolderColumn(title, subtitle = null, folderId = null) {
         folderColumn.style.backgroundColor = color;
     }
 
-    const folderHeader = document.createElement('div');
-    folderHeader.className = 'folder-header';
-    folderHeader.textContent = title;
+    const folderHeader = createElement('div', { className: 'folder-header', textContent: title });
 
     if (subtitle) {
-        const subheader = document.createElement('span');
-        subheader.className = 'folder-subheader';
-        subheader.textContent = subtitle;
+        const subheader = createElement('span',
+            {
+                className: 'folder-subheader',
+                textContent: subtitle
+            }
+        );
         folderHeader.appendChild(subheader);
     }
 
     folderColumn.appendChild(folderHeader);
 
-    const folderContent = document.createElement('div');
-    folderContent.className = 'folder-content';
+    const folderContent = createElement('div', { className: 'folder-content' });
     folderColumn.appendChild(folderContent);
 
     return { column: folderColumn, content: folderContent };
@@ -789,9 +785,12 @@ function showDeleteConfirmation(bookmark, event) {
     const buttonRect = deleteButton.getBoundingClientRect();
 
     // Create confirmation dialog
-    const confirmDialog = document.createElement('div');
-    confirmDialog.className = 'delete-confirm';
-    confirmDialog.id = 'delete-confirm';
+    const confirmDialog = createElement('div',
+        {
+            className: 'delete-confirm',
+            id: 'delete-confirm'
+        }
+    );
 
     // Position the dialog to the left of the delete button
     confirmDialog.style.position = 'fixed';
@@ -799,18 +798,17 @@ function showDeleteConfirmation(bookmark, event) {
     confirmDialog.style.top = `${buttonRect.top - 5}px`;
 
     // Dialog content
-    const title = document.createElement('h3');
-    title.textContent = 'Delete Bookmark';
+    const title = createElement('h3', { textContent: 'Delete Bookmark' });
+    const message = createElement('p', { textContent: `Delete "${bookmark.title}"?` });
+    const buttonsContainer = createElement('div', { className: 'delete-confirm-buttons' });
 
-    const message = document.createElement('p');
-    message.textContent = `Delete "${bookmark.title}"?`;
+    const cancelBtn = createElement('button',
+        {
+            className: 'delete-confirm-cancel',
+            textContent: 'Cancel'
+        }
+    );
 
-    const buttonsContainer = document.createElement('div');
-    buttonsContainer.className = 'delete-confirm-buttons';
-
-    const cancelBtn = document.createElement('button');
-    cancelBtn.className = 'delete-confirm-cancel';
-    cancelBtn.textContent = 'Cancel';
     cancelBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         hideDeleteConfirmation();
@@ -824,9 +822,13 @@ function showDeleteConfirmation(bookmark, event) {
         }
     });
 
-    const deleteBtn = document.createElement('button');
-    deleteBtn.className = 'delete-confirm-delete';
-    deleteBtn.textContent = 'Delete';
+    const deleteBtn = createElement('button',
+        {
+            className: 'delete-confirm-delete',
+            textContent: 'Delete'
+        }
+    );
+
     deleteBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         deleteBookmark(bookmark.id);
