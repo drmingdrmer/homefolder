@@ -75,12 +75,23 @@ function createBookmarkElement(bookmark, isSearchMode = false) {
     const container = document.createElement('div');
     container.className = 'bookmark-item';
 
+    // Create wrapper for bookmark content (title and URL)
+    const contentWrapper = document.createElement('div');
+    contentWrapper.className = 'bookmark-content';
+    container.appendChild(contentWrapper);
+
     // Create the bookmark link
     const link = document.createElement('a');
     link.href = bookmark.url;
     link.textContent = bookmark.title || bookmark.url;
     link.className = 'bookmark-link';
-    container.appendChild(link);
+    contentWrapper.appendChild(link);
+
+    // Create URL display
+    const urlDisplay = document.createElement('div');
+    urlDisplay.className = 'bookmark-url';
+    urlDisplay.textContent = bookmark.url;
+    contentWrapper.appendChild(urlDisplay);
 
     // Only create delete button if not in search mode
     if (!isSearchMode) {
@@ -589,9 +600,17 @@ function getFolderPath(folder) {
 
 // Helper function to highlight search term in text
 function highlightText(element, searchTerm) {
-    if (!searchTerm.trim() || !element.textContent) return;
+    if (!searchTerm.trim()) return;
 
-    const text = element.textContent;
+    // Find the bookmark link element if we're highlighting a bookmark-content element
+    let textElement = element;
+    if (element.classList.contains('bookmark-content')) {
+        textElement = element.querySelector('.bookmark-link');
+    }
+
+    if (!textElement || !textElement.textContent) return;
+
+    const text = textElement.textContent;
     const lcText = text.toLowerCase();
     const lcSearch = searchTerm.toLowerCase();
 
@@ -630,7 +649,7 @@ function highlightText(element, searchTerm) {
         }
 
         // Clear element and add highlighted content
-        element.innerHTML = '';
+        textElement.innerHTML = '';
         parts.forEach(part => {
             if (part.isMatch) {
                 const highlight = document.createElement('span');
@@ -638,10 +657,10 @@ function highlightText(element, searchTerm) {
                 highlight.style.padding = '0 2px';
                 highlight.style.borderRadius = '2px';
                 highlight.textContent = part.text;
-                element.appendChild(highlight);
+                textElement.appendChild(highlight);
             } else {
                 const textNode = document.createTextNode(part.text);
-                element.appendChild(textNode);
+                textElement.appendChild(textNode);
             }
         });
     }
