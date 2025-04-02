@@ -273,37 +273,121 @@ function filterBookmarks(searchTerm) {
     const folderMatches = {};
 
     matches.forEach(bookmark => {
-        const parentId = bookmark.parentId;
-        if (!folderMatches[parentId]) {
-            folderMatches[parentId] = [];
+        // Find the folder path for this bookmark
+        const folderPath = getBookmarkFolderPath(bookmark);
+        const folderKey = folderPath.map(f => f.id).join('-');
+
+        if (!folderMatches[folderKey]) {
+            folderMatches[folderKey] = {
+                path: folderPath,
+                bookmarks: []
+            };
         }
-        folderMatches[parentId].push(bookmark);
+        folderMatches[folderKey].bookmarks.push(bookmark);
     });
 
-    // Create a results column
-    const resultsColumn = document.createElement('div');
-    resultsColumn.className = 'folder-column';
-    resultsColumn.style.gridColumn = '1 / -1'; // Span all columns
+    // Create result columns grouped by folder
+    Object.values(folderMatches).forEach(group => {
+        const { path, bookmarks } = group;
 
-    const resultsHeader = document.createElement('div');
-    resultsHeader.className = 'folder-header';
-    resultsHeader.textContent = `Search Results: ${matches.length} bookmarks found`;
-    resultsColumn.appendChild(resultsHeader);
+        // Create folder column
+        const folderColumn = document.createElement('div');
+        folderColumn.className = 'folder-column';
 
-    const resultsContent = document.createElement('div');
-    resultsContent.className = 'folder-content';
-    resultsContent.style.display = 'grid';
-    resultsContent.style.gridTemplateColumns = 'repeat(auto-fill, minmax(250px, 1fr))';
-    resultsContent.style.gap = '10px';
-    resultsColumn.appendChild(resultsContent);
+        // Create header with full path
+        const folderHeader = document.createElement('div');
+        folderHeader.className = 'folder-header';
 
-    // Add all matches
-    matches.forEach(bookmark => {
-        const link = createBookmarkElement(bookmark);
-        resultsContent.appendChild(link);
+        // Format the path for display
+        const pathDisplay = path.map(f => f.title).join(' > ');
+        folderHeader.textContent = pathDisplay;
+
+        // Add match count as subheader
+        const matchCount = document.createElement('span');
+        matchCount.className = 'folder-subheader';
+        matchCount.textContent = `${bookmarks.length} match${bookmarks.length > 1 ? 'es' : ''}`;
+        folderHeader.appendChild(matchCount);
+
+        folderColumn.appendChild(folderHeader);
+
+        // Add bookmarks
+        const folderContent = document.createElement('div');
+        folderContent.className = 'folder-content';
+
+        bookmarks.forEach(bookmark => {
+            const link = createBookmarkElement(bookmark);
+
+            // Highlight the matched text
+            if (searchTerm.trim()) {
+                const titleText = bookmark.title;
+                const lcTitle = titleText.toLowerCase();
+                const lcSearch = searchTerm.toLowerCase();
+
+                if (lcTitle.includes(lcSearch)) {
+                    const startIndex = lcTitle.indexOf(lcSearch);
+                    const endIndex = startIndex + lcSearch.length;
+
+                    const beforeMatch = titleText.substring(0, startIndex);
+                    const match = titleText.substring(startIndex, endIndex);
+                    const afterMatch = titleText.substring(endIndex);
+
+                    link.innerHTML = '';
+
+                    if (beforeMatch) {
+                        const before = document.createTextNode(beforeMatch);
+                        link.appendChild(before);
+                    }
+
+                    const highlight = document.createElement('span');
+                    highlight.style.backgroundColor = 'rgba(255, 255, 100, 0.3)';
+                    highlight.style.padding = '0 2px';
+                    highlight.style.borderRadius = '2px';
+                    highlight.textContent = match;
+                    link.appendChild(highlight);
+
+                    if (afterMatch) {
+                        const after = document.createTextNode(afterMatch);
+                        link.appendChild(after);
+                    }
+                }
+            }
+
+            folderContent.appendChild(link);
+        });
+
+        folderColumn.appendChild(folderContent);
+        container.appendChild(folderColumn);
     });
 
-    container.appendChild(resultsColumn);
+    // Add summary at the top
+    const summaryColumn = document.createElement('div');
+    summaryColumn.className = 'folder-column';
+    summaryColumn.style.gridColumn = '1 / -1';
+    summaryColumn.style.marginBottom = '10px';
+
+    const summaryHeader = document.createElement('div');
+    summaryHeader.className = 'folder-header';
+    summaryHeader.textContent = `Search Results: ${matches.length} bookmark${matches.length > 1 ? 's' : ''} found matching "${searchTerm}"`;
+    summaryColumn.appendChild(summaryHeader);
+
+    container.insertBefore(summaryColumn, container.firstChild);
+}
+
+// Helper function to get the full folder path for a bookmark
+function getBookmarkFolderPath(bookmark) {
+    const path = [];
+    let currentId = bookmark.parentId;
+
+    // Traverse up the folder hierarchy
+    while (currentId) {
+        const folder = allBookmarks[currentId];
+        if (!folder) break;
+
+        path.unshift(folder); // Add to beginning of array
+        currentId = folder.parentId;
+    }
+
+    return path;
 }
 
 // Settings functions
