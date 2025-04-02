@@ -332,9 +332,7 @@ body::before {
 }
 
 /* Search mode styles */
-body.search-mode .delete-button {
-    display: none !important;
-}
+/* Removing the rule that hides delete buttons during search mode */
 
 @media (max-width: 768px) {
     .bookmarks-container {

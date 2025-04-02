@@ -42,26 +42,24 @@ function createBookmarkElement(bookmark, isSearchMode = false) {
         ])
     ]);
 
-    // Only create delete button if not in search mode
-    if (!isSearchMode) {
-        // Create delete button
-        const deleteBtn = createElement('button',
-            {
-                className: 'delete-button',
-                'aria-label': 'Delete bookmark',
-                textContent: '×'
-            }
-        );
+    // Always create delete button regardless of search mode
+    // Create delete button
+    const deleteBtn = createElement('button',
+        {
+            className: 'delete-button',
+            'aria-label': 'Delete bookmark',
+            textContent: '×'
+        }
+    );
 
-        deleteBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            showDeleteConfirmation(bookmark, e);
-        });
+    deleteBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        showDeleteConfirmation(bookmark, e);
+    });
 
-        // Add delete button to the container
-        container.appendChild(deleteBtn);
-    }
+    // Add delete button to the container
+    container.appendChild(deleteBtn);
 
     return container;
 }
@@ -405,7 +403,7 @@ function filterBookmarks(searchTerm) {
 
                     if (!item.isFolder) {
                         // Add bookmark with search mode enabled
-                        const bookmarkElement = createBookmarkElement(item, true);
+                        const bookmarkElement = createBookmarkElement(item);
                         content.appendChild(bookmarkElement);
                         itemCount++;
                     }
@@ -512,7 +510,7 @@ function filterBookmarks(searchTerm) {
 
             bookmarks.forEach(bookmark => {
                 // Create bookmark element with search mode enabled
-                const link = createBookmarkElement(bookmark, true);
+                const link = createBookmarkElement(bookmark);
 
                 // Get the content element that contains the bookmark link
                 const content = link.querySelector('.bookmark-content');
@@ -677,7 +675,7 @@ function showFolderContents(folderId) {
                 }
             } else {
                 // This is a bookmark, add it to the container (respecting search mode)
-                container.appendChild(createBookmarkElement(item, isSearchMode));
+                container.appendChild(createBookmarkElement(item));
             }
         });
     }
