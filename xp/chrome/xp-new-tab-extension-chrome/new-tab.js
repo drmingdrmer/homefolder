@@ -4,6 +4,71 @@ let config = {
     maxEntriesPerColumn: 10
 };
 let bookmarkToDelete = null;
+// Map to store folder colors
+let folderColors = {};
+// Seed colors for directories (stronger pastel colors with better contrast on dark backgrounds)
+const colorPalette = [
+    'rgba(255, 179, 186, 0.15)', // Pink
+    'rgba(255, 223, 186, 0.15)', // Peach
+    'rgba(255, 255, 186, 0.15)', // Light Yellow
+    'rgba(186, 255, 201, 0.15)', // Light Green
+    'rgba(186, 225, 255, 0.15)', // Light Blue
+    'rgba(186, 200, 255, 0.15)', // Lavender
+    'rgba(228, 186, 255, 0.15)', // Light Purple
+    'rgba(255, 186, 255, 0.15)', // Light Magenta
+    'rgba(200, 255, 248, 0.15)', // Mint
+    'rgba(255, 213, 145, 0.15)', // Light Orange
+    'rgba(173, 216, 230, 0.15)', // Light Sky Blue
+    'rgba(144, 238, 144, 0.15)'  // Light Green
+];
+
+// Function to get a unique key for folder coloring
+function getFolderColorKey(folder) {
+    // For root-level folders, use the folder title to ensure consistent coloring
+    if (folder.parentId === '0' || folder.parentId === '1') {
+        return folder.title;
+    }
+
+    // For direct children of the root folders (like direct links, util, etc.)
+    // use the folder's title to ensure they get unique colors
+    const parentFolder = allBookmarks[folder.parentId];
+    if (parentFolder && (parentFolder.parentId === '0' || parentFolder.parentId === '1')) {
+        return folder.title; // Use the actual folder title for direct bookmarks bar children
+    }
+
+    // For deeper nested folders, use a combination
+    return folder.title;
+}
+
+// Function to get color for a folder
+function getFolderColor(folderId) {
+    const folder = allBookmarks[folderId];
+    if (!folder) return colorPalette[0];
+
+    // For the splitFolderIntoColumns case, we need to consider both the parent folder 
+    // and the specific subfolder to distinguish "Direct links" from "util"
+    let colorKey;
+
+    // If this is a direct child of the root folders, use its title
+    const parentFolder = folder.parentId ? allBookmarks[folder.parentId] : null;
+    if (parentFolder && (parentFolder.parentId === '0' || parentFolder.parentId === '1')) {
+        // For direct children of Bookmarks Bar, we want to use the complete title
+        colorKey = folder.title;
+    } else {
+        // For other cases, use the folder's own title for consistency
+        colorKey = getFolderColorKey(folder);
+    }
+
+    // If we already assigned a color to this key, return it
+    if (folderColors[colorKey]) {
+        return folderColors[colorKey];
+    }
+
+    // Otherwise, assign a new color from our palette
+    const colorIndex = Object.keys(folderColors).length % colorPalette.length;
+    folderColors[colorKey] = colorPalette[colorIndex];
+    return folderColors[colorKey];
+}
 
 function createBookmarkElement(bookmark, isSearchMode = false) {
     // Create container for the bookmark item and delete button
@@ -71,6 +136,9 @@ function renderBookmarks() {
     const container = document.getElementById('bookmarks-container');
     container.innerHTML = '';
 
+    // Reset folder colors on re-render
+    folderColors = {};
+
     // Remove search mode class when returning to normal view
     document.body.classList.remove('search-mode');
 
@@ -91,7 +159,7 @@ function renderBookmarks() {
 
         if (itemCount <= config.maxEntriesPerColumn) {
             // Create a single column for this folder
-            const folderColumn = createFolderColumn(folder.title);
+            const folderColumn = createFolderColumn(folder.title, null, folder.id);
 
             // Add all items to the column
             processBookmarksInFolder(folder.children, folderColumn.content);
@@ -125,9 +193,15 @@ function countItemsInFolder(folder) {
     return count;
 }
 
-function createFolderColumn(title, subtitle = null) {
+function createFolderColumn(title, subtitle = null, folderId = null) {
     const folderColumn = document.createElement('div');
     folderColumn.className = 'folder-column';
+
+    // Apply color if folderId is provided
+    if (folderId) {
+        const color = getFolderColor(folderId);
+        folderColumn.style.backgroundColor = color;
+    }
 
     const folderHeader = document.createElement('div');
     folderHeader.className = 'folder-header';
@@ -173,7 +247,8 @@ function splitFolderIntoColumns(folder, container) {
 
         chunkedBookmarks.forEach((chunk, index) => {
             const subtitle = chunkedBookmarks.length > 1 ? `Direct links (${index + 1}/${chunkedBookmarks.length})` : 'Direct links';
-            const { column, content } = createFolderColumn(folder.title, subtitle);
+            // For direct links, use folder.id to maintain the same color across direct links sections
+            const { column, content } = createFolderColumn(folder.title, subtitle, folder.id);
 
             chunk.forEach(bookmark => {
                 content.appendChild(createBookmarkElement(bookmark));
@@ -189,17 +264,18 @@ function splitFolderIntoColumns(folder, container) {
 
         if (itemCount <= config.maxEntriesPerColumn) {
             // This subfolder fits in one column
-            const { column, content } = createFolderColumn(folder.title, subfolder.title);
+            // For subfolders, use the subfolder's ID to get different colors for different subfolders
+            const { column, content } = createFolderColumn(folder.title, subfolder.title, subfolder.id);
             processBookmarksInFolder(subfolder.children, content);
             container.appendChild(column);
         } else {
             // This subfolder needs to be split
-            splitSubfolderIntoColumns(folder.title, subfolder, container);
+            splitSubfolderIntoColumns(folder.title, subfolder, container, subfolder.id);
         }
     });
 }
 
-function splitSubfolderIntoColumns(parentTitle, subfolder, container) {
+function splitSubfolderIntoColumns(parentTitle, subfolder, container, parentFolderId) {
     // Collect all bookmarks in this subfolder (flattened)
     const allSubfolderBookmarks = [];
 
@@ -226,7 +302,8 @@ function splitSubfolderIntoColumns(parentTitle, subfolder, container) {
     // Create a column for each chunk
     chunks.forEach((chunk, index) => {
         const subtitle = `${subfolder.title} (${index + 1}/${chunks.length})`;
-        const { column, content } = createFolderColumn(parentTitle, subtitle);
+        // Use the subfolder's ID for consistent coloring within this subfolder's chunks
+        const { column, content } = createFolderColumn(parentTitle, subtitle, subfolder.id);
 
         chunk.forEach(bookmark => {
             content.appendChild(createBookmarkElement(bookmark));
@@ -280,6 +357,9 @@ function filterBookmarks(searchTerm) {
 
     // Add a class to the body or container to indicate search mode
     document.body.classList.add('search-mode');
+
+    // Reset folder colors for search
+    folderColors = {};
 
     container.innerHTML = '';
 
@@ -351,7 +431,7 @@ function filterBookmarks(searchTerm) {
             const pathDisplay = folderPath.map(f => f.title).join(' > ');
 
             // Create a column for this folder
-            const { column, content } = createFolderColumn(pathDisplay);
+            const { column, content } = createFolderColumn(pathDisplay, null, folder.id);
 
             // Highlight the folder name in the header
             const folderHeader = column.querySelector('.folder-header');
@@ -441,9 +521,18 @@ function filterBookmarks(searchTerm) {
         Object.values(folderMatches).forEach(group => {
             const { path, bookmarks } = group;
 
-            // Create folder column
+            // Get the top-level folder to use for coloring
+            const topFolderId = path.length > 0 ? path[0].id : null;
+
+            // Create folder column with color
             const folderColumn = document.createElement('div');
             folderColumn.className = 'folder-column';
+
+            // Apply color based on top folder
+            if (topFolderId) {
+                const color = getFolderColor(topFolderId);
+                folderColumn.style.backgroundColor = color;
+            }
 
             // Create header with full path
             const folderHeader = document.createElement('div');
@@ -481,7 +570,7 @@ function filterBookmarks(searchTerm) {
     }
 }
 
-// Helper function to get the path of a folder (similar to getBookmarkFolderPath)
+// Helper function to get the path of a folder
 function getFolderPath(folder) {
     const path = [folder]; // Include the folder itself
     let currentId = folder.parentId;
@@ -597,7 +686,7 @@ function showFolderContents(folderId) {
     const pathDisplay = folderPath.map(f => f.title).join(' > ');
 
     // Create folder content
-    const { column, content } = createFolderColumn(pathDisplay);
+    const { column, content } = createFolderColumn(pathDisplay, null, folder.id);
 
     // Create a custom function to process folder contents with search mode awareness
     function processFolderContentsWithMode(childIds, container) {
