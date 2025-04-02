@@ -3,13 +3,33 @@ let allBookmarks = {};
 let config = {
     maxEntriesPerColumn: 10
 };
+let bookmarkToDelete = null;
 
 function createBookmarkElement(bookmark) {
+    // Create container for the bookmark item and delete button
+    const container = document.createElement('div');
+    container.className = 'bookmark-item';
+
+    // Create the bookmark link
     const link = document.createElement('a');
     link.href = bookmark.url;
     link.textContent = bookmark.title || bookmark.url;
     link.className = 'bookmark-link';
-    return link;
+    container.appendChild(link);
+
+    // Create delete button
+    const deleteBtn = document.createElement('button');
+    deleteBtn.className = 'delete-button';
+    deleteBtn.textContent = '×';
+    deleteBtn.setAttribute('aria-label', 'Delete bookmark');
+    deleteBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        showDeleteConfirmation(bookmark);
+    });
+    container.appendChild(deleteBtn);
+
+    return container;
 }
 
 function createSubfolderHeader(title) {
@@ -596,6 +616,138 @@ function getBookmarkFolderPath(bookmark) {
     }
 
     return path;
+}
+
+// Show confirmation dialog for bookmark deletion
+function showDeleteConfirmation(bookmark) {
+    // Store the bookmark to delete
+    bookmarkToDelete = bookmark;
+
+    // Create overlay
+    const overlay = document.createElement('div');
+    overlay.className = 'overlay';
+    overlay.id = 'delete-overlay';
+
+    // Create confirmation dialog
+    const confirmDialog = document.createElement('div');
+    confirmDialog.className = 'delete-confirm';
+    confirmDialog.id = 'delete-confirm';
+
+    // Dialog content
+    const title = document.createElement('h3');
+    title.textContent = 'Delete Bookmark';
+
+    const message = document.createElement('p');
+    message.textContent = `Are you sure you want to delete "${bookmark.title}"?`;
+
+    const buttonsContainer = document.createElement('div');
+    buttonsContainer.className = 'delete-confirm-buttons';
+
+    const cancelBtn = document.createElement('button');
+    cancelBtn.className = 'delete-confirm-cancel';
+    cancelBtn.textContent = 'Cancel';
+    cancelBtn.addEventListener('click', hideDeleteConfirmation);
+
+    // Add keyboard controls for easier navigation
+    cancelBtn.addEventListener('keydown', (e) => {
+        if (e.key === 'Tab' && e.shiftKey) {
+            e.preventDefault();
+            deleteBtn.focus();
+        }
+    });
+
+    const deleteBtn = document.createElement('button');
+    deleteBtn.className = 'delete-confirm-delete';
+    deleteBtn.textContent = 'Delete';
+    deleteBtn.addEventListener('click', () => {
+        deleteBookmark(bookmark.id);
+        hideDeleteConfirmation();
+    });
+
+    // Add keyboard controls for easier navigation
+    deleteBtn.addEventListener('keydown', (e) => {
+        if (e.key === 'Tab' && !e.shiftKey) {
+            e.preventDefault();
+            cancelBtn.focus();
+        }
+    });
+
+    // Assemble the dialog
+    buttonsContainer.appendChild(cancelBtn);
+    buttonsContainer.appendChild(deleteBtn);
+
+    confirmDialog.appendChild(title);
+    confirmDialog.appendChild(message);
+    confirmDialog.appendChild(buttonsContainer);
+
+    // Add to document
+    document.body.appendChild(overlay);
+    document.body.appendChild(confirmDialog);
+
+    // Focus on the Cancel button by default (safer option)
+    setTimeout(() => {
+        cancelBtn.focus();
+    }, 10);
+
+    // Add keyboard event listener for Escape key
+    document.addEventListener('keydown', handleEscapeKey);
+
+    // Also add click on overlay to cancel
+    overlay.addEventListener('click', hideDeleteConfirmation);
+}
+
+function hideDeleteConfirmation() {
+    // Remove the dialog and overlay
+    const dialog = document.getElementById('delete-confirm');
+    const overlay = document.getElementById('delete-overlay');
+
+    if (dialog) document.body.removeChild(dialog);
+    if (overlay) document.body.removeChild(overlay);
+
+    // Remove escape key listener
+    document.removeEventListener('keydown', handleEscapeKey);
+
+    // Clear bookmarkToDelete
+    bookmarkToDelete = null;
+}
+
+function handleEscapeKey(e) {
+    if (e.key === 'Escape') {
+        hideDeleteConfirmation();
+    }
+}
+
+function deleteBookmark(id) {
+    chrome.bookmarks.remove(id, () => {
+        // Check for error
+        if (chrome.runtime.lastError) {
+            console.error(chrome.runtime.lastError.message);
+            return;
+        }
+
+        // Update our local store
+        const bookmark = allBookmarks[id];
+        if (bookmark && bookmark.parentId) {
+            const parent = allBookmarks[bookmark.parentId];
+            if (parent && parent.children) {
+                // Remove from parent's children array
+                parent.children = parent.children.filter(childId => childId !== id);
+            }
+        }
+
+        // Remove from our local store
+        delete allBookmarks[id];
+
+        // Refresh the view
+        const searchBox = document.getElementById('searchBox');
+        if (searchBox.value.trim()) {
+            // If search is active, re-filter
+            filterBookmarks(searchBox.value);
+        } else {
+            // Otherwise just render normally
+            renderBookmarks();
+        }
+    });
 }
 
 // Settings functions
