@@ -160,9 +160,6 @@ function renderBookmarks() {
         item.isFolder && (item.parentId === '0' || item.parentId === '1')
     );
 
-    // Sort folders alphabetically
-    topLevelFolders.sort((a, b) => a.title.localeCompare(b.title));
-
     // Process each top-level folder
     topLevelFolders.forEach(folder => {
         if (!folder.children || folder.children.length === 0) return;
@@ -379,14 +376,16 @@ function filterBookmarks(searchTerm) {
     const lowercaseSearch = searchTerm.toLowerCase();
 
     // FIRST SECTION: Find folders that match the search term
-    const matchingFolders = Object.values(allBookmarks).filter(item =>
+    // Use Array.from to preserve the order in which they were defined
+    const matchingFolders = Array.from(Object.values(allBookmarks).filter(item =>
         item.isFolder && item.title.toLowerCase().includes(lowercaseSearch)
-    );
+    ));
 
     // SECOND SECTION: Find bookmarks that match the search term
-    const matchingBookmarks = Object.values(allBookmarks).filter(item =>
+    // Use Array.from to preserve the order in which they were defined
+    const matchingBookmarks = Array.from(Object.values(allBookmarks).filter(item =>
         !item.isFolder && item.title.toLowerCase().includes(lowercaseSearch)
-    );
+    ));
 
     // If no matches at all
     if (matchingFolders.length === 0 && matchingBookmarks.length === 0) {
@@ -515,6 +514,7 @@ function filterBookmarks(searchTerm) {
 
         // Group matches by parent folder
         const folderMatches = {};
+        const folderMatchOrder = []; // Track insertion order
 
         matchingBookmarks.forEach(bookmark => {
             // Find the folder path for this bookmark
@@ -526,12 +526,14 @@ function filterBookmarks(searchTerm) {
                     path: folderPath,
                     bookmarks: []
                 };
+                folderMatchOrder.push(folderKey); // Remember the order
             }
             folderMatches[folderKey].bookmarks.push(bookmark);
         });
 
-        // Create result columns grouped by folder
-        Object.values(folderMatches).forEach(group => {
+        // Process folder matches in the original order they were encountered
+        folderMatchOrder.forEach(key => {
+            const group = folderMatches[key];
             const { path, bookmarks } = group;
 
             // Get the top-level folder to use for coloring
