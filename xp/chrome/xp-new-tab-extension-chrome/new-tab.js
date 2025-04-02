@@ -7,7 +7,7 @@ let bookmarkToDelete = null;
 // Map to store folder colors
 let folderColors = {};
 // Import colorPalette and helper functions from ui.js
-import { colorPalette, createElement, createTextDiv } from './ui.js';
+import { colorPalette, createElement, div, textDiv, textSpan } from './ui.js';
 
 
 // Function to get color for a folder
@@ -31,17 +31,14 @@ function getFolderColor(folderId) {
 
 function createBookmarkElement(bookmark, isSearchMode = false) {
     // Create container with bookmark content and prepare for delete button
-    const container = createElement('div', { className: 'bookmark-item' }, [
-        createElement('div', { className: 'bookmark-content' }, [
+    const container = div('bookmark-item', {}, [
+        div('bookmark-content', {}, [
             createElement('a', {
                 href: bookmark.url,
                 className: 'bookmark-link',
                 textContent: bookmark.title || bookmark.url
             }),
-            createElement('div', {
-                className: 'bookmark-url',
-                textContent: bookmark.url
-            })
+            div('bookmark-url', { textContent: bookmark.url })
         ])
     ]);
 
@@ -67,10 +64,6 @@ function createBookmarkElement(bookmark, isSearchMode = false) {
     }
 
     return container;
-}
-
-function createSubfolderHeader(title) {
-    return createTextDiv('subfolder', title);
 }
 
 function collectAllBookmarks(nodes, parentFolder = null) {
@@ -157,7 +150,7 @@ function countItemsInFolder(folder) {
 }
 
 function createFolderColumn(title, subtitle = null, folderId = null) {
-    const folderColumn = createElement('div', { className: 'folder-column' });
+    const folderColumn = div('folder-column');
 
     // Apply color if folderId is provided
     if (folderId) {
@@ -165,21 +158,15 @@ function createFolderColumn(title, subtitle = null, folderId = null) {
         folderColumn.style.backgroundColor = color;
     }
 
-    const folderHeader = createTextDiv('folder-header', title);
+    const folderHeader = textDiv('folder-header', title);
 
     if (subtitle) {
-        const subheader = createElement('span',
-            {
-                className: 'folder-subheader',
-                textContent: subtitle
-            }
-        );
-        folderHeader.appendChild(subheader);
+        folderHeader.appendChild(textSpan('folder-subheader', subtitle));
     }
 
     folderColumn.appendChild(folderHeader);
 
-    const folderContent = createElement('div', { className: 'folder-content' });
+    const folderContent = div('folder-content');
     folderColumn.appendChild(folderContent);
 
     return { column: folderColumn, content: folderContent };
@@ -293,7 +280,7 @@ function processBookmarksInFolder(childIds, container) {
 
         if (item.isFolder) {
             // This is a subfolder, add a header
-            const subfolderHeader = createTextDiv('subfolder', item.title);
+            const subfolderHeader = textDiv('subfolder', item.title);
             container.appendChild(subfolderHeader);
             currentSubfolder = item;
 
@@ -341,22 +328,26 @@ function filterBookmarks(searchTerm) {
 
     // If no matches at all
     if (matchingFolders.length === 0 && matchingBookmarks.length === 0) {
-        const noResults = document.createElement('div');
-        noResults.textContent = 'No bookmarks or folders found matching your search.';
-        noResults.style.padding = '20px';
-        noResults.style.textAlign = 'center';
+        const noResults = div('', {
+            textContent: 'No bookmarks or folders found matching your search.',
+            style: {
+                padding: '20px',
+                textAlign: 'center'
+            }
+        });
         container.appendChild(noResults);
         return;
     }
 
     // Add summary at the top
-    const summaryColumn = document.createElement('div');
-    summaryColumn.className = 'folder-column';
-    summaryColumn.style.gridColumn = '1 / -1';
-    summaryColumn.style.marginBottom = '10px';
+    const summaryColumn = div('folder-column', {
+        style: {
+            gridColumn: '1 / -1',
+            marginBottom: '10px'
+        }
+    });
 
-    const summaryHeader = document.createElement('div');
-    summaryHeader.className = 'folder-header';
+    const summaryHeader = div('folder-header');
 
     let summaryText = 'Search Results:';
     if (matchingFolders.length > 0) {
@@ -376,14 +367,14 @@ function filterBookmarks(searchTerm) {
 
     // SECTION 1: Display matching folders with their contents
     if (matchingFolders.length > 0) {
-        const folderSectionHeader = document.createElement('div');
-        folderSectionHeader.className = 'folder-column';
-        folderSectionHeader.style.gridColumn = '1 / -1';
-        folderSectionHeader.style.marginBottom = '5px';
+        const folderSectionHeader = div('folder-column', {
+            style: {
+                gridColumn: '1 / -1',
+                marginBottom: '5px'
+            }
+        });
 
-        const headerDiv = document.createElement('div');
-        headerDiv.className = 'folder-header';
-        headerDiv.textContent = 'Matching Folders';
+        const headerDiv = div('folder-header', { textContent: 'Matching Folders' });
         folderSectionHeader.appendChild(headerDiv);
 
         container.appendChild(folderSectionHeader);
@@ -437,11 +428,14 @@ function filterBookmarks(searchTerm) {
                     content.appendChild(moreLink);
                 }
             } else {
-                const emptyNote = document.createElement('div');
-                emptyNote.textContent = 'This folder is empty';
-                emptyNote.style.fontStyle = 'italic';
-                emptyNote.style.padding = '5px';
-                emptyNote.style.opacity = '0.7';
+                const emptyNote = div('', {
+                    textContent: 'This folder is empty',
+                    style: {
+                        fontStyle: 'italic',
+                        padding: '5px',
+                        opacity: '0.7'
+                    }
+                });
                 content.appendChild(emptyNote);
             }
 
@@ -451,15 +445,15 @@ function filterBookmarks(searchTerm) {
 
     // SECTION 2: Display bookmarks that match the search term
     if (matchingBookmarks.length > 0) {
-        const bookmarkSectionHeader = document.createElement('div');
-        bookmarkSectionHeader.className = 'folder-column';
-        bookmarkSectionHeader.style.gridColumn = '1 / -1';
-        bookmarkSectionHeader.style.marginBottom = '5px';
-        bookmarkSectionHeader.style.marginTop = '20px';
+        const bookmarkSectionHeader = div('folder-column', {
+            style: {
+                gridColumn: '1 / -1',
+                marginBottom: '5px',
+                marginTop: '20px'
+            }
+        });
 
-        const headerDiv = document.createElement('div');
-        headerDiv.className = 'folder-header';
-        headerDiv.textContent = 'Matching Bookmarks';
+        const headerDiv = div('folder-header', { textContent: 'Matching Bookmarks' });
         bookmarkSectionHeader.appendChild(headerDiv);
 
         container.appendChild(bookmarkSectionHeader);
@@ -492,8 +486,7 @@ function filterBookmarks(searchTerm) {
             const topFolderId = path.length > 0 ? path[0].id : null;
 
             // Create folder column with color
-            const folderColumn = document.createElement('div');
-            folderColumn.className = 'folder-column';
+            const folderColumn = div('folder-column');
 
             // Apply color based on top folder
             if (topFolderId) {
@@ -502,24 +495,20 @@ function filterBookmarks(searchTerm) {
             }
 
             // Create header with full path
-            const folderHeader = document.createElement('div');
-            folderHeader.className = 'folder-header';
+            const folderHeader = div('folder-header');
 
             // Format the path for display
             const pathDisplay = path.map(f => f.title).join(' > ');
             folderHeader.textContent = pathDisplay;
 
             // Add match count as subheader
-            const matchCount = document.createElement('span');
-            matchCount.className = 'folder-subheader';
-            matchCount.textContent = `${bookmarks.length} match${bookmarks.length > 1 ? 'es' : ''}`;
+            const matchCount = textSpan('folder-subheader', `${bookmarks.length} match${bookmarks.length > 1 ? 'es' : ''}`);
             folderHeader.appendChild(matchCount);
 
             folderColumn.appendChild(folderHeader);
 
             // Add bookmarks
-            const folderContent = document.createElement('div');
-            folderContent.className = 'folder-content';
+            const folderContent = div('folder-content');
 
             bookmarks.forEach(bookmark => {
                 // Create bookmark element with search mode enabled
@@ -637,13 +626,14 @@ function showFolderContents(folderId) {
     const isSearchMode = document.body.classList.contains('search-mode');
 
     // Create a "back to all bookmarks" link
-    const backColumn = document.createElement('div');
-    backColumn.className = 'folder-column';
-    backColumn.style.gridColumn = '1 / -1';
-    backColumn.style.marginBottom = '15px';
+    const backColumn = div('folder-column', {
+        style: {
+            gridColumn: '1 / -1',
+            marginBottom: '15px'
+        }
+    });
 
-    const backHeader = document.createElement('div');
-    backHeader.className = 'folder-header';
+    const backHeader = div('folder-header');
 
     const backLink = document.createElement('a');
     backLink.href = "#";
@@ -677,7 +667,7 @@ function showFolderContents(folderId) {
 
             if (item.isFolder) {
                 // This is a subfolder, add a header
-                const subfolderHeader = createTextDiv('subfolder', item.title);
+                const subfolderHeader = textDiv('subfolder', item.title);
                 container.appendChild(subfolderHeader);
                 currentSubfolder = item;
 
@@ -696,11 +686,14 @@ function showFolderContents(folderId) {
     if (folder.children && folder.children.length > 0) {
         processFolderContentsWithMode(folder.children, content);
     } else {
-        const emptyNote = document.createElement('div');
-        emptyNote.textContent = 'This folder is empty';
-        emptyNote.style.fontStyle = 'italic';
-        emptyNote.style.padding = '5px';
-        emptyNote.style.opacity = '0.7';
+        const emptyNote = div('', {
+            textContent: 'This folder is empty',
+            style: {
+                fontStyle: 'italic',
+                padding: '5px',
+                opacity: '0.7'
+            }
+        });
         content.appendChild(emptyNote);
     }
 
@@ -741,12 +734,7 @@ function showDeleteConfirmation(bookmark, event) {
     const buttonRect = deleteButton.getBoundingClientRect();
 
     // Create confirmation dialog
-    const confirmDialog = createElement('div',
-        {
-            className: 'delete-confirm',
-            id: 'delete-confirm'
-        }
-    );
+    const confirmDialog = div('delete-confirm', { id: 'delete-confirm' });
 
     // Position the dialog to the left of the delete button
     confirmDialog.style.position = 'fixed';
@@ -756,7 +744,7 @@ function showDeleteConfirmation(bookmark, event) {
     // Dialog content
     const title = createElement('h3', { textContent: 'Delete Bookmark' });
     const message = createElement('p', { textContent: `Delete "${bookmark.title}"?` });
-    const buttonsContainer = createElement('div', { className: 'delete-confirm-buttons' });
+    const buttonsContainer = div('delete-confirm-buttons');
 
     const cancelBtn = createElement('button',
         {

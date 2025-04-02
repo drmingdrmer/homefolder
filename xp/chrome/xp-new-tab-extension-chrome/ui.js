@@ -52,13 +52,42 @@ function createElement(tag, attributes = {}, children = []) {
 }
 
 /**
+ * Helper function to create a span element with text content
+ * @param {string} className - CSS class name for the span
+ * @param {string} text - Text content for the span
+ * @param {Object} additionalAttributes - Additional attributes to set on the span
+ * @returns {HTMLElement} The created span element
+ */
+function textSpan(className, text, additionalAttributes = {}) {
+    return createElement('span', {
+        className,
+        textContent: text,
+        ...additionalAttributes
+    });
+}
+
+/**
+ * Helper function to create a div element with attributes and children
+ * @param {string} className - CSS class name for the div
+ * @param {Object} additionalAttributes - Additional attributes to set on the div
+ * @param {Array} children - Array of child elements or text nodes
+ * @returns {HTMLElement} The created div element
+ */
+function div(className, additionalAttributes = {}, children = []) {
+    return createElement('div', {
+        className,
+        ...additionalAttributes
+    }, children);
+}
+
+/**
  * Helper function to create a div element with text content
  * @param {string} className - CSS class name for the div
  * @param {string} text - Text content for the div
  * @param {Object} additionalAttributes - Additional attributes to set on the div
  * @returns {HTMLElement} The created div element
  */
-function createTextDiv(className, text, additionalAttributes = {}) {
+function textDiv(className, text, additionalAttributes = {}) {
     return createElement('div', {
         className,
         textContent: text,
@@ -67,4 +96,4 @@ function createTextDiv(className, text, additionalAttributes = {}) {
 }
 
 // Export the colorPalette and helper functions for use in other files
-export { colorPalette, createElement, createTextDiv }; 
+export { colorPalette, createElement, div, textDiv, textSpan }; 
