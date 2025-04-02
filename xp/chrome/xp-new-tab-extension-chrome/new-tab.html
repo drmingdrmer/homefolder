@@ -9,111 +9,108 @@
         body {
             margin: 0;
             padding: 0;
-            height: 100vh;
-            background-image: url('./girl-grey.jpg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            min-height: 100vh;
+            background-color: #202124;
             color: white;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            position: relative;
-        }
-
-        body::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.3));
-            z-index: 1;
         }
 
         .content {
-            text-align: center;
-            background-color: rgba(0, 0, 0, 0.6);
-            padding: 2rem;
-            border-radius: 15px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            z-index: 2;
-            max-width: 800px;
-            width: 90%;
-            transition: transform 0.3s ease;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-
-        .content:hover {
-            transform: translateY(-5px);
-        }
-
-        a {
-            color: white;
-            text-decoration: none;
-            display: block;
-            padding: 0.8rem;
-            margin: 0.5rem 0;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-
-        a:hover {
-            background-color: rgba(255, 255, 255, 0.2);
-            transform: translateX(5px);
-            text-decoration: none;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 20px;
         }
 
         .title {
-            font-size: 1.5rem;
-            margin-bottom: 1.5rem;
-            font-weight: 500;
-            color: rgba(255, 255, 255, 0.9);
-        }
-
-        .bookmark-folder {
-            margin: 1rem 0;
-            padding: 1rem;
-            background-color: rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
-        }
-
-        .folder-title {
-            font-size: 1.2rem;
-            margin-bottom: 1rem;
-            color: rgba(255, 255, 255, 0.8);
+            display: none;
         }
 
         .search-box {
-            width: 100%;
-            padding: 0.8rem;
-            margin-bottom: 1rem;
+            width: calc(100% - 40px);
+            padding: 8px 12px;
+            margin: 0 auto 20px;
             border: none;
-            border-radius: 8px;
-            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            background-color: #333;
             color: white;
             font-size: 1rem;
+            display: block;
         }
 
         .search-box::placeholder {
-            color: rgba(255, 255, 255, 0.5);
+            color: #999;
+        }
+
+        .bookmarks-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            width: 100%;
+        }
+
+        .folder-column {
+            background-color: #292929;
+            border-radius: 4px;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: fit-content;
+        }
+
+        .folder-header {
+            background-color: #333;
+            padding: 10px 15px;
+            font-weight: bold;
+            border-radius: 4px 4px 0 0;
+            font-size: 14px;
+        }
+
+        .folder-content {
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .subfolder {
+            margin: 10px 0 5px;
+            border-bottom: 1px solid #3c3c3c;
+            padding-bottom: 5px;
+            color: #aaa;
+            font-size: 13px;
+        }
+
+        .bookmark-link {
+            color: #fff;
+            text-decoration: none;
+            display: block;
+            padding: 7px 10px;
+            background-color: #333;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: 13px;
+        }
+
+        .bookmark-link:hover {
+            background-color: #444;
+        }
+
+        @media (max-width: 768px) {
+            .bookmarks-container {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
         }
 
         @media (max-width: 480px) {
-            .content {
-                padding: 1.5rem;
-                width: 85%;
+            .bookmarks-container {
+                grid-template-columns: 1fr;
             }
 
-            a {
-                padding: 0.6rem;
-                font-size: 0.9rem;
+            .content {
+                padding: 10px;
             }
         }
     </style>
@@ -123,7 +120,7 @@
     <div class="content">
         <div class="title">Bookmarks</div>
         <input type="text" class="search-box" placeholder="Search bookmarks..." id="searchBox" autofocus>
-        <div id="bookmarks-container"></div>
+        <div id="bookmarks-container" class="bookmarks-container"></div>
     </div>
 
     <script src="new-tab.js"></script>
