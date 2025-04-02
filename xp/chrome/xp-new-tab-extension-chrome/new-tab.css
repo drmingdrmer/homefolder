@@ -1,0 +1,366 @@
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background-image: url('./girl-grey.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    color: white;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    position: relative;
+}
+
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.3));
+    z-index: 0;
+}
+
+.content {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 20px;
+    position: relative;
+    z-index: 1;
+}
+
+.title {
+    display: none;
+}
+
+.settings {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 10px;
+    gap: 10px;
+}
+
+.settings-icon {
+    cursor: pointer;
+    font-size: 20px;
+    color: #fff;
+}
+
+.settings-panel {
+    display: none;
+    position: absolute;
+    right: 20px;
+    top: 60px;
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 15px;
+    border-radius: 4px;
+    z-index: 10;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(5px);
+}
+
+.settings-panel.visible {
+    display: block;
+}
+
+.setting-item {
+    margin-bottom: 10px;
+}
+
+.setting-item label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 13px;
+    color: #ccc;
+}
+
+.setting-item input {
+    width: 100%;
+    padding: 6px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 3px;
+    color: white;
+}
+
+.search-box {
+    width: calc(100% - 40px);
+    padding: 8px 12px;
+    margin: 0 auto 20px;
+    border: none;
+    border-radius: 4px;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    font-size: 1rem;
+    display: block;
+    backdrop-filter: blur(5px);
+}
+
+.search-box::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.bookmarks-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    width: 100%;
+}
+
+.folder-column {
+    background-color: rgba(0, 0, 0, 0.6);
+    border-radius: 8px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: fit-content;
+    backdrop-filter: blur(5px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 1;
+    transition: background-color 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.folder-column:hover {
+    transform: none;
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+.folder-header {
+    background-color: rgba(0, 0, 0, 0.4);
+    padding: 10px 15px;
+    font-weight: bold;
+    border-radius: 8px 8px 0 0;
+    font-size: 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.folder-subheader {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+    margin-left: 5px;
+    font-weight: normal;
+}
+
+.folder-content {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.subfolder {
+    margin: 10px 0 5px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding-bottom: 5px;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 13px;
+}
+
+.bookmark-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    z-index: 1;
+}
+
+.bookmark-item.deleting {
+    z-index: 99998;
+}
+
+.bookmark-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.bookmark-content:hover .bookmark-link {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.bookmark-content:hover .bookmark-url {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.bookmark-link {
+    color: #fff;
+    text-decoration: none;
+    display: block;
+    padding: 7px 10px 3px 10px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 4px 4px 0 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 13px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.bookmark-url {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 10px;
+    padding: 2px 10px 5px 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 0 0 4px 4px;
+}
+
+.delete-button {
+    opacity: 0.05;
+    width: 18px;
+    height: 18px;
+    min-width: 18px;
+    margin-left: 5px;
+    background-color: rgba(150, 150, 150, 0.1);
+    border: none;
+    border-radius: 50%;
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bookmark-item:hover .delete-button {
+    opacity: 0.4;
+}
+
+.delete-button:hover {
+    opacity: 1;
+    background-color: #ff0000;
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+    width: 22px;
+    height: 22px;
+    min-width: 22px;
+    box-shadow: 0 0 8px #ff3333, 0 0 12px rgba(255, 0, 0, 0.5);
+    border: 1px solid white;
+    z-index: 5;
+    position: relative;
+}
+
+.delete-confirm {
+    /* Position is now set in JavaScript */
+    background-color: rgba(0, 0, 0, 0.9);
+    padding: 8px 10px;
+    border-radius: 4px;
+    z-index: 999999;
+    /* Maximum z-index */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+    text-align: left;
+    min-width: 150px;
+    max-width: 200px;
+    font-size: 12px;
+    white-space: normal;
+}
+
+.delete-confirm::before {
+    content: '';
+    position: absolute;
+    top: 12px;
+    left: -6px;
+    width: 0;
+    height: 0;
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    border-right: 6px solid rgba(0, 0, 0, 0.9);
+}
+
+.delete-confirm p {
+    margin: 5px 0;
+    font-size: 12px;
+}
+
+.delete-confirm h3 {
+    margin-top: 0;
+    margin-bottom: 5px;
+    font-size: 13px;
+}
+
+.delete-confirm-buttons {
+    display: flex;
+    justify-content: flex-start;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.delete-confirm-buttons button {
+    padding: 4px 10px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-weight: bold;
+    outline: none;
+    font-size: 12px;
+}
+
+.delete-confirm-cancel {
+    background-color: rgba(120, 120, 120, 0.8);
+    color: white;
+}
+
+.delete-confirm-cancel:hover,
+.delete-confirm-cancel:focus {
+    background-color: rgba(140, 140, 140, 0.9);
+}
+
+.delete-confirm-delete {
+    background-color: rgba(255, 70, 70, 0.9);
+    color: white;
+}
+
+.delete-confirm-delete:hover,
+.delete-confirm-delete:focus {
+    background-color: rgba(255, 90, 90, 1);
+}
+
+.overlay {
+    display: none;
+}
+
+/* Search mode styles */
+body.search-mode .delete-button {
+    display: none !important;
+}
+
+@media (max-width: 768px) {
+    .bookmarks-container {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+
+    .delete-confirm {
+        right: 0;
+        left: auto;
+        top: 100%;
+        margin-left: 0;
+        margin-top: 5px;
+    }
+
+    .delete-confirm::before {
+        top: -6px;
+        left: 15px;
+        border-left: 6px solid transparent;
+        border-right: 6px solid transparent;
+        border-bottom: 6px solid rgba(0, 0, 0, 0.9);
+        border-top: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .bookmarks-container {
+        grid-template-columns: 1fr;
+    }
+
+    .content {
+        padding: 10px;
+    }
+}

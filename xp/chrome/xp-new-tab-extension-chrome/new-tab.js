@@ -569,8 +569,11 @@ function filterBookmarks(searchTerm) {
                 // Create bookmark element with search mode enabled
                 const link = createBookmarkElement(bookmark, true);
 
+                // Get the content element that contains the bookmark link
+                const content = link.querySelector('.bookmark-content');
+
                 // Highlight the matched text
-                highlightText(link, searchTerm);
+                highlightText(content, searchTerm);
 
                 folderContent.appendChild(link);
             });
