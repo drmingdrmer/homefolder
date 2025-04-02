@@ -5,7 +5,7 @@ let config = {
 };
 let bookmarkToDelete = null;
 
-function createBookmarkElement(bookmark) {
+function createBookmarkElement(bookmark, isSearchMode = false) {
     // Create container for the bookmark item and delete button
     const container = document.createElement('div');
     container.className = 'bookmark-item';
@@ -17,17 +17,20 @@ function createBookmarkElement(bookmark) {
     link.className = 'bookmark-link';
     container.appendChild(link);
 
-    // Create delete button
-    const deleteBtn = document.createElement('button');
-    deleteBtn.className = 'delete-button';
-    deleteBtn.textContent = '×';
-    deleteBtn.setAttribute('aria-label', 'Delete bookmark');
-    deleteBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        showDeleteConfirmation(bookmark, e);
-    });
-    container.appendChild(deleteBtn);
+    // Only create delete button if not in search mode
+    if (!isSearchMode) {
+        // Create delete button
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'delete-button';
+        deleteBtn.textContent = '×';
+        deleteBtn.setAttribute('aria-label', 'Delete bookmark');
+        deleteBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            showDeleteConfirmation(bookmark, e);
+        });
+        container.appendChild(deleteBtn);
+    }
 
     return container;
 }
@@ -67,6 +70,9 @@ function collectAllBookmarks(nodes, parentFolder = null) {
 function renderBookmarks() {
     const container = document.getElementById('bookmarks-container');
     container.innerHTML = '';
+
+    // Remove search mode class when returning to normal view
+    document.body.classList.remove('search-mode');
 
     // Get top-level folders
     const topLevelFolders = Object.values(allBookmarks).filter(item =>
@@ -272,6 +278,9 @@ function filterBookmarks(searchTerm) {
         return;
     }
 
+    // Add a class to the body or container to indicate search mode
+    document.body.classList.add('search-mode');
+
     container.innerHTML = '';
 
     const lowercaseSearch = searchTerm.toLowerCase();
@@ -360,8 +369,9 @@ function filterBookmarks(searchTerm) {
                     if (!item) return;
 
                     if (!item.isFolder) {
-                        // Add bookmark
-                        content.appendChild(createBookmarkElement(item));
+                        // Add bookmark with search mode enabled
+                        const bookmarkElement = createBookmarkElement(item, true);
+                        content.appendChild(bookmarkElement);
                         itemCount++;
                     }
                 });
@@ -456,7 +466,8 @@ function filterBookmarks(searchTerm) {
             folderContent.className = 'folder-content';
 
             bookmarks.forEach(bookmark => {
-                const link = createBookmarkElement(bookmark);
+                // Create bookmark element with search mode enabled
+                const link = createBookmarkElement(bookmark, true);
 
                 // Highlight the matched text
                 highlightText(link, searchTerm);
@@ -555,6 +566,9 @@ function showFolderContents(folderId) {
     const container = document.getElementById('bookmarks-container');
     container.innerHTML = '';
 
+    // Check if we're in search mode
+    const isSearchMode = document.body.classList.contains('search-mode');
+
     // Create a "back to all bookmarks" link
     const backColumn = document.createElement('div');
     backColumn.className = 'folder-column';
@@ -571,7 +585,7 @@ function showFolderContents(folderId) {
     backLink.style.textDecoration = "none";
     backLink.addEventListener('click', (e) => {
         e.preventDefault();
-        renderBookmarks();
+        renderBookmarks(); // This will remove the search-mode class
     });
 
     backHeader.appendChild(backLink);
@@ -585,9 +599,35 @@ function showFolderContents(folderId) {
     // Create folder content
     const { column, content } = createFolderColumn(pathDisplay);
 
-    // Process folder contents
+    // Create a custom function to process folder contents with search mode awareness
+    function processFolderContentsWithMode(childIds, container) {
+        let currentSubfolder = null;
+
+        // Process items in order
+        childIds.forEach(childId => {
+            const item = allBookmarks[childId];
+            if (!item) return;
+
+            if (item.isFolder) {
+                // This is a subfolder, add a header
+                const subfolderHeader = createSubfolderHeader(item.title);
+                container.appendChild(subfolderHeader);
+                currentSubfolder = item;
+
+                // Process bookmarks in this subfolder
+                if (item.children && item.children.length > 0) {
+                    processFolderContentsWithMode(item.children, container);
+                }
+            } else {
+                // This is a bookmark, add it to the container (respecting search mode)
+                container.appendChild(createBookmarkElement(item, isSearchMode));
+            }
+        });
+    }
+
+    // Process folder contents with search mode awareness
     if (folder.children && folder.children.length > 0) {
-        processBookmarksInFolder(folder.children, content);
+        processFolderContentsWithMode(folder.children, content);
     } else {
         const emptyNote = document.createElement('div');
         emptyNote.textContent = 'This folder is empty';
