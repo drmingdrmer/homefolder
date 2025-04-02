@@ -685,9 +685,7 @@ function showDeleteConfirmation(bookmark) {
     document.body.appendChild(confirmDialog);
 
     // Focus on the Cancel button by default (safer option)
-    setTimeout(() => {
-        cancelBtn.focus();
-    }, 10);
+    cancelBtn.focus();
 
     // Add keyboard event listener for Escape key
     document.addEventListener('keydown', handleEscapeKey);

@@ -127,11 +127,10 @@
             height: fit-content;
             backdrop-filter: blur(5px);
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s ease;
         }
 
         .folder-column:hover {
-            transform: translateY(-5px);
+            transform: none;
         }
 
         .folder-header {
@@ -177,7 +176,6 @@
             padding: 7px 10px;
             background-color: rgba(255, 255, 255, 0.1);
             border-radius: 4px;
-            transition: all 0.2s ease;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -187,35 +185,43 @@
 
         .bookmark-link:hover {
             background-color: rgba(255, 255, 255, 0.2);
-            transform: translateX(3px);
+            transform: none;
         }
 
         .delete-button {
-            opacity: 0;
-            width: 20px;
-            height: 20px;
-            min-width: 20px;
+            opacity: 0.05;
+            width: 18px;
+            height: 18px;
+            min-width: 18px;
             margin-left: 5px;
-            background-color: rgba(255, 0, 0, 0.2);
+            background-color: rgba(150, 150, 150, 0.1);
             border: none;
             border-radius: 50%;
-            color: white;
+            color: rgba(255, 255, 255, 0.3);
             font-size: 10px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s ease;
         }
 
         .bookmark-item:hover .delete-button {
-            opacity: 0.7;
+            opacity: 0.4;
         }
 
         .delete-button:hover {
-            opacity: 1 !important;
-            background-color: rgba(255, 0, 0, 0.6);
-            transform: scale(1.1);
+            opacity: 1;
+            background-color: #ff0000;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+            width: 22px;
+            height: 22px;
+            min-width: 22px;
+            box-shadow: 0 0 8px #ff3333, 0 0 12px rgba(255, 0, 0, 0.5);
+            border: 1px solid white;
+            z-index: 5;
+            position: relative;
         }
 
         .delete-confirm {
@@ -250,33 +256,32 @@
             border-radius: 4px;
             cursor: pointer;
             font-weight: bold;
-            transition: all 0.2s ease;
             outline: none;
         }
 
         .delete-confirm-buttons button:focus {
             box-shadow: 0 0 0 2px white, 0 0 0 4px rgba(0, 120, 255, 0.5);
-            transform: scale(1.05);
+            transform: none;
         }
 
         .delete-confirm-cancel {
-            background-color: rgba(100, 100, 100, 0.5);
+            background-color: rgba(120, 120, 120, 0.8);
             color: white;
         }
 
         .delete-confirm-cancel:hover,
         .delete-confirm-cancel:focus {
-            background-color: rgba(120, 120, 120, 0.8);
+            background-color: rgba(140, 140, 140, 0.9);
         }
 
         .delete-confirm-delete {
-            background-color: rgba(255, 50, 50, 0.8);
+            background-color: rgba(255, 70, 70, 0.9);
             color: white;
         }
 
         .delete-confirm-delete:hover,
         .delete-confirm-delete:focus {
-            background-color: rgba(255, 70, 70, 0.9);
+            background-color: rgba(255, 90, 90, 1);
         }
 
         .overlay {
