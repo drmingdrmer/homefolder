@@ -1,7 +1,7 @@
 // Global bookmarks store
 let allBookmarks = {};
 let config = {
-    maxEntriesPerColumn: 20
+    maxEntriesPerColumn: 10
 };
 
 function createBookmarkElement(bookmark) {
