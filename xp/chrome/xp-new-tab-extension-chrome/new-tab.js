@@ -321,7 +321,10 @@ function filterBookmarks(searchTerm) {
     // SECOND SECTION: Find bookmarks that match the search term
     // Use Array.from to preserve the order in which they were defined
     const matchingBookmarks = Array.from(Object.values(allBookmarks).filter(item =>
-        !item.isFolder && item.title.toLowerCase().includes(lowercaseSearch)
+        !item.isFolder && (
+            item.title.toLowerCase().includes(lowercaseSearch) ||
+            (item.url && item.url.toLowerCase().includes(lowercaseSearch))
+        )
     ));
 
     // If no matches at all
@@ -550,8 +553,11 @@ function highlightText(element, searchTerm) {
 
     // Find the bookmark link element if we're highlighting a bookmark-content element
     let textElement = element;
+    let urlElement = null;
+
     if (element.classList.contains('bookmark-content')) {
         textElement = element.querySelector('.bookmark-link');
+        urlElement = element.querySelector('.bookmark-url');
     }
 
     if (!textElement || !textElement.textContent) return;
@@ -609,6 +615,63 @@ function highlightText(element, searchTerm) {
                 textElement.appendChild(textNode);
             }
         });
+    }
+
+    // Also highlight URL if it exists and contains the search term
+    if (urlElement && urlElement.textContent) {
+        const urlText = urlElement.textContent;
+        const lcUrlText = urlText.toLowerCase();
+
+        if (lcUrlText.includes(lcSearch)) {
+            // Find all occurrences in URL
+            const urlParts = [];
+            let lastIndex = 0;
+            let startIndex = lcUrlText.indexOf(lcSearch);
+
+            while (startIndex !== -1) {
+                // Add text before match
+                if (startIndex > lastIndex) {
+                    urlParts.push({
+                        text: urlText.substring(lastIndex, startIndex),
+                        isMatch: false
+                    });
+                }
+
+                // Add match
+                const endIndex = startIndex + lcSearch.length;
+                urlParts.push({
+                    text: urlText.substring(startIndex, endIndex),
+                    isMatch: true
+                });
+
+                lastIndex = endIndex;
+                startIndex = lcUrlText.indexOf(lcSearch, lastIndex);
+            }
+
+            // Add any remaining text
+            if (lastIndex < urlText.length) {
+                urlParts.push({
+                    text: urlText.substring(lastIndex),
+                    isMatch: false
+                });
+            }
+
+            // Clear element and add highlighted content
+            urlElement.innerHTML = '';
+            urlParts.forEach(part => {
+                if (part.isMatch) {
+                    const highlight = document.createElement('span');
+                    highlight.style.backgroundColor = 'rgba(255, 255, 100, 0.3)';
+                    highlight.style.padding = '0 2px';
+                    highlight.style.borderRadius = '2px';
+                    highlight.textContent = part.text;
+                    urlElement.appendChild(highlight);
+                } else {
+                    const textNode = document.createTextNode(part.text);
+                    urlElement.appendChild(textNode);
+                }
+            });
+        }
     }
 }
 
