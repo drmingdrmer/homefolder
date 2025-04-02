@@ -105,6 +105,8 @@ function createBookmarkElement(bookmark, isSearchMode = false) {
             e.stopPropagation();
             showDeleteConfirmation(bookmark, e);
         });
+        // Add delete button to the container, not the content wrapper
+        // This allows it to be positioned absolutely relative to the container
         container.appendChild(deleteBtn);
     }
 
@@ -789,9 +791,9 @@ function showDeleteConfirmation(bookmark, event) {
     confirmDialog.className = 'delete-confirm';
     confirmDialog.id = 'delete-confirm';
 
-    // Position the dialog next to the delete button
+    // Position the dialog to the left of the delete button
     confirmDialog.style.position = 'fixed';
-    confirmDialog.style.left = `${buttonRect.right + 10}px`;
+    confirmDialog.style.right = `${window.innerWidth - buttonRect.left + 10}px`;
     confirmDialog.style.top = `${buttonRect.top - 5}px`;
 
     // Dialog content
