@@ -25,6 +25,56 @@
             display: none;
         }
 
+        .settings {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin-bottom: 10px;
+            gap: 10px;
+        }
+
+        .settings-icon {
+            cursor: pointer;
+            font-size: 20px;
+            color: #999;
+        }
+
+        .settings-panel {
+            display: none;
+            position: absolute;
+            right: 20px;
+            top: 60px;
+            background-color: #333;
+            padding: 15px;
+            border-radius: 4px;
+            z-index: 10;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .settings-panel.visible {
+            display: block;
+        }
+
+        .setting-item {
+            margin-bottom: 10px;
+        }
+
+        .setting-item label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 13px;
+            color: #ccc;
+        }
+
+        .setting-item input {
+            width: 100%;
+            padding: 6px;
+            background-color: #444;
+            border: none;
+            border-radius: 3px;
+            color: white;
+        }
+
         .search-box {
             width: calc(100% - 40px);
             padding: 8px 12px;
@@ -63,6 +113,13 @@
             font-weight: bold;
             border-radius: 4px 4px 0 0;
             font-size: 14px;
+        }
+
+        .folder-subheader {
+            font-size: 12px;
+            color: #999;
+            margin-left: 5px;
+            font-weight: normal;
         }
 
         .folder-content {
@@ -118,7 +175,15 @@
 
 <body>
     <div class="content">
-        <div class="title">Bookmarks</div>
+        <div class="settings">
+            <div class="settings-icon" id="settings-toggle">⚙️</div>
+            <div class="settings-panel" id="settings-panel">
+                <div class="setting-item">
+                    <label for="max-entries">Maximum entries per column</label>
+                    <input type="number" id="max-entries" min="5" max="100" value="20">
+                </div>
+            </div>
+        </div>
         <input type="text" class="search-box" placeholder="Search bookmarks..." id="searchBox" autofocus>
         <div id="bookmarks-container" class="bookmarks-container"></div>
     </div>

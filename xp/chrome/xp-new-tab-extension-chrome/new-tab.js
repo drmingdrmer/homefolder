@@ -1,5 +1,8 @@
 // Global bookmarks store
 let allBookmarks = {};
+let config = {
+    maxEntriesPerColumn: 20
+};
 
 function createBookmarkElement(bookmark) {
     const link = document.createElement('a');
@@ -53,31 +56,166 @@ function renderBookmarks() {
     // Sort folders alphabetically
     topLevelFolders.sort((a, b) => a.title.localeCompare(b.title));
 
-    // Create a column for each top-level folder
+    // Process each top-level folder
     topLevelFolders.forEach(folder => {
-        // Create folder column
-        const folderColumn = document.createElement('div');
-        folderColumn.className = 'folder-column';
+        if (!folder.children || folder.children.length === 0) return;
 
-        // Add folder header
-        const folderHeader = document.createElement('div');
-        folderHeader.className = 'folder-header';
-        folderHeader.textContent = folder.title;
-        folderColumn.appendChild(folderHeader);
+        // Count total items in folder (recursive)
+        const itemCount = countItemsInFolder(folder);
 
-        // Create folder content container
-        const folderContent = document.createElement('div');
-        folderContent.className = 'folder-content';
-        folderColumn.appendChild(folderContent);
+        if (itemCount <= config.maxEntriesPerColumn) {
+            // Create a single column for this folder
+            const folderColumn = createFolderColumn(folder.title);
 
-        // Process folder contents
-        if (folder.children && folder.children.length > 0) {
-            processBookmarksInFolder(folder.children, folderContent);
+            // Add all items to the column
+            processBookmarksInFolder(folder.children, folderColumn.content);
+
+            // Add the column to the container
+            container.appendChild(folderColumn.column);
+        } else {
+            // We need to split this folder into multiple columns
+            splitFolderIntoColumns(folder, container);
         }
-
-        // Add column to container
-        container.appendChild(folderColumn);
     });
+}
+
+function countItemsInFolder(folder) {
+    if (!folder.children) return 0;
+
+    let count = 0;
+    folder.children.forEach(childId => {
+        const item = allBookmarks[childId];
+        if (!item) return;
+
+        if (item.isFolder) {
+            // Add the subfolder count
+            count += countItemsInFolder(item);
+        } else {
+            // Add this bookmark
+            count++;
+        }
+    });
+
+    return count;
+}
+
+function createFolderColumn(title, subtitle = null) {
+    const folderColumn = document.createElement('div');
+    folderColumn.className = 'folder-column';
+
+    const folderHeader = document.createElement('div');
+    folderHeader.className = 'folder-header';
+    folderHeader.textContent = title;
+
+    if (subtitle) {
+        const subheader = document.createElement('span');
+        subheader.className = 'folder-subheader';
+        subheader.textContent = subtitle;
+        folderHeader.appendChild(subheader);
+    }
+
+    folderColumn.appendChild(folderHeader);
+
+    const folderContent = document.createElement('div');
+    folderContent.className = 'folder-content';
+    folderColumn.appendChild(folderContent);
+
+    return { column: folderColumn, content: folderContent };
+}
+
+function splitFolderIntoColumns(folder, container) {
+    if (!folder.children || folder.children.length === 0) return;
+
+    // First, separate direct bookmarks from subfolders
+    const directBookmarks = [];
+    const subfolders = [];
+
+    folder.children.forEach(childId => {
+        const item = allBookmarks[childId];
+        if (!item) return;
+
+        if (item.isFolder) {
+            subfolders.push(item);
+        } else {
+            directBookmarks.push(item);
+        }
+    });
+
+    // Add direct bookmarks to their own column if there are any
+    if (directBookmarks.length > 0) {
+        const chunkedBookmarks = chunkArray(directBookmarks, config.maxEntriesPerColumn);
+
+        chunkedBookmarks.forEach((chunk, index) => {
+            const subtitle = chunkedBookmarks.length > 1 ? `Direct links (${index + 1}/${chunkedBookmarks.length})` : 'Direct links';
+            const { column, content } = createFolderColumn(folder.title, subtitle);
+
+            chunk.forEach(bookmark => {
+                content.appendChild(createBookmarkElement(bookmark));
+            });
+
+            container.appendChild(column);
+        });
+    }
+
+    // Process subfolders
+    subfolders.forEach(subfolder => {
+        const itemCount = countItemsInFolder(subfolder);
+
+        if (itemCount <= config.maxEntriesPerColumn) {
+            // This subfolder fits in one column
+            const { column, content } = createFolderColumn(folder.title, subfolder.title);
+            processBookmarksInFolder(subfolder.children, content);
+            container.appendChild(column);
+        } else {
+            // This subfolder needs to be split
+            splitSubfolderIntoColumns(folder.title, subfolder, container);
+        }
+    });
+}
+
+function splitSubfolderIntoColumns(parentTitle, subfolder, container) {
+    // Collect all bookmarks in this subfolder (flattened)
+    const allSubfolderBookmarks = [];
+
+    function collectBookmarks(childIds) {
+        childIds.forEach(childId => {
+            const item = allBookmarks[childId];
+            if (!item) return;
+
+            if (item.isFolder) {
+                if (item.children) {
+                    collectBookmarks(item.children);
+                }
+            } else {
+                allSubfolderBookmarks.push(item);
+            }
+        });
+    }
+
+    collectBookmarks(subfolder.children);
+
+    // Split into chunks
+    const chunks = chunkArray(allSubfolderBookmarks, config.maxEntriesPerColumn);
+
+    // Create a column for each chunk
+    chunks.forEach((chunk, index) => {
+        const subtitle = `${subfolder.title} (${index + 1}/${chunks.length})`;
+        const { column, content } = createFolderColumn(parentTitle, subtitle);
+
+        chunk.forEach(bookmark => {
+            content.appendChild(createBookmarkElement(bookmark));
+        });
+
+        container.appendChild(column);
+    });
+}
+
+function chunkArray(array, chunkSize) {
+    const chunks = [];
+    for (let i = 0; i < array.length; i += chunkSize) {
+        chunks.push(array.slice(i, i + chunkSize));
+    }
+    return chunks;
 }
 
 function processBookmarksInFolder(childIds, container) {
@@ -168,8 +306,51 @@ function filterBookmarks(searchTerm) {
     container.appendChild(resultsColumn);
 }
 
+// Settings functions
+function toggleSettings() {
+    const settingsPanel = document.getElementById('settings-panel');
+    settingsPanel.classList.toggle('visible');
+}
+
+function saveSettings() {
+    const maxEntriesInput = document.getElementById('max-entries');
+    config.maxEntriesPerColumn = parseInt(maxEntriesInput.value) || 20;
+
+    // Save to storage
+    chrome.storage.sync.set({ config: config }, function () {
+        renderBookmarks(); // Re-render with new settings
+    });
+}
+
+function loadSettings() {
+    chrome.storage.sync.get('config', function (result) {
+        if (result.config) {
+            config = result.config;
+            // Update input values
+            document.getElementById('max-entries').value = config.maxEntriesPerColumn;
+        }
+    });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const searchBox = document.getElementById('searchBox');
+    const settingsToggle = document.getElementById('settings-toggle');
+    const maxEntriesInput = document.getElementById('max-entries');
+
+    // Load settings
+    loadSettings();
+
+    // Event listeners
+    settingsToggle.addEventListener('click', toggleSettings);
+    maxEntriesInput.addEventListener('change', saveSettings);
+
+    // Click outside to close settings
+    document.addEventListener('click', (e) => {
+        const settingsPanel = document.getElementById('settings-panel');
+        if (e.target !== settingsToggle && !settingsPanel.contains(e.target) && settingsPanel.classList.contains('visible')) {
+            settingsPanel.classList.remove('visible');
+        }
+    });
 
     chrome.bookmarks.getTree((bookmarkTreeNodes) => {
         collectAllBookmarks(bookmarkTreeNodes);
