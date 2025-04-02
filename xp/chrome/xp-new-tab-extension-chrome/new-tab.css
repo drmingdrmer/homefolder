@@ -148,6 +148,13 @@ body::before {
     display: flex;
     flex-direction: column;
     gap: 5px;
+    min-height: 20px;
+}
+
+.folder-content.folder-drag-over {
+    background-color: rgba(255, 255, 255, 0.15);
+    outline: 2px dashed rgba(255, 255, 255, 0.5);
+    outline-offset: -4px;
 }
 
 .subfolder {
@@ -163,10 +170,63 @@ body::before {
     display: flex;
     align-items: center;
     z-index: 1;
+    transition: transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out;
+}
+
+.bookmark-item.dragging {
+    opacity: 0.7;
+    z-index: 1000;
+}
+
+.bookmark-item.drag-over {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+.bookmark-item.drop-before {
+    border-top: 2px solid rgba(255, 255, 255, 0.8);
+}
+
+.bookmark-item.drop-after {
+    border-bottom: 2px solid rgba(255, 255, 255, 0.8);
 }
 
 .bookmark-item.deleting {
     z-index: 99998;
+}
+
+.drag-handle {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 16px;
+    height: 34px;
+    padding: 5px 2px;
+    margin-right: 5px;
+    cursor: grab;
+    opacity: 0.2;
+    transition: opacity 0.2s;
+    z-index: 3;
+}
+
+.bookmark-item:hover .drag-handle {
+    opacity: 0.7;
+}
+
+.drag-handle:hover {
+    opacity: 1;
+}
+
+.drag-handle:active {
+    cursor: grabbing;
+}
+
+.drag-dot {
+    width: 4px;
+    height: 4px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    margin: 1px 0;
 }
 
 .bookmark-content {
@@ -174,7 +234,7 @@ body::before {
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    width: 100%;
+    width: calc(100% - 25px);
 }
 
 .bookmark-content:hover .bookmark-link {

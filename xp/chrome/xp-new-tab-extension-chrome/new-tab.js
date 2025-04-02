@@ -6,6 +6,13 @@ let config = {
 let bookmarkToDelete = null;
 // Map to store folder colors
 let folderColors = {};
+// Track drag operation state
+let dragOperation = {
+    dragging: false,
+    draggedElement: null,
+    sourceFolderId: null,
+    originalIndex: -1
+};
 // Import colorPalette and helper functions from ui.js
 import { colorPalette, createElement, div, textDiv, textSpan } from './ui.js';
 
@@ -31,16 +38,37 @@ function getFolderColor(folderId) {
 
 function createBookmarkElement(bookmark, isSearchMode = false) {
     // Create container with bookmark content and prepare for delete button
-    const container = div('bookmark-item', {}, [
-        div('bookmark-content', {}, [
-            createElement('a', {
-                href: bookmark.url,
-                className: 'bookmark-link',
-                textContent: bookmark.title || bookmark.url
-            }),
-            div('bookmark-url', { textContent: bookmark.url })
-        ])
+    const container = div('bookmark-item', {}, []);
+
+    // Add drag handle
+    const dragHandle = createElement('div', {
+        className: 'drag-handle',
+        draggable: true,
+        'aria-label': 'Drag to reorder',
+        title: 'Drag to reorder'
+    });
+
+    // Add grip icon to the drag handle (using a simple 3-dots design)
+    for (let i = 0; i < 3; i++) {
+        dragHandle.appendChild(createElement('span', { className: 'drag-dot' }));
+    }
+
+    // Add drag events
+    dragHandle.addEventListener('dragstart', (e) => handleDragStart(e, bookmark));
+
+    // Add bookmark content
+    const bookmarkContent = div('bookmark-content', {}, [
+        createElement('a', {
+            href: bookmark.url,
+            className: 'bookmark-link',
+            textContent: bookmark.title || bookmark.url
+        }),
+        div('bookmark-url', { textContent: bookmark.url })
     ]);
+
+    // Add drag handle and content to container
+    container.appendChild(dragHandle);
+    container.appendChild(bookmarkContent);
 
     // Always create delete button regardless of search mode
     // Create delete button
@@ -60,6 +88,15 @@ function createBookmarkElement(bookmark, isSearchMode = false) {
 
     // Add delete button to the container
     container.appendChild(deleteBtn);
+
+    // Set data attributes to help with drag operations
+    container.dataset.bookmarkId = bookmark.id;
+    container.dataset.parentId = bookmark.parentId;
+
+    // Add drop-related events to the container
+    container.addEventListener('dragover', handleDragOver);
+    container.addEventListener('dragleave', handleDragLeave);
+    container.addEventListener('drop', (e) => handleDrop(e, bookmark));
 
     return container;
 }
@@ -154,6 +191,9 @@ function createFolderColumn(title, subtitle = null, folderId = null) {
     if (folderId) {
         const color = getFolderColor(folderId);
         folderColumn.style.backgroundColor = color;
+
+        // Store folder ID as data attribute for drag operations
+        folderColumn.dataset.folderId = folderId;
     }
 
     const folderHeader = textDiv('folder-header', title);
@@ -291,6 +331,68 @@ function processBookmarksInFolder(childIds, container) {
             container.appendChild(createBookmarkElement(item));
         }
     });
+
+    // Add folder-level dragover event for empty folders
+    if (childIds.length === 0 || container.children.length === 0) {
+        container.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            container.classList.add('folder-drag-over');
+        });
+
+        container.addEventListener('dragleave', (e) => {
+            container.classList.remove('folder-drag-over');
+        });
+
+        container.addEventListener('drop', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            container.classList.remove('folder-drag-over');
+
+            if (!dragOperation.dragging) return;
+
+            // Get folder id from closest parent with folder-content class
+            const folderContent = container.closest('.folder-content');
+            if (!folderContent) return;
+
+            const folderColumn = folderContent.closest('.folder-column');
+            if (!folderColumn || !folderColumn.dataset.folderId) return;
+
+            const folderId = folderColumn.dataset.folderId;
+            const folder = allBookmarks[folderId];
+            if (!folder || !folder.isFolder) return;
+
+            // Get dragged bookmark ID
+            const draggedId = e.dataTransfer.getData('text/plain');
+            const draggedBookmark = allBookmarks[draggedId];
+
+            if (!draggedBookmark) return;
+
+            // Move the bookmark to this folder
+            chrome.bookmarks.move(draggedId, {
+                parentId: folderId,
+                index: 0  // Add to beginning of folder
+            }, () => {
+                if (chrome.runtime.lastError) {
+                    console.error('Error moving bookmark:', chrome.runtime.lastError);
+                    resetDragState();
+                    return;
+                }
+
+                // Update our local data structure
+                updateBookmarkOrder(draggedId, folderId, 0);
+
+                // Re-render bookmarks
+                const searchBox = document.getElementById('searchBox');
+                if (searchBox.value.trim()) {
+                    filterBookmarks(searchBox.value);
+                } else {
+                    renderBookmarks();
+                }
+            });
+
+            resetDragState();
+        });
+    }
 }
 
 function filterBookmarks(searchTerm) {
@@ -964,6 +1066,178 @@ function loadSettings() {
     });
 }
 
+// Drag and Drop handling functions
+function handleDragStart(e, bookmark) {
+    // Start dragging and store the bookmark information
+    dragOperation.dragging = true;
+    dragOperation.draggedElement = e.target.closest('.bookmark-item');
+    dragOperation.sourceFolderId = bookmark.parentId;
+
+    // Find the index of this bookmark in its parent folder
+    const parentFolder = allBookmarks[bookmark.parentId];
+    if (parentFolder && parentFolder.children) {
+        dragOperation.originalIndex = parentFolder.children.indexOf(bookmark.id);
+    }
+
+    // Set drag effects and data
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', bookmark.id);
+
+    // Add dragging class for styling
+    dragOperation.draggedElement.classList.add('dragging');
+
+    // Create a custom drag image if desired
+    // const dragImage = dragOperation.draggedElement.cloneNode(true);
+    // document.body.appendChild(dragImage);
+    // e.dataTransfer.setDragImage(dragImage, 0, 0);
+    // setTimeout(() => document.body.removeChild(dragImage), 0);
+}
+
+function handleDragOver(e) {
+    // Allow the drop
+    e.preventDefault();
+
+    if (!dragOperation.dragging) return;
+
+    // Add a visual indicator for the drop target
+    e.currentTarget.classList.add('drag-over');
+
+    // Determine drop position (before or after)
+    const rect = e.currentTarget.getBoundingClientRect();
+    const midY = rect.top + rect.height / 2;
+
+    // Remove any existing position indicators
+    e.currentTarget.classList.remove('drop-before', 'drop-after');
+
+    // Add appropriate position indicator
+    if (e.clientY < midY) {
+        e.currentTarget.classList.add('drop-before');
+    } else {
+        e.currentTarget.classList.add('drop-after');
+    }
+}
+
+function handleDragLeave(e) {
+    // Remove visual indicators when leaving a potential drop target
+    e.currentTarget.classList.remove('drag-over', 'drop-before', 'drop-after');
+}
+
+function handleDrop(e, targetBookmark) {
+    // Prevent default behavior
+    e.preventDefault();
+    e.stopPropagation();
+
+    // Remove visual indicators
+    e.currentTarget.classList.remove('drag-over', 'drop-before', 'drop-after');
+
+    if (!dragOperation.dragging) return;
+
+    // Get dragged bookmark ID
+    const draggedId = e.dataTransfer.getData('text/plain');
+    const draggedBookmark = allBookmarks[draggedId];
+
+    if (!draggedBookmark) return;
+
+    // Determine if dropping before or after the target
+    const rect = e.currentTarget.getBoundingClientRect();
+    const midY = rect.top + rect.height / 2;
+    const dropBefore = e.clientY < midY;
+
+    // Get parent folder
+    const parentId = targetBookmark.parentId;
+    const parentFolder = allBookmarks[parentId];
+
+    if (!parentFolder || !parentFolder.children) return;
+
+    // Find indexes
+    const targetIndex = parentFolder.children.indexOf(targetBookmark.id);
+    let newIndex = targetIndex;
+
+    if (!dropBefore) {
+        newIndex++;
+    }
+
+    // If it's the same folder and dropping at the same position or just after the dragged item,
+    // no changes needed
+    if (parentId === dragOperation.sourceFolderId) {
+        const oldIndex = dragOperation.originalIndex;
+
+        if (oldIndex === newIndex || oldIndex + 1 === newIndex) {
+            resetDragState();
+            return;
+        }
+
+        // Adjust index if moving within the same folder
+        if (oldIndex < newIndex) {
+            newIndex--;
+        }
+    }
+
+    // Move the bookmark
+    chrome.bookmarks.move(draggedId, {
+        parentId: parentId,
+        index: newIndex
+    }, () => {
+        if (chrome.runtime.lastError) {
+            console.error('Error moving bookmark:', chrome.runtime.lastError);
+            resetDragState();
+            return;
+        }
+
+        // Update our local data structure
+        updateBookmarkOrder(draggedId, parentId, newIndex);
+
+        // Re-render bookmarks
+        const searchBox = document.getElementById('searchBox');
+        if (searchBox.value.trim()) {
+            filterBookmarks(searchBox.value);
+        } else {
+            renderBookmarks();
+        }
+    });
+
+    resetDragState();
+}
+
+function updateBookmarkOrder(bookmarkId, newParentId, newIndex) {
+    // Get the bookmark
+    const bookmark = allBookmarks[bookmarkId];
+    if (!bookmark) return;
+
+    // Remove from old parent's children array
+    const oldParentId = bookmark.parentId;
+    const oldParent = allBookmarks[oldParentId];
+
+    if (oldParent && oldParent.children) {
+        oldParent.children = oldParent.children.filter(id => id !== bookmarkId);
+    }
+
+    // Add to new parent's children array at the new index
+    const newParent = allBookmarks[newParentId];
+    if (newParent && newParent.children) {
+        // Remove first if it's already there (shouldn't happen but just in case)
+        newParent.children = newParent.children.filter(id => id !== bookmarkId);
+
+        // Insert at new position
+        newParent.children.splice(newIndex, 0, bookmarkId);
+    }
+
+    // Update bookmark's parent
+    bookmark.parentId = newParentId;
+}
+
+function resetDragState() {
+    // Reset drag operation state
+    if (dragOperation.draggedElement) {
+        dragOperation.draggedElement.classList.remove('dragging');
+    }
+
+    dragOperation.dragging = false;
+    dragOperation.draggedElement = null;
+    dragOperation.sourceFolderId = null;
+    dragOperation.originalIndex = -1;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const searchBox = document.getElementById('searchBox');
     const settingsToggle = document.getElementById('settings-toggle');
@@ -991,5 +1265,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     searchBox.addEventListener('input', (e) => {
         filterBookmarks(e.target.value);
+    });
+
+    // Add global drag end handler
+    document.addEventListener('dragend', () => {
+        // Reset drag state
+        resetDragState();
+
+        // Remove any lingering drag-related classes from all bookmark items
+        document.querySelectorAll('.bookmark-item').forEach(item => {
+            item.classList.remove('drag-over', 'drop-before', 'drop-after', 'dragging');
+        });
     });
 }); 
