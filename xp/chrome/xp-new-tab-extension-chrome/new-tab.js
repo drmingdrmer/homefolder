@@ -58,31 +58,20 @@ function getFolderColor(folderId) {
 }
 
 function createBookmarkElement(bookmark, isSearchMode = false) {
-    // Create container for the bookmark item and delete button
-    const container = createElement('div', { className: 'bookmark-item' });
-
-    // Create wrapper for bookmark content (title and URL)
-    const contentWrapper = createElement('div', { className: 'bookmark-content' });
-    container.appendChild(contentWrapper);
-
-    // Create the bookmark link
-    const link = createElement('a',
-        {
-            href: bookmark.url,
-            className: 'bookmark-link',
-            textContent: bookmark.title || bookmark.url
-        }
-    );
-    contentWrapper.appendChild(link);
-
-    // Create URL display
-    const urlDisplay = createElement('div',
-        {
-            className: 'bookmark-url',
-            textContent: bookmark.url
-        }
-    );
-    contentWrapper.appendChild(urlDisplay);
+    // Create container with bookmark content and prepare for delete button
+    const container = createElement('div', { className: 'bookmark-item' }, [
+        createElement('div', { className: 'bookmark-content' }, [
+            createElement('a', {
+                href: bookmark.url,
+                className: 'bookmark-link',
+                textContent: bookmark.title || bookmark.url
+            }),
+            createElement('div', {
+                className: 'bookmark-url',
+                textContent: bookmark.url
+            })
+        ])
+    ]);
 
     // Only create delete button if not in search mode
     if (!isSearchMode) {

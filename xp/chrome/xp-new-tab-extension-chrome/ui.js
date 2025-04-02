@@ -1,0 +1,55 @@
+// UI-related constants
+
+// Seed colors for directories (stronger pastel colors with better contrast on dark backgrounds)
+const colorPalette = [
+    'rgba(255, 179, 186, 0.15)', // Pink
+    'rgba(255, 223, 186, 0.15)', // Peach
+    'rgba(255, 255, 186, 0.15)', // Light Yellow
+    'rgba(186, 255, 201, 0.15)', // Light Green
+    'rgba(186, 225, 255, 0.15)', // Light Blue
+    'rgba(186, 200, 255, 0.15)', // Lavender
+    'rgba(228, 186, 255, 0.15)', // Light Purple
+    'rgba(255, 186, 255, 0.15)', // Light Magenta
+    'rgba(200, 255, 248, 0.15)', // Mint
+    'rgba(255, 213, 145, 0.15)', // Light Orange
+    'rgba(173, 216, 230, 0.15)', // Light Sky Blue
+    'rgba(144, 238, 144, 0.15)'  // Light Green
+];
+
+/**
+ * Helper function to create DOM elements with attributes and children
+ * @param {string} tag - The HTML tag name
+ * @param {Object} attributes - Object of attributes to set on the element
+ * @param {Array} children - Array of child elements or text nodes
+ * @returns {HTMLElement} The created element
+ */
+function createElement(tag, attributes = {}, children = []) {
+    const element = document.createElement(tag);
+
+    // Set attributes
+    Object.entries(attributes).forEach(([key, value]) => {
+        if (key === 'className') {
+            element.className = value;
+        } else if (key === 'textContent') {
+            element.textContent = value;
+        } else if (key === 'innerHTML') {
+            element.innerHTML = value;
+        } else {
+            element.setAttribute(key, value);
+        }
+    });
+
+    // Add children
+    children.forEach(child => {
+        if (typeof child === 'string') {
+            element.appendChild(document.createTextNode(child));
+        } else {
+            element.appendChild(child);
+        }
+    });
+
+    return element;
+}
+
+// Export the colorPalette and createElement function for use in other files
+export { colorPalette, createElement }; 
