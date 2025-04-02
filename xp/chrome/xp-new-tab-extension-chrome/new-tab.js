@@ -25,7 +25,7 @@ function createBookmarkElement(bookmark) {
     deleteBtn.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
-        showDeleteConfirmation(bookmark);
+        showDeleteConfirmation(bookmark, e);
     });
     container.appendChild(deleteBtn);
 
@@ -619,26 +619,36 @@ function getBookmarkFolderPath(bookmark) {
 }
 
 // Show confirmation dialog for bookmark deletion
-function showDeleteConfirmation(bookmark) {
+function showDeleteConfirmation(bookmark, event) {
     // Store the bookmark to delete
     bookmarkToDelete = bookmark;
 
-    // Create overlay
-    const overlay = document.createElement('div');
-    overlay.className = 'overlay';
-    overlay.id = 'delete-overlay';
+    // Close any existing dialog first
+    hideDeleteConfirmation();
+
+    // Get the clicked delete button element and its position
+    const deleteButton = event.currentTarget;
+    const bookmarkItem = deleteButton.parentElement;
+
+    // Get position of the delete button for positioning the dialog
+    const buttonRect = deleteButton.getBoundingClientRect();
 
     // Create confirmation dialog
     const confirmDialog = document.createElement('div');
     confirmDialog.className = 'delete-confirm';
     confirmDialog.id = 'delete-confirm';
 
+    // Position the dialog next to the delete button
+    confirmDialog.style.position = 'fixed';
+    confirmDialog.style.left = `${buttonRect.right + 10}px`;
+    confirmDialog.style.top = `${buttonRect.top - 5}px`;
+
     // Dialog content
     const title = document.createElement('h3');
     title.textContent = 'Delete Bookmark';
 
     const message = document.createElement('p');
-    message.textContent = `Are you sure you want to delete "${bookmark.title}"?`;
+    message.textContent = `Delete "${bookmark.title}"?`;
 
     const buttonsContainer = document.createElement('div');
     buttonsContainer.className = 'delete-confirm-buttons';
@@ -646,7 +656,10 @@ function showDeleteConfirmation(bookmark) {
     const cancelBtn = document.createElement('button');
     cancelBtn.className = 'delete-confirm-cancel';
     cancelBtn.textContent = 'Cancel';
-    cancelBtn.addEventListener('click', hideDeleteConfirmation);
+    cancelBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        hideDeleteConfirmation();
+    });
 
     // Add keyboard controls for easier navigation
     cancelBtn.addEventListener('keydown', (e) => {
@@ -659,7 +672,8 @@ function showDeleteConfirmation(bookmark) {
     const deleteBtn = document.createElement('button');
     deleteBtn.className = 'delete-confirm-delete';
     deleteBtn.textContent = 'Delete';
-    deleteBtn.addEventListener('click', () => {
+    deleteBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
         deleteBookmark(bookmark.id);
         hideDeleteConfirmation();
     });
@@ -680,8 +694,13 @@ function showDeleteConfirmation(bookmark) {
     confirmDialog.appendChild(message);
     confirmDialog.appendChild(buttonsContainer);
 
-    // Add to document
-    document.body.appendChild(overlay);
+    // Store original button for reference
+    confirmDialog.dataset.sourceButtonId = deleteButton.id || Date.now().toString();
+    if (!deleteButton.id) {
+        deleteButton.id = confirmDialog.dataset.sourceButtonId;
+    }
+
+    // Add to document body instead of the bookmark item
     document.body.appendChild(confirmDialog);
 
     // Focus on the Cancel button by default (safer option)
@@ -690,20 +709,22 @@ function showDeleteConfirmation(bookmark) {
     // Add keyboard event listener for Escape key
     document.addEventListener('keydown', handleEscapeKey);
 
-    // Also add click on overlay to cancel
-    overlay.addEventListener('click', hideDeleteConfirmation);
+    // Add click outside to close
+    setTimeout(() => {
+        document.addEventListener('click', handleClickOutside);
+    }, 10);
 }
 
 function hideDeleteConfirmation() {
-    // Remove the dialog and overlay
+    // Remove the dialog
     const dialog = document.getElementById('delete-confirm');
-    const overlay = document.getElementById('delete-overlay');
+    if (dialog) {
+        document.body.removeChild(dialog);
+    }
 
-    if (dialog) document.body.removeChild(dialog);
-    if (overlay) document.body.removeChild(overlay);
-
-    // Remove escape key listener
+    // Remove event listeners
     document.removeEventListener('keydown', handleEscapeKey);
+    document.removeEventListener('click', handleClickOutside);
 
     // Clear bookmarkToDelete
     bookmarkToDelete = null;
@@ -711,6 +732,13 @@ function hideDeleteConfirmation() {
 
 function handleEscapeKey(e) {
     if (e.key === 'Escape') {
+        hideDeleteConfirmation();
+    }
+}
+
+function handleClickOutside(e) {
+    const dialog = document.getElementById('delete-confirm');
+    if (dialog && !dialog.contains(e.target) && !e.target.classList.contains('delete-button')) {
         hideDeleteConfirmation();
     }
 }
