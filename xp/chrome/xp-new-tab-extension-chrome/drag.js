@@ -269,7 +269,7 @@ function addEmptyFolderDragoverHandler(container) {
         container.classList.add('folder-drag-over');
     });
 
-    container.addEventListener('dragleave', (_e) => {
+    container.addEventListener('dragleave', () => {
         container.classList.remove('folder-drag-over');
     });
 }

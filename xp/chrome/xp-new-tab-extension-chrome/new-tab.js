@@ -40,7 +40,7 @@ function getFolderColor(folderId) {
     return folderColors[colorKey];
 }
 
-function createBookmarkElement(bookmark, isSearchMode = false) {
+function createBookmarkElement(bookmark) {
     // Create container with bookmark content and prepare for delete button
     const container = div('bookmark-item', {}, []);
 
@@ -105,7 +105,7 @@ function createBookmarkElement(bookmark, isSearchMode = false) {
     return container;
 }
 
-function collectAllBookmarks(nodes, parentFolder = null) {
+function collectAllBookmarks(nodes) {
     nodes.forEach(node => {
         if (node.children) {
             // This is a folder
@@ -116,7 +116,7 @@ function collectAllBookmarks(nodes, parentFolder = null) {
                 isFolder: true,
                 children: node.children.map(child => child.id),
             };
-            collectAllBookmarks(node.children, node);
+            collectAllBookmarks(node.children);
         } else if (node.url) {
             // This is a bookmark
             allBookmarks[node.id] = {
@@ -261,12 +261,12 @@ function splitFolderIntoColumns(folder, container) {
             container.appendChild(column);
         } else {
             // This subfolder needs to be split
-            splitSubfolderIntoColumns(folder.title, subfolder, container, subfolder.id);
+            splitSubfolderIntoColumns(folder.title, subfolder, container);
         }
     });
 }
 
-function splitSubfolderIntoColumns(parentTitle, subfolder, container, parentFolderId) {
+function splitSubfolderIntoColumns(parentTitle, subfolder, container) {
     // Collect all bookmarks in this subfolder (flattened)
     const allSubfolderBookmarks = [];
 
@@ -313,8 +313,6 @@ function chunkArray(array, chunkSize) {
 }
 
 function processBookmarksInFolder(childIds, container) {
-    let currentSubfolder = null;
-
     // Process items in order
     childIds.forEach(childId => {
         const item = allBookmarks[childId];
@@ -324,7 +322,6 @@ function processBookmarksInFolder(childIds, container) {
             // This is a subfolder, add a header
             const subfolderHeader = textDiv('subfolder', item.title);
             container.appendChild(subfolderHeader);
-            currentSubfolder = item;
 
             // Process bookmarks in this subfolder
             if (item.children && item.children.length > 0) {
@@ -361,7 +358,7 @@ function filterBookmarks(searchTerm) {
     const container = document.getElementById('bookmarks-container');
 
     if (!searchTerm.trim()) {
-    // Reset to normal view if search is cleared
+        // Reset to normal view if search is cleared
         renderBookmarks();
         return;
     }
@@ -631,7 +628,7 @@ function highlightText(element, searchTerm) {
     const lcSearch = searchTerm.toLowerCase();
 
     if (lcText.includes(lcSearch)) {
-    // Find all occurrences
+        // Find all occurrences
         const parts = [];
         let lastIndex = 0;
         let startIndex = lcText.indexOf(lcSearch);
@@ -747,9 +744,6 @@ function showFolderContents(folderId) {
     const container = document.getElementById('bookmarks-container');
     container.innerHTML = '';
 
-    // Check if we're in search mode
-    const isSearchMode = document.body.classList.contains('search-mode');
-
     // Create a "back to all bookmarks" link
     const backColumn = div('folder-column', {
         style: {
@@ -783,8 +777,6 @@ function showFolderContents(folderId) {
 
     // Create a custom function to process folder contents with search mode awareness
     function processFolderContentsWithMode(childIds, container) {
-        let currentSubfolder = null;
-
         // Process items in order
         childIds.forEach(childId => {
             const item = allBookmarks[childId];
@@ -794,7 +786,6 @@ function showFolderContents(folderId) {
                 // This is a subfolder, add a header
                 const subfolderHeader = textDiv('subfolder', item.title);
                 container.appendChild(subfolderHeader);
-                currentSubfolder = item;
 
                 // Process bookmarks in this subfolder
                 if (item.children && item.children.length > 0) {
@@ -970,7 +961,7 @@ function handleClickOutside(e) {
 
 function deleteBookmark(id) {
     chrome.bookmarks.remove(id, () => {
-    // Check for error
+        // Check for error
         if (chrome.runtime.lastError) {
             console.error(chrome.runtime.lastError.message);
             return;
