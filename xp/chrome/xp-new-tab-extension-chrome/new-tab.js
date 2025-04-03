@@ -8,14 +8,12 @@ let bookmarkToDelete = null;
 let folderColors = {};
 // Import drag operations from drag.js
 import {
-    dragOperation,
     handleDragStart,
     handleDragOver,
     handleDragLeave,
     handleDrop,
     handleEmptyFolderDrop,
     updateBookmarkOrder,
-    resetDragState,
     addEmptyFolderDragoverHandler,
     setupGlobalDragEndHandler
 } from './drag.js';
@@ -855,7 +853,6 @@ function showDeleteConfirmation(bookmark, event) {
 
     // Get the clicked delete button element and its position
     const deleteButton = event.currentTarget;
-    const bookmarkItem = deleteButton.parentElement;
 
     // Get position of the delete button for positioning the dialog
     const buttonRect = deleteButton.getBoundingClientRect();
