@@ -4,8 +4,6 @@ let config = {
     maxEntriesPerColumn: 10,
 };
 let bookmarkToDelete = null;
-// Map to store folder colors
-let folderColors = {};
 // Import drag operations from drag.js
 import {
     handleDragStart,
@@ -18,27 +16,10 @@ import {
     setupGlobalDragEndHandler,
 } from './drag.js';
 // Import colorPalette and helper functions from ui.js
-import { colorPalette, createElement, div, textDiv, textSpan } from './ui.js';
+import { createElement, div, textDiv, textSpan } from './ui.js';
+// Import folder color functions from folder_color.js
+import { getFolderColor, resetFolderColors } from './folder_color.js';
 
-
-// Function to get color for a folder
-function getFolderColor(folderId) {
-    const folder = allBookmarks[folderId];
-    if (!folder) return colorPalette[0];
-
-    // Get the color key based on the folder title
-    const colorKey = folder.title;
-
-    // Return existing color if already assigned
-    if (folderColors[colorKey]) {
-        return folderColors[colorKey];
-    }
-
-    // Assign a new color from the palette
-    const colorIndex = Object.keys(folderColors).length % colorPalette.length;
-    folderColors[colorKey] = colorPalette[colorIndex];
-    return folderColors[colorKey];
-}
 
 function createBookmarkElement(bookmark) {
     // Create container with bookmark content and prepare for delete button
@@ -135,7 +116,7 @@ function renderBookmarks() {
     container.innerHTML = '';
 
     // Reset folder colors on re-render
-    folderColors = {};
+    resetFolderColors();
 
     // Remove search mode class when returning to normal view
     document.body.classList.remove('search-mode');
@@ -193,7 +174,7 @@ function createFolderColumn(title, subtitle = null, folderId = null) {
 
     // Apply color if folderId is provided
     if (folderId) {
-        const color = getFolderColor(folderId);
+        const color = getFolderColor(folderId, allBookmarks);
         folderColumn.style.backgroundColor = color;
 
         // Store folder ID as data attribute for drag operations
@@ -367,7 +348,7 @@ function filterBookmarks(searchTerm) {
     document.body.classList.add('search-mode');
 
     // Reset folder colors for search
-    folderColors = {};
+    resetFolderColors();
 
     container.innerHTML = '';
 
@@ -552,7 +533,7 @@ function filterBookmarks(searchTerm) {
 
             // Apply color based on top folder
             if (topFolderId) {
-                const color = getFolderColor(topFolderId);
+                const color = getFolderColor(topFolderId, allBookmarks);
                 folderColumn.style.backgroundColor = color;
             }
 
