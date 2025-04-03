@@ -3,7 +3,6 @@ const allBookmarks = {};
 let config = {
     maxEntriesPerColumn: 10,
 };
-let bookmarkToDelete = null;
 // Import drag operations from drag.js
 import {
     handleDragStart,
@@ -793,8 +792,6 @@ function getBookmarkFolderPath(bookmark) {
 
 // Show confirmation dialog for bookmark deletion
 function showDeleteConfirmation(bookmark, event) {
-    // Store the bookmark to delete
-    bookmarkToDelete = bookmark;
 
     // Close any existing dialog first
     hideDeleteConfirmation();
@@ -898,9 +895,6 @@ function hideDeleteConfirmation() {
     // Remove event listeners
     document.removeEventListener('keydown', handleEscapeKey);
     document.removeEventListener('click', handleClickOutside);
-
-    // Clear bookmarkToDelete
-    bookmarkToDelete = null;
 }
 
 function handleEscapeKey(e) {
