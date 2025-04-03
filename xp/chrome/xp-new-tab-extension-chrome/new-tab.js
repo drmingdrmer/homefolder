@@ -1,7 +1,7 @@
 // Global bookmarks store
-let allBookmarks = {};
+const allBookmarks = {};
 let config = {
-    maxEntriesPerColumn: 10
+    maxEntriesPerColumn: 10,
 };
 let bookmarkToDelete = null;
 // Map to store folder colors
@@ -15,7 +15,7 @@ import {
     handleEmptyFolderDrop,
     updateBookmarkOrder,
     addEmptyFolderDragoverHandler,
-    setupGlobalDragEndHandler
+    setupGlobalDragEndHandler,
 } from './drag.js';
 // Import colorPalette and helper functions from ui.js
 import { colorPalette, createElement, div, textDiv, textSpan } from './ui.js';
@@ -49,7 +49,7 @@ function createBookmarkElement(bookmark, isSearchMode = false) {
         className: 'drag-handle',
         draggable: true,
         'aria-label': 'Drag to reorder',
-        title: 'Drag to reorder'
+        title: 'Drag to reorder',
     });
 
     // Add grip icon to the drag handle (using a simple 3-dots design)
@@ -65,9 +65,9 @@ function createBookmarkElement(bookmark, isSearchMode = false) {
         createElement('a', {
             href: bookmark.url,
             className: 'bookmark-link',
-            textContent: bookmark.title || bookmark.url
+            textContent: bookmark.title || bookmark.url,
         }),
-        div('bookmark-url', { textContent: bookmark.url })
+        div('bookmark-url', { textContent: bookmark.url }),
     ]);
 
     // Add drag handle and content to container
@@ -80,8 +80,8 @@ function createBookmarkElement(bookmark, isSearchMode = false) {
         {
             className: 'delete-button',
             'aria-label': 'Delete bookmark',
-            textContent: '×'
-        }
+            textContent: '×',
+        },
     );
 
     deleteBtn.addEventListener('click', (e) => {
@@ -114,7 +114,7 @@ function collectAllBookmarks(nodes, parentFolder = null) {
                 title: node.title,
                 parentId: node.parentId,
                 isFolder: true,
-                children: node.children.map(child => child.id)
+                children: node.children.map(child => child.id),
             };
             collectAllBookmarks(node.children, node);
         } else if (node.url) {
@@ -124,7 +124,7 @@ function collectAllBookmarks(nodes, parentFolder = null) {
                 title: node.title || node.url,
                 url: node.url,
                 parentId: node.parentId,
-                isFolder: false
+                isFolder: false,
             };
         }
     });
@@ -142,7 +142,7 @@ function renderBookmarks() {
 
     // Get top-level folders
     const topLevelFolders = Object.values(allBookmarks).filter(item =>
-        item.isFolder && (item.parentId === '0' || item.parentId === '1')
+        item.isFolder && (item.parentId === '0' || item.parentId === '1'),
     );
 
     // Process each top-level folder
@@ -379,7 +379,7 @@ function filterBookmarks(searchTerm) {
     // FIRST SECTION: Find folders that match the search term
     // Use Array.from to preserve the order in which they were defined
     const matchingFolders = Array.from(Object.values(allBookmarks).filter(item =>
-        item.isFolder && item.title.toLowerCase().includes(lowercaseSearch)
+        item.isFolder && item.title.toLowerCase().includes(lowercaseSearch),
     ));
 
     // SECOND SECTION: Find bookmarks that match the search term
@@ -388,7 +388,7 @@ function filterBookmarks(searchTerm) {
         !item.isFolder && (
             item.title.toLowerCase().includes(lowercaseSearch) ||
             (item.url && item.url.toLowerCase().includes(lowercaseSearch))
-        )
+        ),
     ));
 
     // If no matches at all
@@ -397,8 +397,8 @@ function filterBookmarks(searchTerm) {
             textContent: 'No bookmarks or folders found matching your search.',
             style: {
                 padding: '20px',
-                textAlign: 'center'
-            }
+                textAlign: 'center',
+            },
         });
         container.appendChild(noResults);
         return;
@@ -408,8 +408,8 @@ function filterBookmarks(searchTerm) {
     const summaryColumn = div('folder-column', {
         style: {
             gridColumn: '1 / -1',
-            marginBottom: '10px'
-        }
+            marginBottom: '10px',
+        },
     });
 
     const summaryHeader = div('folder-header');
@@ -435,8 +435,8 @@ function filterBookmarks(searchTerm) {
         const folderSectionHeader = div('folder-column', {
             style: {
                 gridColumn: '1 / -1',
-                marginBottom: '5px'
-            }
+                marginBottom: '5px',
+            },
         });
 
         const headerDiv = div('folder-header', { textContent: 'Matching Folders' });
@@ -479,7 +479,7 @@ function filterBookmarks(searchTerm) {
                 // Add "see more" link if needed
                 if (folder.children.length > MAX_ITEMS_TO_SHOW) {
                     const moreLink = document.createElement('a');
-                    moreLink.href = "#";
+                    moreLink.href = '#';
                     moreLink.className = 'bookmark-link';
                     moreLink.textContent = `... and ${folder.children.length - MAX_ITEMS_TO_SHOW} more items`;
                     moreLink.style.fontStyle = 'italic';
@@ -498,8 +498,8 @@ function filterBookmarks(searchTerm) {
                     style: {
                         fontStyle: 'italic',
                         padding: '5px',
-                        opacity: '0.7'
-                    }
+                        opacity: '0.7',
+                    },
                 });
                 content.appendChild(emptyNote);
             }
@@ -514,8 +514,8 @@ function filterBookmarks(searchTerm) {
             style: {
                 gridColumn: '1 / -1',
                 marginBottom: '5px',
-                marginTop: '20px'
-            }
+                marginTop: '20px',
+            },
         });
 
         const headerDiv = div('folder-header', { textContent: 'Matching Bookmarks' });
@@ -535,7 +535,7 @@ function filterBookmarks(searchTerm) {
             if (!folderMatches[folderKey]) {
                 folderMatches[folderKey] = {
                     path: folderPath,
-                    bookmarks: []
+                    bookmarks: [],
                 };
                 folderMatchOrder.push(folderKey); // Remember the order
             }
@@ -641,7 +641,7 @@ function highlightText(element, searchTerm) {
             if (startIndex > lastIndex) {
                 parts.push({
                     text: text.substring(lastIndex, startIndex),
-                    isMatch: false
+                    isMatch: false,
                 });
             }
 
@@ -649,7 +649,7 @@ function highlightText(element, searchTerm) {
             const endIndex = startIndex + lcSearch.length;
             parts.push({
                 text: text.substring(startIndex, endIndex),
-                isMatch: true
+                isMatch: true,
             });
 
             lastIndex = endIndex;
@@ -660,7 +660,7 @@ function highlightText(element, searchTerm) {
         if (lastIndex < text.length) {
             parts.push({
                 text: text.substring(lastIndex),
-                isMatch: false
+                isMatch: false,
             });
         }
 
@@ -697,7 +697,7 @@ function highlightText(element, searchTerm) {
                 if (startIndex > lastIndex) {
                     urlParts.push({
                         text: urlText.substring(lastIndex, startIndex),
-                        isMatch: false
+                        isMatch: false,
                     });
                 }
 
@@ -705,7 +705,7 @@ function highlightText(element, searchTerm) {
                 const endIndex = startIndex + lcSearch.length;
                 urlParts.push({
                     text: urlText.substring(startIndex, endIndex),
-                    isMatch: true
+                    isMatch: true,
                 });
 
                 lastIndex = endIndex;
@@ -716,7 +716,7 @@ function highlightText(element, searchTerm) {
             if (lastIndex < urlText.length) {
                 urlParts.push({
                     text: urlText.substring(lastIndex),
-                    isMatch: false
+                    isMatch: false,
                 });
             }
 
@@ -754,17 +754,17 @@ function showFolderContents(folderId) {
     const backColumn = div('folder-column', {
         style: {
             gridColumn: '1 / -1',
-            marginBottom: '15px'
-        }
+            marginBottom: '15px',
+        },
     });
 
     const backHeader = div('folder-header');
 
     const backLink = document.createElement('a');
-    backLink.href = "#";
-    backLink.textContent = "← Back to all bookmarks";
-    backLink.style.color = "white";
-    backLink.style.textDecoration = "none";
+    backLink.href = '#';
+    backLink.textContent = '← Back to all bookmarks';
+    backLink.style.color = 'white';
+    backLink.style.textDecoration = 'none';
     backLink.addEventListener('click', (e) => {
         e.preventDefault();
         renderBookmarks(); // This will remove the search-mode class
@@ -816,8 +816,8 @@ function showFolderContents(folderId) {
             style: {
                 fontStyle: 'italic',
                 padding: '5px',
-                opacity: '0.7'
-            }
+                opacity: '0.7',
+            },
         });
         content.appendChild(emptyNote);
     }
@@ -873,8 +873,15 @@ function showDeleteConfirmation(bookmark, event) {
     const cancelBtn = createElement('button',
         {
             className: 'delete-confirm-cancel',
-            textContent: 'Cancel'
-        }
+            textContent: 'Cancel',
+        },
+    );
+
+    const deleteBtn = createElement('button',
+        {
+            className: 'delete-confirm-delete',
+            textContent: 'Delete',
+        },
     );
 
     cancelBtn.addEventListener('click', (e) => {
@@ -889,13 +896,6 @@ function showDeleteConfirmation(bookmark, event) {
             deleteBtn.focus();
         }
     });
-
-    const deleteBtn = createElement('button',
-        {
-            className: 'delete-confirm-delete',
-            textContent: 'Delete'
-        }
-    );
 
     deleteBtn.addEventListener('click', (e) => {
         e.stopPropagation();
