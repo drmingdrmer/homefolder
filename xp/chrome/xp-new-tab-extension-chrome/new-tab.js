@@ -15,7 +15,7 @@ import {
     addEmptyFolderDragoverHandler,
     setupGlobalDragEndHandler,
 } from './drag.js';
-// Import colorPalette and helper functions from ui.js
+// Import helper functions for UI elements from ui.js
 import { createElement, div, textDiv, textSpan } from './ui.js';
 // Import folder color functions from folder_color.js
 import { getFolderColor, resetFolderColors } from './folder_color.js';
@@ -724,30 +724,6 @@ function showFolderContents(folderId) {
 
     const container = document.getElementById('bookmarks-container');
     container.innerHTML = '';
-
-    // Create a "back to all bookmarks" link
-    const backColumn = div('folder-column', {
-        style: {
-            gridColumn: '1 / -1',
-            marginBottom: '15px',
-        },
-    });
-
-    const backHeader = div('folder-header');
-
-    const backLink = document.createElement('a');
-    backLink.href = '#';
-    backLink.textContent = '← Back to all bookmarks';
-    backLink.style.color = 'white';
-    backLink.style.textDecoration = 'none';
-    backLink.addEventListener('click', (e) => {
-        e.preventDefault();
-        renderBookmarks(); // This will remove the search-mode class
-    });
-
-    backHeader.appendChild(backLink);
-    backColumn.appendChild(backHeader);
-    container.appendChild(backColumn);
 
     // Get folder path
     const folderPath = getFolderPath(folder);

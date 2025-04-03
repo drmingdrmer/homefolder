@@ -37,7 +37,6 @@ function resetFolderColors() {
 
 // Export folder color functions and variables
 export {
-    folderColors,
     getFolderColor,
     resetFolderColors
 }; 
