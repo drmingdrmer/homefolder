@@ -233,7 +233,7 @@ function updateBookmarkOrder(bookmarkId, newParentId, newIndex, allBookmarks) {
     // Add to new parent's children array at the new index
     const newParent = allBookmarks[newParentId];
     if (newParent && newParent.children) {
-    // Remove first if it's already there (shouldn't happen but just in case)
+        // Remove first if it's already there (shouldn't happen but just in case)
         newParent.children = newParent.children.filter(id => id !== bookmarkId);
 
         // Insert at new position
@@ -269,7 +269,7 @@ function addEmptyFolderDragoverHandler(container) {
         container.classList.add('folder-drag-over');
     });
 
-    container.addEventListener('dragleave', (e) => {
+    container.addEventListener('dragleave', (_e) => {
         container.classList.remove('folder-drag-over');
     });
 }
@@ -279,7 +279,7 @@ function addEmptyFolderDragoverHandler(container) {
  */
 function setupGlobalDragEndHandler() {
     document.addEventListener('dragend', () => {
-    // Reset drag state
+        // Reset drag state
         resetDragState();
 
         // Remove any lingering drag-related classes from all bookmark items
