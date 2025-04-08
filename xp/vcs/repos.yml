@@ -88,9 +88,11 @@ other:
 - - f github.com/drmingdrmer/cnosdb
 - - . github.com/drmingdrmer/codeq
 - - f github.com/drmingdrmer/compact_str
+- - . github.com/drmingdrmer/conflict-trait-in-main
 - - . github.com/drmingdrmer/consensus-2
 - - . github.com/drmingdrmer/consensus-bugs
 - - . github.com/drmingdrmer/consensus-essence
+- - f github.com/drmingdrmer/crc64fast-nvme
 - - f github.com/drmingdrmer/crossbeam
 - - f github.com/drmingdrmer/dashmap
 - - . github.com/drmingdrmer/databend-0
@@ -101,14 +103,17 @@ other:
 - - f github.com/drmingdrmer/databend-scripts
 - - . github.com/drmingdrmer/databend2
 - - f github.com/drmingdrmer/datacake
+- - . github.com/drmingdrmer/display-more
 - - . github.com/drmingdrmer/drmingdrmer
 - - . github.com/drmingdrmer/dupit
 - - f github.com/drmingdrmer/english-learning
+- - f github.com/drmingdrmer/epochfs
 - - f github.com/drmingdrmer/erasure-code-py
 - - f github.com/drmingdrmer/feature-set
 - - . github.com/drmingdrmer/futures-rs
 - - f github.com/drmingdrmer/generator-rs
 - - f github.com/drmingdrmer/get-size
+- - f github.com/drmingdrmer/github-dir
 - - . github.com/drmingdrmer/go-typegraph
 - - f github.com/drmingdrmer/gpt-translate
 - - f github.com/drmingdrmer/h2
@@ -125,6 +130,7 @@ other:
 - - . github.com/drmingdrmer/lru-cache-map
 - - f github.com/drmingdrmer/lru-rs
 - - f github.com/drmingdrmer/madsim
+- - . github.com/drmingdrmer/map-api
 - - f github.com/drmingdrmer/math-in-rust-doc
 - - f github.com/drmingdrmer/may
 - - f github.com/drmingdrmer/md2zhihu
@@ -211,8 +217,10 @@ other:
 - - . github.com/drmingdrmer/vbox
 - - f github.com/drmingdrmer/wal
 - - f github.com/drmingdrmer/want
+- - f github.com/drmingdrmer/watcher
 - - f github.com/drmingdrmer/weibot
 - - f github.com/drmingdrmer/whisper-obsidian-plugin
+- - f github.com/drmingdrmer/whm
 - - f github.com/drmingdrmer/wizard
 - - f github.com/drmingdrmer/writing
 - - f github.com/drmingdrmer/xorfilter
@@ -245,6 +253,7 @@ other:
 - - . github.com/lni/dragonboat-example
 - - . github.com/lzanini/mdbook-katex
 - - . github.com/mambisi/escanor
+- - f github.com/mannaandpoem/OpenManus
 - - . github.com/matrixorigin/matrixcube
 - - . github.com/meilisearch/MeiliSearch
 - - f github.com/mozilla/lmdb-rs
@@ -264,6 +273,7 @@ other:
 - - f github.com/ritelabs/riteraft
 - - . github.com/rust-analyzer/rust-analyzer
 - - f github.com/rust-lang/cargo
+- - f github.com/rust-lang/futures-rs
 - - . github.com/rust-lang/rust
 - - f github.com/rust-rocksdb/rust-rocksdb
 - - . github.com/sean-public/fast-skiplist
