@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 """
 视频转换工具的可执行入口点脚本
-将此文件放在系统PATH中的bin目录下，可以从任何位置运行
 """
 
 import os
@@ -11,7 +10,7 @@ import sys
 # 将脚本名称修改为模块名，这样argparse显示的帮助信息更准确
 script_name = os.path.basename(__file__)
 
-# 尝试直接从相对路径导入videoconv包
+# 直接从相对路径导入videoconv包
 def find_package():
     """从相对路径查找videoconv包"""
     script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -28,17 +27,14 @@ def find_package():
         except ImportError:
             pass
     
-    # 如果导入失败，返回False
     return False
 
 if __name__ == "__main__":
-    # 尝试导入并运行包
+    # 导入并运行
     if find_package():
-        # 直接导入并运行模块
         import videoconv.cli
         sys.argv[0] = script_name  # 设置正确的脚本名称
         videoconv.cli.main()
     else:
-        sys.stderr.write(f"Error: 无法找到videoconv包。请确保videoconv目录存在于此脚本的父目录中。\n")
-        sys.stderr.write(f"目录结构应该是: \n  video-convert/\n    ├── bin/\n    │   └── video-conv\n    └── videoconv/\n        └── __init__.py\n")
+        sys.stderr.write(f"Error: 无法找到videoconv包。请确保此脚本位于video-convert/bin/目录中，且videoconv目录存在。\n")
         sys.exit(1) 
