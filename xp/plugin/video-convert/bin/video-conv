@@ -15,22 +15,27 @@ script_name = os.path.basename(__file__)
 # 尝试不同的方法查找和使用videoconv包
 def find_package():
     """查找videoconv包并返回运行它的命令"""
-    # 方法1: 尝试直接导入包（如果已正确安装）
-    try:
-        import videoconv
-        return [sys.executable, "-m", "videoconv.cli"]
-    except ImportError:
-        pass
-    
-    # 方法2: 尝试查找包相对于脚本的位置
+    # 方法1: 直接从相对路径导入(无需安装)
     script_dir = os.path.dirname(os.path.abspath(__file__))
     parent_dir = os.path.dirname(script_dir)
     
     # 检查相对路径是否存在videoconv包
     package_path = os.path.join(parent_dir, "videoconv")
     if os.path.isdir(package_path) and os.path.exists(os.path.join(package_path, "__init__.py")):
-        # 使用相对于脚本目录的路径运行
+        # 将父目录添加到Python路径中，这样可以直接导入videoconv
+        sys.path.insert(0, parent_dir)
+        try:
+            import videoconv.cli
+            return "direct_import"
+        except ImportError:
+            pass
+    
+    # 方法2: 尝试直接导入包（如果已正确安装）
+    try:
+        import videoconv
         return [sys.executable, "-m", "videoconv.cli"]
+    except ImportError:
+        pass
     
     # 方法3: 通过pip查找安装位置
     try:
@@ -52,10 +57,15 @@ if __name__ == "__main__":
     # 查找并运行包
     command = find_package()
     
-    if command is None:
-        sys.stderr.write(f"Error: 无法找到videoconv包。请确保它已正确安装。\n")
-        sys.stderr.write(f"提示: 运行 'pip install -e /path/to/video-convert' 安装此包。\n")
-        sys.exit(1)
-    
-    # 执行命令，传递所有命令行参数
-    os.execvp(command[0], command + sys.argv[1:]) 
+    if command == "direct_import":
+        # 直接导入并运行模块
+        import videoconv.cli
+        sys.argv[0] = script_name  # 设置正确的脚本名称
+        videoconv.cli.main()
+    elif command is not None:
+        # 执行命令，传递所有命令行参数
+        os.execvp(command[0], command + sys.argv[1:])
+    else:
+        sys.stderr.write(f"Error: 无法找到videoconv包。请确保videoconv目录存在于此脚本的父目录中。\n")
+        sys.stderr.write(f"目录结构应该是: \n  video-convert/\n    ├── bin/\n    │   └── video-conv\n    └── videoconv/\n        └── __init__.py\n")
+        sys.exit(1) 
