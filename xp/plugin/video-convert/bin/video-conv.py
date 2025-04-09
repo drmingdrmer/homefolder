@@ -11,6 +11,8 @@ from ffmpeg_params import FFmpegParams, PRESET_PARAMS
 from output_utils import get_output_name
 from exceptions import ConversionError
 from stream_manager import StreamManager
+from ffmpeg_command_builder import FFmpegCommandBuilder, FFmpegCommandDirector
+from argument_validator import ArgumentValidator, create_argument_parser
 
 
 def print_section_header(title):
@@ -30,6 +32,7 @@ class VideoConverter:
     Class to handle video conversion process
     """
     def __init__(self, args):
+        # 使用已验证的参数对象
         self.args = args
         self.stream_manager = StreamManager(args.input_file)
         self.selected_audio_stream = None
@@ -61,10 +64,7 @@ class VideoConverter:
         """
         Execute the conversion process
         """
-        if self.args.width not in PRESET_PARAMS:
-            available_widths = ", ".join(str(w) for w in sorted(PRESET_PARAMS.keys()))
-            raise ConversionError(f"Width {self.args.width} not found in presets. Available width presets: {available_widths}")
-        
+        # 宽度已经在ArgumentValidator中验证过，不需要再验证
         self.params = PRESET_PARAMS[self.args.width]
         
         # Set start and end time parameters
@@ -91,10 +91,7 @@ class VideoConverter:
             print(f"Absolute Stream Index: {self.selected_subtitle_stream.index}")
             print(f"Relative Subtitle Index: {relative_index} (used in filter)")
         elif self.external_subtitle_file is not None:
-            # Validate external subtitle file
-            if not os.path.exists(self.external_subtitle_file):
-                raise ConversionError(f"External subtitle file not found: {self.external_subtitle_file}")
-                
+            # 外部字幕文件已在ArgumentValidator中验证过，不需要再验证
             self.params.external_subtitle_file = self.external_subtitle_file
             print_subsection_header("External Subtitle")
             print(f"File: {self.external_subtitle_file}")
@@ -137,19 +134,22 @@ class VideoConverter:
             else:
                 raise ConversionError(f"Output file already exists: {output}\nUse --skip-exists or -se to skip with normal exit when file exists.")
         
-        ffmpeg_template = self._get_ffmpeg_template()
-        ffmpeg_cmd = ["ffmpeg", "-i", self.args.input_file]
+        # 使用FFmpegCommandDirector构建命令
+        command_builder = FFmpegCommandBuilder(self.params, self.args.input_file, output)
+        command_builder.set_audio_stream(self.selected_audio_stream)
         
-        # Add external subtitle file as input if specified
-        if self.params.external_subtitle_file is not None:
-            ffmpeg_cmd.extend(["-i", self.params.external_subtitle_file])
+        if self.selected_subtitle_stream is not None:
+            command_builder.set_subtitle_stream(self.selected_subtitle_stream)
+        elif self.external_subtitle_file is not None:
+            command_builder.set_external_subtitle(self.external_subtitle_file)
         
-        ffmpeg_cmd.extend(ffmpeg_template + [output])
+        command_builder.set_dry_run(self.args.dry_run)
         
+        # 获取格式化的命令字符串用于显示
         print_subsection_header("FFmpeg Command")
-        print(" ".join([f'"{arg}"' if ' ' in arg else arg for arg in ffmpeg_cmd]))
+        print(command_builder.get_pretty_command())
         
-        if self.params.subtitle_stream is not None:
+        if self.selected_subtitle_stream is not None:
             print("\nNote: Using relative subtitle index in the filter. The subtitles filter uses")
             print("a 0-based index that counts only subtitle streams, not all streams.")
         
@@ -160,97 +160,35 @@ class VideoConverter:
         print("\nStarting conversion...")
         
         try:
-            subprocess.run(ffmpeg_cmd, check=True)
+            # 执行命令
+            command_builder.execute(self.stream_manager.subtitle_indices)
             print(f"Conversion completed: {output}")
             return True
         except subprocess.CalledProcessError as e:
             raise ConversionError(f"Conversion failed: {e}")
-    
-    def _get_ffmpeg_template(self):
-        """
-        Return ffmpeg command template with parameters from FFmpegParams
-        """
-        template = []
-        
-        if self.params.start_time is not None:
-            template.extend(["-ss", self.params.start_time])
-        
-        if self.params.end_time is not None:
-            template.extend(["-to", self.params.end_time])
-        
-        if self.selected_audio_stream is not None:
-            template.extend(["-map", "0:0"])  # Map video stream
-            template.extend(["-map", f"0:{self.selected_audio_stream.index}"])  # Map audio stream
-        
-        subtitle_filter = ""
-        if self.selected_subtitle_stream is not None:
-            # Handle embedded subtitle
-            relative_subtitle_index = self.stream_manager.calculate_subtitle_relative_index(self.selected_subtitle_stream.index)
-            subtitle_filter = f",subtitles='{os.path.abspath(self.params.input_file)}':stream_index={relative_subtitle_index}"
-        elif self.params.external_subtitle_file is not None:
-            # Handle external subtitle
-            subtitle_filter = f",subtitles='{os.path.abspath(self.params.external_subtitle_file)}'"
-        
-        template.extend([
-            "-c:v",             "libaom-av1",
-            "-b:v",             self.params.video_bitrate,
-            "-vf",              self.params.get_scale_filter() + subtitle_filter,
-            "-pix_fmt",         "yuv420p",
-            "-color_primaries", "bt709",
-            "-color_trc",       "bt709",
-            "-colorspace",      "bt709",
-            "-c:a",             "aac",
-            "-b:a",             "116k",
-            "-ar",              "48000",
-            "-ac",              "2",
-            "-preset",          "slower",
-            "-cpu-used",        "3",
-            "-threads",         "0",
-        ])
-        
-        return template
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Convert video files using ffmpeg with customizable parameters.')
-
-    parser.add_argument('width', type=int, choices=sorted(PRESET_PARAMS.keys()),
-                        help=f'Video width preset. Available presets: {", ".join(str(w) for w in sorted(PRESET_PARAMS.keys()))}')
-    parser.add_argument('input_file', help='Input video file path. If path contains "./" (e.g., "foo/./videos/file.mp4"), the output filename will be split at this point.')
-    parser.add_argument('output_file', nargs='?', default=None,
-                        help='Output file path or directory. If not specified, a default output directory will be used.')
-    parser.add_argument('--audio-stream', '-a', type=int, dest='audio_stream',
-                        help='Audio stream index to select (e.g., 1 for Stream #0:1)')
-    parser.add_argument('--subtitle-stream', '-s', type=int, dest='subtitle_stream',
-                        help='Optional subtitle stream index to embed (e.g., 2 for Stream #0:2). If not specified, no subtitles will be included.')
-    parser.add_argument('--subtitle-language', '-sl', dest='subtitle_language',
-                        help='Select subtitle by language code (e.g., "chi" for Chinese, "eng" for English)')
-    parser.add_argument('--subtitle-title', '-st', dest='subtitle_title',
-                        help='Select subtitle by title (e.g., "中文（简体）")')
-    parser.add_argument('--external-subtitle', '-es', dest='external_subtitle_file',
-                        help='Path to external subtitle file to embed (e.g., "subtitle.srt")')
-    parser.add_argument('--list-subtitles', '-ls', action='store_true', dest='list_subtitles',
-                        help='List all available subtitle streams and exit')
-    parser.add_argument('--bitrate', '-b', dest='video_bitrate',
-                        help='Override video bitrate (e.g., "200k", "1M")')
-    parser.add_argument('--start-time', '-ss', dest='start_time',
-                        help='Start time for conversion (format: HH:MM:SS or seconds, e.g., "00:01:30" or "90")')
-    parser.add_argument('--end-time', '-to', dest='end_time',
-                        help='End time for conversion (format: HH:MM:SS or seconds, e.g., "00:05:00" or "300")')
-    parser.add_argument('--dry-run', '-n', action='store_true', dest='dry_run',
-                        help='Print information and conversion command without executing it')
-    parser.add_argument('--skip-exists', '-se', action='store_true', dest='skip_exists',
-                        help='Skip with normal exit if output file already exists (default: exit with error)')
-
-    args = parser.parse_args()
+    """主程序入口点"""
+    # 使用参数验证器定义的解析器
+    parser = create_argument_parser()
+    raw_args = parser.parse_args()
     
+    # 验证并获取处理后的参数
+    try:
+        args = ArgumentValidator.validate_args(raw_args)
+    except ConversionError as e:
+        print(f"Error: {e.message}", file=sys.stderr)
+        sys.exit(e.exit_code)
+    
+    # 使用验证过的参数创建转换器
     converter = VideoConverter(args)
     
-    # These methods now raise exceptions instead of returning True/False
+    # 进行转换
     converter.select_streams()
     converter.convert()
     
-    # If we get here, everything was successful
+    # 如果到达这里，说明一切顺利
 
 
 if __name__ == "__main__":
