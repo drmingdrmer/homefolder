@@ -356,6 +356,10 @@ class VideoConverter:
         
         self.params = PRESET_PARAMS[self.args.width]
         
+        # Set start and end time parameters
+        self.params.start_time = self.args.start_time
+        self.params.end_time = self.args.end_time
+        
         # Use original FPS if available
         if self.original_fps is not None:
             self.params.fps = self.original_fps
