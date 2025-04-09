@@ -115,7 +115,7 @@ git push origin $branch || exit 1
 repo="$(basename $(pwd))"
 
 gh pr create \
-    $draft \
+    --draft \
     --repo databendlabs/$repo \
     --base $upstream_branch \
     --head drmingdrmer:$branch \
