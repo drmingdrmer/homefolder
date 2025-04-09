@@ -2,8 +2,14 @@
 # coding: utf-8
 
 import os
-from ffmpeg_params import FFmpegParams
-from stream_info import StreamInfo
+
+# 支持直接运行和测试环境
+try:
+    from ffmpeg_params import FFmpegParams
+    from stream_info import StreamInfo
+except ImportError:
+    from bin.ffmpeg_params import FFmpegParams
+    from bin.stream_info import StreamInfo
 
 
 class FFmpegCommandBuilder:

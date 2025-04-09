@@ -3,8 +3,14 @@
 
 import os
 import argparse
-from exceptions import ConversionError
-from ffmpeg_params import PRESET_PARAMS
+
+# 支持直接运行和测试环境
+try:
+    from exceptions import ConversionError
+    from ffmpeg_params import PRESET_PARAMS
+except ImportError:
+    from bin.exceptions import ConversionError
+    from bin.ffmpeg_params import PRESET_PARAMS
 
 
 class ArgumentValidator:

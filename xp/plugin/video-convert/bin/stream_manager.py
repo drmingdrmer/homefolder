@@ -4,8 +4,14 @@
 import subprocess
 import json
 import sys
-from stream_info import StreamInfo
-from exceptions import ConversionError
+
+# 支持直接运行和测试环境
+try:
+    from stream_info import StreamInfo
+    from exceptions import ConversionError
+except ImportError:
+    from bin.stream_info import StreamInfo
+    from bin.exceptions import ConversionError
 
 def print_subsection_header(title):
     """Print a subsection header with a line separator"""

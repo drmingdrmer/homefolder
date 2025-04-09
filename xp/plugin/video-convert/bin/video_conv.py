@@ -6,13 +6,29 @@ import sys
 import subprocess
 import json
 import argparse
-from stream_info import StreamInfo
-from ffmpeg_params import FFmpegParams, PRESET_PARAMS
-from output_utils import get_output_name
-from exceptions import ConversionError
-from stream_manager import StreamManager
-from ffmpeg_command_builder import FFmpegCommandBuilder, FFmpegCommandDirector
-from argument_validator import ArgumentValidator, create_argument_parser
+
+# 添加模块导入路径处理，同时支持直接运行和测试
+try:
+    # 当作为独立脚本运行时
+    from stream_info import StreamInfo
+    from ffmpeg_params import FFmpegParams, PRESET_PARAMS
+    from output_utils import get_output_name
+    from exceptions import ConversionError
+    from stream_manager import StreamManager
+    from ffmpeg_command_builder import FFmpegCommandBuilder, FFmpegCommandDirector
+    from argument_validator import ArgumentValidator, create_argument_parser
+except ImportError:
+    # 当通过测试导入时
+    from bin.stream_info import StreamInfo
+    from bin.ffmpeg_params import FFmpegParams, PRESET_PARAMS
+    from bin.output_utils import get_output_name
+    from bin.exceptions import ConversionError
+    from bin.stream_manager import StreamManager
+    from bin.ffmpeg_command_builder import FFmpegCommandBuilder, FFmpegCommandDirector
+    from bin.argument_validator import ArgumentValidator, create_argument_parser
+
+# 确保ConversionError可以被正确引用，无论是哪个导入路径
+_ConversionError = ConversionError  # 保存引用以确保后续代码能正确引用异常
 
 
 def print_section_header(title):
@@ -132,7 +148,7 @@ class VideoConverter:
                 print(f"\nOutput file already exists. Skipping conversion (--skip-exists is set).")
                 return True
             else:
-                raise ConversionError(f"Output file already exists: {output}\nUse --skip-exists or -se to skip with normal exit when file exists.")
+                raise _ConversionError(f"Output file already exists: {output}\nUse --skip-exists or -se to skip with normal exit when file exists.")
         
         # 使用FFmpegCommandDirector构建命令
         command_builder = FFmpegCommandBuilder(self.params, self.args.input_file, output)
@@ -165,7 +181,7 @@ class VideoConverter:
             print(f"Conversion completed: {output}")
             return True
         except subprocess.CalledProcessError as e:
-            raise ConversionError(f"Conversion failed: {e}")
+            raise _ConversionError(f"Conversion failed: {e}")
 
 
 def main():
@@ -177,7 +193,7 @@ def main():
     # 验证并获取处理后的参数
     try:
         args = ArgumentValidator.validate_args(raw_args)
-    except ConversionError as e:
+    except _ConversionError as e:
         print(f"Error: {e.message}", file=sys.stderr)
         sys.exit(e.exit_code)
     
@@ -194,7 +210,7 @@ def main():
 if __name__ == "__main__":
     try:
         main()
-    except ConversionError as e:
+    except _ConversionError as e:
         print(f"Error: {e.message}", file=sys.stderr)
         sys.exit(e.exit_code)
     except KeyboardInterrupt:

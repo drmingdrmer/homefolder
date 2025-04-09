@@ -1,5 +1,10 @@
 import os
-from ffmpeg_params import FFmpegParams
+
+# 支持直接运行和测试环境
+try:
+    from ffmpeg_params import FFmpegParams
+except ImportError:
+    from bin.ffmpeg_params import FFmpegParams
 
 def get_output_name(params: FFmpegParams, default_output_dir: str, input_file: str, output_arg: str = None):
     input_fn = input_file
