@@ -9,6 +9,7 @@ import argparse
 from stream_info import StreamInfo
 from ffmpeg_params import FFmpegParams, PRESET_PARAMS
 from output_utils import get_output_name
+from exceptions import ConversionError
 
 
 def print_section_header(title):
@@ -80,8 +81,7 @@ class VideoConverter:
         audio_stream_indices = [stream.index for stream in self.audio_streams]
         
         if not self.audio_streams:
-            print("No audio streams detected in the input file.")
-            return False
+            raise ConversionError("No audio streams detected in the input file.")
             
         if requested_audio_stream is None:
             if len(self.audio_streams) == 1:
@@ -99,11 +99,10 @@ class VideoConverter:
 
                 print("\nExample usage:")
                 print(f"  {sys.argv[0]} {self.args.width} \"{self.args.input_file}\" --audio-stream <STREAM_NUMBER>")
-                return False
+                raise ConversionError("Please specify an audio stream to use.")
         elif requested_audio_stream not in audio_stream_indices:
-            print(f"Error: Specified audio stream {requested_audio_stream} not found in the input file.")
-            print(f"Available audio streams: {', '.join(map(str, audio_stream_indices))}")
-            return False
+            error_msg = f"Specified audio stream {requested_audio_stream} not found in the input file. Available audio streams: {', '.join(map(str, audio_stream_indices))}"
+            raise ConversionError(error_msg)
         else:
             self.selected_audio_stream = next(stream for stream in self.audio_streams if stream.index == requested_audio_stream)
             print_subsection_header("Selected Audio Stream")
@@ -125,8 +124,7 @@ class VideoConverter:
         
         if not self.subtitle_streams:
             if self.args.subtitle_stream is not None or self.args.subtitle_language is not None or self.args.subtitle_title is not None:
-                print("Error: No subtitle streams found in the input file, but subtitle selection was requested.")
-                return False
+                raise ConversionError("No subtitle streams found in the input file, but subtitle selection was requested.")
             else:
                 print("No subtitle streams found in the input file.")
                 return True
@@ -139,7 +137,8 @@ class VideoConverter:
                 default = "Yes" if stream.default else "No"
                 forced = "Yes" if stream.forced else "No"
                 print(f"{stream.index:5} | {stream.language:8} | {stream.title:20} | {default:7} | {forced}")
-            return False
+            # Special case: with --list-subtitles, we want to exit with code 0
+            raise ConversionError("Listed available subtitle streams.", exit_code=0)
         
         print_subsection_header("Available Subtitle Streams")
         for stream in self.subtitle_streams:
@@ -157,9 +156,9 @@ class VideoConverter:
                 print(f"Stream #{self.selected_subtitle_stream.index}")
                 print(self.selected_subtitle_stream.get_subtitle_info())
             else:
-                print(f"Error: No subtitle stream with language '{self.args.subtitle_language}' found.")
-                print(f"Available subtitle languages: {', '.join(self.subtitle_languages)}")
-                return False
+                available_langs = ', '.join(self.subtitle_languages)
+                error_msg = f"No subtitle stream with language '{self.args.subtitle_language}' found. Available subtitle languages: {available_langs}"
+                raise ConversionError(error_msg)
         elif self.args.subtitle_title is not None:
             title_matches = [s for s in self.subtitle_streams if self.args.subtitle_title.lower() in s.title.lower()]
             if title_matches:
@@ -168,14 +167,14 @@ class VideoConverter:
                 print(f"Stream #{self.selected_subtitle_stream.index}")
                 print(self.selected_subtitle_stream.get_subtitle_info())
             else:
-                print(f"Error: No subtitle stream with title containing '{self.args.subtitle_title}' found.")
-                print(f"Available subtitle titles: {', '.join(self.subtitle_titles)}")
-                return False
+                available_titles = ', '.join(self.subtitle_titles)
+                error_msg = f"No subtitle stream with title containing '{self.args.subtitle_title}' found. Available subtitle titles: {available_titles}"
+                raise ConversionError(error_msg)
         elif requested_subtitle_stream is not None:
             if requested_subtitle_stream not in self.subtitle_indices:
-                print(f"Error: Specified subtitle stream {requested_subtitle_stream} not found in the input file.")
-                print(f"Available subtitle streams: {', '.join(map(str, self.subtitle_indices))}")
-                return False
+                available_streams = ', '.join(map(str, self.subtitle_indices))
+                error_msg = f"Specified subtitle stream {requested_subtitle_stream} not found in the input file. Available subtitle streams: {available_streams}"
+                raise ConversionError(error_msg)
             else:
                 self.selected_subtitle_stream = next(stream for stream in self.subtitle_streams if stream.index == requested_subtitle_stream)
                 print_subsection_header("Selected Subtitle Stream")
@@ -197,9 +196,8 @@ class VideoConverter:
     
     def convert(self):
         if self.args.width not in PRESET_PARAMS:
-            print(f"Error: Width {self.args.width} not found in presets")
-            print("Available width presets:", ", ".join(str(w) for w in sorted(PRESET_PARAMS.keys())))
-            return False
+            available_widths = ", ".join(str(w) for w in sorted(PRESET_PARAMS.keys()))
+            raise ConversionError(f"Width {self.args.width} not found in presets. Available width presets: {available_widths}")
         
         self.params = PRESET_PARAMS[self.args.width]
         
@@ -229,8 +227,7 @@ class VideoConverter:
         elif self.external_subtitle_file is not None:
             # Validate external subtitle file
             if not os.path.exists(self.external_subtitle_file):
-                print(f"Error: External subtitle file not found: {self.external_subtitle_file}")
-                return False
+                raise ConversionError(f"External subtitle file not found: {self.external_subtitle_file}")
                 
             self.params.external_subtitle_file = self.external_subtitle_file
             print_subsection_header("External Subtitle")
@@ -272,9 +269,7 @@ class VideoConverter:
                 print(f"\nOutput file already exists. Skipping conversion (--skip-exists is set).")
                 return True
             else:
-                print(f"\nError: Output file already exists: {output}")
-                print("Use --skip-exists or -se to skip with normal exit when file exists.")
-                return False
+                raise ConversionError(f"Output file already exists: {output}\nUse --skip-exists or -se to skip with normal exit when file exists.")
         
         ffmpeg_template = self._get_ffmpeg_template()
         ffmpeg_cmd = ["ffmpeg", "-i", self.args.input_file]
@@ -303,8 +298,7 @@ class VideoConverter:
             print(f"Conversion completed: {output}")
             return True
         except subprocess.CalledProcessError as e:
-            print(f"Conversion failed: {e}", file=sys.stderr)
-            return False
+            raise ConversionError(f"Conversion failed: {e}")
     
     def _get_ffmpeg_template(self):
         """
@@ -386,15 +380,23 @@ def main():
     
     converter = VideoConverter(args)
     
-    if not converter.select_audio_stream():
-        sys.exit(1)
+    # These methods now raise exceptions instead of returning True/False
+    converter.select_audio_stream()
+    converter.select_subtitle_stream()
+    converter.convert()
     
-    if not converter.select_subtitle_stream():
-        sys.exit(0 if args.list_subtitles else 1)
-    
-    if not converter.convert():
-        sys.exit(1)
+    # If we get here, everything was successful
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except ConversionError as e:
+        print(f"Error: {e.message}", file=sys.stderr)
+        sys.exit(e.exit_code)
+    except KeyboardInterrupt:
+        print("\nOperation cancelled by user.", file=sys.stderr)
+        sys.exit(130)
+    except Exception as e:
+        print(f"Unexpected error: {str(e)}", file=sys.stderr)
+        sys.exit(1)
