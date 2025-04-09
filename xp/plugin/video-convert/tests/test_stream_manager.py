@@ -8,11 +8,11 @@ import subprocess
 from unittest.mock import patch, MagicMock
 
 # 添加项目根目录到Python路径，以便测试能够导入模块
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../bin')))
+# 使用新的包导入结构，不需要修改路径
 
-from stream_manager import StreamManager
-from stream_info import StreamInfo
-from exceptions import ConversionError
+from videoconv.stream_manager import StreamManager
+from videoconv.stream_info import StreamInfo
+from videoconv.exceptions import ConversionError
 
 
 class TestStreamManager:
@@ -463,7 +463,7 @@ class TestStreamManager:
     
     def test_print_subsection_header(self, capsys):
         """测试小节标题打印函数"""
-        from stream_manager import print_subsection_header
+        from videoconv.stream_manager import print_subsection_header
         
         print_subsection_header("Test Header")
         captured = capsys.readouterr()

@@ -1,0 +1,61 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+视频转换工具的可执行入口点脚本
+将此文件放在系统PATH中的bin目录下，可以从任何位置运行
+"""
+
+import os
+import sys
+import subprocess
+
+# 将脚本名称修改为模块名，这样argparse显示的帮助信息更准确
+script_name = os.path.basename(__file__)
+
+# 尝试不同的方法查找和使用videoconv包
+def find_package():
+    """查找videoconv包并返回运行它的命令"""
+    # 方法1: 尝试直接导入包（如果已正确安装）
+    try:
+        import videoconv
+        return [sys.executable, "-m", "videoconv.cli"]
+    except ImportError:
+        pass
+    
+    # 方法2: 尝试查找包相对于脚本的位置
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    parent_dir = os.path.dirname(script_dir)
+    
+    # 检查相对路径是否存在videoconv包
+    package_path = os.path.join(parent_dir, "videoconv")
+    if os.path.isdir(package_path) and os.path.exists(os.path.join(package_path, "__init__.py")):
+        # 使用相对于脚本目录的路径运行
+        return [sys.executable, "-m", "videoconv.cli"]
+    
+    # 方法3: 通过pip查找安装位置
+    try:
+        result = subprocess.run(
+            [sys.executable, "-m", "pip", "show", "video-convert"],
+            capture_output=True,
+            text=True,
+            check=False
+        )
+        if result.returncode == 0:
+            return [sys.executable, "-m", "videoconv.cli"]
+    except:
+        pass
+    
+    # 如果所有方法都失败，返回None
+    return None
+
+if __name__ == "__main__":
+    # 查找并运行包
+    command = find_package()
+    
+    if command is None:
+        sys.stderr.write(f"Error: 无法找到videoconv包。请确保它已正确安装。\n")
+        sys.stderr.write(f"提示: 运行 'pip install -e /path/to/video-convert' 安装此包。\n")
+        sys.exit(1)
+    
+    # 执行命令，传递所有命令行参数
+    os.execvp(command[0], command + sys.argv[1:]) 

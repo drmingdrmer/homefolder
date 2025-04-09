@@ -6,11 +6,8 @@ import os
 import pytest
 from unittest.mock import patch, MagicMock, PropertyMock
 
-# 添加项目根目录到Python路径，以便测试能够导入模块
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../bin')))
-
-# 直接从新模块导入
-from exceptions import ConversionError
+# 使用新的包结构导入
+from videoconv.exceptions import ConversionError
 
 
 class TestVideoConvMain:
@@ -20,9 +17,9 @@ class TestVideoConvMain:
         """Test successful execution of main function"""
         with patch('sys.argv', ['video_conv.py', '720', 'test_input.mp4']):
             # 创建必要的mock
-            with patch('video_conv.create_argument_parser') as mock_create_parser, \
-                 patch('video_conv.ArgumentValidator.validate_args') as mock_validate_args, \
-                 patch('video_conv.VideoConverter') as mock_video_converter_class:
+            with patch('videoconv.video_conv.create_argument_parser') as mock_create_parser, \
+                 patch('videoconv.video_conv.ArgumentValidator.validate_args') as mock_validate_args, \
+                 patch('videoconv.video_conv.VideoConverter') as mock_video_converter_class:
                 
                 # 设置 mocks
                 mock_parser = MagicMock()
@@ -36,7 +33,7 @@ class TestVideoConvMain:
                 mock_video_converter_class.return_value = mock_converter
                 
                 # 导入并运行主函数
-                from video_conv import main
+                from videoconv.video_conv import main
                 main()
                 
                 # 验证调用
@@ -57,8 +54,8 @@ class TestVideoConvMain:
         validation_error = ConversionError(error_message, exit_code)
         
         with patch('sys.argv', ['video_conv.py', '720', 'nonexistent.mp4']):
-            # 从bin目录导入
-            import video_conv
+            # 从新包结构导入
+            from videoconv import video_conv
             
             # 替换主函数以抛出验证错误
             with patch.object(video_conv, 'main', side_effect=validation_error), \
@@ -86,8 +83,8 @@ class TestVideoConvMain:
         conversion_error = ConversionError(error_message, exit_code)
         
         with patch('sys.argv', ['video_conv.py', '720', 'test_input.mp4']):
-            # 从bin目录导入
-            import video_conv
+            # 从新包结构导入
+            from videoconv import video_conv
             
             # 替换主函数以抛出转换错误
             with patch.object(video_conv, 'main', side_effect=conversion_error), \
@@ -107,8 +104,8 @@ class TestVideoConvMain:
     def test_keyboard_interrupt(self):
         """Test `if __name__ == "__main__"` with keyboard interrupt"""
         with patch('sys.argv', ['video_conv.py', '720', 'test_input.mp4']):
-            # 从bin目录导入
-            import video_conv
+            # 从新包结构导入
+            from videoconv import video_conv
             
             # 替换主函数以抛出KeyboardInterrupt
             with patch.object(video_conv, 'main', side_effect=KeyboardInterrupt()), \
@@ -131,8 +128,8 @@ class TestVideoConvMain:
     def test_unexpected_error(self):
         """Test `if __name__ == "__main__"` with unexpected error"""
         with patch('sys.argv', ['video_conv.py', '720', 'test_input.mp4']):
-            # 从bin目录导入
-            import video_conv
+            # 从新包结构导入
+            from videoconv import video_conv
             
             # 替换主函数以抛出一般异常
             with patch.object(video_conv, 'main', side_effect=Exception("Unexpected error")), \

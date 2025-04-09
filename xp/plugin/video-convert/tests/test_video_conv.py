@@ -8,26 +8,23 @@ import os
 import sys
 import subprocess
 
-# 添加上级目录到sys.path以便导入bin目录中的模块
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
-# 直接从bin目录导入模块
-from bin.video_conv import VideoConverter
-from bin.stream_info import StreamInfo
-from bin.stream_manager import StreamManager
-from bin.ffmpeg_command_builder import FFmpegCommandBuilder
-from bin.exceptions import ConversionError as BinConversionError
+# 从新的包结构导入
+from videoconv.video_conv import VideoConverter
+from videoconv.stream_info import StreamInfo
+from videoconv.stream_manager import StreamManager
+from videoconv.ffmpeg_command_builder import FFmpegCommandBuilder
+from videoconv.exceptions import ConversionError
 
 # 确保在测试环境中导入的ConversionError可以被直接引用
 try:
     # 验证ConversionError是否已导入
-    ConversionError = BinConversionError
+    ConversionError = ConversionError
 except NameError:
     # 如果未导入，尝试从exceptions模块导入
     try:
-        from exceptions import ConversionError
+        from videoconv.exceptions import ConversionError
     except ImportError:
-        from bin.exceptions import ConversionError
+        from videoconv.exceptions import ConversionError
 
 
 class TestVideoConverter(unittest.TestCase):
@@ -77,7 +74,7 @@ class TestVideoConverter(unittest.TestCase):
         self.mock_subtitle_stream = StreamInfo(mock_subtitle_stream_data)
         
         # 模拟StreamManager
-        self.patcher = patch('bin.video_conv.StreamManager')
+        self.patcher = patch('videoconv.video_conv.StreamManager')
         self.mock_stream_manager = self.patcher.start()
         self.mock_stream_manager_instance = MagicMock()
         self.mock_stream_manager.return_value = self.mock_stream_manager_instance
@@ -90,7 +87,7 @@ class TestVideoConverter(unittest.TestCase):
         self.mock_stream_manager_instance.calculate_subtitle_relative_index.return_value = 0
         
         # 模拟FFmpegCommandBuilder
-        self.command_builder_patcher = patch('bin.video_conv.FFmpegCommandBuilder')
+        self.command_builder_patcher = patch('videoconv.video_conv.FFmpegCommandBuilder')
         self.mock_command_builder = self.command_builder_patcher.start()
         self.mock_command_builder_instance = MagicMock()
         self.mock_command_builder.return_value = self.mock_command_builder_instance

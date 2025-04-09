@@ -7,10 +7,10 @@ import pytest
 from unittest.mock import patch, MagicMock
 
 # 添加项目根目录到Python路径，以便测试能够导入模块
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../bin')))
+# 使用新的包导入结构，不需要修改路径
 
-from output_utils import get_output_name
-from ffmpeg_params import FFmpegParams
+from videoconv.output_utils import get_output_name
+from videoconv.ffmpeg_params import FFmpegParams
 
 
 class TestOutputUtils:

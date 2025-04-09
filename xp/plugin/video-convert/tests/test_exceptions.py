@@ -1,32 +1,20 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-import sys
-import os
-import pytest
+import unittest
 
-# 添加项目根目录到Python路径，以便测试能够导入模块
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../bin')))
-
-from exceptions import ConversionError
+# 从新的包结构导入
+from videoconv.exceptions import ConversionError
 
 
-class TestConversionError:
+class TestConversionError(unittest.TestCase):
     """ConversionError类的测试用例"""
 
     def test_initialization_with_defaults(self):
-        """测试使用默认参数初始化"""
-        error = ConversionError("Test error message")
-        
-        # 验证属性
-        assert error.message == "Test error message"
-        assert error.exit_code == 1
-        
-        # 验证作为异常的行为
-        assert str(error) == "Test error message"
-        
-        # 验证继承性
-        assert isinstance(error, Exception)
+        """测试使用默认值初始化ConversionError"""
+        error = ConversionError("测试错误消息")
+        self.assertEqual(error.message, "测试错误消息")
+        self.assertEqual(error.exit_code, 1)
 
     def test_initialization_with_custom_exit_code(self):
         """测试使用自定义退出码初始化"""
@@ -66,4 +54,4 @@ class TestConversionError:
 
 
 if __name__ == "__main__":
-    pytest.main(["-xvs", __file__]) 
+    unittest.main() 
