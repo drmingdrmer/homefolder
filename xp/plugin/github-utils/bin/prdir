@@ -28,6 +28,7 @@ map_label()
 
 
 labels=""
+draft=""
 case $1 in
     -l)
         shift
@@ -35,7 +36,10 @@ case $1 in
         labels="--label $lb"
         shift
     ;;
-
+    --draft)
+        shift
+        draft="--draft"
+    ;;
 esac
 
 upstream_branch=main
@@ -111,7 +115,7 @@ git push origin $branch || exit 1
 repo="$(basename $(pwd))"
 
 gh pr create \
-    --draft \
+    $draft \
     --repo databendlabs/$repo \
     --base $upstream_branch \
     --head drmingdrmer:$branch \
