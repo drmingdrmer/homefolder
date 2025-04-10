@@ -68,7 +68,7 @@ class VideoConverter:
         """
         Execute the conversion process
         """
-        # 宽度已经在ArgumentValidator中验证过，不需要再验证
+        # Initialize params at the beginning
         self.params = PRESET_PARAMS[self.args.width]
         
         # Set start and end time parameters
@@ -79,6 +79,17 @@ class VideoConverter:
         if self.stream_manager.original_fps is not None:
             self.params.fps = self.stream_manager.original_fps
             print(f"Using original video FPS: {self.stream_manager.original_fps}")
+        
+        # Set input file
+        self.params.input_file = self.args.input_file
+        
+        # Set external subtitle file if available
+        if self.external_subtitle_file is not None:
+            self.params.external_subtitle_file = self.external_subtitle_file
+            
+        # Set custom video bitrate if provided
+        if self.args.video_bitrate:
+            self.params.video_bitrate = self.args.video_bitrate
         
         print_section_header("Conversion Summary")
         
@@ -96,7 +107,6 @@ class VideoConverter:
             print(f"Relative Subtitle Index: {relative_index} (used in filter)")
         elif self.external_subtitle_file is not None:
             # 外部字幕文件已在ArgumentValidator中验证过，不需要再验证
-            self.params.external_subtitle_file = self.external_subtitle_file
             print_subsection_header("External Subtitle")
             print(f"File: {self.external_subtitle_file}")
         else:
@@ -110,10 +120,7 @@ class VideoConverter:
             if self.args.end_time is not None:
                 print(f"End: {self.args.end_time}")
         
-        self.params.input_file = self.args.input_file
-        
         if self.args.video_bitrate:
-            self.params.video_bitrate = self.args.video_bitrate
             print_subsection_header("Custom Settings")
             print(f"Bitrate: {self.args.video_bitrate}")
         
