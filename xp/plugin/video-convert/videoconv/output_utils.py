@@ -37,12 +37,6 @@ def get_output_name(params: FFmpegParams, default_output_dir: str, input_file: s
             time_info += f"-to_{params.end_time.replace(':', '_')}"
         output_name += time_info
     
-    if params.external_subtitle_file is not None:
-        # Add suffix to indicate external subtitles were used
-        subtitle_base = os.path.basename(params.external_subtitle_file)
-        subtitle_name = os.path.splitext(subtitle_base)[0]
-        output_name += f"-with_sub_{subtitle_name}"
-    
     output_name += ext
 
     return output_name 

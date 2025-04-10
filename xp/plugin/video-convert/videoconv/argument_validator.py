@@ -239,6 +239,10 @@ class ArgumentValidator:
                 raise ConversionError(
                     f"Start time ({validated_args.start_time}) must be earlier than end time ({validated_args.end_time})"
                 )
+
+        
+        # output_dir = f"output-{validated_args.width}x"
+        # output = get_output_name(self.params, output_dir, self.args.input_file, self.args.output_file)
         
         return validated_args
     

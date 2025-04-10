@@ -52,7 +52,7 @@ class TestArgumentValidator:
     def test_validate_input_file_valid(self):
         """测试有效的输入文件"""
         validated = ArgumentValidator.validate_input_file(self.temp_file)
-        assert validated == os.path.abspath(self.temp_file)
+        assert validated == self.temp_file
     
     def test_validate_input_file_not_found(self):
         """测试不存在的输入文件"""

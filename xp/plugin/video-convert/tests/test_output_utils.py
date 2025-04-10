@@ -104,19 +104,6 @@ class TestOutputUtils:
             output_name = get_output_name(params, "output-dir", "input.mp4")
             assert output_name == "output-dir/input-720x-150k-from_90-to_300.mp4"
 
-    def test_output_name_with_external_subtitle(self):
-        """测试带有外部字幕的情况"""
-        params = FFmpegParams(video_width=720, video_bitrate="150k", external_subtitle_file="subs.srt")
-        with patch('os.makedirs'):
-            output_name = get_output_name(params, "output-dir", "input.mp4")
-            assert output_name == "output-dir/input-720x-150k-with_sub_subs.mp4"
-        
-        # 带有路径的字幕文件
-        params = FFmpegParams(video_width=720, video_bitrate="150k", external_subtitle_file="path/to/subs.srt")
-        with patch('os.makedirs'):
-            output_name = get_output_name(params, "output-dir", "input.mp4")
-            assert output_name == "output-dir/input-720x-150k-with_sub_subs.mp4"
-
     def test_combined_output_params(self):
         """测试组合多个输出参数的情况"""
         params = FFmpegParams(
@@ -124,11 +111,11 @@ class TestOutputUtils:
             video_bitrate="480k",
             start_time="00:01:30",
             end_time="00:05:00",
-            external_subtitle_file="subtitles.srt"
+            external_subtitle_file="subtitles.srt",  # This does not affect the output name
         )
         with patch('os.makedirs'):
             output_name = get_output_name(params, "output-dir", "input.mp4")
-            assert output_name == "output-dir/input-1280x-480k-from_00_01_30-to_00_05_00-with_sub_subtitles.mp4"
+            assert output_name == "output-dir/input-1280x-480k-from_00_01_30-to_00_05_00.mp4"
 
 
 if __name__ == "__main__":
