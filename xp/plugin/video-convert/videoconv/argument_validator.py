@@ -213,38 +213,38 @@ class ArgumentValidator:
             ConversionError: 如参数无效
         """
         # 创建新参数对象，避免修改原始对象
-        validated_args = argparse.Namespace()
+        res = argparse.Namespace()
         
         # 验证并更新各个参数
-        validated_args.width = cls.validate_width(args.width)
-        validated_args.input_file = cls.validate_input_file(args.input_file)
-        validated_args.output_file = cls.validate_output_file(args.output_file, args.input_file)
-        validated_args.external_subtitle_file = cls.validate_external_subtitle(args.external_subtitle_file)
-        validated_args.start_time = cls.validate_time_format(args.start_time, "start time")
-        validated_args.end_time = cls.validate_time_format(args.end_time, "end time")
-        validated_args.video_bitrate = cls.validate_video_bitrate(args.video_bitrate)
+        res.width = cls.validate_width(args.width)
+        res.input_file = cls.validate_input_file(args.input_file)
+        res.output_file = cls.validate_output_file(args.output_file, args.input_file)
+        res.external_subtitle_file = cls.validate_external_subtitle(args.external_subtitle_file)
+        res.start_time = cls.validate_time_format(args.start_time, "start time")
+        res.end_time = cls.validate_time_format(args.end_time, "end time")
+        res.video_bitrate = cls.validate_video_bitrate(args.video_bitrate)
         
         # 直接复制其他参数
-        validated_args.audio_stream = args.audio_stream
-        validated_args.subtitle_stream = args.subtitle_stream
-        validated_args.subtitle_language = args.subtitle_language
-        validated_args.subtitle_title = args.subtitle_title
-        validated_args.list_subtitles = args.list_subtitles
-        validated_args.dry_run = args.dry_run
-        validated_args.skip_exists = args.skip_exists
+        res.audio_stream = args.audio_stream
+        res.subtitle_stream = args.subtitle_stream
+        res.subtitle_language = args.subtitle_language
+        res.subtitle_title = args.subtitle_title
+        res.list_subtitles = args.list_subtitles
+        res.dry_run = args.dry_run
+        res.skip_exists = args.skip_exists
         
         # 验证时间范围的逻辑
-        if validated_args.start_time and validated_args.end_time:
-            if cls._convert_to_seconds(validated_args.start_time) >= cls._convert_to_seconds(validated_args.end_time):
+        if res.start_time and res.end_time:
+            if cls._convert_to_seconds(res.start_time) >= cls._convert_to_seconds(res.end_time):
                 raise ConversionError(
-                    f"Start time ({validated_args.start_time}) must be earlier than end time ({validated_args.end_time})"
+                    f"Start time ({res.start_time}) must be earlier than end time ({res.end_time})"
                 )
 
         
         # output_dir = f"output-{validated_args.width}x"
         # output = get_output_name(self.params, output_dir, self.args.input_file, self.args.output_file)
         
-        return validated_args
+        return res
     
     @staticmethod
     def _convert_to_seconds(time_str):
