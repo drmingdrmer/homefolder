@@ -120,7 +120,6 @@ class TestVideoConverter(unittest.TestCase):
         self.assertEqual(converter.args, self.args)
         self.assertIsNone(converter.selected_audio_stream)
         self.assertIsNone(converter.selected_subtitle_stream)
-        self.assertIsNone(converter.params)
         self.assertEqual(converter.external_subtitle_file, None)
     
     def test_select_streams(self):

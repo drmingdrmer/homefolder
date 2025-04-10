@@ -43,6 +43,8 @@ class VideoConverter:
         self.selected_subtitle_stream = None
         self.params = None
         self.external_subtitle_file = args.external_subtitle_file
+
+        self.initialize_params()
         
     def select_streams(self):
         """
@@ -97,7 +99,6 @@ class VideoConverter:
         Execute the conversion process
         """
         # Initialize params at the beginning
-        self.initialize_params()
         
         print_section_header("Conversion Summary")
         
