@@ -177,6 +177,8 @@ def main():
     # 使用参数验证器定义的解析器
     parser = create_argument_parser()
     raw_args = parser.parse_args()
+
+    print(f"raw_args: {raw_args}")
     
     # 验证并获取处理后的参数
     try:
@@ -184,6 +186,8 @@ def main():
     except ConversionError as e:
         print(f"Error: {e.message}", file=sys.stderr)
         sys.exit(e.exit_code)
+
+    print(f"validated args: {args}")
     
     # 使用验证过的参数创建转换器
     converter = VideoConverter(args)

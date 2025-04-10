@@ -50,6 +50,16 @@ class TestOutputUtils:
         output_name = get_output_name(params, "output-dir", "path/to/input.mp4", output_arg="output/*.mp4")
         assert output_name == "output/path/to/input-1280x-480k.mp4"
 
+    def test_dot_in_src_and_output_name_with_wildcard(self):
+        """测试使用通配符的情况"""
+        params = FFmpegParams(video_width=1280, video_bitrate="480k")
+        output_name = get_output_name(params, "output-dir", "a/b/./c/input.mp4", output_arg="e/f/xxx_*.mp4")
+        assert output_name == "e/f/xxx_c/input-1280x-480k.mp4"
+        
+        # 测试带有路径的通配符
+        output_name = get_output_name(params, "output-dir", "a/b/./c/input.mp4", output_arg="e/f/*.mp4")
+        assert output_name == "e/f/c/input-1280x-480k.mp4"
+
     def test_output_name_with_slash_suffix(self):
         """测试输出参数以斜杠结尾的情况"""
         params = FFmpegParams(video_width=854, video_bitrate="220k")

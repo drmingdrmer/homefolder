@@ -61,8 +61,10 @@ class ArgumentValidator:
         if not os.path.isfile(input_file):
             raise ConversionError(f"Input path is not a file: {input_file}")
         
-        # 返回绝对路径，避免相对路径带来的问题
-        return os.path.abspath(input_file)
+        # Return the original input_file path without converting to absolute path.
+        # This preserves any "./" markers which are used in output path generation
+        # to determine where to split the path when replacing "*" in output_file.
+        return input_file
     
     @staticmethod
     def validate_output_file(output_file, input_file):
