@@ -42,8 +42,7 @@ class VideoConverter:
         self.selected_audio_stream = None
         self.selected_subtitle_stream = None
         self.params = None
-        self.external_subtitle_file = args.external_subtitle_file
-
+        
         self.initialize_params()
         
     def select_streams(self):
@@ -58,13 +57,13 @@ class VideoConverter:
             stream_index=self.args.subtitle_stream,
             language=self.args.subtitle_language,
             title=self.args.subtitle_title,
-            external_subtitle_file=self.external_subtitle_file,
+            external_subtitle_file=self.args.external_subtitle_file,
             list_subtitles=self.args.list_subtitles
         )
         
         # Update external subtitle file
         if self.selected_subtitle_stream is not None:
-            self.external_subtitle_file = None
+            self.args.external_subtitle_file = None
     
     def initialize_params(self):
         """
@@ -85,8 +84,8 @@ class VideoConverter:
         self.params.input_file = self.args.input_file
         
         # Set external subtitle file if available
-        if self.external_subtitle_file is not None:
-            self.params.external_subtitle_file = self.external_subtitle_file
+        if self.args.external_subtitle_file is not None:
+            self.params.external_subtitle_file = self.args.external_subtitle_file
             
         # Set custom video bitrate if provided
         if self.args.video_bitrate:
@@ -114,10 +113,10 @@ class VideoConverter:
             relative_index = self.stream_manager.calculate_subtitle_relative_index(self.selected_subtitle_stream.index)
             print(f"Absolute Stream Index: {self.selected_subtitle_stream.index}")
             print(f"Relative Subtitle Index: {relative_index} (used in filter)")
-        elif self.external_subtitle_file is not None:
+        elif self.args.external_subtitle_file is not None:
             # 外部字幕文件已在ArgumentValidator中验证过，不需要再验证
             print_subsection_header("External Subtitle")
-            print(f"File: {self.external_subtitle_file}")
+            print(f"File: {self.args.external_subtitle_file}")
         else:
             print_subsection_header("Subtitles")
             print("None (not included in output)")
@@ -160,8 +159,8 @@ class VideoConverter:
         
         if self.selected_subtitle_stream is not None:
             command_builder.set_subtitle_stream(self.selected_subtitle_stream)
-        elif self.external_subtitle_file is not None:
-            command_builder.set_external_subtitle(self.external_subtitle_file)
+        elif self.args.external_subtitle_file is not None:
+            command_builder.set_external_subtitle(self.args.external_subtitle_file)
         
         command_builder.set_dry_run(self.args.dry_run)
         

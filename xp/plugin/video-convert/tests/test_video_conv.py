@@ -120,7 +120,7 @@ class TestVideoConverter(unittest.TestCase):
         self.assertEqual(converter.args, self.args)
         self.assertIsNone(converter.selected_audio_stream)
         self.assertIsNone(converter.selected_subtitle_stream)
-        self.assertEqual(converter.external_subtitle_file, None)
+        self.assertIsNone(converter.args.external_subtitle_file)
     
     def test_select_streams(self):
         """测试选择音频和字幕流"""
@@ -148,7 +148,7 @@ class TestVideoConverter(unittest.TestCase):
         converter.select_streams()
         
         # 如果选择了字幕流，外部字幕文件应该被设置为None
-        self.assertIsNone(converter.external_subtitle_file)
+        self.assertIsNone(converter.args.external_subtitle_file)
     
     def test_convert_dry_run(self):
         """测试dry run模式下的转换过程"""
