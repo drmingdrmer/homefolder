@@ -89,57 +89,51 @@ class VideoConverter:
             
         return self.params
 
+    def print_conversion_info(self, output):
+        """
+        Print information about the conversion in a compact format
+        """
+        print_section_header("Conversion Summary")
+        
+        # Audio information
+        print(f"Audio: Stream #{self.selected_audio_stream.index} - {self.selected_audio_stream.get_audio_info()}")
+        
+        # Subtitle information
+        if self.selected_subtitle_stream is not None:
+            relative_index = self.stream_manager.calculate_subtitle_relative_index(self.selected_subtitle_stream.index)
+            print(f"Subtitle: Stream #{self.selected_subtitle_stream.index} - {self.selected_subtitle_stream.get_subtitle_info()}")
+            print(f"          (Absolute: {self.selected_subtitle_stream.index}, Relative: {relative_index})")
+        elif self.args.external_subtitle_file is not None:
+            print(f"External Subtitle: {self.args.external_subtitle_file}")
+        else:
+            print("Subtitle: None")
+        
+        # Time range if specified
+        time_info = []
+        if self.args.start_time is not None:
+            time_info.append(f"Start: {self.args.start_time}")
+        if self.args.end_time is not None:
+            time_info.append(f"End: {self.args.end_time}")
+        if time_info:
+            print("Time Range: " + ", ".join(time_info))
+        
+        # Video parameters
+        print(f"Video: Width={self.params.video_width}, Bitrate={self.params.video_bitrate}, FPS={self.params.fps}")
+        
+        # Custom settings if any
+        if self.args.video_bitrate:
+            print(f"Custom Bitrate: {self.args.video_bitrate}")
+        
+        # File information
+        print(f"Files: Input='{self.args.input_file}', Output='{output}'")
+
     def convert(self):
         """
         Execute the conversion process
         """
-        # Initialize params at the beginning
-        
-        print_section_header("Conversion Summary")
-        
-        print_subsection_header("Audio Stream")
-        print(f"Stream #{self.selected_audio_stream.index}")
-        print(self.selected_audio_stream.get_audio_info())
-        
-        if self.selected_subtitle_stream is not None:
-            print_subsection_header("Subtitle Stream")
-            print(f"Stream #{self.selected_subtitle_stream.index}")
-            print(self.selected_subtitle_stream.get_subtitle_info())
-            
-            relative_index = self.stream_manager.calculate_subtitle_relative_index(self.selected_subtitle_stream.index)
-            print(f"Absolute Stream Index: {self.selected_subtitle_stream.index}")
-            print(f"Relative Subtitle Index: {relative_index} (used in filter)")
-        elif self.args.external_subtitle_file is not None:
-            # 外部字幕文件已在ArgumentValidator中验证过，不需要再验证
-            print_subsection_header("External Subtitle")
-            print(f"File: {self.args.external_subtitle_file}")
-        else:
-            print_subsection_header("Subtitles")
-            print("None (not included in output)")
-        
-        if self.args.start_time is not None or self.args.end_time is not None:
-            print_subsection_header("Time Range")
-            if self.args.start_time is not None:
-                print(f"Start: {self.args.start_time}")
-            if self.args.end_time is not None:
-                print(f"End: {self.args.end_time}")
-        
-        if self.args.video_bitrate:
-            print_subsection_header("Custom Settings")
-            print(f"Bitrate: {self.args.video_bitrate}")
-        
-        print_subsection_header("Video Parameters")
-        print(f"Width: {self.params.video_width}")
-        print(f"Bitrate: {self.params.video_bitrate}")
-        print(f"FPS: {self.params.fps}")
-        
         output_dir = f"output-{self.args.width}x"
         output = get_output_name(self.params, output_dir, self.args.input_file, self.args.output_file)
         os.makedirs(os.path.dirname(output), exist_ok=True)
-        
-        print_subsection_header("File Information")
-        print(f"Input: {self.args.input_file}")
-        print(f"Output: {output}")
         
         # Check if output file already exists
         if os.path.exists(output):
@@ -205,6 +199,15 @@ def main():
     
     # 进行转换
     converter.select_streams()
+    
+    # 获取输出文件路径
+    output_dir = f"output-{args.width}x"
+    output = get_output_name(converter.params, output_dir, args.input_file, args.output_file)
+    
+    # 打印转换信息
+    converter.print_conversion_info(output)
+    
+    # 执行转换
     converter.convert()
     
     # 如果到达这里，说明一切顺利

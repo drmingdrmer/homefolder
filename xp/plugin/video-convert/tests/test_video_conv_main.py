@@ -19,7 +19,8 @@ class TestVideoConvMain:
             # 创建必要的mock
             with patch('videoconv.video_conv.create_argument_parser') as mock_create_parser, \
                  patch('videoconv.video_conv.ArgumentValidator.validate_args') as mock_validate_args, \
-                 patch('videoconv.video_conv.VideoConverter') as mock_video_converter_class:
+                 patch('videoconv.video_conv.VideoConverter') as mock_video_converter_class, \
+                 patch('videoconv.video_conv.get_output_name') as mock_get_output_name:
                 
                 # 设置 mocks
                 mock_parser = MagicMock()
@@ -32,6 +33,9 @@ class TestVideoConvMain:
                 mock_converter = MagicMock()
                 mock_video_converter_class.return_value = mock_converter
                 
+                # 设置 get_output_name 返回值
+                mock_get_output_name.return_value = "test_output.mp4"
+                
                 # 导入并运行主函数
                 from videoconv.video_conv import main
                 main()
@@ -42,6 +46,7 @@ class TestVideoConvMain:
                 mock_validate_args.assert_called_once_with(mock_args)
                 mock_video_converter_class.assert_called_once_with(mock_args)
                 mock_converter.select_streams.assert_called_once()
+                mock_converter.print_conversion_info.assert_called_once()
                 mock_converter.convert.assert_called_once()
     
     def test_main_validation_error(self):
