@@ -10,9 +10,8 @@ from videoconv.stream_info import StreamInfo
 from videoconv.exceptions import ConversionError
 
 def print_subsection_header(title):
-    """Print a subsection header with a line separator"""
-    print(f"\n{title}")
-    print("-" * len(title))
+    """Print a compact subsection header"""
+    print(f"\n== {title} ==")
 
 
 class StreamManager:
@@ -94,28 +93,23 @@ class StreamManager:
             if len(self.audio_streams) == 1:
                 self.selected_audio_stream = self.audio_streams[0]
                 print_subsection_header("Selected Audio Stream")
-                print(f"Stream #{self.selected_audio_stream.index}")
-                print(self.selected_audio_stream.get_audio_info())
+                print(f"#{self.selected_audio_stream.index}: {self.selected_audio_stream.get_audio_info()}")
                 return self.selected_audio_stream
             else:
                 if show_available:
                     print_subsection_header("Available Audio Streams")
                     for stream in self.audio_streams:
-                        print(f"Stream #{stream.index}")
-                        print(stream.get_audio_info())
-                        print()
+                        print(f"#{stream.index}: {stream.get_audio_info()}")
 
-                    print("\nExample usage:")
-                    print(f"  {sys.argv[0]} <width> \"{self.input_file}\" --audio-stream <STREAM_NUMBER>")
+                    print(f"\nUsage: {sys.argv[0]} <width> \"{self.input_file}\" --audio-stream <STREAM_NUMBER>")
                 raise ConversionError("Please specify an audio stream to use.")
         elif stream_index not in audio_stream_indices:
-            error_msg = f"Specified audio stream {stream_index} not found in the input file. Available audio streams: {', '.join(map(str, audio_stream_indices))}"
+            error_msg = f"Audio stream #{stream_index} not found. Available: {', '.join(map(str, audio_stream_indices))}"
             raise ConversionError(error_msg)
         else:
             self.selected_audio_stream = next(stream for stream in self.audio_streams if stream.index == stream_index)
             print_subsection_header("Selected Audio Stream")
-            print(f"Stream #{self.selected_audio_stream.index}")
-            print(self.selected_audio_stream.get_audio_info())
+            print(f"#{self.selected_audio_stream.index}: {self.selected_audio_stream.get_audio_info()}")
             return self.selected_audio_stream
     
     def select_subtitle_stream(self, stream_index=None, language=None, title=None, external_subtitle_file=None, list_subtitles=False, show_available=True):
@@ -140,67 +134,61 @@ class StreamManager:
         
         # Check if both embedded and external subtitles were specified
         if (stream_index is not None or language is not None or title is not None) and external_subtitle_file is not None:
-            print("\nWarning: Both embedded and external subtitles were specified.")
-            print("Embedded subtitles will be used. External subtitle file will be ignored.")
+            print("Warning: Both embedded and external subtitles specified. Using embedded subtitles.")
             external_subtitle_file = None
         
         if not self.subtitle_streams:
             if stream_index is not None or language is not None or title is not None:
-                raise ConversionError("No subtitle streams found in the input file, but subtitle selection was requested.")
+                raise ConversionError("No subtitle streams found, but subtitle selection was requested.")
             else:
                 print("No subtitle streams found in the input file.")
                 return None
         
         if list_subtitles:
             print_subsection_header("Available Subtitle Streams")
-            print("Index | Language | Title | Default | Forced")
-            print("-" * 60)
+            print("IDX | LANG   | TITLE                | DEFAULT | FORCED")
+            print("-" * 55)
             for stream in self.subtitle_streams:
                 default = "Yes" if stream.default else "No"
                 forced = "Yes" if stream.forced else "No"
-                print(f"{stream.index:5} | {stream.language:8} | {stream.title:20} | {default:7} | {forced}")
+                print(f"{stream.index:3} | {stream.language:6} | {stream.title[:20]:20} | {default:7} | {forced}")
             # Special case: with list_subtitles, we want to exit with code 0
             raise ConversionError("Listed available subtitle streams.", exit_code=0)
         
         if show_available:
             print_subsection_header("Available Subtitle Streams")
             for stream in self.subtitle_streams:
-                print(f"Stream #{stream.index}")
-                print(stream.get_subtitle_info())
-                print()
+                print(f"#{stream.index}: {stream.get_subtitle_info()}")
         
         if language is not None:
             language_matches = [s for s in self.subtitle_streams if s.language.lower() == language.lower()]
             if language_matches:
                 self.selected_subtitle_stream = language_matches[0]
                 print_subsection_header("Selected Subtitle Stream")
-                print(f"Stream #{self.selected_subtitle_stream.index}")
-                print(self.selected_subtitle_stream.get_subtitle_info())
+                print(f"#{self.selected_subtitle_stream.index}: {self.selected_subtitle_stream.get_subtitle_info()}")
             else:
                 available_langs = ', '.join(self.subtitle_languages)
-                error_msg = f"No subtitle stream with language '{language}' found. Available subtitle languages: {available_langs}"
+                error_msg = f"No subtitle with language '{language}' found. Available: {available_langs}"
                 raise ConversionError(error_msg)
         elif title is not None:
             title_matches = [s for s in self.subtitle_streams if title.lower() in s.title.lower()]
             if title_matches:
                 self.selected_subtitle_stream = title_matches[0]
                 print_subsection_header("Selected Subtitle Stream")
-                print(f"Stream #{self.selected_subtitle_stream.index}")
-                print(self.selected_subtitle_stream.get_subtitle_info())
+                print(f"#{self.selected_subtitle_stream.index}: {self.selected_subtitle_stream.get_subtitle_info()}")
             else:
                 available_titles = ', '.join(self.subtitle_titles)
-                error_msg = f"No subtitle stream with title containing '{title}' found. Available subtitle titles: {available_titles}"
+                error_msg = f"No subtitle with title '{title}' found. Available: {available_titles}"
                 raise ConversionError(error_msg)
         elif stream_index is not None:
             if stream_index not in self.subtitle_indices:
                 available_streams = ', '.join(map(str, self.subtitle_indices))
-                error_msg = f"Specified subtitle stream {stream_index} not found in the input file. Available subtitle streams: {available_streams}"
+                error_msg = f"Subtitle stream #{stream_index} not found. Available: {available_streams}"
                 raise ConversionError(error_msg)
             else:
                 self.selected_subtitle_stream = next(stream for stream in self.subtitle_streams if stream.index == stream_index)
                 print_subsection_header("Selected Subtitle Stream")
-                print(f"Stream #{self.selected_subtitle_stream.index}")
-                print(self.selected_subtitle_stream.get_subtitle_info())
+                print(f"#{self.selected_subtitle_stream.index}: {self.selected_subtitle_stream.get_subtitle_info()}")
         else:
             print("No subtitle stream specified. Subtitles will not be included.")
         

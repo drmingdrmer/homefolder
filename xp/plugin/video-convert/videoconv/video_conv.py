@@ -93,7 +93,7 @@ class VideoConverter:
         """
         Print information about the conversion in a compact format
         """
-        print_section_header("Conversion Summary")
+        print("\n===== Conversion Summary =====")
         
         # Audio information
         print(f"Audio: Stream #{self.selected_audio_stream.index} - {self.selected_audio_stream.get_audio_info()}")
@@ -155,7 +155,7 @@ class VideoConverter:
         command_builder.set_dry_run(self.args.dry_run)
         
         # 获取格式化的命令字符串用于显示
-        print_subsection_header("FFmpeg Command")
+        print("\n----- FFmpeg Command -----")
         print(command_builder.get_pretty_command())
         
         if self.selected_subtitle_stream is not None:
@@ -183,7 +183,10 @@ def main():
     parser = create_argument_parser()
     raw_args = parser.parse_args()
 
-    print(f"raw_args: {raw_args}")
+    print("Raw arguments:")
+    for key, value in vars(raw_args).items():
+        if value is not None:
+            print(f"  {key}: {value}")
     
     # 验证并获取处理后的参数
     try:
@@ -192,7 +195,10 @@ def main():
         print(f"Error: {e.message}", file=sys.stderr)
         sys.exit(e.exit_code)
 
-    print(f"validated args: {args}")
+    print("Validated arguments:")   
+    for key, value in vars(args).items():
+        if value is not None:
+            print(f"  {key}: {value}")
     
     # 使用验证过的参数创建转换器
     converter = VideoConverter(args)
