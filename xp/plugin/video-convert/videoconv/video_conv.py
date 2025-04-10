@@ -64,11 +64,10 @@ class VideoConverter:
         if self.selected_subtitle_stream is not None:
             self.external_subtitle_file = None
     
-    def convert(self):
+    def initialize_params(self):
         """
-        Execute the conversion process
+        Initialize and configure FFmpeg parameters
         """
-        # Initialize params at the beginning
         self.params = PRESET_PARAMS[self.args.width]
         
         # Set start and end time parameters
@@ -90,6 +89,15 @@ class VideoConverter:
         # Set custom video bitrate if provided
         if self.args.video_bitrate:
             self.params.video_bitrate = self.args.video_bitrate
+            
+        return self.params
+
+    def convert(self):
+        """
+        Execute the conversion process
+        """
+        # Initialize params at the beginning
+        self.initialize_params()
         
         print_section_header("Conversion Summary")
         
