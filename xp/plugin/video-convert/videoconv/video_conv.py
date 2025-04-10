@@ -74,11 +74,7 @@ class VideoConverter:
         # Set start and end time parameters
         self.params.start_time = self.args.start_time
         self.params.end_time = self.args.end_time
-        
-        # Use original FPS if available
-        if self.stream_manager.original_fps is not None:
-            self.params.fps = self.stream_manager.original_fps
-            print(f"Using original video FPS: {self.stream_manager.original_fps}")
+        self.params.fps = self.stream_manager.original_fps
         
         # Set input file
         self.params.input_file = self.args.input_file

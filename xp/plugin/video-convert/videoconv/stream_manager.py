@@ -43,9 +43,8 @@ class StreamManager:
         
         # Get original FPS from video stream
         video_streams = [s for s in self.all_streams if s.codec_type == "video"]
-        if video_streams and video_streams[0].fps is not None:
-            self.original_fps = video_streams[0].fps
-            print(f"Original video FPS: {self.original_fps}")
+        vs = video_streams[0]
+        self.original_fps = vs.fps
         
         self.subtitle_languages = set(s.language for s in self.subtitle_streams)
         self.subtitle_titles = set(s.title for s in self.subtitle_streams)
