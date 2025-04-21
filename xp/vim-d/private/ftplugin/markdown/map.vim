@@ -20,3 +20,16 @@ fun! s:RemoveDuplicateLatexWikipedia() "{{{
 endfunction "}}}
 
 com! XXcleanwiki call <SID>RemoveDuplicateLatexWikipedia()
+
+" convert chinese to english punctuation
+fun! s:ChinesePunctuationToEnglish() "{{{
+    %s/。/. /g
+    %s/，/, /g
+    %s/[“”]/"/g
+    %s/（/(/g
+    %s/）/)/g
+    %s/？/? /g
+    %s/；/; /g
+endfunction "}}}
+
+com! XXc2e silent! call <SID>ChinesePunctuationToEnglish()
