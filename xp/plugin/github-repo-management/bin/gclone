@@ -1,0 +1,76 @@
+#!/usr/bin/env python3
+# coding: utf-8
+
+import os
+import sys
+import subprocess
+
+def parse_host_user_repo(url) -> tuple[str, str, str]:
+    """Parse a git@... or https://... URL into host, user, repo."""
+
+    if url.startswith("git@"):
+        # git@github.com:apache/parquet-format.git
+
+        parts = url.split("@", 1)[1]
+        host = parts.split(":", 1)[0]
+        full_path = parts.split(":", 1)[1]
+        if full_path.endswith(".git"):
+            full_path = full_path[:-4]
+        user, repo = full_path.split("/", 1)
+
+    elif url.startswith("https://"):
+        # https://github.com/apache/parquet-format.git
+
+        stripped = url[len("https://"):]
+        host = stripped.split("/", 1)[0]
+        full_path = stripped.split("/", 1)[1]
+        if full_path.endswith(".git"):
+            full_path = full_path[:-4]
+        user, repo = full_path.split("/", 1)
+
+    else:
+        raise ValueError("URL must start with git@ or https://")
+
+    return host, user, repo
+
+
+def main():
+    os.chdir(os.path.expanduser("~/xp/vcs"))
+    print("Switched working dir to `~/xp/vcs`")
+
+    if len(sys.argv) < 2:
+        print("Usage: gclone <url> [http]")
+        sys.exit(1)
+
+    url = sys.argv[1]
+    mode = sys.argv[2] if len(sys.argv) >= 3 else "http"
+    print(f"URL: {url}, mode: {mode}")
+    if mode not in ("http", "git"):
+        raise ValueError("Mode must be 'http' or 'git'")
+
+    host, user, repo = parse_host_user_repo(url)
+    print(f"Parsed host={host}, user={user}, repo={repo}")
+
+    dest = os.path.join(host, user, repo)
+    print(f"Destination directory: {dest}")
+
+    if mode == "http":
+        clone_url = f"https://{host}/{user}/{repo}.git"
+    else:
+        clone_url = f"git@{host}:{user}/{repo}.git"
+
+    print(f"Cloning {clone_url} into {dest}")
+    subprocess.check_call(["git", "clone", clone_url, dest])
+    print(f"Successfully cloned into {dest}")
+
+    # Create a symlink in the current directory pointing to the cloned repo
+    link_name = os.path.basename(dest)
+    try:
+        os.symlink(dest, link_name)
+        print(f"Symbolic link {link_name} -> {dest} created")
+    except Exception as e:
+        print("Failed to create symbolic link:", e)
+
+
+if __name__ == "__main__":
+    main()
