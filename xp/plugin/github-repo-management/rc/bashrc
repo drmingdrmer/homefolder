@@ -1,0 +1,8 @@
+gclone()
+{
+
+    gclone.py "$@"
+    path="$(gclone.py "$1" "print_path")"
+    echo Switching to "$path"
+    cd "$path"
+}
