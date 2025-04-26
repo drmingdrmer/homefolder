@@ -1,8 +1,0 @@
-#!/bin/sh
-
-set -o errexit
-gclone.py "$@"
-path="$(gclone.py "$1" "print_path")"
-
-
-
