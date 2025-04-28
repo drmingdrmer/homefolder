@@ -119,6 +119,7 @@ other:
 - - f github.com/drmingdrmer/h2
 - - f github.com/drmingdrmer/hashlink
 - - f github.com/drmingdrmer/hyper
+- - f github.com/drmingdrmer/iceberg-rust
 - - f github.com/drmingdrmer/itertools
 - - f github.com/drmingdrmer/latex-template
 - - f github.com/drmingdrmer/leveldb
@@ -161,6 +162,7 @@ other:
 - - f github.com/drmingdrmer/opensrv
 - - f github.com/drmingdrmer/openstudy
 - - f github.com/drmingdrmer/ordq
+- - f github.com/drmingdrmer/percas
 - - f github.com/drmingdrmer/phi-detector
 - - f github.com/drmingdrmer/prost
 - - f github.com/drmingdrmer/python-paxos-jepsen
