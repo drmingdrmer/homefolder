@@ -11,6 +11,7 @@ import k3thread
 import queue
 import time
 from rich.console import Console
+from typing import Callable
 
 class Log(object):
     def error(self, *msg):
@@ -105,7 +106,19 @@ class WorkSpace(object):
         url = self.norm_url(url)
         return fav, url
 
-    def norm_url(self, url):
+    def norm_url(self, url: str) -> str:
+        """
+        Normalize a repository URL by ensuring it has a host component.
+        
+        If the URL only contains user/repo without a host, the default host
+        is prepended to the URL.
+        
+        Args:
+            url (str): The repository URL to normalize
+            
+        Returns:
+            str: The normalized URL in the format host/user/repo
+        """
         elts = url.split('/')
         if len(elts) == 2:
             #  url without host: user/repo
@@ -277,11 +290,24 @@ class WorkSpace(object):
         q.put("done")
         h.join()
 
-    def for_each(self, func, ctx):
+    def for_each(self, func: Callable[[str, k3git.Git, dict], None], ctx: dict) -> None:
+        """
+        Execute a function for each git repository in the workspace.
+        
+        Args:
+            func: A callable that takes three arguments:
+                - path (str): The path to the git repository
+                - g (k3git.Git): A Git object for the repository
+                - ctx (dict): A context dictionary with additional parameters
+            ctx (dict): A context dictionary passed to the function for each repository.
+                        This is a user-defined dictionary that can contain any
+                        data needed by the function. The content and structure are
+                        determined by the caller and passed to each repository function.
+        """
         base = "."
 
         for itm in self.by_url.values():
-
+            
             url = itm['url']
 
             path = pjoin(base, url)
