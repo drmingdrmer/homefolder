@@ -154,7 +154,7 @@ class WorkSpace(object):
 
     def import_repos(self):
 
-        links, rlinks = self.find_links()
+        links, rlinks = self.find_symbolic_links()
 
         base = 'github.com'
         users = os.listdir(base)
@@ -182,7 +182,7 @@ class WorkSpace(object):
 
 
 
-    def find_links(self):
+    def find_symbolic_links(self):
         favorites = {}
         rfavorites = {}
 
