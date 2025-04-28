@@ -9,9 +9,39 @@ import k3git
 import k3jobq
 import k3thread
 import queue
-import time
 from rich.console import Console
-from typing import Callable
+from typing import Callable, Dict, List, Optional
+
+class Repository:
+    """
+    Represents a git repository in the workspace.
+    """
+    def __init__(self, workspace: 'WorkSpace', fav: str, url: str):
+        """
+        Initialize a repository.
+        
+        Args:
+            workspace: The WorkSpace instance this repository belongs to
+            fav (str): Favorite indicator ("f" for favorite, "." for normal)
+            url (str): Repository URL
+        """
+        self.workspace = workspace
+        self.fav = fav
+        self.url = url
+        self.remotes: Dict[str, str] = {}
+        
+    def encode(self) -> List[str]:
+        """
+        Encode this Repository object into a list of strings.
+        
+        Returns:
+            List[str]: List of strings representing the repository
+        """
+        res = [self.fav + " " + self.url]
+        for k, v in self.remotes.items():
+            res.append(k + " " + v)
+
+        return res
 
 class Log(object):
     def error(self, *msg):
@@ -45,8 +75,8 @@ class WorkSpace(object):
             for url in urls:
                 o = self.parse_item(url)
 
-                self.groups[cate][o['url']] = o
-                self.by_url[o['url']] = o
+                self.groups[cate][o.url] = o
+                self.by_url[o.url] = o
 
     def parse_item(self, itms):
         """
@@ -71,20 +101,13 @@ class WorkSpace(object):
 
         fav, url = self.parse_item_line(itms[0])
 
-        res = self.new_repo(fav, url)
+        res = Repository(self, fav, url)
 
         for it in itms[1:]:
             upstream, url = self.parse_item_line(it)
-            res['remotes'][upstream] = url
+            res.remotes[upstream] = url
 
         return res
-
-    def new_repo(self, fav, url):
-        return {
-                'fav':fav,
-                'url': url,
-                'remotes': {}
-        }
 
     def parse_item_line(self, itm):
         """
@@ -128,13 +151,6 @@ class WorkSpace(object):
         url = '/'.join(elts)
         return url
 
-    def encode_item(self, obj):
-        res = [obj['fav'] + " " + obj['url']]
-        for k, v in obj['remotes'].items():
-            res.append(k + " " + v)
-
-        return res
-
 
     def import_repos(self):
 
@@ -159,10 +175,10 @@ class WorkSpace(object):
                     fav = 'f'
 
                 if path not in self.by_url:
-                    self.groups['other'][path] = self.new_repo(fav, path)
+                    self.groups['other'][path] = Repository(self, fav, path)
                     self.by_url[path] = self.groups['other'][path]
                 else:
-                    self.by_url[path]['fav'] = fav
+                    self.by_url[path].fav = fav
 
 
 
@@ -200,7 +216,7 @@ class WorkSpace(object):
             g = self.groups[k]
             urls = list(g.keys())
             urls = sorted(urls)
-            urls = [self.encode_item(g[x]) for x in urls]
+            urls = [g[x].encode() for x in urls]
             rst[k] = urls
 
         s = yaml.dump(rst)
@@ -214,8 +230,8 @@ class WorkSpace(object):
         def clone_repo(args):
             obj = args
 
-            url = obj['url']
-            flag = obj['fav']
+            url = obj.url
+            flag = obj.fav
 
             q.put(('start', url))
 
@@ -232,7 +248,7 @@ class WorkSpace(object):
                 if not os.path.islink(pjoin(base, repo)):
                     os.symlink(url, repo, target_is_directory=True)
 
-            for upstream, rurl in obj['remotes'].items():
+            for upstream, rurl in obj.remotes.items():
                 sshurl = k3git.GitUrl.parse(rurl).fmt('ssh')
 
                 g = k3git.Git(k3git.GitOpt(), cwd=path)
@@ -308,7 +324,7 @@ class WorkSpace(object):
 
         for itm in self.by_url.values():
             
-            url = itm['url']
+            url = itm.url
 
             path = pjoin(base, url)
 
