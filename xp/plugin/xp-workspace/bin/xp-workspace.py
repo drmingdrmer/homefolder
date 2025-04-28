@@ -189,11 +189,11 @@ class WorkSpace(object):
         base = "."
         links = os.listdir(base)
         for link in links:
-            p = pjoin(base, link)
-            if not os.path.islink(p):
+            full_path = pjoin(base, link)
+            if not os.path.islink(full_path):
                 continue
 
-            repo_path = os.readlink(p)
+            repo_path = os.readlink(full_path)
             if self.is_git_repo(repo_path):
                 favorites[link] = repo_path
                 rfavorites[repo_path] = link
