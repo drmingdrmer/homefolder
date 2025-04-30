@@ -1,0 +1,65 @@
+#!/bin/sh
+
+# parse input url:
+# the url is either http url or git url: 
+# - https://github.com/drmingdrmer/openraft.git 
+# - git@github.com:drmingdrmer/mea.git
+# This script outputs the user and repo name, separate by space. For example:
+# '$0 https://github.com/drmingdrmer/openraft.git' outputs "drmingdrmer openraft"
+# '$0 git@github.com:drmingdrmer/mea.git' outputs "drmingdrmer mea"
+#
+# if the input is not a valid github url, the script will exit with code 1, and outputs nothing.
+
+if [ $# -ne 1 ]; then
+    exit 1
+fi
+
+url="$1"
+
+# Step 1: Strip schema
+# Remove https:// or git@
+case "$url" in
+    https://*)
+        path="${url#https://}"
+        ;;
+    git@*)
+        path="${url#git@}"
+        ;;
+    *)
+        exit 1
+        ;;
+esac
+
+# Step 2: Strip .git suffix
+if [ "${path%.git}" != "$path" ]; then
+    path="${path%.git}"
+fi
+
+# Step 3: Strip host
+# Remove github.com/ or github.com:
+case "$path" in
+    github.com/*)
+        path="${path#github.com/}"
+        ;;
+    github.com:*)
+        path="${path#github.com:}"
+        ;;
+    *)
+        exit 1
+        ;;
+esac
+
+# Step 4: Parse user and repo name
+user="${path%%/*}"
+repo="${path#*/}"
+
+# Validate the result
+if [ -z "$user" ] || [ -z "$repo" ]; then
+    exit 1
+fi
+
+echo "$user $repo"
+
+
+
+
