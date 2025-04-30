@@ -1,0 +1,34 @@
+#!/bin/sh
+
+usage()
+{
+    cat <<-END
+Convert git remote to https:// or git@
+Usage:
+    $0 [https|ssh|git]
+
+END
+exit 0
+
+}
+
+set -o errexit
+
+mode="$1"
+
+git remote | while read remote_name; do
+
+url="$(git remote get-url "$remote_name")"
+user_repo="$(parse-github-remote "$url")"
+
+if [ ".$mode" = ".git" ] || [ ".$mode" = ".ssh" ]; then
+    converted="git@github.com:$user_repo.git"
+else
+    converted="https://github.com/$user_repo.git"
+fi
+
+git remote set-url "$remote_name" "$converted"
+
+echo "git-remote converted: $remote_name $converted"
+
+done
