@@ -43,14 +43,88 @@ def clean_filename(filename):
     
     # Remove common quality indicators and other metadata
     patterns = [
+        # Brackets and parentheses patterns
         r'\[.*?\]',  # Remove text in square brackets
         r'\(.*?\)',  # Remove text in parentheses
+        
+        # Common file naming patterns
+        r'^\.+',  # Remove leading dots (common in some Asian filenames)
+        r'^@+',   # Remove leading @ symbols
+        r'^_+',   # Remove leading underscores
+        r'_by_.*$',  # Remove attribution (_by_username)
+        r'@.*$',  # Remove text after @ symbol
+        
+        # Common prefixes/separators
+        r'^The\.',  # Remove "The." prefix
+        r'^\d{2}\.\d{2}\.\d{2}\.', # Remove date-like prefixes (01.02.03.)
+        r'^\(\w+\)',  # Remove language indicators like (eng)
+        
+        # Quality and format indicators
         r'\.\d{3,4}p',  # Remove resolution indicators
+        r'\.HD(TV)?',  # Remove HDTV indicator
+        r'\.DVD(rip|scr)?',  # Remove DVD indicators
         r'\.BluRay', r'\.WEB-DL', r'\.HDRip', r'\.BRRip',  # Remove quality indicators
         r'\.x264', r'\.x265', r'\.AAC', r'\.AC3',  # Remove codec indicators
+        r'\.R\d', r'\.CAM', r'\.TS', r'\.PROPER', r'\.REPACK',  # Remove release type
+        r'\.(KORSUB|VOSTFR|SUBBED)',  # Remove subtitle indicators
+        r'\.(iNT|LiMiTED|INTERNAL)',  # Remove release attributes
+        
+        # Release group indications
+        r'-(RARBG|YYeTs|PLAYNOW|YIFY|Ganool|AbSurd[iI]Ty|DiAMOND|DoNE|NeDiVx|iLG|VoMiT|TLF)',  # Remove release groups
+        r'-(S-Files|MURDER|YSDG|FLAiTE|JYK|TDP|TOPAZ)',  # More release groups
+        r'\.(ARROW|KAMERA|GENUiNE|TheWretched|LMG)',  # More release groups
+        r'\.CD\d',  # Remove CD1, CD2 etc. (common in split files)
+        
+        # Language indicators
+        r'\.(Chi|Eng|Chs|Cht|CN|GB|CnEn)(\.|$)',  # Remove language indicators
+        r'\.SUB',  # Remove subtitle indicator
+        r'\.中英(双语)?(字幕)?',  # Remove Chinese subtitle indicator
+        r'\.双语字幕',  # Another Chinese subtitle format
+        
+        # Season/episode indicators for TV shows
+        r'\.S\d{2}E\d{2}(\.\w+)?',  # Remove season/episode indicators like S01E01
+        r'\.EP\d{2}(_\w+)?',  # Remove episode indicators like EP01
+        
+        # Assorted other patterns from the file list
+        r'\.rmvb$', r'\.avi$', r'\.mkv$', r'\.mp4$',  # Remove any remaining file extensions
+        r'-\d$',  # Remove trailing single digit (often used for parts)
+        r'\.part\d+',  # Remove part indicators
+        r'-(RARBG|YYeTs|JUSTiCE|CaRRe|BMDru|DoNE)$',  # Remove trailer release groups
+        r'-\w{1,7}$',  # Remove short trailing codes
+        
+        # Names and translations - keep only the main title
+        r'\.\d{4}\.',  # Remove year in middle of filename
+        r'\-\d{4}$',  # Remove year at end
+        r'[\.\-_]cd\d+$',  # Remove disc indicators
     ]
+    
     for pattern in patterns:
         name = re.sub(pattern, '', name, flags=re.IGNORECASE)
+    
+    # Remove common Chinese/English title separator patterns
+    name = re.sub(r'[\.\-_]((中文|英文|双语|国语|粤语|中英|简体|繁体|外挂)字幕)?$', '', name)
+    
+    # Handle special case of Chinese titles with English titles
+    # If format is "ChineseTitle..EnglishTitle" or similar
+    if '..' in name:
+        parts = name.split('..')
+        if len(parts) == 2:
+            # Use English title when available
+            name = parts[1]
+    
+    # Handle "MovieName.英文名" format
+    name = re.sub(r'\.英文名$', '', name)
+    
+    # Replace dots, underscores and multiple spaces with single space
+    name = re.sub(r'[\._]+', ' ', name)
+    name = re.sub(r'\s+', ' ', name)
+    
+    # Replace hyphens surrounded by spaces with space
+    name = re.sub(r'\s+\-\s+', ' ', name)
+    
+    # Keep hyphen between words
+    name = re.sub(r'(\w)\-(\w)', r'\1 \2', name)
+    
     return name.strip()
 
 def display_movie_info(movie_results):
@@ -177,7 +251,9 @@ def rename_file(file_path):
     new_path = path.parent / new_name
     
     os.rename(file_path, new_path)
-    print(f"Renamed: {path.name} -> {new_name}")
+    print(f"Renamed:")
+    print(f"    {path.name}")
+    print(f"    {new_name}")
 
 def main():
     if len(sys.argv) != 2:
