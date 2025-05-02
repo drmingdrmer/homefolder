@@ -2,13 +2,15 @@
 # -*- coding: utf-8 -*-
 
 """
-通过ffprobe拿到视频的宽度, 和比特率, 然后重命名视频文件, 追加信息到`fn.mp4` 为:  `fn-1920x-1000k.mp4`
+通过ffprobe拿到视频的宽度, 和比特率, 然后重命名视频文件, 追加信息到`fn.mp4` 为:  `fn-2010y-1920x-1000k.mp4`
 """
 
 import os
 import subprocess
 import sys
+import re
 from pathlib import Path
+from tmdbv3api import TMDb, Movie
 
 def get_video_info(file_path):
     """Get video width and bitrate using ffprobe"""
@@ -25,13 +27,153 @@ def get_video_info(file_path):
     width, bitrate = result.stdout.strip().split('\n')
     return int(width), int(bitrate)
 
+def clean_filename(filename):
+    # Remove common file extensions
+    name = os.path.splitext(filename)[0]
+    
+    # Remove existing metadata pattern like -2010y-1920x-1000k
+    # First, remove the full pattern (year, width and bitrate)
+    name = re.sub(r'-\d{4}y-\d+x-\d+k$', '', name)
+    
+    # Next, check and remove just the width and bitrate pattern
+    name = re.sub(r'-\d+x-\d+k$', '', name)
+    
+    # Finally, check and remove just the year pattern
+    name = re.sub(r'-\d{4}y$', '', name)
+    
+    # Remove common quality indicators and other metadata
+    patterns = [
+        r'\[.*?\]',  # Remove text in square brackets
+        r'\(.*?\)',  # Remove text in parentheses
+        r'\.\d{3,4}p',  # Remove resolution indicators
+        r'\.BluRay', r'\.WEB-DL', r'\.HDRip', r'\.BRRip',  # Remove quality indicators
+        r'\.x264', r'\.x265', r'\.AAC', r'\.AC3',  # Remove codec indicators
+    ]
+    for pattern in patterns:
+        name = re.sub(pattern, '', name, flags=re.IGNORECASE)
+    return name.strip()
+
+def display_movie_info(movie_results):
+    # Convert results to a list and limit to 5 entries
+    results_list = list(movie_results)
+    display_results = results_list[:5] if len(results_list) > 5 else results_list
+    
+    # Display all found movies
+    print("\nFound the following movies:")
+    for idx, result in enumerate(display_results, 1):
+
+        release_year = result.release_date.split('-')[0] if hasattr(result, 'release_date') and result.release_date else 'Unknown'
+        original_title = result.original_title if hasattr(result, 'original_title') else 'N/A'
+        overview = result.overview if hasattr(result, 'overview') else 'No overview available'
+        
+        print(f"\n{idx}. {result.title} ({release_year})")
+        print(f"   Original Title: {original_title}")
+        print(f"   Overview: {overview}")
+    
+    return display_results
+
+def is_english(text):
+    """Check if text contains only English characters"""
+    if not text:
+        return False
+    # Check if all characters are ASCII (covers English letters, numbers, punctuation)
+    return all(ord(c) < 128 for c in text)
+
+def get_user_selection(display_results):
+    # Get user confirmation
+    while True:
+        choice_input = input("\nEnter the number of the correct movie (or 0 to skip): ")
+        
+        try:
+            choice = int(choice_input)
+        except ValueError:
+            print("Please enter a valid number.")
+            continue
+            
+        if choice == 0:
+            return None, None, None
+            
+        if 1 <= choice <= len(display_results):
+            selected_movie = display_results[choice-1]
+            
+            # Extract movie information
+            year = None
+            if hasattr(selected_movie, 'release_date') and selected_movie.release_date:
+                year = selected_movie.release_date.split('-')[0]
+            
+            # Get movie titles
+            en_title = selected_movie.original_title if hasattr(selected_movie, 'original_title') else None
+            zh_title = selected_movie.title if hasattr(selected_movie, 'title') else None
+            
+            return year, en_title, zh_title
+            
+        print("Invalid choice. Please try again.")
+
+def format_english_title(title):
+    """Format English title to contain only alphanumeric chars and hyphens, and capitalize each word"""
+    if not title:
+        return ""
+    
+    # Keep only alphanumeric and spaces
+    cleaned = re.sub(r'[^a-zA-Z0-9\s]', '', title)
+    
+    # Replace spaces with hyphens and title-case each word
+    formatted = '-'.join([word.capitalize() for word in cleaned.split()])
+    return formatted
+
+def get_movie_info(filename):
+    """Get movie year, English title and Chinese title"""
+    # Initialize TMDB
+    tmdb = TMDb()
+    tmdb.api_key = os.environ.get('XP_SEC_TMDB_API_KEY')  # Get API key from environment variable
+    tmdb.language = 'zh-CN'  # Set language to Chinese
+    
+    movie = Movie()
+    clean_name = clean_filename(filename)
+    print(f"\nSearching for movie with query: '{clean_name}'")
+    
+    # Search for the movie
+    results = movie.search(clean_name)
+    if results:
+        display_results = display_movie_info(results)
+        year, en_title, zh_title = get_user_selection(display_results)
+        
+        # Check if original_title is actually in English
+        if en_title and not is_english(en_title):
+            # If original title is not English, don't use it
+            en_title = None
+            
+        return year, en_title, zh_title
+    else:
+        print(f"No movies found for '{clean_name}'")
+    
+    return None, None, None
+
 def rename_file(file_path):
-    """Rename file with width and bitrate information"""
+    """Rename file with English name, Chinese name, year, width, and bitrate information"""
     width, bitrate = get_video_info(file_path)
     bitrate_k = bitrate // 1000  # Convert to kbps
     
     path = Path(file_path)
-    new_name = f"{path.stem}-{width}x-{bitrate_k}k{path.suffix}"
+    filename = path.name
+    
+    # Get movie information
+    year, en_title, zh_title = get_movie_info(filename)
+    
+    # Format parts of the new filename
+    year_part = f"-{year}y" if year else ""
+    
+    # Determine the base name and formatted parts for the new file
+    if en_title:
+        # If we have English title, use it as the base name and add Chinese title
+        base_name = format_english_title(en_title)
+        formatted_zh_title = f"-{zh_title}" if zh_title else ""
+    else:
+        # If no English title, use Chinese title as the base
+        base_name = zh_title if zh_title else path.stem
+        formatted_zh_title = ""
+    
+    new_name = f"{base_name}{formatted_zh_title}{year_part}-{width}x-{bitrate_k}k{path.suffix}"
     new_path = path.parent / new_name
     
     os.rename(file_path, new_path)
@@ -39,7 +181,7 @@ def rename_file(file_path):
 
 def main():
     if len(sys.argv) != 2:
-        print("Usage: ff-rename <video_file>")
+        print("Usage: ff-append-prop <video_file>")
         sys.exit(1)
     
     video_file = sys.argv[1]
