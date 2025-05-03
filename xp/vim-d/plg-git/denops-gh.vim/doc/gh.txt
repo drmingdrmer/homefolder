@@ -1,0 +1,438 @@
+*gh.txt*       Vim/Neovim plugin for GitHub
+
+Author: skanehira <sho19921005@gmail.com>
+License : MIT license  {{{
+    Permission is hereby granted, free of charge, to any person obtaining
+    a copy of this software and associated documentation files (the
+    "Software"), to deal in the Software without restriction, including
+    without limitation the rights to use, copy, modify, merge, publish,
+    distribute, sublicense, and/or sell copies of the Software, and to
+    permit persons to whom the Software is furnished to do so, subject to
+    the following conditions:
+    The above copyright notice and this permission notice shall be included
+    in all copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+    OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+    IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+    CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+    TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+    SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+}}}
+
+==============================================================================
+CONTENTS                                  *gh-contents*
+
+INTRODUCTION                              |gh-introduction|
+USAGE                                     |gh-usage|
+INTERFACE                                 |gh-interface|
+  VARIABLES                                 |gh-variables|
+  BUFFER                                    |gh-buffers|
+  KEY-MAPPINGS                              |gh-key-mappings|
+  FUNCTIONS                                 |gh-functions|
+  DDC-SETTINGS                              |gh-ddc-settings|
+FAQ                                       |gh-faq|
+CHANGELOG                                 |gh-changelog|
+
+
+==============================================================================
+INTRODUCTION                              *gh-introduction*
+
+*gh.vim* is a Vim/Neovim plugin for GitHub
+
+Latest version:
+https://github.com/skanehira/denops-gh.vim
+
+
+==============================================================================
+USAGE                                     *gh-usage*
+
+SETUP
+                                          *gh-setup*
+
+At first time, you have to install https://github.com/cli/cli
+and setup auth token. Please refer offical documents.
+
+==============================================================================
+INTERFACE                                 *gh-interface*
+
+------------------------------------------------------------------------------
+VARIABLES                                 *gh-variables*
+
+
+------------------------------------------------------------------------------
+BUFFER                                    *gh-buffer*
+gh.vim providing some virtual buffers named 'gh://*'.
+You can do something (like see issue list) through the buffer.
+
+NOTE:
+  When you open `https://github.com/*` it will replace `gh://*`.
+  For example, if `:e https://github.com/owner/repo/issues`, it will
+  be replace to `gh://owner/repo/issues`
+
+                                          *gh-buffer-issue-list*
+gh://{owner}/{repo}/issues
+  Show {owner}/{repo} issues.
+  You can do some actions that like edit, open issue in browser and search.
+  Please refer |gh-default-key-mappings|.
+
+  The buffer show you some information of issues as bellow.
+>
+    ISSUES LIST
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #12 test1 OPEN   @man1 (bug, docs)  1
+    #25 test2 CLOSED @man2 (feature)    4
+
+     │    │     │      │       │        │
+     │    │     │      │       │        └ Count of comments
+     │    │     │      │       └ labels (Max 3 labels will be shown)
+     │    │     │      └ Assigneed users (Max 2 users will be shown)
+     │    │     └ Status (OPEN or CLOSED)
+     │    └ Title (Max 100 character will be shown)
+     └ Number
+<
+
+                                          *gh-buffer-issue-search*
+issues-search
+  Search issues.
+  You can use some qualifiers to find specific issues.
+  For exmaple, if you type `state:closed label:bug` and Enter,
+  it will show issues that state is closed and label is bug.
+  Refer https://git.io/JSKd3 to check more qualifiers.
+
+  NOTE: This buffer applies only to the buffer
+        that executed <Plug>(gh:issue:search).
+
+  NOTE:
+    You can complements some qualifiers if ddc source be added.
+    Refer |gh-ddc-settings| and |gh-ddc-issues-search|.
+
+    autocmd name: 'gh_open_issue_search'
+    source  name: 'gh_issues_search'
+
+                                          *gh-buffer-issue-edit*
+gh://{owner}/{repo}/issues/{number}
+  Edit issue body.
+  When you type |:write|, then issue body would be updated.
+
+  NOTE:
+    You can complements user's name and issue's title if ddc source be added.
+    Refer |gh-ddc-settings| and |gh-ddc-issues|.
+
+    autocmd name: 'gh_open_issue'
+    source  name: 'gh_issues'
+
+                                          *gh-buffer-issue-new*
+gh://{owner}/{repo}/issues/new
+  Create a new issue.
+  If {owner}/{repo} has issue templates, you can chose it and edit
+  template body.
+  When you type |:write|, then 'gh' would be executed in terminal, and
+  you can chose any options(e.g add labels).
+
+  NOTE:
+    You can complements user's name and issue's title if ddc source be added.
+    Refer |gh-ddc-settings| and |gh-ddc-issues|.
+
+    autocmd name: 'gh_open_issue'
+    source  name: 'gh_issues'
+
+                                          *gh-buffer-issue-assignee-list*
+gh://{owner}/{repo}/issues/{number}/assignees
+  Add or remove issue's assignees.
+  You have to type login name of user in the buffer.
+  When you type |:write|, then buffer's contents will be applied.
+  If you want to clear all assignees, just delete all of buffer contents.
+
+  NOTE:
+    You can complements user's name if ddc source be added.
+    Refer |gh-ddc-settings| and |gh-ddc-issues-assignees|.
+
+    autocmd name: 'gh_open_issue_assignees'
+    source  name: 'gh_issues_assginees'
+
+                                          *gh-buffer-issue-label-list*
+gh://{owner}/{repo}/issues/{number}/labels
+  Add or remove issue's label.
+  You have to type label names.
+  When you type |:write|, then buffer's contents will be applied.
+  If you want to clear all labels, just delete all of buffer contents.
+
+  NOTE: This buffer just get label until 20.
+        So if issue has label more then 20,
+        please add removed labels with manual.
+
+  NOTE:
+    You can complements label's name if ddc source be added.
+    Refer |gh-ddc-settings| and |gh-ddc-issues-labels|.
+
+    autocmd name: 'gh_open_issue_labels'
+    source  name: 'gh_issues_labels'
+
+                                          *gh-buffer-issue-comment-list*
+gh://{owner}/{repo}/issues/{number}/comments
+  Show issue's comments.
+>
+    ISSUES COMMENT LIST
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    @man1 something body
+    ...
+     │    │
+     │    └ Comment body (Just show first line of body)
+     └ Author
+<
+                                          *gh-buffer-issue-comment-new*
+gh://{owner}/{repo}/issues/{number}/comments/new
+  Create a new comment.
+  When you type |:write|, then buffer's contents will be applied.
+  The buffer will be deleted(|:bwipeout|) if this action is complete.
+
+  NOTE:
+    You can complements user's name and issue's title if ddc source be added.
+    Refer |gh-ddc-settings| and |gh-ddc-issues|.
+
+    autocmd name: 'gh_open_issue_comment'
+    source  name: 'gh_issues'
+
+                                          *gh-buffer-issue-comment-edit*
+gh://{owner}/{repo}/issues/{number}/comments/{id}
+  Edit comment body.
+  When you type |:write|, then buffer's contents will be applied.
+
+  NOTE:
+    You can complements user's name and issue's title if ddc source be added.
+    Refer |gh-ddc-settings| and |gh-ddc-issues|.
+
+    autocmd name: 'gh_open_issue_comment'
+    source  name: 'gh_issues'
+
+                                          *gh-buffer-pull-list*
+gh://{owner}/{repo}/pulls
+  TODO
+
+                                          *gh-buffer-repo-readme*
+gh://{owner}/{repo}
+  TODO
+
+                                          *gh-buffer-action-list*
+gh://{owner}/{repo}/actions
+  TODO
+
+                                          *gh-buffer-file-list*
+gh://{owner}/{repo}/[:branch|:tree_sha]/files
+  TODO
+
+                                          *gh-buffer-gist-list*
+gh://{owner}/gists[?privacy=public]
+  TODO
+
+                                          *gh-buffer-gist*
+gh://{owner}/gists/:id
+  TODO
+
+--------------------------------------------------------------------
+KEY-MAPPINGS                              *gh-key-mappings*
+
+<Plug>(gh:issue:edit)                     *<Plug>(gh:issue:edit)*
+  Open editing buffer of issue.
+
+<Plug>(gh:issue:new)                      *<Plug>(gh:issue:new)*
+  Create new issue.
+
+<Plug>(gh:issue:comment:new)              *<Plug>(gh:issue:comment:new)*
+  Create new issue comment.
+
+<Plug>(gh:issue:comment:edit)             *<Plug>(gh:issue:comment:edit)*
+  Open editing buffer of issue comment.
+
+<Plug>(gh:issue:comment:select:next)      *<Plug>(gh:issue:comment:select:next)*
+  Toggle selecting comment and move cursor down.
+
+<Plug>(gh:issue:comment:select:prev)      *<Plug>(gh:issue:comment:select:prev)*
+  Toggle selecting comment and move cursor up.
+
+<Plug>(gh:issue:comment:yank)             *<Plug>(gh:issue:comment:yank)*
+  yank issue comment url.
+
+<Plug>(gh:issue:comment:preview)          *<Plug>(gh:issue:comment:preview)*
+  Previw comment body.
+  This body is not newest.
+  If you want to see newest comment body,
+  please reload |gh-buffer-issue-comment-list|.
+
+<Plug>(gh:issue:comment:view)             *<Plug>(gh:issue:comment:view)*
+  View issue comment in browser.
+
+<Plug>(gh:issue:open)                     *<Plug>(gh:issue:open)*
+  Open issue.
+
+<Plug>(gh:issue:close)                    *<Plug>(gh:issue:close)*
+  Close issue.
+
+<Plug>(gh:issue:view)                     *<Plug>(gh:issue:view)*
+  View issue in browser.
+
+<Plug>(gh:issue:preview)                  *<Plug>(gh:issue:preview)*
+  Previw issue body.
+  This body is not newest.
+  If you want to see newest issue body,
+  please reload |gh-buffer-issue-list|.
+
+<Plug>(gh:issue:select:next)              *<Plug>(gh:issue:select:next)*
+  Toggle selecting issue and move cursor down.
+
+<Plug>(gh:issue:select:prev)              *<Plug>(gh:issue:select:prev)*
+  Toggle selecting issue and move cursor up.
+
+<Plug>(gh:issue:yank)                     *<Plug>(gh:issue:yank)*
+  Yank issues url.
+
+<Plug>(gh:issue:search)                   *<Plug>(gh:issue:search)*
+  Open buffer that for searching issues.
+
+<Plug>(gh:issue:assignees)                *<Plug>(gh:issue:assignees)*
+  Open buffer that for assign users to issue.
+
+<Plug>(gh:issue:labels)                   *<Plug>(gh:issue:labels)*
+  Open buffer that for add or remove label on the issue.
+
+<Plug>(gh:issue:edit:title)               *<Plug>(gh:issue:edit:title)*
+  Edit issue title.
+
+DEFAULT-KEY-MAPPINGS                      *gh-default-key-mappings*
+
+{buffer}                      {mode}     {lhs}     {rhs}
+----------------------------  --------   ------    -----------------------
+|gh-buffer-issue-list|          normal     ghe       <Plug>(gh:issue:edit)
+                              normal     ght       <Plug>(gh:issue:edit:title)
+                              normal     ghn       <Plug>(gh:issue:new)
+                              normal     gho       <Plug>(gh:issue:open)
+                              normal     ghc       <Plug>(gh:issue:close)
+                              normal     gha       <Plug>(gh:issue:assignees)
+                              normal     ghm       <Plug>(gh:issue:comments)
+                              normal     ghl       <Plug>(gh:issue:labels)
+                              normal     <C-O>     <Plug>(gh:issue:view)
+                              normal     <C-J>     <Plug>(gh:issue:select:next)
+                              normal     <C-K>     <Plug>(gh:issue:select:prev)
+                              normal     ghy       <Plug>(gh:issue:yank)
+                              normal     K         <Plug>(gh:issue:preview)
+                              normal     ghs       <Plug>(gh:issue:search)
+|gh-buffer-issue-edit|          normal     gha       <Plug>(gh:issue:assignees)
+                              normal     ghl       <Plug>(gh:issue:labels)
+                              normal     ghm       <Plug>(gh:issue:comments)
+                              normal     ght       <Plug>(gh:issue:edit:title)
+|gh-buffer-issue-comment-list|  normal     ghn       <Plug>(gh:issue:comment:new)
+                              normal     ghe       <Plug>(gh:issue:comment:edit)
+                              normal     K         <Plug>(gh:issue:comment:preview)
+                              normal     <C-J>     <Plug>(gh:issue:comment:select:next)
+                              normal     <C-K>     <Plug>(gh:issue:comment:select:prev)
+                              normal     ghy       <Plug>(gh:issue:comment:yank)
+                              normal     <C-O>     <Plug>(gh:issue:comment:view)
+
+--------------------------------------------------------------------
+FUNCTIONS                                 *gh-functions*
+
+--------------------------------------------------------------------
+
+DDC-SETTINGS                              *gh-ddc-settings*
+
+gh.vim providing some |ddc|'s sources.
+For exmaple, you can auto complements mentionable users and
+issue numbers in the |gh-buffer-issue-edit|.
+
+If you want use ddc, you have to define autocmd to add ddc's settings
+Please refer sample settings as bellow.
+
+NOTE: Also you can use 'github.com/matsui54/denops-popup-preview.vim'
+      to preview issue's body in popup/float window.
+>
+  " If matsui54/denops-popup-preview.vim are installed,
+  " you can preview issue body's in popup window.
+  call popup_preview#enable()
+
+  " remove 'preview' from completeopt
+  " when you use denops-popup-preview.vim
+  set completeopt-=preview
+
+  " define autocmd for gh's ddc settings
+  augroup gh_ddc
+    au!
+    au User gh_open_issue call <SID>enableAutoCompletionForGh('gh_issues')
+    au User gh_open_issue_assignees call <SID>enableAutoCompletionForGh('gh_issues_assginees')
+  augroup END
+
+  function! s:enableAutoCompletionForGh(kind) abort
+    call ddc#custom#patch_buffer('sources', [a:kind])
+    call ddc#custom#patch_buffer('specialBufferCompletion', v:true)
+
+    " If you want to complements with japanese, you should add keywordPattern
+    call ddc#custom#patch_buffer({'keywordPattern':
+          \ "[a-zA-Z0-9_À-ÿ\u30a0-\u30ff\u3040-\u309f\u3005-\u3006\u30e0-\u9fcf]*"})
+
+    let option = {}
+    if a:kind ==# 'gh_issues'
+      let option = {
+            \ 'gh_issues': {
+              \  'matcherKey': 'menu',
+              \  'minAutoCompleteLength': 1,
+              \ }}
+    elseif a:kind ==# 'gh_issues_assginees'
+      let option = {
+            \ 'gh_issues_assginees': {
+              \  'minAutoCompleteLength': 1,
+              \ }}
+    endif
+    call ddc#custom#patch_buffer('sourceOptions', option)
+  endfunction
+<
+GH-DDC-SOURCE                             *gh-ddc-sources*
+
+autocmd name            | source name
+------------------------+---------------------
+gh_open_issue           | gh_issues
+gh_open_issue_comment   | gh_issues
+gh_open_issue_assignees | gh_issues_assginees
+gh_open_issue_labels    | gh_issues_labels
+gh_open_issue_search    | gh_issues_search
+
+GH-DDC-ISSUES                             *gh-ddc-issues*
+
+Mentionable user's name and issue's title can be complemented like bellow.
+
+'#Add' can be complemented title that is start with 'Add..'
+'@sk' can be complemented user's name that is start with 'sk...'
+
+GH-DDC-ISSUES-ASSIGNEES                   *gh-ddc-issues-assignees*
+
+Assignable user name can be complemented like bellow.
+
+'sk' can be complemented user's name that is start with 'sk...'
+
+GH-DDC-ISSUES-LABELS                      *gh-ddc-issues-labels*
+
+Label name can be complemented like bellow.
+
+'doc' can be complemented label's name that is start with 'doc...'
+
+GH-DDC-ISSUES-SEARCH                      *gh-ddc-issues-search*
+
+Some qualifiers can be complemented.
+Currently, the qualifiers that can be complemented are bellow.
+
+| Qualifiers | Description                |
+| ---------- | -------------------------- |
+| mentions   | mentionable user name      |
+| author     | issue created by user name |
+| assignee   | assignable user name       |
+| label      | label name                 |
+
+==============================================================================
+FAQ                                       *gh-faq*
+
+==============================================================================
+CHANGELOG                                 *gh-changelog*
+
+
+==============================================================================
+vim:tw=78:ts=8:ft=help:norl:noet:fen:
