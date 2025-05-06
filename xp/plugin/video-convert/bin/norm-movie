@@ -6,12 +6,16 @@
 例如：将`filename.mp4`重命名为`MovieName-中文名-2010y-1920x-1000k.mp4`，
 其中电影的名字是从 themoviedb.org 获取的
 其中2010y表示年份， 1920x表示视频宽度，1000k表示比特率。
+
+可选参数:
+-n, --no-tmdb: 跳过TMDB查询，只添加宽度和比特率信息，例如 `filename-1920x-1000k.mp4`
 """
 
 import os
 import subprocess
 import sys
 import re
+import argparse
 from pathlib import Path
 from tmdbv3api import TMDb, Movie
 
@@ -226,7 +230,7 @@ def get_movie_info(filename):
     
     return None, None, None
 
-def rename_file(file_path):
+def rename_file(file_path, use_tmdb=True):
     """Rename file with English name, Chinese name, year, width, and bitrate information"""
     width, bitrate = get_video_info(file_path)
     bitrate_k = bitrate // 1000  # Convert to kbps
@@ -234,41 +238,56 @@ def rename_file(file_path):
     path = Path(file_path)
     filename = path.name
     
-    # Get movie information
-    year, en_title, zh_title = get_movie_info(filename)
+    # Get movie information from TMDB if needed
+    year, en_title, zh_title = None, None, None
+    if use_tmdb:
+        year, en_title, zh_title = get_movie_info(filename)
     
     # Format parts of the new filename
     year_part = f"-{year}y" if year else ""
     
     # Determine the base name and formatted parts for the new file
-    if en_title:
+    if use_tmdb and en_title:
         # If we have English title, use it as the base name and add Chinese title
         base_name = format_english_title(en_title)
         formatted_zh_title = f"-{zh_title}" if zh_title else ""
     else:
-        # If no English title, use Chinese title as the base
-        base_name = zh_title if zh_title else path.stem
+        # If no English title or not using TMDB, use original filename as the base
+        base_name = path.stem
         formatted_zh_title = ""
     
     new_name = f"{base_name}{formatted_zh_title}{year_part}-{width}x-{bitrate_k}k{path.suffix}"
     new_path = path.parent / new_name
     
-    os.rename(file_path, new_path)
-    print(f"Renamed:")
-    print(f"    {path.name}")
-    print(f"    {new_name}")
+    # Ask for user confirmation before renaming
+    print(f"\nAbout to rename:")
+    print(f"    From: {path.name}")
+    print(f"    To:   {new_name}")
+    
+    while True:
+        confirm = input("\nConfirm rename? (y/n): ").lower()
+        if confirm in ['y', 'yes']:
+            os.rename(file_path, new_path)
+            print(f"File renamed successfully.")
+            break
+        elif confirm in ['n', 'no']:
+            print(f"Rename cancelled.")
+            break
+        else:
+            print(f"Please enter 'y' or 'n'.")
 
 def main():
-    if len(sys.argv) != 2:
-        print("Usage: ff-append-prop <video_file>")
+    # Parse command line arguments
+    parser = argparse.ArgumentParser(description='Rename video files with metadata information')
+    parser.add_argument('video_file', help='Path to the video file')
+    parser.add_argument('-n', '--no-tmdb', action='store_true', help='Skip TMDB query, only append width and bitrate')
+    args = parser.parse_args()
+    
+    if not os.path.exists(args.video_file):
+        print(f"File not found: {args.video_file}")
         sys.exit(1)
     
-    video_file = sys.argv[1]
-    if not os.path.exists(video_file):
-        print(f"File not found: {video_file}")
-        sys.exit(1)
-    
-    rename_file(video_file)
+    rename_file(args.video_file, use_tmdb=not args.no_tmdb)
 
 if __name__ == "__main__":
     main()
