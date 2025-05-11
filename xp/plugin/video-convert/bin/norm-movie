@@ -136,8 +136,9 @@ def clean_filename(filename):
 
 def display_movie_info(movie_results):
     # Convert results to a list and limit to 5 entries
+    n = 10
     results_list = list(movie_results)
-    display_results = results_list[:5] if len(results_list) > 5 else results_list
+    display_results = results_list[:n] if len(results_list) > n else results_list
     
     # Display all found movies
     print("\nFound the following movies:")
