@@ -7,8 +7,10 @@
 # export HTTP_PROXY=http://127.0.0.1:$port; export HTTPS_PROXY=http://127.0.0.1:$port; export ALL_PROXY=socks5://127.0.0.1:51837
 
 
-# clash:
-export https_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 all_proxy=socks5://127.0.0.1:7890
+# clash verge:
+export https_proxy=http://127.0.0.1:7897 http_proxy=http://127.0.0.1:7897 all_proxy=socks5://127.0.0.1:7897
+# # clash:
+# export https_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 all_proxy=socks5://127.0.0.1:7890
 
 yt-dlp --cookies-from-browser chrome \
     "$@"
