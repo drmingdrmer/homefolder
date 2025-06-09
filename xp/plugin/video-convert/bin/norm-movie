@@ -216,7 +216,7 @@ def get_movie_info(filename):
     
     # Search for the movie
     results = movie.search(clean_name)
-    if results:
+    if results['total_results'] > 0:
         display_results = display_movie_info(results)
         year, en_title, zh_title = get_user_selection(display_results)
         
