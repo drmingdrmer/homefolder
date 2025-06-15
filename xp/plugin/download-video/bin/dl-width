@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# Download video, filter the output by width
+
+width="1280"
+if [ ".$1" = ".-w" ]; then
+    width=$2
+    shift
+    shift
+fi
+
+yt-dlp --cookies-from-browser chrome \
+    -f 'bestvideo[width='$width'][vcodec^=av01]+bestaudio.2/bestvideo[width='$width']+bestaudio.2/best[width<='$width']' \
+    "$@"

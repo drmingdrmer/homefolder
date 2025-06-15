@@ -288,6 +288,41 @@ dtdir()
     cd $d
 }
 
+rmdtdir()
+{
+    # First ensure current directory is in the format:
+    # ~/tt/2025-06-15-10-00-**
+
+    # Check if parent directory is 'tt'
+    local parent_dir="$(dirname "$PWD")"
+    if [[ "$parent_dir" != "$HOME/tt" ]]; then
+        echo "Not in a '~/tt' subdirectory, skipping destruction"
+        return
+    fi
+
+    # If current directory is not a date-time directory, return directly
+    local current_dir=$(basename "$PWD")
+    if [[ ! "$current_dir" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9]{2}-[0-9]{2}- ]]; then
+        echo "Not in a date-time directory, skipping destruction"
+        return
+    fi
+
+    # Confirm destruction with user
+    echo "About to destroy directory: $current_dir"
+    echo "Are you sure? (y/N)"
+    read -r confirmation
+    
+    if [[ "$confirmation" != "y" && "$confirmation" != "Y" ]]; then
+        echo "Destruction cancelled"
+        return
+    fi
+    
+    cd ..
+
+    rm -rf $current_dir
+
+}
+
 . "$HOME/.cargo/env"
 
 # add this or git commit with signing does not work
