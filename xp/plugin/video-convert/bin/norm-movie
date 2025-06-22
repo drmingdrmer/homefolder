@@ -18,6 +18,7 @@ import re
 import argparse
 from pathlib import Path
 from tmdbv3api import TMDb, Movie
+from pypinyin import lazy_pinyin, Style
 
 def get_video_info(file_path):
     """Get video width and bitrate using ffprobe"""
@@ -203,6 +204,25 @@ def format_english_title(title):
     formatted = '-'.join([word.capitalize() for word in cleaned.split()])
     return formatted
 
+def get_pinyin_abbreviation(chinese_text):
+    """Generate pinyin abbreviation from Chinese text using only first character's first letter"""
+    if not chinese_text:
+        return ""
+    
+    # Get first character only
+    first_char = chinese_text[0]
+    
+    # Get pinyin for first character, only first letter, without tone
+    pinyin_list = lazy_pinyin(first_char, style=Style.FIRST_LETTER, strict=False)
+    
+    # Get the first letter and convert to lowercase
+    abbreviation = pinyin_list[0].lower() if pinyin_list else ""
+    
+    # Keep only alphabetic characters
+    abbreviation = re.sub(r'[^a-z]', '', abbreviation)
+    
+    return abbreviation
+
 def get_movie_info(filename):
     """Get movie year, English title and Chinese title"""
     # Initialize TMDB
@@ -252,8 +272,13 @@ def rename_file(file_path, use_tmdb=True):
         # If we have English title, use it as the base name and add Chinese title
         base_name = format_english_title(en_title)
         formatted_zh_title = f"-{zh_title}" if zh_title else ""
+    elif use_tmdb and zh_title:
+        # If no English title but have Chinese title, use pinyin abbreviation as prefix
+        pinyin_abbr = get_pinyin_abbreviation(zh_title)
+        base_name = f"{pinyin_abbr}-{zh_title}" if pinyin_abbr else zh_title
+        formatted_zh_title = ""
     else:
-        # If no English title or not using TMDB, use original filename as the base
+        # If no title from TMDB or not using TMDB, use original filename as the base
         base_name = path.stem
         formatted_zh_title = ""
     
