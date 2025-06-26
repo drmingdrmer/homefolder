@@ -1,0 +1,82 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+"""
+Convert Traditional Chinese to Simplified Chinese
+
+Usage:
+    traditional-to-simplified -i input_file -o output_file    # output to file
+    traditional-to-simplified -i input_file                   # output to stdout
+"""
+
+import sys
+import argparse
+from pathlib import Path
+
+from zhconv import convert
+
+def convert_file(input_file, output_file=None):
+    """Convert Traditional Chinese to Simplified Chinese in a file"""
+    try:
+        # Try multiple encodings to read the input file
+        encodings = ['utf-8', 'utf-16', 'utf-16le', 'utf-16be', 'gbk', 'gb2312', 'big5']
+        content = None
+        used_encoding = None
+        
+        for encoding in encodings:
+            print(f"Trying encoding: {encoding}: ", end="")
+            try:
+                with open(input_file, 'r', encoding=encoding) as f:
+                    content = f.read()
+                    used_encoding = encoding
+                    print(f"OK")
+                    break
+            except (UnicodeDecodeError, UnicodeError) as e:
+                print(f"Error: {e}")
+                continue
+        
+        if content is None:
+            print(f"Error: Unable to decode file '{input_file}' with any supported encoding", file=sys.stderr)
+            sys.exit(1)
+        
+        # Convert Traditional Chinese to Simplified Chinese
+        converted_content = convert(content, 'zh-cn')
+        
+        # Write to output file or stdout
+        if output_file:
+            with open(output_file, 'w', encoding='utf-8') as f:
+                f.write(converted_content)
+            print(f"Conversion completed:")
+            print(f"  Input file:  {input_file} (detected encoding: {used_encoding})")
+            print(f"  Output file: {output_file}")
+        else:
+            # Output to stdout
+            print(converted_content, end='')
+        
+    except FileNotFoundError:
+        print(f"Error: Input file not found '{input_file}'", file=sys.stderr)
+        sys.exit(1)
+    except Exception as e:
+        print(f"Error: {e}", file=sys.stderr)
+        sys.exit(1)
+
+def main():
+    parser = argparse.ArgumentParser(description='Convert Traditional Chinese to Simplified Chinese')
+    parser.add_argument('-i', '--input', required=True, help='Input file path')
+    parser.add_argument('-o', '--output', help='Output file path (optional, defaults to stdout)')
+    
+    args = parser.parse_args()
+    
+    input_path = Path(args.input)
+    
+    # Check if input file exists
+    if not input_path.exists():
+        print(f"Error: Input file does not exist '{input_path}'", file=sys.stderr)
+        sys.exit(1)
+    
+    # Convert the file
+    output_path = Path(args.output) if args.output else None
+    convert_file(input_path, output_path)
+
+if __name__ == "__main__":
+    main()
